@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 import vitePluginPrettier from "vite-plugin-prettier";
 
 // https://vitejs.dev/config/
@@ -12,4 +12,5 @@ export default defineConfig({
       exclude: ["node_modules/**", ".git/**"],
     }),
   ],
+  base: '/starwars-react/'
 });
