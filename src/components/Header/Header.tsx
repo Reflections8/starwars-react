@@ -1,11 +1,10 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { YellowBgIcon } from "../../icons/YellowBg";
+import creditsBg from "./img/CreditsBg.png";
 import bgImgBlur from "./img/left-bg-blur.png";
 import bgImg from "./img/left-bg.png";
-import creditsBg from "./img/CreditsBg.png";
 import "./styles/Header.css";
-import { HeaderBlueBgIcon } from "../../icons/HeaderBlueBg";
 
 type HeaderProps = {
   onlyRight: boolean;
