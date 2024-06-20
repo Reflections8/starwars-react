@@ -62,6 +62,9 @@ export function Header({
               <div className={`header__top-left-content`}>
                 <div className="header__top-left-content-iconWrapper">
                   {leftIcon}
+                  <div className="header__top-left-content-iconWrapper-blur">
+                    {leftIcon}
+                  </div>
                 </div>
                 <span className="header__top-left-content-text">
                   {leftText}
@@ -89,6 +92,9 @@ export function Header({
                 </span>
                 <div className="header__top-right-content-iconWrapper">
                   {rightIcon}
+                  <div className="header__top-right-content-iconWrapper-blur">
+                    {rightIcon}
+                  </div>
                 </div>
               </div>
             </div>
