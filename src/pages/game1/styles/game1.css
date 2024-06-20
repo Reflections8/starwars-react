@@ -1,0 +1,6 @@
+[data-page="game1"] .page__container {
+  background-image: url("../img/game1-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}

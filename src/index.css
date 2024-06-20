@@ -1,0 +1,32 @@
+@font-face {
+  font-family: "Bicubik";
+  src: url("assets/fonts/Bicubik.OTF") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --doc-height: 100%;
+}
+
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Bicubik", sans-serif;
+  background: #050a14;
+  color: #076ce9;
+}
+
+#root {
+  display: flex;
+  height: var(--doc-height);
+}
+
+a {
+  text-decoration: none;
+}
