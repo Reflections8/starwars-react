@@ -32,10 +32,6 @@ export function Header({
 
   useEffect(() => {
     setIsMounted(true);
-    console.log("MOUNT");
-    return () => {
-      console.log("UNMOUNT");
-    };
   }, []);
 
   function formatNumberWithCommas(number: number) {
