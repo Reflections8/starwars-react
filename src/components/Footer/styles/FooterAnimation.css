@@ -1,0 +1,15 @@
+.footer--slideInBottom {
+  animation: slideInFromBottom 1s forwards 1.5s;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -34,6 +34,7 @@
   max-width: 198px;
   display: flex;
   margin-right: auto;
+  opacity: 0;
 }
 
 .header__top-left-content {
@@ -89,6 +90,7 @@
   max-width: 198px;
   display: flex;
   justify-content: flex-end;
+  opacity: 0;
 }
 
 .header__top-right-bg {
@@ -153,6 +155,7 @@
   flex-direction: column;
   align-items: center;
   gap: 38px;
+  opacity: 0;
 }
 
 .header__bottom-sup {

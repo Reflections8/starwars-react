@@ -1,10 +1,11 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { YellowBgIcon } from "../../icons/YellowBg";
 import creditsBg from "./img/CreditsBg.png";
 import bgImgBlur from "./img/left-bg-blur.png";
 import bgImg from "./img/left-bg.png";
 import "./styles/Header.css";
+import "./styles/HeaderAnimation.css";
 
 type HeaderProps = {
   onlyRight: boolean;
@@ -27,6 +28,16 @@ export function Header({
   rightText,
   credits = 0,
 }: Partial<HeaderProps>) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    console.log("MOUNT");
+    return () => {
+      console.log("UNMOUNT");
+    };
+  }, []);
+
   function formatNumberWithCommas(number: number) {
     if (number) {
       let strNumber = number.toString();
@@ -49,7 +60,7 @@ export function Header({
             to={leftLink as string}
             className={`header__top-link header__top-left ${
               onlyRight && "header__top-link--Disabled"
-            }`}
+            } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
           >
             <img
               src={bgImg}
@@ -74,7 +85,11 @@ export function Header({
           </Link>
 
           {!onlyLeft && (
-            <div className="header__top-link header__top-right">
+            <div
+              className={`header__top-link header__top-right ${
+                isMounted ? "header__top-link--slideInRight" : ""
+              }`}
+            >
               <img
                 src={bgImg}
                 alt="bg"
@@ -101,7 +116,11 @@ export function Header({
           )}
         </div>
 
-        <div className="header__bottom">
+        <div
+          className={`header__bottom ${
+            isMounted ? "header__bottom--slideInTop" : ""
+          }`}
+        >
           <div className="header__bottom-sup">
             <div className="header__bottom-sup-bg">
               <YellowBgIcon />

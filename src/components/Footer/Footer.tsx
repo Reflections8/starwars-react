@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { FooterAmmoBgIcon } from "../../icons/FooterAmmoBgIcon";
 import bgBottom from "./img/bg-bottom.png";
 import bgBottomBar from "./img/bottom-bar.png";
 import weaponBg from "./img/weapon-bg.png";
 import weaponImg from "./img/weapon.png";
 import "./styles/Footer.css";
+import "./styles/FooterAnimation.css";
 
 type FooterProps = {
   clip: number;
@@ -14,9 +16,15 @@ type FooterProps = {
 export function Footer({ clip, power, charges }: Partial<FooterProps>) {
   const chargeArray = Array.from(Array(25));
 
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   return (
-    <footer className="footerWrapper">
-      <div className="footer">
+    <footer className={`footerWrapper`}>
+      <div className={`footer ${isMounted ? "footer--slideInBottom" : ""}`}>
         <div className="footer__top">
           <div className="footer__top-left">
             <div className="footer__top-content">
@@ -53,8 +61,8 @@ export function Footer({ clip, power, charges }: Partial<FooterProps>) {
               <div
                 key={index}
                 className={`segment ${
-						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-						//@ts-ignore
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  //@ts-ignore
                   index < charges
                     ? "footer__bottom-bar-item footer__bottom-bar-item--Charged"
                     : "footer__bottom-bar-item"
