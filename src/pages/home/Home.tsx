@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useState } from "react";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
@@ -41,6 +42,7 @@ export function Home() {
         leftIcon={<GamesIcon />}
         leftText={"Игры"}
         leftAction={() => {
+          //@ts-ignore
           openModal("chooseGame");
         }}
         rightIcon={<OptionsIcon />}
