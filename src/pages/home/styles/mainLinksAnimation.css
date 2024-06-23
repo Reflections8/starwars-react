@@ -18,23 +18,23 @@
 }
 
 .mainLinks__col-item--slideInLeft2 {
-  animation: slideInFromLeftReverse 1s forwards 2s;
+  animation: slideInFromLeftReverse 1s forwards 1.75s;
 }
 
 .mainLinks__col-item--slideInLeft3 {
-  animation: slideInFromLeftReverse 1s forwards 2.5s;
+  animation: slideInFromLeftReverse 1s forwards 2s;
 }
 
 .mainLinks__col-item--slideInRight {
-  animation: slideInFromRightReverse 1s forwards 3s;
+  animation: slideInFromRightReverse 1s forwards 2.25s;
 }
 
 .mainLinks__col-item--slideInRight2 {
-  animation: slideInFromRightReverse 1s forwards 3.5s;
+  animation: slideInFromRightReverse 1s forwards 2.5s;
 }
 
 .mainLinks__col-item--slideInRight3 {
-  animation: slideInFromRightReverse 1s forwards 4s;
+  animation: slideInFromRightReverse 1s forwards 2.75s;
 }
 
 @keyframes slideInFromLeftReverse {
