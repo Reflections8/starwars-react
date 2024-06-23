@@ -32,7 +32,6 @@ export function DrawerProvider({ children }: DrawerProviderProps) {
       value={{ isOpen, drawerType, openDrawer, closeDrawer }}
     >
       {children}
-
       <Drawer isOpen={isOpen} />
     </DrawerContext.Provider>
   );

@@ -11,9 +11,11 @@ import { Resources } from "./components/Resources";
 import "./styles/home.css";
 import { MainLinks } from "./components/MainLinks";
 import { BackgroundLayers } from "./components/BackgroundLayers";
+import { useModal } from "../../context/ModalContext";
 
 export function Home() {
   const [currentModel] = useState("stormtrooper");
+  const { openModal } = useModal();
   return (
     <>
       <BackgroundLayers />
@@ -38,6 +40,9 @@ export function Home() {
         position={"bottom"}
         leftIcon={<GamesIcon />}
         leftText={"Игры"}
+        leftAction={() => {
+          openModal("chooseGame");
+        }}
         rightIcon={<OptionsIcon />}
         rightText={"Опции"}
         rightAction={openMenu}

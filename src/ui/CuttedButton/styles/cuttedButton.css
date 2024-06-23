@@ -22,6 +22,9 @@
   border: 1px solid #19c1efcc;
   transition: all 0.2s ease-in-out;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   clip-path: polygon(
     10px 0,
     calc(100% - 10px) 0,
@@ -77,6 +80,10 @@
     0 calc(100% - 10px),
     0 10px
   );
+}
+
+.cuttedButton.small {
+  padding: 10px 12px;
 }
 
 .cuttedButton__text {

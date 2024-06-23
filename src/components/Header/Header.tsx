@@ -27,6 +27,7 @@ export function Header({
   leftIcon,
   leftLink,
   leftText,
+  leftAction,
   rightIcon,
   rightText,
   rightAction,
@@ -46,33 +47,65 @@ export function Header({
     >
       <div className="header">
         <div className="header__top">
-          <Link
-            to={leftLink as string}
-            className={`header__top-link header__top-left ${
-              onlyRight ? "header__top-link--Disabled" : ""
-            } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
-          >
-            <img
-              src={bgImg}
-              alt="bg"
-              className="header__top-bg header__top-left-bg"
-            />
-            <img src={bgImgBlur} alt="" className="header__top-left-bgBlur" />
+          {leftLink && (
+            <Link
+              to={leftLink as string}
+              className={`header__top-link header__top-left ${
+                onlyRight ? "header__top-link--Disabled" : ""
+              } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
+            >
+              <img
+                src={bgImg}
+                alt="bg"
+                className="header__top-bg header__top-left-bg"
+              />
+              <img src={bgImgBlur} alt="" className="header__top-left-bgBlur" />
 
-            {!onlyRight && (
-              <div className={`header__top-left-content`}>
-                <div className="header__top-left-content-iconWrapper">
-                  {leftIcon}
-                  <div className="header__top-left-content-iconWrapper-blur">
+              {!onlyRight && (
+                <div className={`header__top-left-content`}>
+                  <div className="header__top-left-content-iconWrapper">
                     {leftIcon}
+                    <div className="header__top-left-content-iconWrapper-blur">
+                      {leftIcon}
+                    </div>
                   </div>
+                  <span className="header__top-left-content-text">
+                    {leftText}
+                  </span>
                 </div>
-                <span className="header__top-left-content-text">
-                  {leftText}
-                </span>
-              </div>
-            )}
-          </Link>
+              )}
+            </Link>
+          )}
+
+          {!!leftAction && (
+            <div
+              onClick={leftAction}
+              className={`header__top-link header__top-left ${
+                onlyRight ? "header__top-link--Disabled" : ""
+              } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
+            >
+              <img
+                src={bgImg}
+                alt="bg"
+                className="header__top-bg header__top-left-bg"
+              />
+              <img src={bgImgBlur} alt="" className="header__top-left-bgBlur" />
+
+              {!onlyRight && (
+                <div className={`header__top-left-content`}>
+                  <div className="header__top-left-content-iconWrapper">
+                    {leftIcon}
+                    <div className="header__top-left-content-iconWrapper-blur">
+                      {leftIcon}
+                    </div>
+                  </div>
+                  <span className="header__top-left-content-text">
+                    {leftText}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
 
           <div
             className={`header__top-link header__top-right ${
