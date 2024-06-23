@@ -209,6 +209,16 @@
   top: -13px;
 }
 
+.header__bottom--Shop .header__bottom-main-bg {
+  z-index: 2;
+  transition: all 0.2s ease-in-out;
+  pointer-events: all;
+}
+
+.header__bottom--Shop .header__bottom-main-bg:active {
+  opacity: 50%;
+}
+
 .headerWrapper--Bottom {
   bottom: -0;
   top: initial;
