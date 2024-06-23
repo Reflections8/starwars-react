@@ -34,6 +34,7 @@
 }
 
 .backgroundVideo {
+  mix-blend-mode: lighten;
   position: absolute;
   opacity: 70%;
   z-index: 1;
