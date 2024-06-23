@@ -1,0 +1,62 @@
+.mainLinks__col-item {
+  position: relative;
+  transition: transform 1s ease-in-out;
+}
+
+.mainLinks__col:nth-child(1) .mainLinks__col-item {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.mainLinks__col:nth-child(2) .mainLinks__col-item {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.mainLinks__col-item--slideInLeft {
+  animation: slideInFromLeftReverse 1s forwards 1.5s;
+}
+
+.mainLinks__col-item--slideInLeft2 {
+  animation: slideInFromLeftReverse 1s forwards 2s;
+}
+
+.mainLinks__col-item--slideInLeft3 {
+  animation: slideInFromLeftReverse 1s forwards 2.5s;
+}
+
+.mainLinks__col-item--slideInRight {
+  animation: slideInFromRightReverse 1s forwards 3s;
+}
+
+.mainLinks__col-item--slideInRight2 {
+  animation: slideInFromRightReverse 1s forwards 3.5s;
+}
+
+.mainLinks__col-item--slideInRight3 {
+  animation: slideInFromRightReverse 1s forwards 4s;
+}
+
+@keyframes slideInFromLeftReverse {
+  from {
+    opacity: 0;
+    transform: translateX(-100%) scaleX(-1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRightReverse {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scaleX(-1);
+  }
+}

@@ -1,5 +1,6 @@
 import { MainLinkBgIcon } from "../../../icons/MainLinkBg";
 import "../styles/mainLinks.css";
+import "../styles/mainLinksAnimation.css";
 import iconBgLeft from "../img/mainLink-iconBg-left.png";
 import iconBgRight from "../img/mainLink-iconBg-right.png";
 
@@ -18,10 +19,10 @@ export function MainLinks() {
     <div className="mainLinks">
       <div className="mainLinks__col">
         <div
-          className="mainLinks__col-item"
+          className="mainLinks__col-item mainLinks__col-item--slideInLeft"
           onClick={() => {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             openDrawer("connectWallet");
           }}
         >
@@ -41,7 +42,7 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item">
+        <div className="mainLinks__col-item mainLinks__col-item--slideInLeft2">
           <MainLinkBgIcon color="green" />
           <img
             src={iconBgLeft}
@@ -58,7 +59,7 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item">
+        <div className="mainLinks__col-item mainLinks__col-item--slideInLeft3">
           <MainLinkBgIcon color="purple" />
           <img
             src={iconBgLeft}
@@ -78,7 +79,7 @@ export function MainLinks() {
 
       {/* RIGHT COLUMN */}
       <div className="mainLinks__col mainLinks__col--Right">
-        <div className="mainLinks__col-item">
+        <div className="mainLinks__col-item mainLinks__col-item--slideInRight">
           <MainLinkBgIcon color="yellow" />
           <img
             src={iconBgRight}
@@ -95,7 +96,7 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item">
+        <div className="mainLinks__col-item mainLinks__col-item--slideInRight2">
           <MainLinkBgIcon color="blue" />
           <img
             src={iconBgRight}
@@ -112,7 +113,7 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item">
+        <div className="mainLinks__col-item mainLinks__col-item--slideInRight3">
           <MainLinkBgIcon color="pink" />
           <img
             src={iconBgRight}

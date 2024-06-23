@@ -10,11 +10,14 @@ import { CharaсterModel } from "./components/CharacterModel";
 import { Resources } from "./components/Resources";
 import "./styles/home.css";
 import { MainLinks } from "./components/MainLinks";
+import { BackgroundLayers } from "./components/BackgroundLayers";
 
 export function Home() {
   const [currentModel] = useState("stormtrooper");
   return (
     <>
+      <BackgroundLayers />
+
       <Header
         leftIcon={<ExitIcon />}
         leftText={"Выход"}

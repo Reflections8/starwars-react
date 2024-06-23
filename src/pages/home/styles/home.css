@@ -3,10 +3,43 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 576px) {
   [data-page="home"] .page__container {
     overflow-x: hidden;
   }
+}
+
+.radialGradient {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(circle, #130b5300 0%, #1202503f 100%);
+  left: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.bottomLinearGradient {
+  position: absolute;
+  width: 100%;
+  height: 92px;
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to top, #120d1f8c, #0f172f00);
+  bottom: 0;
+}
+
+.backgroundVideo {
+  position: absolute;
+  opacity: 60%;
+  z-index: 1;
+  width: 550vw;
+  height: 100vh;
+  pointer-events: none;
+  left: 50%;
+  transform: translateX(-50%);
 }
