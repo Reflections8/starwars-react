@@ -3,14 +3,14 @@
 }
 
 .cuttedButtonContainer::before {
-  content: url("/starwars-react/src/ui/CuttedButton/img/corner.svg");
+  content: url("../img/corner.svg");
   position: absolute;
   top: -2px;
   left: -2px;
 }
 
 .cuttedButtonContainer::after {
-  content: url("/starwars-react/src/ui/CuttedButton/img/corner.svg");
+  content: url("../img/corner.svg");
   position: absolute;
   bottom: -2px;
   right: -2px;
