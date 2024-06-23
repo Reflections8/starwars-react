@@ -13,6 +13,8 @@
 *:after,
 *:before {
   box-sizing: border-box;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -29,4 +31,10 @@ body {
 
 a {
   text-decoration: none;
+}
+
+input,
+textarea,
+button {
+  font-family: "Bicubik", sans-serif;
 }

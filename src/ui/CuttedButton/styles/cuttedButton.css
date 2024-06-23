@@ -1,0 +1,88 @@
+.cuttedButtonContainer {
+  position: relative;
+}
+
+.cuttedButtonContainer::before {
+  content: url("/starwars-react/src/ui/CuttedButton/img/corner.svg");
+  position: absolute;
+  top: -2px;
+  left: -2px;
+}
+
+.cuttedButtonContainer::after {
+  content: url("/starwars-react/src/ui/CuttedButton/img/corner.svg");
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  transform: scale(-1, -1);
+}
+
+.cuttedButtonFrame {
+  padding: 3px;
+  border: 1px solid #19c1efcc;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  clip-path: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 0px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0px 100%,
+    0 calc(100% - 10px),
+    0 10px
+  );
+  -webkit-clip-path: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 0px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0px 100%,
+    0 calc(100% - 10px),
+    0 10px
+  );
+}
+
+.cuttedButtonFrame:active .cuttedButton {
+  opacity: 50%;
+}
+
+.cuttedButton {
+  outline: none;
+  border: none;
+  background: linear-gradient(to bottom, #076ce9, #14b4de);
+  font-family: "Bicubik", sans-serif;
+  text-align: center;
+  border: 1px solid #2cd1ff93;
+  padding: 12px 30px;
+  transition: all 0.2s ease-in-out;
+  clip-path: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 0px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0px 100%,
+    0 calc(100% - 10px),
+    0 10px
+  );
+  -webkit-clip-path: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 0px,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    0px 100%,
+    0 calc(100% - 10px),
+    0 10px
+  );
+}
+
+.cuttedButton__text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}

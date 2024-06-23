@@ -4,3 +4,9 @@
   background-size: cover;
   background-position: center;
 }
+
+@media screen and (max-width: 576px) {
+  [data-page="home"] .page__container {
+    overflow-x: hidden;
+  }
+}

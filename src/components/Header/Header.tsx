@@ -1,24 +1,27 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { YellowBgIcon } from "../../icons/YellowBg";
-import creditsBg from "./img/CreditsBg.png";
+
 import bgImgBlur from "./img/left-bg-blur.png";
 import bgImg from "./img/left-bg.png";
 import "./styles/Header.css";
 import "./styles/HeaderAnimation.css";
 
 type HeaderProps = {
+  position: "top" | "bottom";
   onlyRight: boolean;
   onlyLeft: boolean;
   leftIcon: ReactNode;
   leftLink: string;
   leftText: string;
+  leftAction: () => void;
   rightIcon: ReactNode;
   rightText: string;
-  credits: number;
+  rightAction: () => void;
+  centerComponent: ReactNode;
 };
 
 export function Header({
+  position = "top",
   onlyRight = false,
   onlyLeft = false,
   leftIcon,
@@ -26,7 +29,8 @@ export function Header({
   leftText,
   rightIcon,
   rightText,
-  credits = 0,
+  rightAction,
+  centerComponent,
 }: Partial<HeaderProps>) {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -34,28 +38,18 @@ export function Header({
     setIsMounted(true);
   }, []);
 
-  function formatNumberWithCommas(number: number) {
-    if (number) {
-      let strNumber = number.toString();
-      let parts = strNumber.split(".");
-      let integerPart = parts[0];
-      integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      if (parts.length === 2) {
-        return integerPart + "." + parts[1];
-      } else {
-        return integerPart;
-      }
-    }
-  }
-
   return (
-    <header className="headerWrapper">
+    <header
+      className={`headerWrapper ${
+        position === "bottom" ? "headerWrapper--Bottom" : ""
+      }`}
+    >
       <div className="header">
         <div className="header__top">
           <Link
             to={leftLink as string}
             className={`header__top-link header__top-left ${
-              onlyRight && "header__top-link--Disabled"
+              onlyRight ? "header__top-link--Disabled" : ""
             } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
           >
             <img
@@ -80,23 +74,20 @@ export function Header({
             )}
           </Link>
 
-          {!onlyLeft && (
-            <div
-              className={`header__top-link header__top-right ${
-                isMounted ? "header__top-link--slideInRight" : ""
-              }`}
-            >
-              <img
-                src={bgImg}
-                alt="bg"
-                className="header__top-bg header__top-right-bg"
-              />
-              <img
-                src={bgImgBlur}
-                alt=""
-                className="header__top-right-bgBlur"
-              />
+          <div
+            className={`header__top-link header__top-right ${
+              isMounted ? "header__top-link--slideInRight" : ""
+            }`}
+            onClick={rightAction}
+          >
+            <img
+              src={bgImg}
+              alt="bg"
+              className="header__top-bg header__top-right-bg"
+            />
+            <img src={bgImgBlur} alt="" className="header__top-right-bgBlur" />
 
+            {!onlyLeft && (
               <div className="header__top-right-content">
                 <span className="header__top-right-content-text">
                   {rightText}
@@ -108,32 +99,11 @@ export function Header({
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
-        <div
-          className={`header__bottom ${
-            isMounted ? "header__bottom--slideInTop" : ""
-          }`}
-        >
-          <div className="header__bottom-sup">
-            <div className="header__bottom-sup-bg">
-              <YellowBgIcon />
-            </div>
-            <div className="header__bottom-sup-text">Кредиты</div>
-          </div>
-          <div className="header__bottom-main">
-            <img
-              src={creditsBg}
-              alt="credits-bg"
-              className="header__bottom-main-bg"
-            />
-            <div className="header__bottom-main-text">
-              {formatNumberWithCommas(credits)}
-            </div>
-          </div>
-        </div>
+        {position === "top" ? centerComponent : null}
       </div>
     </header>
   );

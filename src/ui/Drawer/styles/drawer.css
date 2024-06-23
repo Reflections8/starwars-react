@@ -1,0 +1,138 @@
+.drawerBg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(to top, #120d1f, #0f172f00);
+  z-index: 1000;
+  transition: all 0.2s ease-in-out;
+  opacity: 1;
+}
+
+.drawerBg--Hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.drawer {
+  max-width: 576px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  max-height: 267px;
+  height: 100%;
+  width: 100%;
+  padding-top: 50px;
+  background: linear-gradient(
+    to bottom,
+    rgb(24 72 185 / 100%),
+    rgb(24 29 91 / 50%)
+  );
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  position: relative;
+  z-index: 1001;
+  transition: all 0.2s ease-in-out;
+}
+
+.drawer.rejected {
+  background: linear-gradient(to bottom, #d6182f, rgb(24 29 91 / 50%));
+}
+
+.drawer.resolved {
+  background: linear-gradient(to bottom, #43ca3f, rgb(24 29 91 / 50%));
+}
+
+.drawer--Hidden {
+  pointer-events: none;
+  transform: translateY(100%);
+}
+
+.drawer__closeIcon {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+}
+
+.drawer__content {
+  width: 100%;
+}
+
+.connectWallet {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.connectWallet__text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+  max-width: 250px;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.connectWallet__mainBtn {
+  margin-bottom: 30px;
+}
+
+.connectWallet__laterBtn {
+  outline: none;
+  border: none;
+  border-radius: 6px;
+  background-color: #0975f85b;
+  color: #19c2ef;
+  text-shadow: 2px -1px 0 #076de93d;
+  font-size: 10px;
+  padding: 7px 17px;
+  transition: all 0.2s ease-in-out;
+}
+
+.connectWallet__laterBtn:active {
+  opacity: 50%;
+}
+
+.responseStatus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.responseStatus__icon {
+  max-width: 64px;
+}
+
+.responseStatus__title {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.responseStatus__text {
+  font-size: 12px;
+  opacity: 50%;
+  color: white;
+  text-shadow: 2px -1px 0 #076de920;
+  max-width: 300px;
+  text-transform: uppercase;
+  text-align: center;
+}

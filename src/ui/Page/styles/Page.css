@@ -32,10 +32,12 @@
   .page__container-gradient--Left {
     left: 0;
     background: linear-gradient(to right, #0f0d24, transparent);
+    z-index: 10;
   }
 
   .page__container-gradient--Right {
     right: 0;
     background: linear-gradient(to left, #0f0d24, transparent);
+    z-index: 10;
   }
 }

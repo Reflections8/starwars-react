@@ -1,0 +1,40 @@
+.characterBlock {
+  margin-top: auto;
+  pointer-events: none;
+}
+
+.characterBlock__pedestal {
+  pointer-events: none;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 576px) {
+  .characterBlock__pedestal {
+    min-width: 576px;
+  }
+}
+
+.characterBlock__rings {
+  max-width: 370px;
+  width: 100%;
+  mix-blend-mode: lighten;
+  opacity: 70%;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 90px;
+  z-index: 10;
+}
+
+.characterBlock__model {
+  max-width: 220px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 81px;
+  z-index: 9;
+}
