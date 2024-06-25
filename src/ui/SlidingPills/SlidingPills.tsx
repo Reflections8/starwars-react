@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useEffect } from "react";
 import "./styles/slidingPills.css";
 import { PillType } from "./types";
@@ -51,8 +52,9 @@ export function SlidingPills({
           ) as HTMLInputElement;
           currentInput.checked = true;
 
+          // @ts-ignore
           currentLabel.domNode = e.currentTarget;
-          updateGlider(e.currentTarget);
+          updateGlider(e.currentTarget as HTMLLabelElement);
         });
       });
 
@@ -71,7 +73,7 @@ export function SlidingPills({
 
       // Resize glider to default checked label
       setTimeout(() => {
-        updateGlider(checkedLabel);
+        updateGlider(checkedLabel as HTMLLabelElement);
       }, 300);
 
       // Set glider to current checked input
@@ -81,7 +83,7 @@ export function SlidingPills({
             updateGlider(currentLabel.domNode);
           } else {
             // if current pills component is not clicked yet we set glider to default label[0] element
-            updateGlider(findCheckedLabel());
+            updateGlider(findCheckedLabel() as HTMLLabelElement);
           }
         }, 0);
       });
@@ -106,7 +108,7 @@ export function SlidingPills({
               className="pills__input"
               checked={activePill.value === pill.value}
             />
-            <label className="pills__label" for={pill.value}>
+            <label className="pills__label" htmlFor={pill.value}>
               <span className="pills__label-text">{pill.label}</span>
             </label>
           </a>
