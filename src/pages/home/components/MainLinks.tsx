@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { MainLinkBgIcon } from "../../../icons/MainLinkBg";
 import "../styles/mainLinks.css";
 import "../styles/mainLinksAnimation.css";
@@ -11,9 +12,11 @@ import tasksIcon from "../img/mainLinkIcons/tasks.svg";
 import teamIcon from "../img/mainLinkIcons/team.svg";
 import cupIcon from "../img/mainLinkIcons/cup.svg";
 import { useDrawer } from "../../../context/DrawerContext";
+import { useModal } from "../../../context/ModalContext";
 
 export function MainLinks() {
   const { openDrawer } = useDrawer();
+  const { openModal } = useModal();
 
   return (
     <div className="mainLinks">
@@ -21,7 +24,6 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInLeft"
           onClick={() => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             openDrawer("connectWallet");
           }}
@@ -79,7 +81,13 @@ export function MainLinks() {
 
       {/* RIGHT COLUMN */}
       <div className="mainLinks__col mainLinks__col--Right">
-        <div className="mainLinks__col-item mainLinks__col-item--slideInRight">
+        <div
+          className="mainLinks__col-item mainLinks__col-item--slideInRight"
+          onClick={() => {
+            //@ts-ignore
+            openModal("tasks");
+          }}
+        >
           <MainLinkBgIcon color="yellow" />
           <img
             src={iconBgRight}
@@ -113,7 +121,13 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item mainLinks__col-item--slideInRight3">
+        <div
+          className="mainLinks__col-item mainLinks__col-item--slideInRight3"
+          onClick={() => {
+            //@ts-ignore
+            openModal("tournament");
+          }}
+        >
           <MainLinkBgIcon color="pink" />
           <img
             src={iconBgRight}

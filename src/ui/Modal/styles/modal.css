@@ -1,3 +1,36 @@
+.modalComingSoon {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  height: 100%;
+  padding-bottom: 180px;
+}
+
+.modalComingSoon__title {
+  max-width: 220px;
+  width: 100%;
+  text-align: center;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 20px;
+  letter-spacing: 3.5px;
+  text-shadow: 2px 2px 0 #0975f82f;
+}
+
+.modalComingSoon__text {
+  max-width: 270px;
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+  color: #076ce9;
+  text-shadow: 2px -1px 0 #076de934;
+}
+
 .modalBg {
   position: fixed;
   width: 100%;

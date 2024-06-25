@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ChooseGame } from "../../components/Modals/ChooseGame/ChooseGame";
 import { Shop } from "../../components/Modals/Shop/Shop";
+import { Tasks } from "../../components/Modals/Tasks/Tasks";
+import { Tournament } from "../../components/Modals/Tournament/Tournament";
 import { useModal } from "../../context/ModalContext";
+import { CupIcon } from "../../icons/Modals/Cup";
 import { GamepadIcon } from "../../icons/Modals/Gamepad";
 import { StoreIcon } from "../../icons/Modals/Store";
+import { TasksIcon } from "../../icons/Modals/Tasks";
 import modalBodyBorderBottom from "./img//modal-body-border-title.svg";
 import textureBg from "./img/bg-texture.svg";
 import modalBodyCloseIcon from "./img/close-bg.svg";
@@ -31,6 +35,16 @@ export function Modal({ isOpen }: ModalProps) {
       title: "Магазин",
       icon: <StoreIcon />,
       component: <Shop />,
+    },
+    tournament: {
+      title: "Турнир",
+      icon: <CupIcon />,
+      component: <Tournament />,
+    },
+    tasks: {
+      title: "Задания",
+      icon: <TasksIcon />,
+      component: <Tasks />,
     },
   };
 
