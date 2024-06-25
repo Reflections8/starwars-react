@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import shopBg from "../../img/ShopBg.png";
 
-export function HeaderCenterShop() {
+type HeaderCenterShopProps = {
+  onClick: () => void;
+};
+
+export function HeaderCenterShop({ onClick }: HeaderCenterShopProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -10,6 +14,7 @@ export function HeaderCenterShop() {
 
   return (
     <div
+      onClick={onClick}
       className={`header__bottom header__bottom--Shop ${
         isMounted ? "header__bottom--slideInTop" : ""
       }`}

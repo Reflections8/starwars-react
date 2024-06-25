@@ -1,0 +1,31 @@
+.cryptoButtons {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cryptoButtons__btn {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #0975f84f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  max-width: 90px;
+  width: 100%;
+  padding: 5px 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.cryptoButtons__btn-text {
+  color: #19c2ef;
+  font-size: 10px;
+  text-shadow: 2px -1px 0 #076de934;
+}
+
+.cryptoButtons__btn--Active {
+  background: #0975f89d;
+  border-color: #2cd1ff83;
+}

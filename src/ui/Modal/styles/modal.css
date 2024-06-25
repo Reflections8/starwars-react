@@ -77,6 +77,8 @@
   height: 538px;
   max-width: 358px;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .modalBg.modalBg--Short {
@@ -100,6 +102,11 @@
   justify-content: center;
   padding-top: 48px;
   gap: 10px;
+  margin-bottom: 20px;
+}
+
+.modal__body--Short .modal__body-top {
+  margin-bottom: 0;
 }
 
 .modal__body-top-closeBtn {
@@ -154,4 +161,42 @@
     padding-left: 4px;
     padding-right: 4px;
   }
+}
+
+.modal__scrollContainer {
+  position: relative;
+  width: 100%;
+  max-width: 342px;
+  max-height: 334px;
+  height: 100%;
+  overflow-y: scroll;
+  position: relative;
+  padding: 0 10px 0 26px;
+}
+
+.modal__scrollContainer__bottomGradient {
+  content: "";
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  left: 26px;
+  pointer-events: none;
+  height: 72px;
+  background: linear-gradient(to top, #171e5e, #171e5e00);
+  max-width: 311px;
+}
+
+.modal__scrollContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.modal__scrollContainer::-webkit-scrollbar-track {
+  background: #1858a2;
+  border-radius: 6px;
+}
+
+.modal__scrollContainer::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #14b4de, #076ce9);
+  border-radius: 6px;
+  border: 1px solid #2cd1ff81;
 }

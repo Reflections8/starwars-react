@@ -1,0 +1,76 @@
+.pills {
+  display: flex;
+  position: relative;
+  background: #120e275b;
+  width: 100%;
+  border-radius: 8px;
+  padding: 5px;
+  border: 1px solid #19c2ef;
+}
+
+.pills::-webkit-scrollbar {
+  display: none;
+}
+
+.pills * {
+  z-index: 2;
+}
+
+.pills__link {
+  width: 100%;
+  max-width: unset;
+}
+
+.pills__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 400;
+  font-size: 12px;
+  padding: 7px 12px;
+  cursor: pointer;
+  width: 100%;
+  user-select: none;
+  color: #19c2ef;
+}
+
+.pills__label-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 500;
+}
+
+.pills__input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pills__input:checked + label {
+  color: #c9e9fb;
+}
+
+.pills__input:checked + label:before {
+  filter: url(#filter-color-contrast);
+}
+
+.pills__glider {
+  position: absolute;
+  max-width: 145px;
+  height: calc(100% - 10px);
+  top: 5px;
+  display: flex;
+  z-index: 1;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  background: linear-gradient(to bottom, #076ce9, #14b4de);
+  border: 1px solid #2cd1ff8a;
+}
+
+@media screen and (max-width: 991px) {
+  .pills__label-text {
+    max-width: unset;
+  }
+}

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { ChooseGame } from "../../components/Modals/ChooseGame";
+import { ChooseGame } from "../../components/Modals/ChooseGame/ChooseGame";
+import { Shop } from "../../components/Modals/Shop/Shop";
 import { useModal } from "../../context/ModalContext";
 import { GamepadIcon } from "../../icons/Modals/Gamepad";
+import { StoreIcon } from "../../icons/Modals/Store";
 import modalBodyBorderBottom from "./img//modal-body-border-title.svg";
 import textureBg from "./img/bg-texture.svg";
 import modalBodyCloseIcon from "./img/close-bg.svg";
@@ -24,6 +26,11 @@ export function Modal({ isOpen }: ModalProps) {
       title: "Выбор игры:",
       icon: <GamepadIcon />,
       component: <ChooseGame />,
+    },
+    shop: {
+      title: "Магазин",
+      icon: <StoreIcon />,
+      component: <Shop />,
     },
   };
 

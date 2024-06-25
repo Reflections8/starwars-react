@@ -58,7 +58,8 @@
   font-family: "Bicubik", sans-serif;
   text-align: center;
   border: 1px solid #2cd1ff93;
-  padding: 12px 30px;
+  padding: 12px;
+  width: 100%;
   transition: all 0.2s ease-in-out;
   clip-path: polygon(
     10px 0,
