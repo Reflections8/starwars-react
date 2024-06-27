@@ -5,7 +5,6 @@ import { MenuIcon } from "../../icons/Menu";
 import "./styles/game1.css";
 import { useCallback, useEffect, useState } from "react";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import { useInitData } from "@vkruglikov/react-telegram-web-app";
 import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
 import { useUnityContext } from "react-unity-webgl/distribution/hooks/use-unity-context";
 import { Unity } from "react-unity-webgl/distribution/components/unity-component";
@@ -17,7 +16,7 @@ export function Game1() {
     window.devicePixelRatio
   );
 
-  const [initDataUnsafe] = useInitData();
+  //const [initDataUnsafe] = useInitData();
 
   const [score, setScore] = useState(0);
   const [damage, setDamage] = useState(1);
@@ -33,7 +32,7 @@ export function Game1() {
     sendMessage,
     addEventListener,
     removeEventListener,
-      unload,
+    unload,
   } = useUnityContext({
     loaderUrl: "build/Build_Ios.loader.js",
     dataUrl: "build/Build_Ios.data.gz",
@@ -67,17 +66,11 @@ export function Game1() {
 
   useEffect(() => {
     if (isLoaded && isUnityLoaded) {
-      if (initDataUnsafe?.user?.id != undefined) {
-        sendMessage(
-          "GameManager",
-          "OnUserIdReceive",
-          initDataUnsafe?.user?.id.toString()
-        );
-        console.log(initDataUnsafe?.user?.id);
-      } else {
-        sendMessage("GameManager", "OnUserIdReceive", "1");
-        console.log("not found tg data, starting 1 user id");
-      }
+      sendMessage(
+        "GameManager",
+        "OnUserWalletReceive",
+        "UQAiqHfH96zGIC38oNRs1AWHRyn3rsjT1zOiAYfjQ4NKN_Pp"
+      );
     }
     return () => {};
   }, [isLoaded, isUnityLoaded]);
