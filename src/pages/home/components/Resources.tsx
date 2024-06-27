@@ -1,4 +1,3 @@
-import { formatNumberWithCommas } from "../../../utils";
 import "../styles/resources.css";
 import topBg from "../img/resources/top-bg.svg";
 import mainBg from "../img/resources/main-bg.png";
@@ -30,9 +29,7 @@ export function Resources({ credits, woopy, ton }: Partial<ResourcesProps>) {
 
         <div className="resources__item-main">
           <img src={mainBg} alt="main-bg" className="resources__item-main-bg" />
-          <div className="resources__item-main-value">
-            {formatNumberWithCommas(credits)}
-          </div>
+          <div className="resources__item-main-value">{credits}</div>
         </div>
 
         <div className="resources__item-bottom">
@@ -58,9 +55,7 @@ export function Resources({ credits, woopy, ton }: Partial<ResourcesProps>) {
 
         <div className="resources__item-main">
           <img src={mainBg} alt="main-bg" className="resources__item-main-bg" />
-          <div className="resources__item-main-value">
-            {formatNumberWithCommas(woopy)}
-          </div>
+          <div className="resources__item-main-value">{woopy}</div>
         </div>
 
         <div className="resources__item-bottom">
@@ -86,9 +81,7 @@ export function Resources({ credits, woopy, ton }: Partial<ResourcesProps>) {
 
         <div className="resources__item-main">
           <img src={mainBg} alt="main-bg" className="resources__item-main-bg" />
-          <div className="resources__item-main-value">
-            {formatNumberWithCommas(ton)}
-          </div>
+          <div className="resources__item-main-value">{ton}</div>
         </div>
 
         <div className="resources__item-bottom">

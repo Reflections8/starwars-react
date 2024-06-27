@@ -33,6 +33,7 @@ export function Game1() {
     sendMessage,
     addEventListener,
     removeEventListener,
+      unload,
   } = useUnityContext({
     loaderUrl: "build/Build_Ios.loader.js",
     dataUrl: "build/Build_Ios.data.gz",
@@ -134,7 +135,8 @@ export function Game1() {
     handleSetBlasterDamage,
   ]);
 
-  function handleReturn() {
+  async function handleReturn() {
+    await unload();
     navigate("/");
   }
   return (
