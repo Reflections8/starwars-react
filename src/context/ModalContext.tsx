@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   ReactNode,
   createContext,
@@ -6,6 +7,7 @@ import {
   useState,
 } from "react";
 import { Modal } from "../ui/Modal/Modal";
+import { useDrawer } from "./DrawerContext";
 
 type ModalProviderProps = {
   children: ReactNode;
@@ -23,11 +25,20 @@ const ModalContext = createContext<Partial<ModalContextProps>>({});
 export function ModalProvider({ children }: ModalProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState("");
+  const { isOpen: drawerIsOpen } = useDrawer();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const modalElement = document.querySelector(".modal");
-      if (modalElement && !modalElement.contains(event.target as Node)) {
+
+      // @ts-ignore
+      const clickOnDrawer = !!event.target.closest(".drawerBg");
+
+      if (
+        modalElement &&
+        !modalElement.contains(event.target as Node) &&
+        !clickOnDrawer
+      ) {
         closeModal();
       }
     };
@@ -43,7 +54,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  }, [isOpen]);
+  }, [isOpen, drawerIsOpen]);
 
   const openModal = (type: string) => {
     setModalType(type);

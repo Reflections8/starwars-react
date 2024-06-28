@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { MainLinkBgIcon } from "../../../icons/MainLinkBg";
-import "../styles/mainLinks.css";
-import "../styles/mainLinksAnimation.css";
 import iconBgLeft from "../img/mainLink-iconBg-left.png";
 import iconBgRight from "../img/mainLink-iconBg-right.png";
+import "../styles/mainLinks.css";
+import "../styles/mainLinksAnimation.css";
 
-import walletIcon from "../img/mainLinkIcons/wallet.svg";
-import helmetIcon from "../img/mainLinkIcons/helmet.svg";
+import { useModal } from "../../../context/ModalContext";
 import chartIcon from "../img/mainLinkIcons/chart.svg";
+import cupIcon from "../img/mainLinkIcons/cup.svg";
+import helmetIcon from "../img/mainLinkIcons/helmet.svg";
 import tasksIcon from "../img/mainLinkIcons/tasks.svg";
 import teamIcon from "../img/mainLinkIcons/team.svg";
-import cupIcon from "../img/mainLinkIcons/cup.svg";
-import { useDrawer } from "../../../context/DrawerContext";
-import { useModal } from "../../../context/ModalContext";
+import walletIcon from "../img/mainLinkIcons/wallet.svg";
 
 export function MainLinks() {
-  const { openDrawer } = useDrawer();
   const { openModal } = useModal();
 
   return (
@@ -25,7 +23,7 @@ export function MainLinks() {
           className="mainLinks__col-item mainLinks__col-item--slideInLeft"
           onClick={() => {
             // @ts-ignore
-            openDrawer("connectWallet");
+            openModal("wallet");
           }}
         >
           <MainLinkBgIcon color="red" />
@@ -61,7 +59,13 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item mainLinks__col-item--slideInLeft3">
+        <div
+          className="mainLinks__col-item mainLinks__col-item--slideInLeft3"
+          onClick={() => {
+            // @ts-ignore
+            openModal("metrics");
+          }}
+        >
           <MainLinkBgIcon color="purple" />
           <img
             src={iconBgLeft}
@@ -104,7 +108,13 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item mainLinks__col-item--slideInRight2">
+        <div
+          className="mainLinks__col-item mainLinks__col-item--slideInRight2"
+          onClick={() => {
+            //@ts-ignore
+            openModal("partners");
+          }}
+        >
           <MainLinkBgIcon color="blue" />
           <img
             src={iconBgRight}

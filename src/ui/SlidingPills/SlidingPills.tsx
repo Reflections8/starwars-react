@@ -16,7 +16,6 @@ export function SlidingPills({
 }: SlidingPillProps) {
   useEffect(() => {
     const pills = document.querySelectorAll(".pills");
-
     pills.forEach((item) => {
       const pillsLabels = item.querySelectorAll(".pills__label");
       const pillsGlider = item.querySelector(".pills__glider");
@@ -88,7 +87,7 @@ export function SlidingPills({
         }, 0);
       });
     }); // forEach
-  });
+  }, []);
 
   return (
     <div className="pills disciplines__pills-container bg-accent-secondary">

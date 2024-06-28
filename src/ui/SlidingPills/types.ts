@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export type PillType = {
   label: string;
   value: string;
-  component: ReactNode;
+  component?: ReactNode;
 };
 
 export type ModelType = {

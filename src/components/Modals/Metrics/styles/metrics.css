@@ -1,0 +1,42 @@
+.metrics {
+	position: relative;
+	padding: 0 20px;
+}
+
+.metrics__tabs .cryptoButtons__btn {
+	width: 100%;
+	max-width: unset;
+}
+
+.metrics__list {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.metrics__list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #19c1ef4d;
+}
+
+.metrics__list-item-key {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 12px;
+}
+
+.metrics__list-item-key-name {
+	color: #19c2ef;
+	text-shadow: 2px -1px #076de93b;
+}
+
+.metrics__list-item-value {
+	font-size: 14px;
+	color: #c9e9fb;
+	text-shadow: 2px -1px #076de93b;
+}

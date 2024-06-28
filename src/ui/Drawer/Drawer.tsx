@@ -4,6 +4,11 @@ import { CuttedButton } from "../CuttedButton/CuttedButton";
 import closeIcon from "./img/closeIcon.svg";
 import resolvedIcon from "./img/resolved.svg";
 import rejectedIcon from "./img/rejected.svg";
+
+import telegramIcon from "./img/menu/tg.svg";
+import xIcon from "./img/menu/x.svg";
+import youtubeIcon from "./img/menu/youtube.svg";
+import walletIcon from "./img/menu/wallet.svg";
 import "./styles//drawer.css";
 
 type DrawerProps = {
@@ -11,16 +16,21 @@ type DrawerProps = {
 };
 
 export function Drawer({ isOpen }: DrawerProps) {
-  const { closeDrawer, drawerType } = useDrawer();
+  const { closeDrawer, drawerType, drawerPosition } = useDrawer();
 
   const drawerContentType = {
+    menu: <Menu />,
     connectWallet: <ConnectWallet />,
     resolved: <Resolved />,
     rejected: <Rejected />,
   };
 
   return (
-    <div className={`drawerBg ${!isOpen ? "drawerBg--Hidden" : ""}`}>
+    <div
+      className={`drawerBg ${
+        !isOpen ? "drawerBg--Hidden" : ""
+      }  ${drawerPosition}`}
+    >
       <div
         className={`drawer ${!isOpen ? "drawer--Hidden" : ""} ${drawerType}`}
       >
@@ -89,6 +99,48 @@ function Rejected() {
 
       <div className="responseStatus__text">
         у вас недостаточно средств на вашем балансе
+      </div>
+    </div>
+  );
+}
+
+function Menu() {
+  const { closeDrawer, openDrawer } = useDrawer();
+
+  async function openWalletDrawer() {
+    // @ts-ignore
+    // Синхронно закрываем текущий drawer
+    closeDrawer();
+
+    // @ts-ignore
+    // Делаем что-то асинхронное, в зависимости от ответа открываем resolved/rejected
+    await openDrawer("connectWallet");
+  }
+
+  return (
+    <div className="menu">
+      <div className="menu__text">Быстрое меню</div>
+
+      <div className="menu__list">
+        <a href="#" className="menu__list-item">
+          <img src={telegramIcon} alt="icon" className="menu__list-item-icon" />
+          <div className="menu__list-item-text">телеграм канал</div>
+        </a>
+
+        <a href="#" className="menu__list-item">
+          <img src={xIcon} alt="icon" className="menu__list-item-icon" />
+          <div className="menu__list-item-text">x.com (twitter)</div>
+        </a>
+
+        <a href="#" className="menu__list-item">
+          <img src={youtubeIcon} alt="icon" className="menu__list-item-icon" />
+          <div className="menu__list-item-text">youtube канал</div>
+        </a>
+
+        <div className="menu__list-item" onClick={openWalletDrawer}>
+          <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
+          <div className="menu__list-item-text">подключить кошелек</div>
+        </div>
       </div>
     </div>
   );

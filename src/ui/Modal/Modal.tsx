@@ -1,13 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ChooseGame } from "../../components/Modals/ChooseGame/ChooseGame";
+import { Metrics } from "../../components/Modals/Metrics/Metrics";
+import { Partners } from "../../components/Modals/Partners/Partners";
+import { Settings } from "../../components/Modals/Settings/Settings";
 import { Shop } from "../../components/Modals/Shop/Shop";
 import { Tasks } from "../../components/Modals/Tasks/Tasks";
 import { Tournament } from "../../components/Modals/Tournament/Tournament";
+import { Wallet } from "../../components/Modals/Wallet/Wallet";
 import { useModal } from "../../context/ModalContext";
+import { ChartIcon } from "../../icons/Modals/Chart";
 import { CupIcon } from "../../icons/Modals/Cup";
 import { GamepadIcon } from "../../icons/Modals/Gamepad";
+import { GearIcon } from "../../icons/Modals/Gear";
 import { StoreIcon } from "../../icons/Modals/Store";
 import { TasksIcon } from "../../icons/Modals/Tasks";
+import { TeamIcon } from "../../icons/Modals/Team";
+import { WalletIcon } from "../../icons/Modals/Wallet";
 import modalBodyBorderBottom from "./img//modal-body-border-title.svg";
 import textureBg from "./img/bg-texture.svg";
 import modalBodyCloseIcon from "./img/close-bg.svg";
@@ -21,32 +29,52 @@ type ModalProps = {
   isOpen: boolean;
 };
 
+const modalContentType = {
+  chooseGame: {
+    title: "Выбор игры:",
+    icon: <GamepadIcon />,
+    component: <ChooseGame />,
+  },
+  shop: {
+    title: "Магазин",
+    icon: <StoreIcon />,
+    component: <Shop />,
+  },
+  tournament: {
+    title: "Турнир",
+    icon: <CupIcon />,
+    component: <Tournament />,
+  },
+  tasks: {
+    title: "Задания",
+    icon: <TasksIcon />,
+    component: <Tasks />,
+  },
+  metrics: {
+    title: "Метрика",
+    icon: <ChartIcon />,
+    component: <Metrics />,
+  },
+  partners: {
+    title: "Партнеры",
+    icon: <TeamIcon />,
+    component: <Partners />,
+  },
+  settings: {
+    title: "Опции",
+    icon: <GearIcon />,
+    component: <Settings />,
+  },
+  wallet: {
+    title: "Кошелек",
+    icon: <WalletIcon />,
+    component: <Wallet />,
+  },
+};
+
 export function Modal({ isOpen }: ModalProps) {
   const { closeModal, modalType } = useModal();
   const shortModalBody = modalType === "chooseGame";
-
-  const modalContentType = {
-    chooseGame: {
-      title: "Выбор игры:",
-      icon: <GamepadIcon />,
-      component: <ChooseGame />,
-    },
-    shop: {
-      title: "Магазин",
-      icon: <StoreIcon />,
-      component: <Shop />,
-    },
-    tournament: {
-      title: "Турнир",
-      icon: <CupIcon />,
-      component: <Tournament />,
-    },
-    tasks: {
-      title: "Задания",
-      icon: <TasksIcon />,
-      component: <Tasks />,
-    },
-  };
 
   return (
     <div

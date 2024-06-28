@@ -10,7 +10,7 @@ type CuttedButtonProps = {
 export function CuttedButton({
   className,
   text,
-  size = 'medium',
+  size = "medium",
   callback,
 }: Partial<CuttedButtonProps>) {
   return (

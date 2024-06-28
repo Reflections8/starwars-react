@@ -129,7 +129,9 @@ export function Game1() {
   ]);
 
   async function handleReturn() {
+    console.log(1);
     await unload();
+    console.log(2);
     navigate("/");
   }
   return (

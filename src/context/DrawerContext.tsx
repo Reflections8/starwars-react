@@ -10,6 +10,7 @@ type DrawerContextProps = {
   drawerType: string;
   openDrawer: (type: string) => void;
   closeDrawer: () => void;
+  drawerPosition: string;
 };
 
 const DrawerContext = createContext<Partial<DrawerContextProps>>({});
@@ -17,8 +18,10 @@ const DrawerContext = createContext<Partial<DrawerContextProps>>({});
 export function DrawerProvider({ children }: DrawerProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [drawerType, setDrawerType] = useState("");
+  const [drawerPosition, setDrawerPosition] = useState("top");
 
-  const openDrawer = (type: string) => {
+  const openDrawer = (type: string, position: "top" | "bottom" = "bottom") => {
+    setDrawerPosition(position);
     setDrawerType(type);
     setIsOpen(true);
   };
@@ -29,7 +32,7 @@ export function DrawerProvider({ children }: DrawerProviderProps) {
 
   return (
     <DrawerContext.Provider
-      value={{ isOpen, drawerType, openDrawer, closeDrawer }}
+      value={{ isOpen, drawerType, openDrawer, closeDrawer, drawerPosition }}
     >
       {children}
       <Drawer isOpen={isOpen} />

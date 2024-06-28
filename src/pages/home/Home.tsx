@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Unity } from "react-unity-webgl/distribution/components/unity-component";
+import { useUnityContext } from "react-unity-webgl/distribution/hooks/use-unity-context";
+import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
+import { useDrawer } from "../../context/DrawerContext";
+import { useLoader } from "../../context/LoaderContext";
 import { useModal } from "../../context/ModalContext";
 import { ExitIcon } from "../../icons/Exit";
 import { GamesIcon } from "../../icons/Games";
 import { MenuIcon } from "../../icons/Menu";
 import { OptionsIcon } from "../../icons/Options";
-import { openMenu } from "../../utils";
 import { BackgroundLayers } from "./components/BackgroundLayers";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import "./styles/home.css";
-import { useUnityContext } from "react-unity-webgl/distribution/hooks/use-unity-context";
-import { Unity } from "react-unity-webgl/distribution/components/unity-component";
-import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import { useNavigate } from "react-router-dom";
 
 export function Home() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export function Home() {
     window.devicePixelRatio
   );
 
-  // const [initDataUnsafe] = useInitData();
+  //   const [initDataUnsafe] = useInitData();
 
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
 
@@ -80,6 +81,7 @@ export function Home() {
   }, [isLoaded, isUnityLoaded]);
 
   const { openModal } = useModal();
+  const { openDrawer } = useDrawer();
 
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
@@ -118,6 +120,21 @@ export function Home() {
     handleSetTon,
   ]);
 
+  const { setIsLoading } = useLoader();
+  useEffect(() => {
+    setIsLoading!(true);
+    setTimeout(() => {
+      setIsLoading!(false);
+    }, 3000);
+
+    return () => {
+      setIsLoading!(true);
+      setTimeout(() => {
+        setIsLoading!(false);
+      }, 3000);
+    };
+  }, []);
+
   return (
     <>
       <BackgroundLayers />
@@ -132,13 +149,14 @@ export function Home() {
         rightIcon={<MenuIcon />}
         rightText={"Меню"}
         rightAction={async () => {
+          //@ts-ignore
+          openDrawer("menu", "top");
           await unload();
-          openMenu();
         }}
         centerComponent={
           <HeaderCenterShop
             onClick={() => {
-              //@ts-ignore
+              // @ts-ignore
               openModal("shop");
             }}
           />
@@ -173,7 +191,10 @@ export function Home() {
         }}
         rightIcon={<OptionsIcon />}
         rightText={"Опции"}
-        rightAction={openMenu}
+        rightAction={() => {
+          //@ts-ignore
+          openModal("settings");
+        }}
       />
     </>
   );

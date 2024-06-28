@@ -1,7 +1,3 @@
-export function openMenu() {
-  console.log("MENU OPENED");
-}
-
 export function formatNumberWithCommas(number?: number) {
   if (number) {
     const strNumber = number.toString();

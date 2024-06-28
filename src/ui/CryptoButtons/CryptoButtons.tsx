@@ -6,14 +6,16 @@ import tonIcon from "./img/ton.svg";
 type CryptoButtonsProps = {
   activeCurrency: string;
   setActiveCurrency: (activeCurrency: string) => void;
+  className?: string;
 };
 
 export function CryptoButtons({
   activeCurrency,
   setActiveCurrency,
+  className,
 }: CryptoButtonsProps) {
   return (
-    <div className="cryptoButtons">
+    <div className={`cryptoButtons ${className || ""}`}>
       <button
         className={`cryptoButtons__btn ${
           activeCurrency === "credits" ? "cryptoButtons__btn--Active" : ""
