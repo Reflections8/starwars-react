@@ -10,6 +10,7 @@ import xIcon from "./img/menu/x.svg";
 import youtubeIcon from "./img/menu/youtube.svg";
 import walletIcon from "./img/menu/wallet.svg";
 import "./styles//drawer.css";
+import { useTonConnectUI } from "@tonconnect/ui-react";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -48,7 +49,7 @@ export function Drawer({ isOpen }: DrawerProps) {
 
 function ConnectWallet() {
   const { closeDrawer, openDrawer } = useDrawer();
-
+  const [tonConnectUI] = useTonConnectUI();
   async function connectWallet() {
     // @ts-ignore
     // Синхронно закрываем текущий drawer
@@ -56,7 +57,9 @@ function ConnectWallet() {
 
     // @ts-ignore
     // Делаем что-то асинхронное, в зависимости от ответа открываем resolved/rejected
-    await openDrawer("rejected");
+    //
+    await tonConnectUI.openModal();
+    // await openDrawer("resolved");
   }
 
   return (

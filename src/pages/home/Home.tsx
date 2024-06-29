@@ -17,9 +17,19 @@ import { BackgroundLayers } from "./components/BackgroundLayers";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import "./styles/home.css";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
+import { ProofApiService } from "../../ProofApiService.ts";
+import { useTonConnectModal, useTonConnectUI } from "@tonconnect/ui-react";
 
 export function Home() {
   const navigate = useNavigate();
+  const [tonConnectUI] = useTonConnectUI();
+  const tonConnectModal = useTonConnectModal();
+  const { openModal } = useModal();
+  const { openDrawer } = useDrawer();
+
+  // data vars
+  const [token, setToken] = useState("");
   const [credits, setCredits] = useState(0);
   const [woopy, setWoopy] = useState(0);
   const [ton, setTon] = useState(0);
@@ -27,10 +37,8 @@ export function Home() {
     window.devicePixelRatio
   );
 
-  //   const [initDataUnsafe] = useInitData();
-
+  // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
-
   const {
     unityProvider,
     isLoaded,
@@ -45,43 +53,83 @@ export function Home() {
     codeUrl: "build/main/Build_Main.wasm.gz",
   });
 
+  // авторегулирование DPI
   useEffect(
     function () {
-      // A function which will update the device pixel ratio of the Unity
-      // Application to match the device pixel ratio of the browser.
       const updateDevicePixelRatio = function () {
         setDevicePixelRatio(window.devicePixelRatio);
       };
-      // A media matcher which watches for changes in the device pixel ratio.
       const mediaMatcher = window.matchMedia(
         `screen and (resolution: ${devicePixelRatio}dppx)`
       );
 
-      // Adding an event listener to the media matcher which will update the
-      // device pixel ratio of the Unity Application when the device pixel
-      // ratio changes.
       mediaMatcher.addEventListener("change", updateDevicePixelRatio);
       return function () {
-        // Removing the event listener when the component unmounts.
         mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
       };
     },
     [devicePixelRatio]
   );
 
+  // повторное открытие окна TonConnect, если юзер закрывает его при не подключенном кошельке
+  useEffect(() => {
+    const checkTonConnection = async () => {
+      setTimeout(async () => {
+        if (
+          tonConnectModal.state.status == "closed" &&
+          ProofApiService.accessToken == null
+        ) {
+          if (tonConnectUI.connected) await tonConnectUI.disconnect();
+          await tonConnectUI.openModal();
+          return;
+        }
+      }, 5000);
+    };
+
+    checkTonConnection().catch(console.error);
+  }, [tonConnectModal.state.status]);
+
+  // отслеживание статуса токена и загрузки приложения
   useEffect(() => {
     if (isLoaded && isUnityLoaded) {
-      sendMessage(
-        "GameManager",
-        "OnUserWalletReceive",
-        "UQAiqHfH96zGIC38oNRs1AWHRyn3rsjT1zOiAYfjQ4NKN_Pp"
-      );
+      const checkTonConnection = async () => {
+        if (ProofApiService.accessToken == null) {
+          if (token != "") {
+            sendMessage("GameManager", "OnUserTokenReceive", token);
+            return;
+          }
+          if (tonConnectUI.connected) await tonConnectUI.disconnect();
+          await tonConnectUI.openModal();
+          return;
+        }
+
+        sendMessage(
+          "GameManager",
+          "OnUserTokenReceive",
+          ProofApiService.accessToken
+        );
+      };
+
+      checkTonConnection().catch(console.error);
     }
     return () => {};
-  }, [isLoaded, isUnityLoaded]);
+  }, [isLoaded, isUnityLoaded, token, ProofApiService.accessToken]);
 
-  const { openModal } = useModal();
-  const { openDrawer } = useDrawer();
+  // для очистки памяти при выходе из страницы
+  useEffect(() => {
+    return () => {
+      const unloadGame = async () => {
+        await unload();
+      }
+      unloadGame().catch(console.error);
+    }
+  }, []);
+
+  const handleAuthTokenChange = (token: string | null) => {
+    if (token != null) {
+      setToken(token);
+    }
+  };
 
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
@@ -100,7 +148,6 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    localStorage.clear();
     addEventListener("LoadFinish", handleLoadingFinish);
     addEventListener("SetCredits", handleSetCredits);
     addEventListener("SetWoopy", handleSetWoopy);
@@ -137,6 +184,7 @@ export function Home() {
 
   return (
     <>
+      <ProofManager onValueChange={handleAuthTokenChange} />
       <BackgroundLayers />
 
       <Header
@@ -151,7 +199,6 @@ export function Home() {
         rightAction={async () => {
           //@ts-ignore
           openDrawer("menu", "top");
-          await unload();
         }}
         centerComponent={
           <HeaderCenterShop

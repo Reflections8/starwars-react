@@ -9,6 +9,8 @@ import { HeaderCenterCredits } from "../../components/Header/components/HeaderCe
 import { useUnityContext } from "react-unity-webgl/distribution/hooks/use-unity-context";
 import { Unity } from "react-unity-webgl/distribution/components/unity-component";
 import { useNavigate } from "react-router-dom";
+import { ProofApiService } from "../../ProofApiService.ts";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 
 export function Game1() {
   const navigate = useNavigate();
@@ -40,40 +42,49 @@ export function Game1() {
     codeUrl: "build/Build_Ios.wasm.gz",
   });
 
+  // авторегулирование DPI
   useEffect(
     function () {
-      // A function which will update the device pixel ratio of the Unity
-      // Application to match the device pixel ratio of the browser.
       const updateDevicePixelRatio = function () {
         setDevicePixelRatio(window.devicePixelRatio);
       };
-      // A media matcher which watches for changes in the device pixel ratio.
       const mediaMatcher = window.matchMedia(
         `screen and (resolution: ${devicePixelRatio}dppx)`
       );
 
-      // Adding an event listener to the media matcher which will update the
-      // device pixel ratio of the Unity Application when the device pixel
-      // ratio changes.
       mediaMatcher.addEventListener("change", updateDevicePixelRatio);
       return function () {
-        // Removing the event listener when the component unmounts.
         mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
       };
     },
     [devicePixelRatio]
   );
 
+  // перевод юзера на главную страницу если у него нету токена доступа
   useEffect(() => {
     if (isLoaded && isUnityLoaded) {
+      if (ProofApiService.accessToken == null) {
+        navigate("/");
+        return;
+      }
+
       sendMessage(
         "GameManager",
-        "OnUserWalletReceive",
-        "UQAiqHfH96zGIC38oNRs1AWHRyn3rsjT1zOiAYfjQ4NKN_Pp"
+        "OnUserTokenReceive",
+        ProofApiService.accessToken
       );
     }
-    return () => {};
   }, [isLoaded, isUnityLoaded]);
+
+  // для очистки памяти при выходе из страницы
+  useEffect(() => {
+    return () => {
+      const unloadGame = async () => {
+        await unload();
+      };
+      unloadGame().catch(console.error);
+    };
+  }, []);
 
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
@@ -105,7 +116,6 @@ export function Game1() {
   );
 
   useEffect(() => {
-    localStorage.clear();
     addEventListener("LoadFinish", handleLoadingFinish);
     addEventListener("SetBlasterCharge", handleSetBlasterCharge);
     addEventListener("SetBlasterChargeExt", handleSetBlasterChargeExt);
@@ -129,13 +139,15 @@ export function Game1() {
   ]);
 
   async function handleReturn() {
-    console.log(1);
     await unload();
-    console.log(2);
     navigate("/");
   }
+
+  const handleAuthTokenChange = () => {};
+
   return (
     <>
+      <ProofManager onValueChange={handleAuthTokenChange} />
       <Header
         leftIcon={<HomeIcon />}
         leftText={"Домой"}
