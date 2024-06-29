@@ -27,6 +27,7 @@ export function Home() {
   const tonConnectModal = useTonConnectModal();
   const { openModal } = useModal();
   const { openDrawer } = useDrawer();
+  const { setIsLoading } = useLoader();
 
   // data vars
   const [token, setToken] = useState("");
@@ -92,6 +93,7 @@ export function Home() {
   // отслеживание статуса токена и загрузки приложения
   useEffect(() => {
     if (isLoaded && isUnityLoaded) {
+      setIsLoading!(false);
       const checkTonConnection = async () => {
         if (ProofApiService.accessToken == null) {
           if (token != "") {
@@ -167,19 +169,9 @@ export function Home() {
     handleSetTon,
   ]);
 
-  const { setIsLoading } = useLoader();
+
   useEffect(() => {
     setIsLoading!(true);
-    setTimeout(() => {
-      setIsLoading!(false);
-    }, 3000);
-
-    return () => {
-      setIsLoading!(true);
-      setTimeout(() => {
-        setIsLoading!(false);
-      }, 3000);
-    };
   }, []);
 
   return (

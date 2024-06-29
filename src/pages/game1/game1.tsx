@@ -11,9 +11,11 @@ import { Unity } from "react-unity-webgl/distribution/components/unity-component
 import { useNavigate } from "react-router-dom";
 import { ProofApiService } from "../../ProofApiService.ts";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
+import { useLoader } from "../../context/LoaderContext.tsx";
 
 export function Game1() {
   const navigate = useNavigate();
+  const { setIsLoading } = useLoader();
   const [devicePixelRatio, setDevicePixelRatio] = useState(
     window.devicePixelRatio
   );
@@ -78,6 +80,8 @@ export function Game1() {
 
   // для очистки памяти при выходе из страницы
   useEffect(() => {
+    setIsLoading!(true);
+
     return () => {
       const unloadGame = async () => {
         await unload();
@@ -88,6 +92,7 @@ export function Game1() {
 
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
+    setIsLoading!(false);
   }, []);
 
   const handleSetScore = useCallback((score: ReactUnityEventParameter) => {
