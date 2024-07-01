@@ -122,9 +122,9 @@ export function Home() {
     return () => {
       const unloadGame = async () => {
         await unload();
-      }
+      };
       unloadGame().catch(console.error);
-    }
+    };
   }, []);
 
   const handleAuthTokenChange = (token: string | null) => {
@@ -168,7 +168,6 @@ export function Home() {
     handleSetWoopy,
     handleSetTon,
   ]);
-
 
   useEffect(() => {
     setIsLoading!(true);

@@ -4,14 +4,17 @@ import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import {
   ModelType,
   PillType,
+  StoreType,
   WeaponType,
 } from "../../../ui/SlidingPills/types";
 import { PlayerCard } from "./components/PlayerCard";
 import model1Img from "./img/player/model1.png";
 import model2Img from "./img/player/model2.png";
-import weapon1Img from './img/weapon/weapon1.png'
+import weapon1Img from "./img/weapon/weapon1.png";
+import storeImg from "./img/store/store.png";
 import "./styles/shop.css";
 import { WeaponCard } from "./components/WeaponCard";
+import { StoreCard } from "./components/StoreCard";
 
 const pills: PillType[] = [
   {
@@ -24,10 +27,15 @@ const pills: PillType[] = [
     value: "WEAPON",
     component: <Weapon />,
   },
+  {
+    label: "Склад",
+    value: "STORE",
+    component: <Store />,
+  },
 ];
 
 export function Shop() {
-  const [activePill, setActivePill] = useState(pills[0]);
+  const [activePill, setActivePill] = useState(pills[2]);
   return (
     <div className="shop">
       <div className="shop__pillsContainer">
@@ -116,6 +124,41 @@ export function Weapon() {
             worth={weapon.worth}
             weaponYield={weapon.weaponYield}
             callback={weapon.callback}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+export function Store() {
+  const weapons: StoreType[] = [
+    {
+      rarity: "common",
+      title: "super blaster",
+      imgSrc: storeImg,
+      strength: "123",
+      level: "2",
+    },
+    {
+      rarity: "rare",
+      title: "super blaster",
+      imgSrc: storeImg,
+      strength: "1",
+      level: "3",
+    },
+  ];
+
+  return (
+    <div className="store">
+      {weapons.map((weapon) => {
+        return (
+          <StoreCard
+            rarity={weapon.rarity}
+            title={weapon.title}
+            imgSrc={weapon.imgSrc}
+            strength={weapon.strength}
+            level={weapon.level}
           />
         );
       })}

@@ -169,3 +169,119 @@
 .weapon-card-footer-btnWrapper {
   max-width: 110px;
 }
+
+/* STORE */
+.store {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 35px;
+}
+
+.store-card {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #19c1ef50;
+  display: flex;
+  flex-direction: column;
+}
+
+.store-card__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.store-card__title-rarity {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-shadow: 3px 3px 0 #0974f820;
+  color: #4fb2fe;
+  letter-spacing: 2px;
+}
+
+.store-card__title-text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-shadow: 3px 3px 0 #0974f820;
+}
+
+.store-card__body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.store-card__body-img {
+  max-width: 154px;
+  width: 100%;
+}
+
+.store-card__body-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.store-card__body-main-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.store-card__body-main-block-head {
+  padding-bottom: 6px;
+  border-bottom: 1px solid #19c1ef36;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.store-card__body-main-block-head-key {
+  font-size: 11px;
+  color: #19c2ef;
+  text-shadow: 2px -1px 0 #076de936;
+}
+
+.store-card__body-main-block-head-value {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+.store-card__body-main-block-head-value-current {
+  color: #c9e9fb;
+  text-shadow: 2px -1px 0 #076de936;
+}
+
+.store-card__body-main-block-head-value-max {
+  text-shadow: 2px -1px 0 #076de936;
+}
+
+.store-card__body-main-block-cuttedBtnWrapper {
+  max-width: 111px;
+  width: 100%;
+}
+
+.store-card__body-main-block-cuttedBtnWrapper .cuttedButtonContainer::before {
+  display: none;
+}
+
+.store-card__body-main-block-cuttedBtnWrapper .cuttedButtonContainer::after {
+  display: none;
+}
+
+.store-card__body-main-block-cuttedBtnWrapper .cuttedButton {
+  padding: 7px 12px;
+}
+
+.store-card__body-main-block-cuttedBtnWrapper .cuttedButton__text {
+  font-size: 12px;
+  letter-spacing: unset;
+}

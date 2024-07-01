@@ -2,6 +2,10 @@
   position: relative;
 }
 
+.cuttedButtonContainer.halfTransparent .cuttedButton {
+  background: linear-gradient(to bottom, #076de942, #14b4de42);
+}
+
 .cuttedButtonContainer::before {
   content: url("../img/corner.svg");
   position: absolute;
@@ -81,6 +85,10 @@
     0 calc(100% - 10px),
     0 10px
   );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .cuttedButton.small {

@@ -9,21 +9,28 @@ import telegramIcon from "./img/menu/tg.svg";
 import xIcon from "./img/menu/x.svg";
 import youtubeIcon from "./img/menu/youtube.svg";
 import walletIcon from "./img/menu/wallet.svg";
+import creditIcon from "./img/upgrade/credits.svg";
+import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import "./styles//drawer.css";
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import { CryptoButtons } from "../CryptoButtons/CryptoButtons";
+import { useState } from "react";
 
 type DrawerProps = {
   isOpen: boolean;
+  drawerText?: string;
 };
 
-export function Drawer({ isOpen }: DrawerProps) {
+export function Drawer({ isOpen, drawerText }: DrawerProps) {
   const { closeDrawer, drawerType, drawerPosition } = useDrawer();
 
   const drawerContentType = {
+    resolved: <Resolved drawerText={drawerText} />,
+    rejected: <Rejected drawerText={drawerText} />,
     menu: <Menu />,
     connectWallet: <ConnectWallet />,
-    resolved: <Resolved />,
-    rejected: <Rejected />,
+    repair: <Repair />,
+    upgrade: <Upgrade />,
   };
 
   return (
@@ -48,16 +55,13 @@ export function Drawer({ isOpen }: DrawerProps) {
 }
 
 function ConnectWallet() {
-  const { closeDrawer, openDrawer } = useDrawer();
+  const { closeDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
   async function connectWallet() {
-    // @ts-ignore
     // Синхронно закрываем текущий drawer
-    closeDrawer();
+    closeDrawer!();
 
-    // @ts-ignore
     // Делаем что-то асинхронное, в зависимости от ответа открываем resolved/rejected
-    //
     await tonConnectUI.openModal();
     // await openDrawer("resolved");
   }
@@ -79,30 +83,26 @@ function ConnectWallet() {
   );
 }
 
-function Resolved() {
+function Resolved({ drawerText }: { drawerText?: string }) {
   return (
     <div className="responseStatus">
       <img src={resolvedIcon} alt="resolved" className="responseStatus__icon" />
 
       <div className="responseStatus__title">Успешно!</div>
 
-      <div className="responseStatus__text">
-        у вас недостаточно средств на вашем балансе
-      </div>
+      <div className="responseStatus__text">{drawerText}</div>
     </div>
   );
 }
 
-function Rejected() {
+function Rejected({ drawerText }: { drawerText?: string }) {
   return (
     <div className="responseStatus">
       <img src={rejectedIcon} alt="resolved" className="responseStatus__icon" />
 
       <div className="responseStatus__title">Ошибка!</div>
 
-      <div className="responseStatus__text">
-        у вас недостаточно средств на вашем балансе
-      </div>
+      <div className="responseStatus__text">{drawerText}</div>
     </div>
   );
 }
@@ -111,13 +111,11 @@ function Menu() {
   const { closeDrawer, openDrawer } = useDrawer();
 
   async function openWalletDrawer() {
-    // @ts-ignore
     // Синхронно закрываем текущий drawer
-    closeDrawer();
+    closeDrawer!();
 
-    // @ts-ignore
     // Делаем что-то асинхронное, в зависимости от ответа открываем resolved/rejected
-    await openDrawer("connectWallet");
+    openDrawer!("connectWallet");
   }
 
   return (
@@ -143,6 +141,103 @@ function Menu() {
         <div className="menu__list-item" onClick={openWalletDrawer}>
           <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
           <div className="menu__list-item-text">подключить кошелек</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Repair() {
+  const [activeCurrency, setActiveCurrency] = useState("credits");
+
+  return (
+    <div className="repair">
+      <div className="repair__text">Починить на 100%</div>
+
+      <div className="repair__block">
+        <div className="repair__block-row">
+          <div className="repair__block-row-key">цена:</div>
+          <div className="repair__block-row-value">1234.5678</div>
+        </div>
+
+        <CryptoButtons
+          activeCurrency={activeCurrency}
+          setActiveCurrency={setActiveCurrency}
+          activeOptions={["credits", "woopy"]}
+        />
+      </div>
+
+      <CuttedButton className="repair__mainBtn" text={"Подтвердить"} />
+    </div>
+  );
+}
+
+function Upgrade() {
+  return (
+    <div className="upgradeBody">
+      <div className="upgrade__text">Улучшение</div>
+
+      <div className="upgrade__block">
+        <div className="upgrade__block-item">
+          <div className="upgrade__block-item-main">
+            <div className="upgrade__block-item-main-title">Урон:</div>
+            <div className="upgrade__block-item-main-value">
+              <div className="upgrade__block-item-main-value-current">123</div>
+              <img
+                src={upgradeArrowsSvg}
+                alt="arrows"
+                className="upgrade__block-item-main-value-arrows"
+              />
+              <div className="upgrade__block-item-main-value-max">170</div>
+            </div>
+          </div>
+          <div className="upgrade__block-item-cuttedButtonWrapper">
+            <CuttedButton iconSrc={creditIcon} text={"125K"} />
+          </div>
+        </div>
+
+        <div className="upgrade__block-item">
+          <div className="upgrade__block-item-main">
+            <div className="upgrade__block-item-main-title">Заряд:</div>
+            <div className="upgrade__block-item-main-value">
+              <div className="upgrade__block-item-main-value-current">1234</div>
+              <img
+                src={upgradeArrowsSvg}
+                alt="arrows"
+                className="upgrade__block-item-main-value-arrows"
+              />
+              <div className="upgrade__block-item-main-value-max">1500</div>
+            </div>
+          </div>
+          <div className="upgrade__block-item-cuttedButtonWrapper">
+            <CuttedButton
+              className="halfTransparent"
+              iconSrc={creditIcon}
+              text={"125K"}
+            />
+          </div>
+        </div>
+
+        <div className="upgrade__block-item">
+          <div className="upgrade__block-item-main">
+            <div className="upgrade__block-item-main-title">
+              скр. восполнения заряда::
+            </div>
+            <div className="upgrade__block-item-main-value">
+              <div className="upgrade__block-item-main-value-current">
+                200\мин
+              </div>
+              <img
+                src={upgradeArrowsSvg}
+                alt="arrows"
+                className="upgrade__block-item-main-value-arrows"
+              />
+              <div className="upgrade__block-item-main-value-max">500\мин</div>
+            </div>
+          </div>
+          <div className="upgrade__block-item-cuttedButtonWrapper">
+            <CuttedButton iconSrc={creditIcon} text={"125K"} />
+          </div>
         </div>
       </div>
     </div>

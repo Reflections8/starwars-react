@@ -24,3 +24,11 @@ export type WeaponType = {
   worth: string;
   callback: () => void;
 };
+
+export type StoreType = {
+  rarity: string;
+  title: string;
+  imgSrc: string;
+  strength: string;
+  level: string;
+};

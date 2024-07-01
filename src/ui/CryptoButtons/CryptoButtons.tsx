@@ -7,54 +7,66 @@ type CryptoButtonsProps = {
   activeCurrency: string;
   setActiveCurrency: (activeCurrency: string) => void;
   className?: string;
+  activeOptions?: string[];
 };
 
 export function CryptoButtons({
   activeCurrency,
   setActiveCurrency,
   className,
+  activeOptions = ["credits", "woopy", "ton"],
 }: CryptoButtonsProps) {
   return (
     <div className={`cryptoButtons ${className || ""}`}>
-      <button
-        className={`cryptoButtons__btn ${
-          activeCurrency === "credits" ? "cryptoButtons__btn--Active" : ""
-        }`}
-        onClick={() => {
-          setActiveCurrency("credits");
-        }}
-      >
-        <img
-          src={creditsIcon}
-          alt="credit"
-          className="cryptoButtons__btn-icon"
-        />
-        <div className="cryptoButtons__btn-text">credits</div>
-      </button>
+      {activeOptions.includes("credits") ? (
+        <button
+          className={`cryptoButtons__btn ${
+            activeCurrency === "credits" ? "cryptoButtons__btn--Active" : ""
+          }`}
+          onClick={() => {
+            setActiveCurrency("credits");
+          }}
+        >
+          <img
+            src={creditsIcon}
+            alt="credit"
+            className="cryptoButtons__btn-icon"
+          />
+          <div className="cryptoButtons__btn-text">credits</div>
+        </button>
+      ) : null}
 
-      <button
-        className={`cryptoButtons__btn ${
-          activeCurrency === "woopy" ? "cryptoButtons__btn--Active" : ""
-        }`}
-        onClick={() => {
-          setActiveCurrency("woopy");
-        }}
-      >
-        <img src={woopyIcon} alt="credit" className="cryptoButtons__btn-icon" />
-        <div className="cryptoButtons__btn-text">woopy</div>
-      </button>
+      {activeOptions.includes("woopy") ? (
+        <button
+          className={`cryptoButtons__btn ${
+            activeCurrency === "woopy" ? "cryptoButtons__btn--Active" : ""
+          }`}
+          onClick={() => {
+            setActiveCurrency("woopy");
+          }}
+        >
+          <img
+            src={woopyIcon}
+            alt="credit"
+            className="cryptoButtons__btn-icon"
+          />
+          <div className="cryptoButtons__btn-text">woopy</div>
+        </button>
+      ) : null}
 
-      <button
-        className={`cryptoButtons__btn ${
-          activeCurrency === "ton" ? "cryptoButtons__btn--Active" : ""
-        }`}
-        onClick={() => {
-          setActiveCurrency("ton");
-        }}
-      >
-        <img src={tonIcon} alt="credit" className="cryptoButtons__btn-icon" />
-        <div className="cryptoButtons__btn-text">ton</div>
-      </button>
+      {activeOptions.includes("ton") ? (
+        <button
+          className={`cryptoButtons__btn ${
+            activeCurrency === "ton" ? "cryptoButtons__btn--Active" : ""
+          }`}
+          onClick={() => {
+            setActiveCurrency("ton");
+          }}
+        >
+          <img src={tonIcon} alt="credit" className="cryptoButtons__btn-icon" />
+          <div className="cryptoButtons__btn-text">ton</div>
+        </button>
+      ) : null}
     </div>
   );
 }
