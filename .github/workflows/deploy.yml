@@ -26,7 +26,7 @@ jobs:
       - name: Compress build files
         run: |
           sudo apt-get install gzip
-          find ./dist -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
+          find ./dist -type f -exec gzip -9 -c {} > {}.gz \;
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
