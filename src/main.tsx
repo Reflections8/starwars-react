@@ -8,7 +8,7 @@ import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <TonConnectUIProvider
-      manifestUrl="https://nftcollector.ru/tonconnect/tonconnect.json"
+      manifestUrl="https://purpleguy.dev/tonconnect/connect.json"
       uiPreferences={{ theme: THEME.DARK }}
       restoreConnection={true}
       walletsListConfiguration={{
@@ -61,9 +61,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             platforms: ["ios", "android"],
           },
         ],
-      }}
-      actionsConfiguration={{
-        twaReturnUrl: "https://t.me/DemoDappWithTonConnectBot/demo",
       }}
     >
       <RouterProvider router={router} />

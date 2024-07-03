@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Unity } from "react-unity-webgl/distribution/components/unity-component";
-import { useUnityContext } from "react-unity-webgl/distribution/hooks/use-unity-context";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
@@ -22,8 +20,11 @@ import { ProofApiService } from "../../ProofApiService.ts";
 import { useTonConnectModal, useTonConnectUI } from "@tonconnect/ui-react";
 
 export function Home() {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
+
   const tonConnectModal = useTonConnectModal();
   const { openModal } = useModal();
   const { openDrawer } = useDrawer();
@@ -34,43 +35,9 @@ export function Home() {
   const [credits, setCredits] = useState(0);
   const [woopy, setWoopy] = useState(0);
   const [ton, setTon] = useState(0);
-  const [devicePixelRatio, setDevicePixelRatio] = useState(
-    window.devicePixelRatio
-  );
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
-  const {
-    unityProvider,
-    isLoaded,
-    sendMessage,
-    addEventListener,
-    removeEventListener,
-    unload,
-  } = useUnityContext({
-    loaderUrl: "build/main/Build_Main.loader.js",
-    dataUrl: "build/main/Build_Main.data.gz",
-    frameworkUrl: "build/main/Build_Main.framework.js.gz",
-    codeUrl: "build/main/Build_Main.wasm.gz",
-  });
-
-  // авторегулирование DPI
-  useEffect(
-    function () {
-      const updateDevicePixelRatio = function () {
-        setDevicePixelRatio(window.devicePixelRatio);
-      };
-      const mediaMatcher = window.matchMedia(
-        `screen and (resolution: ${devicePixelRatio}dppx)`
-      );
-
-      mediaMatcher.addEventListener("change", updateDevicePixelRatio);
-      return function () {
-        mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
-      };
-    },
-    [devicePixelRatio]
-  );
 
   // повторное открытие окна TonConnect, если юзер закрывает его при не подключенном кошельке
   useEffect(() => {
@@ -90,14 +57,21 @@ export function Home() {
     checkTonConnection().catch(console.error);
   }, [tonConnectModal.state.status]);
 
+  const sendMessageToUnity = (method: string, param: any) => {
+    const message = JSON.stringify({ method, param });
+    if (iframeRef.current) {
+      iframeRef.current.contentWindow?.postMessage(message, "*");
+    }
+  };
+
   // отслеживание статуса токена и загрузки приложения
   useEffect(() => {
-    if (isLoaded && isUnityLoaded) {
+    if (isUnityLoaded) {
       setIsLoading!(false);
       const checkTonConnection = async () => {
         if (ProofApiService.accessToken == null) {
           if (token != "") {
-            sendMessage("GameManager", "OnUserTokenReceive", token);
+            sendMessageToUnity("OnUserTokenReceive", token);
             return;
           }
           if (tonConnectUI.connected) await tonConnectUI.disconnect();
@@ -105,27 +79,13 @@ export function Home() {
           return;
         }
 
-        sendMessage(
-          "GameManager",
-          "OnUserTokenReceive",
-          ProofApiService.accessToken
-        );
+        sendMessageToUnity("OnUserTokenReceive", ProofApiService.accessToken);
       };
 
       checkTonConnection().catch(console.error);
     }
     return () => {};
-  }, [isLoaded, isUnityLoaded, token, ProofApiService.accessToken]);
-
-  // для очистки памяти при выходе из страницы
-  useEffect(() => {
-    return () => {
-      const unloadGame = async () => {
-        await unload();
-      };
-      unloadGame().catch(console.error);
-    };
-  }, []);
+  }, [isUnityLoaded, token, ProofApiService.accessToken]);
 
   const handleAuthTokenChange = (token: string | null) => {
     if (token != null) {
@@ -135,6 +95,7 @@ export function Home() {
 
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
+    iframeRef.current?.focus();
   }, []);
 
   const handleSetCredits = useCallback((value: ReactUnityEventParameter) => {
@@ -149,25 +110,32 @@ export function Home() {
     setTon(value as number);
   }, []);
 
+  // Обработчик сообщений, полученных из iFrame
   useEffect(() => {
-    addEventListener("LoadFinish", handleLoadingFinish);
-    addEventListener("SetCredits", handleSetCredits);
-    addEventListener("SetWoopy", handleSetWoopy);
-    addEventListener("SetTon", handleSetTon);
-    return () => {
-      removeEventListener("LoadFinish", handleLoadingFinish);
-      removeEventListener("SetCredits", handleSetCredits);
-      removeEventListener("SetWoopy", handleSetWoopy);
-      removeEventListener("SetTon", handleSetTon);
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data: any = JSON.parse(event.data);
+        switch (data.type) {
+          case "single": {
+            if (data.method === "LoadFinish") handleLoadingFinish();
+            break;
+          }
+          case "multiple": {
+            if (data.method === "SetCredits") handleSetCredits(data.value);
+            else if (data.method === "SetWoopy") handleSetWoopy(data.value);
+            else if (data.method === "SetTon") handleSetTon(data.value);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse message data", error);
+      }
     };
-  }, [
-    addEventListener,
-    removeEventListener,
-    handleLoadingFinish,
-    handleSetCredits,
-    handleSetWoopy,
-    handleSetTon,
-  ]);
+
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
   useEffect(() => {
     setIsLoading!(true);
@@ -181,8 +149,7 @@ export function Home() {
       <Header
         leftIcon={<ExitIcon />}
         leftText={"Выход"}
-        leftAction={async () => {
-          await unload();
+        leftAction={() => {
           navigate("/auth");
         }}
         rightIcon={<MenuIcon />}
@@ -205,19 +172,20 @@ export function Home() {
 
       <MainLinks />
 
-      <Unity
-        unityProvider={unityProvider}
+      <iframe
+        ref={iframeRef}
+        src="https://purpleguy.dev/main"
         style={{
-          visibility: isLoaded ? "visible" : "hidden",
           position: "absolute",
           left: 0,
           top: 0,
           width: "100%",
           height: "100%",
+          border: "none",
         }}
-        devicePixelRatio={devicePixelRatio}
+        id="mainWrapper"
         className="mainWrapper"
-      />
+      ></iframe>
 
       <Header
         position={"bottom"}

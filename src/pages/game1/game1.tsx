@@ -3,22 +3,19 @@ import { Header } from "../../components/Header/Header";
 import { HomeIcon } from "../../icons/Home";
 import { MenuIcon } from "../../icons/Menu";
 import "./styles/game1.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
-import { useUnityContext } from "react-unity-webgl/distribution/hooks/use-unity-context";
-import { Unity } from "react-unity-webgl/distribution/components/unity-component";
 import { useNavigate } from "react-router-dom";
 import { ProofApiService } from "../../ProofApiService.ts";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useLoader } from "../../context/LoaderContext.tsx";
 
 export function Game1() {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   const navigate = useNavigate();
   const { setIsLoading } = useLoader();
-  const [devicePixelRatio, setDevicePixelRatio] = useState(
-    window.devicePixelRatio
-  );
 
   //const [initDataUnsafe] = useInitData();
 
@@ -29,70 +26,32 @@ export function Game1() {
 
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
 
-  const {
-    unityProvider,
-    loadingProgression,
-    isLoaded,
-    sendMessage,
-    addEventListener,
-    removeEventListener,
-    unload,
-  } = useUnityContext({
-    loaderUrl: "build/Build_Ios.loader.js",
-    dataUrl: "build/Build_Ios.data.gz",
-    frameworkUrl: "build/Build_Ios.framework.js.gz",
-    codeUrl: "build/Build_Ios.wasm.gz",
-  });
-
-  // авторегулирование DPI
-  useEffect(
-    function () {
-      const updateDevicePixelRatio = function () {
-        setDevicePixelRatio(window.devicePixelRatio);
-      };
-      const mediaMatcher = window.matchMedia(
-        `screen and (resolution: ${devicePixelRatio}dppx)`
-      );
-
-      mediaMatcher.addEventListener("change", updateDevicePixelRatio);
-      return function () {
-        mediaMatcher.removeEventListener("change", updateDevicePixelRatio);
-      };
-    },
-    [devicePixelRatio]
-  );
-
   // перевод юзера на главную страницу если у него нету токена доступа
   useEffect(() => {
-    if (isLoaded && isUnityLoaded) {
+    if (isUnityLoaded) {
       if (ProofApiService.accessToken == null) {
         navigate("/");
         return;
       }
-
-      sendMessage(
-        "GameManager",
-        "OnUserTokenReceive",
-        ProofApiService.accessToken
-      );
+      sendMessageToUnity("OnUserTokenReceive", ProofApiService.accessToken);
     }
-  }, [isLoaded, isUnityLoaded]);
+  }, [isUnityLoaded]);
 
-  // для очистки памяти при выходе из страницы
+  const sendMessageToUnity = (method: string, param: any) => {
+    const message = JSON.stringify({ method, param });
+    if (iframeRef.current) {
+      iframeRef.current.contentWindow?.postMessage(message, "*");
+    }
+  };
+
   useEffect(() => {
     setIsLoading!(true);
-
-    return () => {
-      const unloadGame = async () => {
-        await unload();
-      };
-      unloadGame().catch(console.error);
-    };
   }, []);
 
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
     setIsLoading!(false);
+    iframeRef.current?.focus();
   }, []);
 
   const handleSetScore = useCallback((score: ReactUnityEventParameter) => {
@@ -120,31 +79,38 @@ export function Game1() {
     []
   );
 
+  // Обработчик сообщений, полученных из iFrame
   useEffect(() => {
-    addEventListener("LoadFinish", handleLoadingFinish);
-    addEventListener("SetBlasterCharge", handleSetBlasterCharge);
-    addEventListener("SetBlasterChargeExt", handleSetBlasterChargeExt);
-    addEventListener("SetScore", handleSetScore);
-    addEventListener("SetDamage", handleSetBlasterDamage);
-    return () => {
-      removeEventListener("SetBlasterCharge", handleSetBlasterCharge);
-      removeEventListener("SetBlasterChargeExt", handleSetBlasterChargeExt);
-      removeEventListener("SetScore", handleSetScore);
-      removeEventListener("SetDamage", handleSetBlasterDamage);
-      removeEventListener("LoadFinish", handleLoadingFinish);
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data: any = JSON.parse(event.data);
+        switch (data.type) {
+          case "single": {
+            if (data.method === "LoadFinish") handleLoadingFinish();
+            break;
+          }
+          case "multiple": {
+            if (data.method === "SetBlasterCharge")
+              handleSetBlasterCharge(data.value);
+            else if (data.method === "SetBlasterChargeExt")
+              handleSetBlasterChargeExt(data.value);
+            else if (data.method === "SetScore") handleSetScore(data.value);
+            else if (data.method === "SetDamage")
+              handleSetBlasterDamage(data.value);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse message data", error);
+      }
     };
-  }, [
-    addEventListener,
-    removeEventListener,
-    handleLoadingFinish,
-    handleSetScore,
-    handleSetBlasterCharge,
-    handleSetBlasterChargeExt,
-    handleSetBlasterDamage,
-  ]);
+
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, []);
 
   async function handleReturn() {
-    await unload();
     navigate("/");
   }
 
@@ -162,24 +128,20 @@ export function Game1() {
         centerComponent={<HeaderCenterCredits credits={score} />}
       />
 
-      {!isLoaded && (
-        <p style={{ visibility: !isLoaded ? "visible" : "hidden" }}>
-          Loading Application... {Math.round(loadingProgression * 100)}%
-        </p>
-      )}
-      <Unity
-        unityProvider={unityProvider}
+      <iframe
+        ref={iframeRef}
+        src="https://purpleguy.dev/vader"
         style={{
-          visibility: isLoaded ? "visible" : "hidden",
           position: "absolute",
           left: 0,
           top: 0,
           width: "100%",
           height: "100%",
+          border: "none",
         }}
-        devicePixelRatio={devicePixelRatio}
+        id="mainWrapper"
         className="mainWrapper"
-      />
+      ></iframe>
 
       <Footer power={damage} clip={blasterChargeExt} charges={blasterCharge} />
     </>
