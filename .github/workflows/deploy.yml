@@ -23,6 +23,11 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Compress build files
+        run: |
+          sudo apt-get install gzip
+          find ./dist -type f -exec gzip -9 {} \; -exec mv {}.gz {} \;
+
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
         with:
