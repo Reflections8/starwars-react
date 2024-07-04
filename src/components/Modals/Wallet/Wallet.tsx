@@ -17,6 +17,9 @@ import badgeCredit from "./img/badge-credit.svg";
 import badgeWoopy from "./img/badge-woopy.svg";
 import { Select } from "../../../ui/Select/Select";
 import { SelectOptionType } from "../Settings/types";
+import { useUserData } from "../../../UserDataService.tsx";
+import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
+import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../../main.tsx";
 
 const pills: PillType[] = [
   {
@@ -37,11 +40,9 @@ const pills: PillType[] = [
 ];
 
 export function Wallet() {
-  const [credits] = useState(123456);
-  const [woopy] = useState(123);
-  const [ton] = useState(1233);
+  const { credits, tokens, tons } = useUserData();
 
-  const [activePill, setActivePill] = useState(pills[2]);
+  const [activePill, setActivePill] = useState(pills[0]);
   return (
     <div className="wallet">
       <div className="wallet__balance">
@@ -65,10 +66,10 @@ export function Wallet() {
               alt="icon"
               className="wallet__balance-box-key-icon"
             />
-            <div className="wallet__balance-box-key-title">Woopy</div>
+            <div className="wallet__balance-box-key-title">Akron</div>
           </div>
 
-          <div className="wallet__balance-box-value">{woopy}</div>
+          <div className="wallet__balance-box-value">{tokens}</div>
         </div>
 
         <div className="wallet__balance-box">
@@ -81,7 +82,7 @@ export function Wallet() {
             <div className="wallet__balance-box-key-title">Ton</div>
           </div>
 
-          <div className="wallet__balance-box-value">{ton}</div>
+          <div className="wallet__balance-box-value">{tons}</div>
         </div>
       </div>
       <div className="wallet__pillsContainer">
@@ -100,6 +101,26 @@ export function Wallet() {
 
 export function Fill() {
   const { openDrawer } = useDrawer();
+  const { startCheckBalance } = useUserData();
+  const [tonConnectUI] = useTonConnectUI();
+  const [value, setValue] = useState("0.05");
+
+  const handleChange = (e: any) => {
+    const inputValue = e.target.value;
+    const regex = /^[0-9]*\.?[0-9]*$/;
+
+    if (regex.test(inputValue)) {
+      setValue(inputValue);
+    }
+  };
+
+  const handleBlur = () => {
+    const numericValue = parseFloat(value);
+
+    if (!isNaN(numericValue) && numericValue < 0.05) {
+      setValue("0.05");
+    }
+  };
 
   return (
     <div className="fill">
@@ -112,7 +133,15 @@ export function Fill() {
         </div>
 
         <div className="fill__inputBlock-inputWrapper">
-          <input type="text" className="fill__inputBlock-input" />
+          <input
+            inputMode="decimal"
+            type="text"
+            min="0.05"
+            value={value}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className="fill__inputBlock-input"
+          />
           <div className="fill__inputBlock-postfix">TON</div>
         </div>
       </div>
@@ -120,9 +149,38 @@ export function Fill() {
       <div className="fill__cuttedButtonWrapper">
         <CuttedButton
           text="пополнить"
-          callback={() => {
-            // @ts-ignore
-            openDrawer("connectWallet");
+          callback={async () => {
+            if (!tonConnectUI.connected) {
+              openDrawer!("connectWallet");
+              return;
+            }
+
+            const fillTx: SendTransactionRequest = {
+              validUntil: Math.floor(Date.now() / 1000) + 600,
+              messages: [
+                {
+                  address: PROJECT_CONTRACT_ADDRESS,
+                  amount: (parseFloat(value) * 1000000000).toString(),
+                  payload: "te6cckEBAQEABgAACPbRsjuPA66g",
+                },
+              ],
+            };
+
+            try {
+              await tonConnectUI.sendTransaction(fillTx);
+              startCheckBalance();
+              openDrawer!(
+                "resolved",
+                "bottom",
+                "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+              );
+            } catch (e) {
+              openDrawer!(
+                "rejected",
+                "bottom",
+                "Отправка транзакции была отклонена"
+              );
+            }
           }}
         />
       </div>
@@ -131,6 +189,100 @@ export function Fill() {
 }
 
 export function Exchange() {
+  const { credits, exchangeRate, jwt, updateTokens, updateCredits } =
+    useUserData();
+  const { openDrawer } = useDrawer();
+
+  const [creditsText, setCredits] = useState("");
+  const [tokensText, setTokens] = useState("");
+  const minCredits = 1; // Минимальное количество кредитов
+
+  const handleCreditsChange = (e) => {
+    const value = e.target.value;
+    if (/^[0-9]*$/.test(value)) {
+      setCredits(value);
+      setTokens(
+        value === "" ? "" : (parseInt(value, 10) * exchangeRate).toFixed(1)
+      );
+    }
+  };
+
+  const handleCreditsBlur = () => {
+    let numericValue = parseInt(creditsText, 10);
+    if (isNaN(numericValue) || numericValue < minCredits) {
+      numericValue = minCredits;
+    } else if (numericValue > credits) {
+      numericValue = credits;
+    }
+    setCredits(numericValue.toString());
+    setTokens((numericValue * exchangeRate).toFixed(1));
+  };
+
+  const handleTokensChange = (e) => {
+    const value = e.target.value;
+    if (/^[0-9]*\.?[0-9]{0,6}$/.test(value)) {
+      setTokens(value);
+      const calculatedCredits = Math.floor(parseFloat(value) / exchangeRate);
+      setCredits(value === "" ? "" : calculatedCredits.toString());
+    }
+  };
+
+  const handleTokensBlur = () => {
+    const numericValue = parseFloat(tokensText);
+    let calculatedCredits = Math.floor(numericValue / exchangeRate);
+    if (isNaN(calculatedCredits) || calculatedCredits < minCredits) {
+      calculatedCredits = minCredits;
+    } else if (calculatedCredits > credits) {
+      calculatedCredits = credits;
+    }
+    setTokens((calculatedCredits * exchangeRate).toFixed(1));
+    setCredits(calculatedCredits.toString());
+  };
+
+  const handleExchangeClick = () => {
+    if (jwt == null) return;
+
+    const numericCredits = parseInt(creditsText, 10);
+
+    if (numericCredits > 1 && numericCredits <= credits) {
+      const json = JSON.stringify({
+        credits: numericCredits,
+        jwt_token: jwt,
+      });
+
+      const ws = new WebSocket(SERVER_URL);
+
+      ws.onopen = () => {
+        ws.send("exchange:" + json);
+      };
+
+      ws.onmessage = (event) => {
+        if (event.data.startsWith("financeData:")) {
+          openDrawer!("resolved", "bottom", "Обмен успешно произведён");
+
+          const data = JSON.parse(event.data.slice("financeData:".length));
+          updateCredits(data.credits);
+          updateTokens(data.tokens);
+
+          ws.close();
+        } else {
+          openDrawer!("rejected", "bottom", "Ошибка при выполнении обмена");
+          ws.close();
+        }
+      };
+
+      ws.onerror = () => {
+        openDrawer!("rejected", "bottom", "Ошибка при выполнении обмена");
+      };
+    } else {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        "Неккоректное количество кредитов для обмена"
+      );
+    }
+  };
+
   return (
     <div className="exchange">
       <div className="exchange__badge">
@@ -161,7 +313,7 @@ export function Exchange() {
         <div className="exchange__badge-item-equalsSign">=</div>
 
         <div className="exchange__badge-item exchange__badge-item--Right">
-          <div className="exchange__badge-item-amount">75</div>
+          <div className="exchange__badge-item-amount">{exchangeRate}</div>
 
           <div className="exchange__badge-item-name">
             <img
@@ -169,7 +321,7 @@ export function Exchange() {
               alt="icon"
               className="exchange__badge-item-name-icon"
             />
-            <div className="exchange__badge-item-name-value">woopy</div>
+            <div className="exchange__badge-item-name-value">akron</div>
           </div>
         </div>
       </div>
@@ -177,11 +329,19 @@ export function Exchange() {
       <div className="exchange__inputBlock">
         <div className="exchange__inputBlock-sup">
           <label className="exchange__inputBlock-sup-label">Отдаете:</label>
-          <div className="exchange__inputBlock-sup-minValue">макс. 12345</div>
+          <div className="exchange__inputBlock-sup-minValue">
+            макс. {credits}
+          </div>
         </div>
 
         <div className="exchange__inputBlock-inputWrapper">
-          <input type="text" className="exchange__inputBlock-input" />
+          <input
+            type="text"
+            value={creditsText}
+            onChange={handleCreditsChange}
+            onBlur={handleCreditsBlur}
+            className="exchange__inputBlock-input"
+          />
           <div className="exchange__inputBlock-iconBox">
             <img
               src={creditIcon}
@@ -199,20 +359,26 @@ export function Exchange() {
         </div>
 
         <div className="exchange__inputBlock-inputWrapper">
-          <input type="text" className="exchange__inputBlock-input" />
+          <input
+            type="text"
+            value={tokensText}
+            onChange={handleTokensChange}
+            onBlur={handleTokensBlur}
+            className="exchange__inputBlock-input"
+          />
           <div className="exchange__inputBlock-iconBox">
             <img
               src={woopyIcon}
               alt="icon"
               className="exchange__inputBlock-iconBox-icon"
             />
-            <div className="exchange__inputBlock-iconBox-text">Woopy</div>
+            <div className="exchange__inputBlock-iconBox-text">Akron</div>
           </div>
         </div>
       </div>
 
       <div className="exchange__cuttedButtonWrapper">
-        <CuttedButton text="обменять" />
+        <CuttedButton text="обменять" callback={handleExchangeClick} />
       </div>
     </div>
   );
@@ -220,8 +386,8 @@ export function Exchange() {
 export function Withdraw() {
   const currencyOptions: SelectOptionType[] = [
     {
-      label: "woopy",
-      value: "WOOPY",
+      label: "akron",
+      value: "AKRON",
     },
     {
       label: "ton",
@@ -230,12 +396,16 @@ export function Withdraw() {
   ];
 
   const [activeCurrency, setActiveCurrency] = useState(currencyOptions[0]);
+
+  const { tokens, tons } = useUserData();
   return (
     <div className="withdraw">
       <div className="withdraw__inputBlock">
         <div className="withdraw__inputBlock-sup">
           <label className="withdraw__inputBlock-sup-label">Отдаете:</label>
-          <div className="withdraw__inputBlock-sup-minValue">макс. 12345</div>
+          <div className="withdraw__inputBlock-sup-minValue">
+            макс. {activeCurrency.label == "token" ? tokens : tons}
+          </div>
         </div>
 
         <div className="withdraw__inputBlock-inputWrapper">
@@ -252,7 +422,7 @@ export function Withdraw() {
         </div>
 
         <div className="withdraw__bottomText">
-          скорость вывода средств зависит от загруженности сети solona
+          скорость вывода средств зависит от загруженности сети ton
         </div>
       </div>
     </div>

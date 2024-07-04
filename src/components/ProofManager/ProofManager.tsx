@@ -2,14 +2,18 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { ProofApiService } from "../../ProofApiService.ts";
 import useInterval from "../../hooks/useInterval.ts";
+import { useUserData } from "../../UserDataService.tsx";
 
 interface ProofManagerComponentProps {
   onValueChange: (newValue: string | null) => void;
 }
 
-export const ProofManager: React.FC<ProofManagerComponentProps> = ({ onValueChange }) => {
+export const ProofManager: React.FC<ProofManagerComponentProps> = ({
+  onValueChange,
+}) => {
   const firstProofLoading = useRef<boolean>(true);
   const [tonConnectUI] = useTonConnectUI();
+  const { updateJwt } = useUserData();
 
   const recreateProofPayload = useCallback(async () => {
     if (firstProofLoading.current) {
@@ -51,7 +55,7 @@ export const ProofManager: React.FC<ProofManagerComponentProps> = ({ onValueChan
               w.account
             )
           ) {
-            onValueChange(ProofApiService.accessToken);
+            updateJwt(ProofApiService.accessToken);
             console.log("authorized");
           } else {
             tonConnectUI.disconnect();
@@ -61,11 +65,11 @@ export const ProofManager: React.FC<ProofManagerComponentProps> = ({ onValueChan
           }
         }
 
-        onValueChange(ProofApiService.accessToken);
+        updateJwt(ProofApiService.accessToken);
         ProofApiService.authorized = true;
       }),
     [tonConnectUI]
   );
 
   return <></>;
-}
+};

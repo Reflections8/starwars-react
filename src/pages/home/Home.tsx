@@ -16,46 +16,24 @@ import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import "./styles/home.css";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
-import { ProofApiService } from "../../ProofApiService.ts";
-import { useTonConnectModal, useTonConnectUI } from "@tonconnect/ui-react";
+import { useTonConnectUI } from "@tonconnect/ui-react";
+import { useUserData } from "../../UserDataService.tsx";
 
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  const { credits, tokens, tons, jwt, updateCredits, updateJwt } =
+    useUserData();
   const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
 
-  const tonConnectModal = useTonConnectModal();
+  //const tonConnectModal = useTonConnectModal();
   const { openModal } = useModal();
-  const { openDrawer } = useDrawer();
+  const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
-
-  // data vars
-  const [token, setToken] = useState("");
-  const [credits, setCredits] = useState(0);
-  const [woopy, setWoopy] = useState(0);
-  const [ton, setTon] = useState(0);
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
-
-  // повторное открытие окна TonConnect, если юзер закрывает его при не подключенном кошельке
-  useEffect(() => {
-    const checkTonConnection = async () => {
-      setTimeout(async () => {
-        if (
-          tonConnectModal.state.status == "closed" &&
-          ProofApiService.accessToken == null
-        ) {
-          if (tonConnectUI.connected) await tonConnectUI.disconnect();
-          await tonConnectUI.openModal();
-          return;
-        }
-      }, 5000);
-    };
-
-    checkTonConnection().catch(console.error);
-  }, [tonConnectModal.state.status]);
 
   const sendMessageToUnity = (method: string, param: any) => {
     const message = JSON.stringify({ method, param });
@@ -69,27 +47,22 @@ export function Home() {
     if (isUnityLoaded) {
       setIsLoading!(false);
       const checkTonConnection = async () => {
-        if (ProofApiService.accessToken == null) {
-          if (token != "") {
-            sendMessageToUnity("OnUserTokenReceive", token);
-            return;
-          }
+        if (jwt == null || jwt == "") {
           if (tonConnectUI.connected) await tonConnectUI.disconnect();
-          await tonConnectUI.openModal();
           return;
         }
 
-        sendMessageToUnity("OnUserTokenReceive", ProofApiService.accessToken);
+        sendMessageToUnity("OnUserTokenReceive", jwt);
       };
 
       checkTonConnection().catch(console.error);
     }
     return () => {};
-  }, [isUnityLoaded, token, ProofApiService.accessToken]);
+  }, [isUnityLoaded, jwt]);
 
   const handleAuthTokenChange = (token: string | null) => {
     if (token != null) {
-      setToken(token);
+      updateJwt(token);
     }
   };
 
@@ -98,17 +71,12 @@ export function Home() {
     iframeRef.current?.focus();
   }, []);
 
-  const handleSetCredits = useCallback((value: ReactUnityEventParameter) => {
-    setCredits(value as number);
-  }, []);
-
-  const handleSetWoopy = useCallback((value: ReactUnityEventParameter) => {
-    setWoopy(value as number);
-  }, []);
-
-  const handleSetTon = useCallback((value: ReactUnityEventParameter) => {
-    setTon(value as number);
-  }, []);
+  const handleSetCredits = useCallback(
+    (value: ReactUnityEventParameter) => {
+      updateCredits(value as number);
+    },
+    [updateCredits]
+  );
 
   // Обработчик сообщений, полученных из iFrame
   useEffect(() => {
@@ -122,8 +90,6 @@ export function Home() {
           }
           case "multiple": {
             if (data.method === "SetCredits") handleSetCredits(data.value);
-            else if (data.method === "SetWoopy") handleSetWoopy(data.value);
-            else if (data.method === "SetTon") handleSetTon(data.value);
           }
         }
       } catch (error) {
@@ -140,6 +106,14 @@ export function Home() {
   useEffect(() => {
     setIsLoading!(true);
   }, []);
+
+  async function openWalletDrawer() {
+    // Синхронно закрываем текущий drawer
+    closeDrawer!();
+
+    // Делаем что-то асинхронное, в зависимости от ответа открываем resolved/rejected
+    openDrawer!("connectWallet");
+  }
 
   return (
     <>
@@ -168,7 +142,7 @@ export function Home() {
         }
       />
 
-      <Resources credits={credits} woopy={woopy} ton={ton} />
+      <Resources credits={credits} woopy={tokens} ton={tons} />
 
       <MainLinks />
 
@@ -193,7 +167,11 @@ export function Home() {
         leftText={"Игры"}
         leftAction={() => {
           //@ts-ignore
-          openModal("chooseGame");
+          if (!tonConnectUI.connected) {
+            openWalletDrawer();
+            return;
+          }
+          openModal!("chooseGame");
         }}
         rightIcon={<OptionsIcon />}
         rightText={"Опции"}

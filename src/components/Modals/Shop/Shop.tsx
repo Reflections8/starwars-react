@@ -35,7 +35,7 @@ const pills: PillType[] = [
 ];
 
 export function Shop() {
-  const [activePill, setActivePill] = useState(pills[2]);
+  const [activePill, setActivePill] = useState(pills[0]);
   return (
     <div className="shop">
       <div className="shop__pillsContainer">

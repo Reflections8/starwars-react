@@ -8,7 +8,7 @@ type DrawerProviderProps = {
 type DrawerContextProps = {
   isOpen: boolean;
   drawerType: string;
-  openDrawer: (type: string) => void;
+  openDrawer: (type: string, position?: "top" | "bottom", text?: string) => void;
   closeDrawer: () => void;
   drawerPosition: string;
   drawerText: string;

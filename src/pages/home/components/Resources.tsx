@@ -64,7 +64,7 @@ export function Resources({ credits, woopy, ton }: Partial<ResourcesProps>) {
             alt="main-bg"
             className="resources__item-bottom-bg"
           />
-          <div className="resources__item-bottom-value">WOOPY</div>
+          <div className="resources__item-bottom-value">AKRON</div>
         </div>
       </div>
 

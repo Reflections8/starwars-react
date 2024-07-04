@@ -5,7 +5,7 @@ import {
 } from "@tonconnect/ui-react";
 
 class ProofService {
-  private localStorageKey = "auth_jwt";
+  public readonly localStorageKey = "auth_jwt";
   public authorized = false;
   public accessToken: string | null = null;
   public readonly refreshIntervalMs = 9 * 60 * 1000;

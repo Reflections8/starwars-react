@@ -12,9 +12,21 @@ import helmetIcon from "../img/mainLinkIcons/helmet.svg";
 import tasksIcon from "../img/mainLinkIcons/tasks.svg";
 import teamIcon from "../img/mainLinkIcons/team.svg";
 import walletIcon from "../img/mainLinkIcons/wallet.svg";
+import { useTonConnectUI } from "@tonconnect/ui-react";
+import { useDrawer } from "../../../context/DrawerContext.tsx";
 
 export function MainLinks() {
   const { openModal } = useModal();
+  const { closeDrawer, openDrawer } = useDrawer();
+  const [tonConnectUI] = useTonConnectUI();
+
+  async function openWalletDrawer() {
+    // Синхронно закрываем текущий drawer
+    closeDrawer!();
+
+    // Делаем что-то асинхронное, в зависимости от ответа открываем resolved/rejected
+    openDrawer!("connectWallet");
+  }
 
   return (
     <div className="mainLinks">
@@ -22,6 +34,10 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInLeft"
           onClick={() => {
+            if (!tonConnectUI.connected) {
+              openWalletDrawer();
+              return;
+            }
             // @ts-ignore
             openModal("wallet");
           }}
@@ -62,6 +78,10 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInLeft3"
           onClick={() => {
+            if (!tonConnectUI.connected) {
+              openWalletDrawer();
+              return;
+            }
             // @ts-ignore
             openModal("metrics");
           }}
@@ -88,6 +108,10 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInRight"
           onClick={() => {
+            if (!tonConnectUI.connected) {
+              openWalletDrawer();
+              return;
+            }
             //@ts-ignore
             openModal("tasks");
           }}
@@ -111,6 +135,10 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInRight2"
           onClick={() => {
+            if (!tonConnectUI.connected) {
+              openWalletDrawer();
+              return;
+            }
             //@ts-ignore
             openModal("partners");
           }}
@@ -134,6 +162,10 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInRight3"
           onClick={() => {
+            if (!tonConnectUI.connected) {
+              openWalletDrawer();
+              return;
+            }
             //@ts-ignore
             openModal("tournament");
           }}
