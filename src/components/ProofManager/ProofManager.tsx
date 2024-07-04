@@ -8,9 +8,7 @@ interface ProofManagerComponentProps {
   onValueChange: (newValue: string | null) => void;
 }
 
-export const ProofManager: React.FC<ProofManagerComponentProps> = ({
-  onValueChange,
-}) => {
+export const ProofManager: React.FC<ProofManagerComponentProps> = () => {
   const firstProofLoading = useRef<boolean>(true);
   const [tonConnectUI] = useTonConnectUI();
   const { updateJwt } = useUserData();

@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import "./styles/Page.css";
 import { ModalProvider } from "../../context/ModalContext";
 import { DrawerProvider } from "../../context/DrawerContext";

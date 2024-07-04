@@ -197,7 +197,7 @@ export function Exchange() {
   const [tokensText, setTokens] = useState("");
   const minCredits = 1; // Минимальное количество кредитов
 
-  const handleCreditsChange = (e) => {
+  const handleCreditsChange = (e: any) => {
     const value = e.target.value;
     if (/^[0-9]*$/.test(value)) {
       setCredits(value);
@@ -218,7 +218,7 @@ export function Exchange() {
     setTokens((numericValue * exchangeRate).toFixed(1));
   };
 
-  const handleTokensChange = (e) => {
+  const handleTokensChange = (e: any) => {
     const value = e.target.value;
     if (/^[0-9]*\.?[0-9]{0,6}$/.test(value)) {
       setTokens(value);
