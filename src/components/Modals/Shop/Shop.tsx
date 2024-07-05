@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import {
   ModelType,
@@ -15,6 +15,8 @@ import storeImg from "./img/store/store.png";
 import "./styles/shop.css";
 import { WeaponCard } from "./components/WeaponCard";
 import { StoreCard } from "./components/StoreCard";
+import { useUserData } from "../../../UserDataService.tsx";
+import { useDrawer } from "../../../context/DrawerContext.tsx";
 
 const pills: PillType[] = [
   {
@@ -88,28 +90,87 @@ export function Player() {
 }
 
 export function Weapon() {
-  const weapons: WeaponType[] = [
+  const { blasters, tons, jwt, sendSocketMessage } = useUserData();
+  const { closeDrawer, openDrawer } = useDrawer();
+
+  const blasterPrices = [1, 2];
+
+  const initialWeapons: WeaponType[] = [
     {
-      title: "super blaster 1",
+      title: "Blaster 2 Lvl",
       imgSrc: weapon1Img,
-      damage: "456",
-      rateOfFire: "12",
-      chargeSpeed: "300",
-      worth: "1100 woopy",
-      weaponYield: "200%",
-      callback: () => console.log("WEAPON 1"),
+      damage: "3",
+      rateOfFire: "2",
+      chargeSpeed: "1.5%",
+      worth: blasterPrices[0].toString() + " TON",
+      weaponYield: "150%",
+      callback: () => {
+        if (jwt == null || jwt === "") {
+          openDrawer!("connectWallet");
+          console.log("ssss");
+        } else if (tons < blasterPrices[0]) {
+          openDrawer!(
+            "rejected",
+            "bottom",
+            "Недостаточно TON для покупки бластера 2 уровня\nНеобходимо " +
+              blasterPrices[0].toString() +
+              " TON + 0.05 TON (gas fee)"
+          );
+        } else {
+          sendSocketMessage(
+            "buyBlaster:" + JSON.stringify({ item_level: 2, jwt_token: jwt })
+          );
+        }
+      },
     },
     {
-      title: "super blaster 2",
+      title: "Blaster 3 Lvl",
       imgSrc: weapon1Img,
-      damage: "456",
-      rateOfFire: "12",
-      chargeSpeed: "300",
-      worth: "1100 woopy",
-      weaponYield: "200%",
-      callback: () => console.log("WEAPON 2"),
+      damage: "8",
+      rateOfFire: "3.3",
+      chargeSpeed: "2.2%",
+      worth: blasterPrices[1].toString() + " TON",
+      weaponYield: "150%",
+      callback: () => {
+        if (jwt == null || jwt === "") {
+          closeDrawer!();
+          openDrawer!("connectWallet");
+        } else if (tons < blasterPrices[1]) {
+          openDrawer!(
+            "rejected",
+            "bottom",
+            "Недостаточно TON для покупки бластера 3 уровня\nНеобходимо " +
+              blasterPrices[1].toString() +
+              " TON + 0.05 TON (gas fee)"
+          );
+        } else {
+          console.log("sssaa");
+          sendSocketMessage(
+            "buyBlaster:" + JSON.stringify({ item_level: 3, jwt_token: jwt })
+          );
+        }
+      },
     },
   ];
+
+  const [weapons, setWeapons] = useState<WeaponType[]>(initialWeapons);
+
+  useEffect(() => {
+    const hasLevel2 = blasters.some((blaster) => blaster.level === 2);
+    const hasLevel3 = blasters.some((blaster) => blaster.level === 3);
+
+    const updatedWeapons = weapons.filter((weapon) => {
+      if (weapon.title === "Blaster 2 Lvl" && hasLevel2) {
+        return false;
+      }
+      if (weapon.title === "Blaster 3 Lvl" && hasLevel3) {
+        return false;
+      }
+      return true;
+    });
+
+    setWeapons(updatedWeapons);
+  }, [blasters]);
 
   return (
     <div className="weapon">

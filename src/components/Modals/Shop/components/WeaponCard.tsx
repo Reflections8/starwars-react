@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { CryptoButtons } from "../../../../ui/CryptoButtons/CryptoButtons";
 import { WeaponType } from "../../../../ui/SlidingPills/types";
 import { CuttedButton } from "../../../../ui/CuttedButton/CuttedButton";
 
@@ -15,7 +13,7 @@ export function WeaponCard({
   weaponYield,
   callback,
 }: WeaponCardProps) {
-  const [activeCurrency, setActiveCurrency] = useState("credits");
+  //const [activeCurrency, setActiveCurrency] = useState("ton");
 
   return (
     <div className="weapon-card">
@@ -55,10 +53,10 @@ export function WeaponCard({
         </div>
       </div>
 
-      <CryptoButtons
+      {/*<CryptoButtons
         activeCurrency={activeCurrency}
         setActiveCurrency={setActiveCurrency}
-      />
+      />*/}
     </div>
   );
 }

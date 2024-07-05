@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PillType } from "../../../ui/SlidingPills/types";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import "./styles/wallet.css";
@@ -19,7 +19,7 @@ import { Select } from "../../../ui/Select/Select";
 import { SelectOptionType } from "../Settings/types";
 import { useUserData } from "../../../UserDataService.tsx";
 import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
-import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../../main.tsx";
+import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 
 const pills: PillType[] = [
   {
@@ -189,8 +189,7 @@ export function Fill() {
 }
 
 export function Exchange() {
-  const { credits, exchangeRate, jwt, updateTokens, updateCredits } =
-    useUserData();
+  const { credits, exchangeRate, jwt, sendSocketMessage } = useUserData();
   const { openDrawer } = useDrawer();
 
   const [creditsText, setCredits] = useState("");
@@ -250,30 +249,7 @@ export function Exchange() {
         jwt_token: jwt,
       });
 
-      const ws = new WebSocket(SERVER_URL);
-
-      ws.onopen = () => {
-        ws.send("exchange:" + json);
-      };
-
-      ws.onmessage = (event) => {
-        if (event.data.startsWith("financeData:")) {
-          openDrawer!("resolved", "bottom", "Обмен успешно произведён");
-
-          const data = JSON.parse(event.data.slice("financeData:".length));
-          updateCredits(data.credits);
-          updateTokens(data.tokens);
-
-          ws.close();
-        } else {
-          openDrawer!("rejected", "bottom", "Ошибка при выполнении обмена");
-          ws.close();
-        }
-      };
-
-      ws.onerror = () => {
-        openDrawer!("rejected", "bottom", "Ошибка при выполнении обмена");
-      };
+      sendSocketMessage("exchange:" + json);
     } else {
       openDrawer!(
         "rejected",
@@ -396,20 +372,81 @@ export function Withdraw() {
   ];
 
   const [activeCurrency, setActiveCurrency] = useState(currencyOptions[0]);
+  const { openDrawer } = useDrawer();
+  const { tokens, tons, jwt, sendSocketMessage } = useUserData();
+  const [value, setValue] = useState("0.05");
 
-  const { tokens, tons } = useUserData();
+  const handleChange = (e: any) => {
+    const inputValue = e.target.value;
+    const regex = /^[0-9]*\.?[0-9]*$/;
+
+    if (regex.test(inputValue)) {
+      setValue(inputValue);
+    }
+  };
+
+  const handleBlur = () => {
+    const numericValue = parseFloat(value);
+
+    if (!isNaN(numericValue) && numericValue < 0.05) {
+      setValue("0.05");
+    } else if (
+      numericValue > (activeCurrency.label == "akron" ? tokens : tons)
+    ) {
+      setValue((activeCurrency.label == "akron" ? tokens : tons).toString());
+    }
+  };
+
+  useEffect(() => {
+    handleBlur();
+  }, [activeCurrency.label]);
+
+  const handleWithdrawClick = () => {
+    if (jwt == null) return;
+
+    const numericCredits = parseFloat(value);
+
+    const balance = activeCurrency.label == "akron" ? tokens : tons;
+
+    if (numericCredits >= 0.05 && numericCredits <= balance) {
+      const json = JSON.stringify({
+        credits: numericCredits,
+        currency: activeCurrency.label == "akron" ? "jetton" : "ton",
+        jwt_token: jwt,
+      });
+
+      sendSocketMessage("withdraw:" + json);
+    } else {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        "Неккоректное количество " +
+          activeCurrency.label.toUpperCase() +
+          " для обмена"
+      );
+    }
+  };
+
   return (
     <div className="withdraw">
       <div className="withdraw__inputBlock">
         <div className="withdraw__inputBlock-sup">
           <label className="withdraw__inputBlock-sup-label">Отдаете:</label>
           <div className="withdraw__inputBlock-sup-minValue">
-            макс. {activeCurrency.label == "token" ? tokens : tons}
+            макс. {activeCurrency.label == "akron" ? tokens : tons}
           </div>
         </div>
 
         <div className="withdraw__inputBlock-inputWrapper">
-          <input type="text" className="withdraw__inputBlock-input" />
+          <input
+            inputMode="decimal"
+            type="text"
+            min="0.05"
+            value={value}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            className="withdraw__inputBlock-input"
+          />
           <Select
             activeOption={activeCurrency}
             setActiveOption={setActiveCurrency}
@@ -418,7 +455,7 @@ export function Withdraw() {
         </div>
 
         <div className="withdraw__cuttedButtonWrapper">
-          <CuttedButton text="вывод" />
+          <CuttedButton text="вывод" callback={handleWithdrawClick} />
         </div>
 
         <div className="withdraw__bottomText">

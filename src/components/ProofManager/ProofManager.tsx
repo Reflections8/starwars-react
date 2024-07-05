@@ -47,26 +47,22 @@ export const ProofManager: React.FC<ProofManagerComponentProps> = () => {
         }
 
         if (w.connectItems?.tonProof && "proof" in w.connectItems.tonProof) {
-          if (
-            await ProofApiService.checkProof(
-              w.connectItems.tonProof.proof,
-              w.account
-            )
-          ) {
-            updateJwt(ProofApiService.accessToken);
+          const token: string | null = await ProofApiService.checkProof(
+            w.connectItems.tonProof.proof,
+            w.account
+          );
+          if (token) {
+            updateJwt(token);
             console.log("authorized");
           } else {
+            updateJwt(null);
             tonConnectUI.disconnect();
-            ProofApiService.authorized = false;
             console.log("not authorized no access token");
             return;
           }
         }
-
-        updateJwt(ProofApiService.accessToken);
-        ProofApiService.authorized = true;
       }),
-    [tonConnectUI]
+    [tonConnectUI, updateJwt]
   );
 
   return <></>;

@@ -8,7 +8,7 @@ import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
 export const PROJECT_CONTRACT_ADDRESS =
   "UQBc4SgP_de5a2oRzXSGNV4wBhoFs9zN6sP1Vv2pQcVZLwWC";
 
-export const SERVER_URL = "wss://socket.purpleguy.dev";
+export const SERVER_URL = "wss://socket.purpleguy.dev/menu";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

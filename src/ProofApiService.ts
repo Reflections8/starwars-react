@@ -3,6 +3,7 @@ import {
   ConnectAdditionalRequest,
   TonProofItemReplySuccess,
 } from "@tonconnect/ui-react";
+import { SERVER_URL } from "./main.tsx";
 
 class ProofService {
   public readonly localStorageKey = "auth_jwt";
@@ -10,18 +11,10 @@ class ProofService {
   public accessToken: string | null = null;
   public readonly refreshIntervalMs = 9 * 60 * 1000;
 
-  constructor() {
-    this.accessToken = localStorage.getItem(this.localStorageKey);
-    this.authorized = this.accessToken != null;
-    if (!this.accessToken) {
-      this.generatePayload();
-    }
-  }
-
   async generatePayload(): Promise<ConnectAdditionalRequest | null> {
     return new Promise<ConnectAdditionalRequest | null>((resolve, reject) => {
       try {
-        const ws = new WebSocket("wss://socket.purpleguy.dev");
+        const ws = new WebSocket(SERVER_URL);
 
         const pingInterval = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN) {
@@ -65,8 +58,8 @@ class ProofService {
   async checkProof(
     proof: TonProofItemReplySuccess["proof"],
     account: Account
-  ): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
+  ): Promise<string | null> {
+    return new Promise<string | null>((resolve, reject) => {
       try {
         const reqBody = {
           address: account.address,
@@ -78,7 +71,7 @@ class ProofService {
           },
         };
 
-        const ws = new WebSocket("wss://socket.purpleguy.dev");
+        const ws = new WebSocket(SERVER_URL);
         const pingInterval = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN) {
             ws.send("ping");
@@ -97,12 +90,12 @@ class ProofService {
             ws.close();
             localStorage.setItem(this.localStorageKey, token);
             this.accessToken = token;
-            resolve(true);
+            resolve(token);
             this.authorized = true;
           } else if (data.startsWith("error:")) {
             clearInterval(pingInterval);
             ws.close();
-            reject(false);
+            reject(null);
             this.authorized = false;
           }
         };
@@ -110,7 +103,7 @@ class ProofService {
         ws.onerror = () => {
           clearInterval(pingInterval);
           ws.close();
-          reject(false);
+          reject(null);
           this.authorized = false;
         };
 
@@ -119,7 +112,7 @@ class ProofService {
         };
       } catch (e) {
         console.log("checkProof error:", e);
-        reject(false);
+        reject(null);
         this.authorized = false;
       }
     });
