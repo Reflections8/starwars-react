@@ -17,6 +17,8 @@ import { WeaponCard } from "./components/WeaponCard";
 import { StoreCard } from "./components/StoreCard";
 import { useUserData } from "../../../UserDataService.tsx";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
+import {SendTransactionRequest, useTonConnectUI} from "@tonconnect/ui-react";
+import {PROJECT_CONTRACT_ADDRESS} from "../../../main.tsx";
 
 const pills: PillType[] = [
   {
@@ -90,8 +92,9 @@ export function Player() {
 }
 
 export function Weapon() {
-  const { blasters, tons, jwt, sendSocketMessage } = useUserData();
-  const { closeDrawer, openDrawer } = useDrawer();
+  const { blasters, jwt } = useUserData();
+  const { openDrawer } = useDrawer();
+  const [tonConnectUI] = useTonConnectUI();
 
   const blasterPrices = [1, 2];
 
@@ -104,21 +107,35 @@ export function Weapon() {
       chargeSpeed: "1.5%",
       worth: blasterPrices[0].toString() + " TON",
       weaponYield: "150%",
-      callback: () => {
-        if (jwt == null || jwt === "") {
+      callback: async () => {
+        if (jwt == null || jwt === "" || !tonConnectUI.connected) {
           openDrawer!("connectWallet");
-        } else if (tons < blasterPrices[0]) {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для покупки бластера 2 уровня\nНеобходимо " +
-              blasterPrices[0].toString() +
-              " TON + 0.05 TON (gas fee)"
-          );
         } else {
-          sendSocketMessage(
-            "buyBlaster:" + JSON.stringify({ item_level: 2, jwt_token: jwt })
-          );
+          const fillTx: SendTransactionRequest = {
+            validUntil: Math.floor(Date.now() / 1000) + 600,
+            messages: [
+              {
+                address: PROJECT_CONTRACT_ADDRESS,
+                amount: ((blasterPrices[0] + 0.05) * 1000000000).toString(),
+                payload: "te6cckEBAQEACgAAEPbRsjsAAAACfjGTqg==",
+              },
+            ],
+          };
+
+          try {
+            await tonConnectUI.sendTransaction(fillTx);
+            openDrawer!(
+                "resolved",
+                "bottom",
+                "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+            );
+          } catch (e) {
+            openDrawer!(
+                "rejected",
+                "bottom",
+                "Отправка транзакции была отклонена"
+            );
+          }
         }
       },
     },
@@ -130,22 +147,35 @@ export function Weapon() {
       chargeSpeed: "2.2%",
       worth: blasterPrices[1].toString() + " TON",
       weaponYield: "150%",
-      callback: () => {
-        if (jwt == null || jwt === "") {
-          closeDrawer!();
+      callback: async () => {
+        if (jwt == null || jwt === "" || !tonConnectUI.connected) {
           openDrawer!("connectWallet");
-        } else if (tons < blasterPrices[1]) {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для покупки бластера 3 уровня\nНеобходимо " +
-              blasterPrices[1].toString() +
-              " TON + 0.05 TON (gas fee)"
-          );
         } else {
-          sendSocketMessage(
-            "buyBlaster:" + JSON.stringify({ item_level: 3, jwt_token: jwt })
-          );
+          const fillTx: SendTransactionRequest = {
+            validUntil: Math.floor(Date.now() / 1000) + 600,
+            messages: [
+              {
+                address: PROJECT_CONTRACT_ADDRESS,
+                amount: ((blasterPrices[1] + 0.05) * 1000000000).toString(),
+                payload: "te6cckEBAQEACgAAEPbRsjsAAAADfbL4WA==",
+              },
+            ],
+          };
+
+          try {
+            await tonConnectUI.sendTransaction(fillTx);
+            openDrawer!(
+                "resolved",
+                "bottom",
+                "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+            );
+          } catch (e) {
+            openDrawer!(
+                "rejected",
+                "bottom",
+                "Отправка транзакции была отклонена"
+            );
+          }
         }
       },
     },
