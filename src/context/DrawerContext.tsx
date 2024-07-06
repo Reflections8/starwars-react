@@ -1,5 +1,4 @@
 import { ReactNode, createContext, useContext, useState } from "react";
-import { Drawer } from "../ui/Drawer/Drawer";
 
 type DrawerProviderProps = {
   children: ReactNode;
@@ -8,7 +7,11 @@ type DrawerProviderProps = {
 type DrawerContextProps = {
   isOpen: boolean;
   drawerType: string;
-  openDrawer: (type: string, position?: "top" | "bottom", text?: string) => void;
+  openDrawer: (
+    type: string,
+    position?: "top" | "bottom",
+    text?: string
+  ) => void;
   closeDrawer: () => void;
   drawerPosition: string;
   drawerText: string;
@@ -50,7 +53,6 @@ export function DrawerProvider({ children }: DrawerProviderProps) {
       }}
     >
       {children}
-      <Drawer isOpen={isOpen} drawerText={drawerText} />
     </DrawerContext.Provider>
   );
 }

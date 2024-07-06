@@ -13,8 +13,9 @@ import creditIcon from "./img/upgrade/credits.svg";
 import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import "./styles//drawer.css";
 import { useTonConnectUI } from "@tonconnect/ui-react";
-import { CryptoButtons } from "../CryptoButtons/CryptoButtons";
 import { useState } from "react";
+import { Prices, useUserData } from "../../UserDataService.tsx";
+import { CryptoButtons } from "../CryptoButtons/CryptoButtons.tsx";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -147,32 +148,83 @@ function Menu() {
   );
 }
 
-function Repair() {
-  const [activeCurrency, setActiveCurrency] = useState("credits");
-
-  return (
-    <div className="repair">
-      <div className="repair__text">Починить на 100%</div>
-
-      <div className="repair__block">
-        <div className="repair__block-row">
-          <div className="repair__block-row-key">цена:</div>
-          <div className="repair__block-row-value">1234.5678</div>
-        </div>
-
-        <CryptoButtons
-          activeCurrency={activeCurrency}
-          setActiveCurrency={setActiveCurrency}
-          activeOptions={["credits", "woopy"]}
-        />
-      </div>
-
-      <CuttedButton className="repair__mainBtn" text={"Подтвердить"} />
-    </div>
-  );
-}
-
 function Upgrade() {
+  const { prices, activeBlaster, sendSocketMessage, credits, jwt } =
+    useUserData();
+
+  const { openDrawer } = useDrawer();
+
+  const damages = [
+    [1, 2, 3, 4], // Blaster 1
+    [3, 4, 5, 6], // Blaster 2
+    [8, 10, 12, 15], // Blaster 3
+  ];
+
+  const maxCharges = [
+    [500, 600, 700, 800], // Blaster 1
+    [1000, 1200, 1400, 1600], // Blaster 2
+    [2000, 2500, 3000, 3500], // Blaster 3
+  ];
+
+  const chargePercents = [
+    [1, 1.1, 1.2, 1.3], // Blaster 1
+    [1.5, 1.7, 1.8, 2], // Blaster 2
+    [2.2, 2.4, 2.6, 2.8], // Blaster 3
+  ];
+
+  function getDamageByLevel(level: number) {
+    if (!activeBlaster) return 0;
+    return damages[activeBlaster?.level - 1][level];
+  }
+
+  function getMaxChargeByLevel(level: number) {
+    if (!activeBlaster) return 0;
+    return maxCharges[activeBlaster?.level - 1][level];
+  }
+
+  function getChargePercentByLevel(level: number) {
+    if (!activeBlaster) return 0;
+    return chargePercents[activeBlaster?.level - 1][level];
+  }
+
+  function getPriceByLevel(level: number) {
+    if (!activeBlaster) return 0;
+
+    const key = `blaster_${activeBlaster?.level}_${level}` as keyof Prices;
+    return prices[key];
+  }
+
+  const handleUpgradeClick = (value: number) => {
+    if (!activeBlaster) return;
+    if (value != 0 && value != 1 && value != 2) return;
+
+    let nextOptionLevel;
+    if (value == 0) nextOptionLevel = activeBlaster.damage_level + 1;
+    else if (value == 1) nextOptionLevel = activeBlaster.max_charge_level + 1;
+    else nextOptionLevel = activeBlaster.charge_level + 1;
+
+    if (nextOptionLevel >= 4) return;
+
+    if (credits < getPriceByLevel(nextOptionLevel)) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        "Недостаточно кредитов для улучшения бластера"
+      );
+      return;
+    }
+
+    if (jwt != null && jwt !== "")
+      sendSocketMessage(
+        "upgradeBlaster:" +
+          JSON.stringify({
+            jwt_token: jwt,
+            item_level: activeBlaster.level,
+            config_id: value,
+          })
+      );
+  };
+
   return (
     <div className="upgradeBody">
       <div className="upgrade__text">Улучшение</div>
@@ -182,17 +234,42 @@ function Upgrade() {
           <div className="upgrade__block-item-main">
             <div className="upgrade__block-item-main-title">Урон:</div>
             <div className="upgrade__block-item-main-value">
-              <div className="upgrade__block-item-main-value-current">123</div>
-              <img
-                src={upgradeArrowsSvg}
-                alt="arrows"
-                className="upgrade__block-item-main-value-arrows"
-              />
-              <div className="upgrade__block-item-main-value-max">170</div>
+              <div className="upgrade__block-item-main-value-current">
+                {activeBlaster
+                  ? getDamageByLevel(activeBlaster.damage_level)
+                  : 0}
+              </div>
+              {activeBlaster && activeBlaster.damage_level < 3 ? (
+                <>
+                  <img
+                    src={upgradeArrowsSvg}
+                    alt="arrows"
+                    className="upgrade__block-item-main-value-arrows"
+                  />
+                  <div className="upgrade__block-item-main-value-max">
+                    {getDamageByLevel(activeBlaster.damage_level + 1)}
+                  </div>
+                </>
+              ) : null}
             </div>
           </div>
           <div className="upgrade__block-item-cuttedButtonWrapper">
-            <CuttedButton iconSrc={creditIcon} text={"125K"} />
+            <CuttedButton
+              iconSrc={creditIcon}
+              callback={() => handleUpgradeClick(0)}
+              className={
+                activeBlaster && activeBlaster.damage_level < 3
+                  ? ""
+                  : "halfTransparent"
+              }
+              text={
+                activeBlaster && activeBlaster.damage_level < 3
+                  ? (
+                      getPriceByLevel(activeBlaster.damage_level + 1) / 1000
+                    ).toString() + "K"
+                  : "MAX"
+              }
+            />
           </div>
         </div>
 
@@ -200,20 +277,43 @@ function Upgrade() {
           <div className="upgrade__block-item-main">
             <div className="upgrade__block-item-main-title">Заряд:</div>
             <div className="upgrade__block-item-main-value">
-              <div className="upgrade__block-item-main-value-current">1234</div>
-              <img
-                src={upgradeArrowsSvg}
-                alt="arrows"
-                className="upgrade__block-item-main-value-arrows"
-              />
-              <div className="upgrade__block-item-main-value-max">1500</div>
+              <div className="upgrade__block-item-main-value-current">
+                {activeBlaster
+                  ? getMaxChargeByLevel(activeBlaster.max_charge_level)
+                  : 0}
+              </div>
+              {activeBlaster && activeBlaster.max_charge_level < 3 ? (
+                <>
+                  <img
+                    src={upgradeArrowsSvg}
+                    alt="arrows"
+                    className="upgrade__block-item-main-value-arrows"
+                  />
+                  <div className="upgrade__block-item-main-value-max">
+                    {activeBlaster
+                      ? getMaxChargeByLevel(activeBlaster.max_charge_level + 1)
+                      : 0}
+                  </div>
+                </>
+              ) : null}
             </div>
           </div>
           <div className="upgrade__block-item-cuttedButtonWrapper">
             <CuttedButton
-              className="halfTransparent"
+              callback={() => handleUpgradeClick(1)}
+              className={
+                activeBlaster && activeBlaster.max_charge_level < 3
+                  ? ""
+                  : "halfTransparent"
+              }
               iconSrc={creditIcon}
-              text={"125K"}
+              text={
+                activeBlaster && activeBlaster.max_charge_level < 3
+                  ? (
+                      getPriceByLevel(activeBlaster.max_charge_level + 1) / 1000
+                    ).toString() + "K"
+                  : "MAX"
+              }
             />
           </div>
         </div>
@@ -225,21 +325,119 @@ function Upgrade() {
             </div>
             <div className="upgrade__block-item-main-value">
               <div className="upgrade__block-item-main-value-current">
-                200\мин
+                {activeBlaster
+                  ? getChargePercentByLevel(activeBlaster.charge_level)
+                  : 0}
+                %\мин
               </div>
-              <img
-                src={upgradeArrowsSvg}
-                alt="arrows"
-                className="upgrade__block-item-main-value-arrows"
-              />
-              <div className="upgrade__block-item-main-value-max">500\мин</div>
+              {activeBlaster && activeBlaster.max_charge_level < 3 ? (
+                <>
+                  <img
+                    src={upgradeArrowsSvg}
+                    alt="arrows"
+                    className="upgrade__block-item-main-value-arrows"
+                  />
+                  <div className="upgrade__block-item-main-value-max">
+                    {activeBlaster
+                      ? getChargePercentByLevel(activeBlaster.charge_level + 1)
+                      : 0}
+                    %\мин
+                  </div>
+                </>
+              ) : null}
             </div>
           </div>
           <div className="upgrade__block-item-cuttedButtonWrapper">
-            <CuttedButton iconSrc={creditIcon} text={"125K"} />
+            <CuttedButton
+              callback={() => handleUpgradeClick(2)}
+              className={
+                activeBlaster && activeBlaster.charge_level < 3
+                  ? ""
+                  : "halfTransparent"
+              }
+              iconSrc={creditIcon}
+              text={
+                activeBlaster && activeBlaster.charge_level < 3
+                  ? (
+                      getPriceByLevel(activeBlaster.charge_level + 1) / 1000
+                    ).toString() + "K"
+                  : "MAX"
+              }
+            />
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Repair() {
+  const [activeCurrency, setActiveCurrency] = useState("credits");
+  const { prices, activeBlaster, sendSocketMessage, credits, jwt } =
+    useUserData();
+  const { openDrawer } = useDrawer();
+  const handleRepairClick = () => {
+    if (!activeBlaster || activeBlaster.level == 1) return;
+
+    if (credits < getBlasterRepairPrice(activeBlaster.level)) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        "Недостаточно кредитов для починки бластера"
+      );
+      return;
+    }
+
+    if (jwt != null && jwt !== "")
+      sendSocketMessage(
+        "repairBlaster:" +
+          JSON.stringify({ jwt_token: jwt, item_level: activeBlaster.level })
+      );
+  };
+
+  const getBlasterRepairPrice = (level: number): number => {
+    switch (level) {
+      case 1:
+        return 0;
+      case 2:
+        return prices.second_blaster_repair;
+      case 3:
+        return prices.third_blaster_repair;
+    }
+    return 0;
+  };
+
+  return (
+    <div className="repair">
+      <div className="repair__text">Починить на 100%</div>
+
+      <div className="repair__block">
+        <div className="repair__block-row">
+          <div className="repair__block-row-key">цена:</div>
+          <div className="repair__block-row-value">
+            {activeBlaster ? getBlasterRepairPrice(activeBlaster.level) : null}
+          </div>
+        </div>
+
+        <CryptoButtons
+          activeCurrency={activeCurrency}
+          setActiveCurrency={setActiveCurrency}
+          activeOptions={["credits"]}
+        />
+      </div>
+
+      <CuttedButton
+        callback={() => handleRepairClick()}
+        className={
+          activeBlaster &&
+          activeBlaster.level !== 1 &&
+          credits >= getBlasterRepairPrice(activeBlaster.level) &&
+          getBlasterRepairPrice(activeBlaster.level) != 0
+            ? "repair__mainBtn"
+            : "repair__mainBtn halfTransparent"
+        }
+        text={"Подтвердить"}
+      />
     </div>
   );
 }

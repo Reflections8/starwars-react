@@ -1,6 +1,7 @@
 import { useDrawer } from "../../../../context/DrawerContext";
 import { CuttedButton } from "../../../../ui/CuttedButton/CuttedButton";
 import { StoreType } from "../../../../ui/SlidingPills/types";
+import { useUserData } from "../../../../UserDataService.tsx";
 
 type StoreCardProps = StoreType;
 
@@ -9,9 +10,12 @@ export function StoreCard({
   title,
   imgSrc,
   strength,
+  maxStrength,
   level,
+  gunLevel,
 }: StoreCardProps) {
   const { openDrawer } = useDrawer();
+  const { selectGun } = useUserData();
   return (
     <div className="store-card">
       <div className="store-card__title">
@@ -35,14 +39,20 @@ export function StoreCard({
                   \
                 </div>
                 <div className="store-card__body-main-block-head-value-max">
-                  150
+                  {maxStrength}
                 </div>
               </div>
             </div>
             <div className="store-card__body-main-block-cuttedBtnWrapper">
               <CuttedButton
+                className={
+                  gunLevel == 1 || parseInt(strength) == parseInt(maxStrength)
+                    ? "halfTransparent"
+                    : ""
+                }
                 text={"Починить"}
                 callback={() => {
+                  selectGun(gunLevel);
                   openDrawer!("repair");
                 }}
               />
@@ -62,7 +72,7 @@ export function StoreCard({
                   \
                 </div>
                 <div className="store-card__body-main-block-head-value-max">
-                  4
+                  10
                 </div>
               </div>
             </div>
@@ -70,6 +80,7 @@ export function StoreCard({
               <CuttedButton
                 text={"Улучшить"}
                 callback={() => {
+                  selectGun(gunLevel);
                   openDrawer!("upgrade");
                 }}
               />

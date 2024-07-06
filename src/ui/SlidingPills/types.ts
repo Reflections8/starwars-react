@@ -30,5 +30,7 @@ export type StoreType = {
   title: string;
   imgSrc: string;
   strength: string;
+  maxStrength: string;
   level: string;
+  gunLevel: number;
 };

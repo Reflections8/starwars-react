@@ -107,7 +107,6 @@ export function Weapon() {
       callback: () => {
         if (jwt == null || jwt === "") {
           openDrawer!("connectWallet");
-          console.log("ssss");
         } else if (tons < blasterPrices[0]) {
           openDrawer!(
             "rejected",
@@ -144,7 +143,6 @@ export function Weapon() {
               " TON + 0.05 TON (gas fee)"
           );
         } else {
-          console.log("sssaa");
           sendSocketMessage(
             "buyBlaster:" + JSON.stringify({ item_level: 3, jwt_token: jwt })
           );
@@ -193,22 +191,37 @@ export function Weapon() {
 }
 
 export function Store() {
-  const weapons: StoreType[] = [
-    {
-      rarity: "common",
-      title: "super blaster",
-      imgSrc: storeImg,
-      strength: "123",
-      level: "2",
-    },
-    {
-      rarity: "rare",
-      title: "super blaster",
-      imgSrc: storeImg,
-      strength: "1",
-      level: "3",
-    },
-  ];
+  const { blasters, prices } = useUserData();
+  const [weapons, setWeapons] = useState<StoreType[]>([]);
+
+  useEffect(() => {
+    const newWeapons = blasters.map((blaster) => {
+      let rarity = "common";
+      if (blaster.level >= 3) {
+        rarity = "rare";
+      } else if (blaster.level === 2) {
+        rarity = "uncommon";
+      }
+
+      const level =
+        1 +
+        blaster.charge_level +
+        blaster.damage_level +
+        blaster.max_charge_level;
+
+      return {
+        rarity,
+        title: "super blaster",
+        imgSrc: storeImg,
+        strength: blaster.usage.toString(),
+        maxStrength: blaster.max_usage.toString(),
+        level: level.toString(),
+        gunLevel: blaster.level,
+      };
+    });
+
+    setWeapons(newWeapons);
+  }, [blasters, prices.third_blaster_repair, prices.second_blaster_repair]);
 
   return (
     <div className="store">
@@ -219,7 +232,9 @@ export function Store() {
             title={weapon.title}
             imgSrc={weapon.imgSrc}
             strength={weapon.strength}
+            maxStrength={weapon.maxStrength}
             level={weapon.level}
+            gunLevel={weapon.gunLevel}
           />
         );
       })}

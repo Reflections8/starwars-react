@@ -7,12 +7,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
 import { useNavigate } from "react-router-dom";
-import { ProofApiService } from "../../ProofApiService.ts";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useLoader } from "../../context/LoaderContext.tsx";
+import { useUserData } from "../../UserDataService.tsx";
 
 export function Game1() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const { jwt } = useUserData();
 
   const navigate = useNavigate();
   const { setIsLoading } = useLoader();
@@ -29,11 +30,11 @@ export function Game1() {
   // перевод юзера на главную страницу если у него нету токена доступа
   useEffect(() => {
     if (isUnityLoaded) {
-      if (ProofApiService.accessToken == null) {
+      if (jwt == null || jwt === "") {
         navigate("/");
         return;
       }
-      sendMessageToUnity("OnUserTokenReceive", ProofApiService.accessToken);
+      sendMessageToUnity("OnUserTokenReceive", jwt);
     }
   }, [isUnityLoaded]);
 
