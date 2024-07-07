@@ -330,7 +330,7 @@ function Upgrade() {
                   : 0}
                 %\мин
               </div>
-              {activeBlaster && activeBlaster.max_charge_level < 3 ? (
+              {activeBlaster && activeBlaster.charge_level < 3 ? (
                 <>
                   <img
                     src={upgradeArrowsSvg}

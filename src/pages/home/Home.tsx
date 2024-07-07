@@ -22,8 +22,16 @@ import { useUserData } from "../../UserDataService.tsx";
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const { credits, tokens, tons, jwt, updateCredits, updateJwt } =
-    useUserData();
+  const {
+    credits,
+    tokens,
+    tons,
+    jwt,
+    updateCredits,
+    updateJwt,
+    checkGun,
+    setCheckGun,
+  } = useUserData();
   const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
 
@@ -59,6 +67,13 @@ export function Home() {
     }
     return () => {};
   }, [isUnityLoaded, jwt]);
+
+  useEffect(() => {
+    if (checkGun) {
+      sendMessageToUnity("RefreshUserConfig", "s");
+      setCheckGun(false);
+    }
+  }, [checkGun]);
 
   const handleAuthTokenChange = (token: string | null) => {
     if (token != null) {

@@ -17,6 +17,7 @@ interface UserDataContextType {
   tokens: number;
   tons: number;
   jwt: string | null;
+  checkGun: boolean;
   exchangeRate: number;
   blasters: Blaster[];
   activeBlaster: Blaster | null;
@@ -26,6 +27,7 @@ interface UserDataContextType {
   updateTokens: (value: number) => void;
   updateJwt: (value: string | null) => void;
   startCheckBalance: () => void;
+  setCheckGun: (value: boolean) => void;
   sendSocketMessage: (value: string) => void;
 }
 
@@ -35,6 +37,7 @@ const defaultValue: UserDataContextType = {
   tons: 0,
   exchangeRate: 0,
   jwt: "",
+  checkGun: false,
   blasters: [],
   activeBlaster: null,
   prices: {
@@ -54,6 +57,7 @@ const defaultValue: UserDataContextType = {
   updateCredits: () => {},
   updateTokens: () => {},
   updateJwt: () => {},
+  setCheckGun: () => {},
   startCheckBalance: () => {},
   sendSocketMessage: () => {},
 };
@@ -91,6 +95,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   });
 
   const [checkBalance, setCheckBalance] = useState(false);
+  const [checkGun, setCheckGunChange] = useState(false);
   const [shouldReconnectFlag, setShouldReconnectFlag] = useState(true);
 
   const tonsRef = useRef<number>(tons);
@@ -127,6 +132,10 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const startCheckBalance = () => {
     setCheckBalance(true);
+  };
+
+  const setCheckGun = (value: boolean) => {
+    setCheckGunChange(value);
   };
 
   const sendSocketMessage = (value: string) => {
@@ -199,6 +208,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         response.slice("blasterBuyResponse:".length)
       );
       setBlasters(blasters);
+      setCheckGun(true);
     } else if (response.startsWith("blasterUpgradeResponse:")) {
       openDrawer!(
         "resolved",
@@ -236,7 +246,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setBlasters(blasterTemp);
 
       openDrawer!("resolved", "bottom", "Починка бластера успешна выполнена.");
-    }  else if (response.startsWith("CODE:")) {
+    } else if (response.startsWith("CODE:")) {
       const exitCode = parseInt(response.slice("CODE:".length));
       switch (exitCode) {
         case 901: {
@@ -294,10 +304,12 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         exchangeRate,
         blasters,
         prices,
+        checkGun,
         selectGun,
         updateCredits,
         updateTokens,
         updateJwt,
+        setCheckGun,
         startCheckBalance,
         sendSocketMessage,
       }}
