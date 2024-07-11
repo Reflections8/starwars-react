@@ -17,8 +17,8 @@ import { WeaponCard } from "./components/WeaponCard";
 import { StoreCard } from "./components/StoreCard";
 import { useUserData } from "../../../UserDataService.tsx";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
-import {SendTransactionRequest, useTonConnectUI} from "@tonconnect/ui-react";
-import {PROJECT_CONTRACT_ADDRESS} from "../../../main.tsx";
+import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
+import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 
 const pills: PillType[] = [
   {
@@ -57,22 +57,79 @@ export function Shop() {
 }
 
 export function Player() {
-  const models: ModelType[] = [
+  const { characters, jwt } = useUserData();
+  const { openDrawer } = useDrawer();
+  const [tonConnectUI] = useTonConnectUI();
+  const characterPrices = [1, 2];
+  const characterPayloads = [
+    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
+    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
+  ];
+
+  const initialCharacters: ModelType[] = [
     {
-      title: "namebot",
+      title: "Droid",
       imgSrc: model1Img,
       modelYield: "200%",
-      worth: "1100 woopy",
-      callback: () => console.log("BUY NAME BOT"),
+      worth: characterPrices[0].toString() + " TON",
+      callback: () => handleCharacterBuyClick(1),
     },
     {
-      title: "namebot2",
+      title: "Stormtrooper",
       imgSrc: model2Img,
       modelYield: "300%",
-      worth: "123 woopy",
-      callback: () => console.log("BUY SECOND"),
+      worth: characterPrices[1].toString() + " TON",
+      callback: () => handleCharacterBuyClick(2),
     },
   ];
+
+  const [models, setModels] = useState<ModelType[]>(initialCharacters);
+
+  useEffect(() => {
+    const has1 = characters.some((c) => c.type === 1);
+    const has2 = characters.some((c) => c.type === 2);
+
+    const updatedWeapons = initialCharacters.filter((model) => {
+      if (model.title === "Droid" && has1) {
+        return false;
+      }
+      if (model.title === "Stormtrooper" && has2) {
+        return false;
+      }
+      return true;
+    });
+
+    setModels(updatedWeapons);
+  }, [characters]);
+
+  const handleCharacterBuyClick = async (i: number) => {
+    if (jwt == null || jwt === "" || !tonConnectUI.connected) {
+      openDrawer!("connectWallet");
+    } else {
+      const fillTx: SendTransactionRequest = {
+        validUntil: Math.floor(Date.now() / 1000) + 600,
+        messages: [
+          {
+            address: PROJECT_CONTRACT_ADDRESS,
+            amount: (characterPrices[i - 1] * 1000000000 + 50000000).toString(),
+            payload: characterPayloads[i - 1],
+          },
+        ],
+      };
+
+      try {
+        await tonConnectUI.sendTransaction(fillTx);
+        openDrawer!(
+          "resolved",
+          "bottom",
+          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+        );
+      } catch (e) {
+        console.log(e);
+        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+      }
+    }
+  };
 
   return (
     <div className="player">
@@ -116,8 +173,8 @@ export function Weapon() {
             messages: [
               {
                 address: PROJECT_CONTRACT_ADDRESS,
-                amount: ((blasterPrices[0] + 0.05) * 1000000000).toString(),
-                payload: "te6cckEBAQEACgAAEPbRsjsAAAACfjGTqg==",
+                amount: (blasterPrices[0] * 1000000000 + 50000000).toString(),
+                payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAAqwzHw4=",
               },
             ],
           };
@@ -125,15 +182,15 @@ export function Weapon() {
           try {
             await tonConnectUI.sendTransaction(fillTx);
             openDrawer!(
-                "resolved",
-                "bottom",
-                "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+              "resolved",
+              "bottom",
+              "Транзакция успешно отправлена.\n Ожидайте подтвержения"
             );
           } catch (e) {
             openDrawer!(
-                "rejected",
-                "bottom",
-                "Отправка транзакции была отклонена"
+              "rejected",
+              "bottom",
+              "Отправка транзакции была отклонена"
             );
           }
         }
@@ -156,8 +213,8 @@ export function Weapon() {
             messages: [
               {
                 address: PROJECT_CONTRACT_ADDRESS,
-                amount: ((blasterPrices[1] + 0.05) * 1000000000).toString(),
-                payload: "te6cckEBAQEACgAAEPbRsjsAAAADfbL4WA==",
+                amount: (blasterPrices[1] * 1000000000 + 50000000).toString(),
+                payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAA6+wdPw=",
               },
             ],
           };
@@ -165,15 +222,15 @@ export function Weapon() {
           try {
             await tonConnectUI.sendTransaction(fillTx);
             openDrawer!(
-                "resolved",
-                "bottom",
-                "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+              "resolved",
+              "bottom",
+              "Транзакция успешно отправлена.\n Ожидайте подтвержения"
             );
           } catch (e) {
             openDrawer!(
-                "rejected",
-                "bottom",
-                "Отправка транзакции была отклонена"
+              "rejected",
+              "bottom",
+              "Отправка транзакции была отклонена"
             );
           }
         }

@@ -6,7 +6,7 @@ import { router } from "./routes/index.tsx";
 import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
 
 export const PROJECT_CONTRACT_ADDRESS =
-  "UQBc4SgP_de5a2oRzXSGNV4wBhoFs9zN6sP1Vv2pQcVZLwWC";
+  "0:5CE1280FFDD7B96B6A11CD7486355E30061A05B3DCCDEAC3F556FDA941C5592F";
 
 export const SERVER_URL = "wss://socket.purpleguy.dev/menu";
 

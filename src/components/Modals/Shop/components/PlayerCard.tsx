@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { ModelType } from "../../../../ui/SlidingPills/types";
 import { CuttedButton } from "../../../../ui/CuttedButton/CuttedButton";
-import { CryptoButtons } from "../../../../ui/CryptoButtons/CryptoButtons";
 
 type PlayerCardProps = ModelType;
 
@@ -12,8 +10,6 @@ export function PlayerCard({
   modelYield,
   callback,
 }: PlayerCardProps) {
-  const [activeCurrency, setActiveCurrency] = useState("credits");
-
   return (
     <div className="player-card">
       <div className="player-card-main">
@@ -46,11 +42,6 @@ export function PlayerCard({
           </div>
         </div>
       </div>
-
-      <CryptoButtons
-        activeCurrency={activeCurrency}
-        setActiveCurrency={setActiveCurrency}
-      />
     </div>
   );
 }

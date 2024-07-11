@@ -108,7 +108,7 @@ export function Home() {
           }
         }
       } catch (error) {
-        console.error("Failed to parse message data", error);
+        console.error("Failed to parse message dats", error);
       }
     };
 
@@ -119,14 +119,12 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    setIsLoading!(true);
+    //setIsLoading!(true);
   }, []);
 
   async function openWalletDrawer() {
-    // Синхронно закрываем текущий drawer
     closeDrawer!();
 
-    // Делаем что-то асинхронное, в зависимости от ответа открываем resolved/rejected
     openDrawer!("connectWallet");
   }
 
@@ -161,7 +159,7 @@ export function Home() {
 
       <MainLinks />
 
-      <iframe
+      {/*<iframe
         ref={iframeRef}
         src="https://purpleguy.dev/main"
         style={{
@@ -174,7 +172,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe>
+      ></iframe>*/}
 
       <Header
         position={"bottom"}

@@ -20,6 +20,7 @@ interface UserDataContextType {
   checkGun: boolean;
   exchangeRate: number;
   blasters: Blaster[];
+  characters: Character[];
   activeBlaster: Blaster | null;
   prices: Prices;
   selectGun: (value: number) => void;
@@ -39,6 +40,7 @@ const defaultValue: UserDataContextType = {
   jwt: "",
   checkGun: false,
   blasters: [],
+  characters: [],
   activeBlaster: null,
   prices: {
     second_blaster_repair: 0,
@@ -80,6 +82,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
   const [blasters, setBlasters] = useState<Blaster[]>([]);
+  const [characters, setCharacters] = useState<Character[]>([]);
   const [prices, setPrices] = useState<Prices>({
     second_blaster_repair: 0,
     third_blaster_repair: 0,
@@ -156,10 +159,12 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
         sendMessage("getFinanceData:" + jwt);
         sendMessage("blasters:" + jwt);
+        sendMessage("characters:" + jwt);
         const interval = setInterval(() => {
           if (jwt != null && jwt !== "") {
             sendMessage("getFinanceData:" + jwt);
             sendMessage("blasters:" + jwt);
+            sendMessage("characters:" + jwt);
           }
         }, 10000);
 
@@ -198,7 +203,14 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
       setPrices(pricesResponse);
       setBlasters(blasters);
-    } else if (response.startsWith("blasterBuyResponse:")) {
+    }
+    else if (response.startsWith("charactersResponse:")) {
+      const characters: Character[] = JSON.parse(
+          response.slice("charactersResponse:".length)
+      );
+
+      setCharacters(characters);
+    }else if (response.startsWith("blasterBuyResponse:")) {
       openDrawer!(
         "resolved",
         "bottom",
@@ -303,6 +315,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         activeBlaster,
         exchangeRate,
         blasters,
+        characters,
         prices,
         checkGun,
         selectGun,
@@ -335,6 +348,14 @@ interface Blaster {
   damage_level: number; // int
   max_charge_level: number; // double соответствует number в TypeScript
   charge_level: number;
+}
+
+interface Character {
+  id: number; // long в C# соответствует number в TypeScript
+  owner: string; // string
+  type: number; // int
+  earn_required: number; // int
+  earned: number;
 }
 
 export interface Prices {
