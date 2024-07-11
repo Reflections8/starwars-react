@@ -203,14 +203,13 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
       setPrices(pricesResponse);
       setBlasters(blasters);
-    }
-    else if (response.startsWith("charactersResponse:")) {
+    } else if (response.startsWith("charactersResponse:")) {
       const characters: Character[] = JSON.parse(
-          response.slice("charactersResponse:".length)
+        response.slice("charactersResponse:".length)
       );
 
       setCharacters(characters);
-    }else if (response.startsWith("blasterBuyResponse:")) {
+    } else if (response.startsWith("blasterBuyResponse:")) {
       openDrawer!(
         "resolved",
         "bottom",
