@@ -57,29 +57,45 @@ export function Shop() {
 }
 
 export function Player() {
-  const { characters, jwt } = useUserData();
+  const { characters } = useUserData();
   const { openDrawer } = useDrawer();
-  const [tonConnectUI] = useTonConnectUI();
+  //   const [tonConnectUI] = useTonConnectUI();
   const characterPrices = [1, 2];
-  const characterPayloads = [
-    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
-    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
-  ];
+  //   const characterPayloads = [
+  //     "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
+  //     "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
+  //   ];
 
   const initialCharacters: ModelType[] = [
     {
-      title: "Droid",
+      title: "-unique rebel pilot-",
       imgSrc: model1Img,
       modelYield: "200%",
       worth: characterPrices[0].toString() + " TON",
-      callback: () => handleCharacterBuyClick(1),
+      strength: "5",
+      strengthToHeal: "2",
+      reloadSpeedup: "5",
+      reloadSpeedupToHeal: "4",
+      charge: "500",
+      chargeToHeal: "500",
+      health: "3000",
+      price: "1234.5678",
+      callback: () => openDrawer!("heal"),
     },
     {
       title: "Stormtrooper",
       imgSrc: model2Img,
       modelYield: "300%",
       worth: characterPrices[1].toString() + " TON",
-      callback: () => handleCharacterBuyClick(2),
+      strength: "5",
+      strengthToHeal: "2",
+      reloadSpeedup: "5",
+      reloadSpeedupToHeal: "4",
+      charge: "500",
+      chargeToHeal: "500",
+      health: "3000",
+      price: "1234.5678",
+      callback: () => openDrawer!("heal"),
     },
   ];
 
@@ -102,34 +118,34 @@ export function Player() {
     setModels(updatedWeapons);
   }, [characters]);
 
-  const handleCharacterBuyClick = async (i: number) => {
-    if (jwt == null || jwt === "" || !tonConnectUI.connected) {
-      openDrawer!("connectWallet");
-    } else {
-      const fillTx: SendTransactionRequest = {
-        validUntil: Math.floor(Date.now() / 1000) + 600,
-        messages: [
-          {
-            address: PROJECT_CONTRACT_ADDRESS,
-            amount: (characterPrices[i - 1] * 1000000000 + 50000000).toString(),
-            payload: characterPayloads[i - 1],
-          },
-        ],
-      };
+  //   const handleCharacterBuyClick = async (i: number) => {
+  //     if (jwt == null || jwt === "" || !tonConnectUI.connected) {
+  //       openDrawer!("connectWallet");
+  //     } else {
+  //       const fillTx: SendTransactionRequest = {
+  //         validUntil: Math.floor(Date.now() / 1000) + 600,
+  //         messages: [
+  //           {
+  //             address: PROJECT_CONTRACT_ADDRESS,
+  //             amount: (characterPrices[i - 1] * 1000000000 + 50000000).toString(),
+  //             payload: characterPayloads[i - 1],
+  //           },
+  //         ],
+  //       };
 
-      try {
-        await tonConnectUI.sendTransaction(fillTx);
-        openDrawer!(
-          "resolved",
-          "bottom",
-          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-        );
-      } catch (e) {
-        console.log(e);
-        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
-      }
-    }
-  };
+  //       try {
+  //         await tonConnectUI.sendTransaction(fillTx);
+  //         openDrawer!(
+  //           "resolved",
+  //           "bottom",
+  //           "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+  //         );
+  //       } catch (e) {
+  //         console.log(e);
+  //         openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+  //       }
+  //     }
+  //   };
 
   return (
     <div className="player">
@@ -141,6 +157,14 @@ export function Player() {
             modelYield={card.modelYield}
             worth={card.worth}
             callback={card.callback}
+            strength={card.strength}
+            strengthToHeal={card.strengthToHeal}
+            reloadSpeedup={card.reloadSpeedup}
+            reloadSpeedupToHeal={card.reloadSpeedupToHeal}
+            health={card.health}
+            charge={card.charge}
+            chargeToHeal={card.chargeToHeal}
+            price={card.price}
           />
         );
       })}
@@ -159,11 +183,16 @@ export function Weapon() {
     {
       title: "Blaster 2 Lvl",
       imgSrc: weapon1Img,
-      damage: "3",
-      rateOfFire: "2",
+      additionalIncome: "133",
+      charge: "500",
       chargeSpeed: "1.5%",
+      rateOfFire: "2",
+      damage: "3",
+      durability: "1830",
       worth: blasterPrices[0].toString() + " TON",
       weaponYield: "150%",
+      level: "1",
+      rarity: "common",
       callback: async () => {
         if (jwt == null || jwt === "" || !tonConnectUI.connected) {
           openDrawer!("connectWallet");
@@ -199,11 +228,16 @@ export function Weapon() {
     {
       title: "Blaster 3 Lvl",
       imgSrc: weapon1Img,
+      additionalIncome: "133",
+      charge: "500",
       damage: "8",
       rateOfFire: "3.3",
+      durability: "1830",
       chargeSpeed: "2.2%",
       worth: blasterPrices[1].toString() + " TON",
       weaponYield: "150%",
+      level: "2",
+      rarity: "rare",
       callback: async () => {
         if (jwt == null || jwt === "" || !tonConnectUI.connected) {
           openDrawer!("connectWallet");
@@ -263,6 +297,9 @@ export function Weapon() {
         return (
           <WeaponCard
             title={weapon.title}
+            additionalIncome={weapon.additionalIncome}
+            charge={weapon.charge}
+            durability={weapon.durability}
             imgSrc={weapon.imgSrc}
             damage={weapon.damage}
             rateOfFire={weapon.rateOfFire}
@@ -270,6 +307,8 @@ export function Weapon() {
             worth={weapon.worth}
             weaponYield={weapon.weaponYield}
             callback={weapon.callback}
+            level={weapon.level}
+            rarity={weapon.rarity}
           />
         );
       })}

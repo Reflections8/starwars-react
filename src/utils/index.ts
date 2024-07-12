@@ -11,3 +11,14 @@ export function formatNumberWithCommas(number?: number) {
     }
   }
 }
+
+export function formatWalletString(walletId: string) {
+  if (walletId.length <= 18) {
+    return walletId;
+  }
+
+  const firstPart = walletId.slice(0, 7);
+  const lastPart = walletId.slice(-11);
+
+  return `${firstPart}...${lastPart}`;
+}

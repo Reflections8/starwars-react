@@ -18,6 +18,7 @@ import "./styles/home.css";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useUserData } from "../../UserDataService.tsx";
+import { Info } from "../../components/Header/components/Info/Info.tsx";
 
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -142,14 +143,12 @@ export function Home() {
         rightIcon={<MenuIcon />}
         rightText={"Меню"}
         rightAction={async () => {
-          //@ts-ignore
-          openDrawer("menu", "top");
+          openDrawer!("menu", "top");
         }}
         centerComponent={
           <HeaderCenterShop
             onClick={() => {
-              // @ts-ignore
-              openModal("shop");
+              openModal!("shop");
             }}
           />
         }
@@ -179,7 +178,6 @@ export function Home() {
         leftIcon={<GamesIcon />}
         leftText={"Игры"}
         leftAction={() => {
-          //@ts-ignore
           if (!tonConnectUI.connected) {
             openWalletDrawer();
             return;
@@ -189,9 +187,9 @@ export function Home() {
         rightIcon={<OptionsIcon />}
         rightText={"Опции"}
         rightAction={() => {
-          //@ts-ignore
-          openModal("settings");
+          openModal!("settings");
         }}
+        centerComponent={<Info damage={150} charge={5} reload={500} />}
       />
     </>
   );

@@ -197,6 +197,10 @@
   transition: all 0.2s ease-in-out;
 }
 
+.menu__list-item--Transparent {
+  background: transparent;
+}
+
 .menu__list-item:active {
   opacity: 50%;
 }
@@ -255,6 +259,63 @@
 }
 
 .repair__mainBtn .cuttedButton__text {
+  font-size: 16px;
+}
+
+/* HEAL */
+.heal__text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+  max-width: 300px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.heal__block {
+  padding: 20px;
+  border-radius: 4px;
+  border: 1px solid #19c2ef;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.heal__block-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.heal__block-row-key {
+  text-shadow: 2px -1px 0 #076de93a;
+  color: #0974f8;
+}
+
+.heal__block-row-value {
+  color: #c9e9fb;
+  text-shadow: 2px -1px 0 #076de93a;
+}
+
+.heal__block-cryptoButtons {
+  width: 100%;
+}
+
+.heal__mainBtn {
+  max-width: 210px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.heal__mainBtn .cuttedButton__text {
   font-size: 16px;
 }
 

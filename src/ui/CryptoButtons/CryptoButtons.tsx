@@ -7,6 +7,7 @@ type CryptoButtonsProps = {
   activeCurrency: string;
   setActiveCurrency: (activeCurrency: string) => void;
   className?: string;
+  soonOptions?: string[];
   activeOptions?: string[];
 };
 
@@ -15,6 +16,7 @@ export function CryptoButtons({
   setActiveCurrency,
   className,
   activeOptions = ["credits", "woopy", "ton"],
+  soonOptions = [],
 }: CryptoButtonsProps) {
   return (
     <div className={`cryptoButtons ${className || ""}`}>
@@ -22,7 +24,7 @@ export function CryptoButtons({
         <button
           className={`cryptoButtons__btn ${
             activeCurrency === "credits" ? "cryptoButtons__btn--Active" : ""
-          }`}
+          } ${soonOptions.includes("credits") ? "cryptoButtons__btn--Soon" : ""}`}
           onClick={() => {
             setActiveCurrency("credits");
           }}
@@ -40,7 +42,7 @@ export function CryptoButtons({
         <button
           className={`cryptoButtons__btn ${
             activeCurrency === "woopy" ? "cryptoButtons__btn--Active" : ""
-          }`}
+          } ${soonOptions.includes("woopy") ? "cryptoButtons__btn--Soon" : ""}`}
           onClick={() => {
             setActiveCurrency("woopy");
           }}
@@ -58,7 +60,7 @@ export function CryptoButtons({
         <button
           className={`cryptoButtons__btn ${
             activeCurrency === "ton" ? "cryptoButtons__btn--Active" : ""
-          }`}
+          } ${soonOptions.includes("ton") ? "cryptoButtons__btn--Soon" : ""}`}
           onClick={() => {
             setActiveCurrency("ton");
           }}

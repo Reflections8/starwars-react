@@ -1,0 +1,116 @@
+.info {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.info__button {
+  padding: 5px 10px;
+  background: #0975f84b;
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 77px;
+  width: 100%;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+.info__button:active {
+  opacity: 50%;
+}
+
+.info__button-text {
+  font-size: 10px;
+  color: #19c2ef;
+}
+
+.info__button-corner--1 {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+}
+
+.info__button-corner--2 {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  transform: scaleX(-1);
+}
+
+.info__button-corner--3 {
+  position: absolute;
+  left: -8px;
+  bottom: -8px;
+  transform: scaleY(-1);
+}
+
+.info__button-corner--4 {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  transform: scale(-1, -1);
+}
+
+.info__menu {
+  border: 1px solid #19c2ef25;
+  padding: 20px;
+  background: linear-gradient(to bottom, #1848b990, #181d5b);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: all 0.2s ease-in-out;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.info__menu--Active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.info__menu-title {
+  text-align: center;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-shadow: 3px 3px 0 #0974f820;
+}
+
+.info__menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.info__menu-list-item {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #19c2ef45;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.info__menu-list-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info__menu-list-item-info-key {
+  font-size: 11px;
+  color: #19c2ef;
+}
+
+.info__menu-list-item-info-value {
+  font-size: 14px;
+  color: #c9e9fb;
+}

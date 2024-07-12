@@ -20,6 +20,8 @@ import { SelectOptionType } from "../Settings/types";
 import { useUserData } from "../../../UserDataService.tsx";
 import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
 import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
+import { formatWalletString } from "../../../utils/index.ts";
+import walletIcon from "../../../ui/Drawer/img/menu/wallet.svg";
 
 const pills: PillType[] = [
   {
@@ -42,60 +44,76 @@ const pills: PillType[] = [
 export function Wallet() {
   const { credits, tokens, tons } = useUserData();
 
+  const [wallet] = useState("123");
   const [activePill, setActivePill] = useState(pills[0]);
   return (
-    <div className="wallet">
-      <div className="wallet__balance">
-        <div className="wallet__balance-box">
-          <div className="wallet__balance-box-key">
+    <>
+      <div className="wallet modal__scrollContainer">
+        {wallet ? (
+          <div className="wallet__connectedWalletBox">
             <img
-              src={creditIcon}
+              src={walletIcon}
               alt="icon"
-              className="wallet__balance-box-key-icon"
+              className="wallet__connectedWalletBox-icon"
             />
-            <div className="wallet__balance-box-key-title">Credit</div>
+            <div className="wallet__connectedWalletBox-text">
+              {formatWalletString(wallet)}
+            </div>
+          </div>
+        ) : null}
+
+        <div className="wallet__balance">
+          <div className="wallet__balance-box">
+            <div className="wallet__balance-box-key">
+              <img
+                src={creditIcon}
+                alt="icon"
+                className="wallet__balance-box-key-icon"
+              />
+              <div className="wallet__balance-box-key-title">Credit</div>
+            </div>
+
+            <div className="wallet__balance-box-value">{credits}</div>
           </div>
 
-          <div className="wallet__balance-box-value">{credits}</div>
-        </div>
+          <div className="wallet__balance-box">
+            <div className="wallet__balance-box-key">
+              <img
+                src={woopyIcon}
+                alt="icon"
+                className="wallet__balance-box-key-icon"
+              />
+              <div className="wallet__balance-box-key-title">Akron</div>
+            </div>
 
-        <div className="wallet__balance-box">
-          <div className="wallet__balance-box-key">
-            <img
-              src={woopyIcon}
-              alt="icon"
-              className="wallet__balance-box-key-icon"
-            />
-            <div className="wallet__balance-box-key-title">Akron</div>
+            <div className="wallet__balance-box-value">{tokens}</div>
           </div>
 
-          <div className="wallet__balance-box-value">{tokens}</div>
-        </div>
+          <div className="wallet__balance-box">
+            <div className="wallet__balance-box-key">
+              <img
+                src={tonIcon}
+                alt="icon"
+                className="wallet__balance-box-key-icon"
+              />
+              <div className="wallet__balance-box-key-title">Ton</div>
+            </div>
 
-        <div className="wallet__balance-box">
-          <div className="wallet__balance-box-key">
-            <img
-              src={tonIcon}
-              alt="icon"
-              className="wallet__balance-box-key-icon"
-            />
-            <div className="wallet__balance-box-key-title">Ton</div>
+            <div className="wallet__balance-box-value">{tons}</div>
           </div>
-
-          <div className="wallet__balance-box-value">{tons}</div>
         </div>
+        <div className="wallet__pillsContainer">
+          <SlidingPills
+            pills={pills}
+            activePill={activePill}
+            setActivePill={setActivePill}
+          />
+        </div>
+
+        <div>{activePill.component}</div>
       </div>
-      <div className="wallet__pillsContainer">
-        <SlidingPills
-          pills={pills}
-          activePill={activePill}
-          setActivePill={setActivePill}
-        />
-      </div>
-
-      <div className="modal__scrollContainer">{activePill.component}</div>
-      <div className="modal__scrollContainer__bottomGradient"></div>
-    </div>
+      <div className="wallet modal__scrollContainer__bottomGradient"></div>
+    </>
   );
 }
 

@@ -28,22 +28,77 @@
   gap: 10px;
 }
 
+.player-card-title {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2.5px;
+  text-shadow: 2px 2px 0 #0975f83d;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.player-card-subtitle {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 11px;
+  color: #0974f8;
+  margin-top: -5px;
+}
+
+.player-card-title-rarity {
+  color: #4fb2fe;
+  background: -webkit-linear-gradient(#4fb2fe, #4fb2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .player-card-main {
   display: flex;
   gap: 12px;
 }
 
+.player-card-main-modelBlockWrapper {
+  max-width: 154px;
+  width: 100%;
+}
+
+.player-card-main-modelBlockWrapper-badge {
+  padding: 8px 10px 20px 10px;
+  border: 1px solid #0975f849;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #0974f8;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  max-width: 100px;
+  width: 100%;
+  margin: 0 auto -16px auto;
+}
+
 .player-card-main-modelBlock {
   background-color: #192d7d;
-  max-width: 140px;
+  max-width: 154px;
   width: 100%;
+  object-fit: contain;
+}
+
+.player-card-main-modelBlock--Weapon {
+  object-fit: contain;
 }
 
 .player-card-main-info {
   display: flex;
   flex-direction: column;
   max-width: 134px;
-  width: 100%;
+  /* width: 100%; */
   gap: 15px;
 }
 
@@ -59,7 +114,7 @@
 .player-card-main-info-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .player-card-main-info-list-item {
@@ -71,7 +126,7 @@
 }
 
 .player-card-main-info-list-item-key {
-  font-size: 12px;
+  font-size: 11px;
   color: #19c2ef;
   text-shadow: 2px -1px 0 #076ce93d;
 }
@@ -82,13 +137,59 @@
   text-shadow: 2px -1px 0 #076ce93d;
 }
 
-.player-card-main-info-list-item:nth-child(2)
-  .player-card-main-info-list-item-key {
+.player-card-main-info-list-item-value .green {
+  color: #1bdd15;
+}
+
+.player-card-main-info-list-item-value .red {
+  color: #ff96a2;
+}
+
+.player-card-main-info-list-item-value .blue {
+  color: #0974f8;
+}
+
+.player-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-card-footer-priceBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.player-card-footer-priceBlock-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-card-footer-priceBlock-price-key {
+  font-size: 11px;
   color: #076ce9;
+  text-shadow: 2px -1px 0 #076ce93d;
+}
+
+.player-card-footer-priceBlock-price-value {
+  font-size: 14px;
+  color: #c9e9fb;
+  text-shadow: 2px -1px 0 #076ce93d;
 }
 
 .player-card-main-info-btnWrapper {
   max-width: 110px;
+}
+
+.player-card-main-info-btnWrapper .cuttedButton {
+  padding: 7px 14px;
+}
+
+.player-card-main-info-btnWrapper .cuttedButton__text {
+  font-size: 12px;
+  letter-spacing: 0px;
 }
 
 /* WEAPON */
@@ -105,32 +206,93 @@
   border: 1px solid #19c1ef50;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
-.weapon-card__title {
+.weapon-card-title {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2.5px;
+  text-shadow: 2px 2px 0 #0975f83d;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.weapon-card-title-rarity {
+  color: #4fb2fe;
+  background: -webkit-linear-gradient(#4fb2fe, #4fb2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.weapon-card-main {
+  display: flex;
+  gap: 12px;
+}
+
+.weapon-card-main-modelBlockWrapper {
+  max-width: 154px;
+  width: 100%;
+}
+
+.weapon-card-main-modelBlockWrapper-badge {
+  padding: 8px 10px 20px 10px;
+  border: 1px solid #0975f849;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #0974f8;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  max-width: 100px;
+  width: 100%;
+  margin: 0 auto -16px auto;
+}
+
+.weapon-card-main-modelBlock {
+  background-color: #192d7d;
+  max-width: 154px;
+  width: 100%;
+}
+
+.weapon-card-main-modelBlock--Weapon {
+  object-fit: contain;
+}
+
+.weapon-card-main-info {
+  display: flex;
+  flex-direction: column;
+  max-width: 134px;
+  /* width: 100%; */
+  gap: 15px;
+}
+
+.weapon-card-main-info-title {
   font-size: 14px;
   background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-shadow: 2px 2px 0 #0975f83d;
-  margin-bottom: 10px;
-  text-align: center;
 }
 
-.weapon-card__img {
-  margin-bottom: 20px;
+.weapon-card-main-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.weapon-card-list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 15px;
-  row-gap: 8px;
-  margin-bottom: 20px;
+.weapon-card-main-info-list--Weapon {
+  gap: 5px;
 }
 
-.weapon-card-list-item {
+.weapon-card-main-info-list-item {
   padding-bottom: 6px;
   border-bottom: 1px solid #19c1ef4d;
   display: flex;
@@ -138,13 +300,13 @@
   gap: 4px;
 }
 
-.weapon-card-list-item-key {
-  font-size: 12px;
+.weapon-card-main-info-list-item-key {
+  font-size: 11px;
   color: #19c2ef;
   text-shadow: 2px -1px 0 #076ce93d;
 }
 
-.weapon-card-list-item-value {
+.weapon-card-main-info-list-item-value {
   font-size: 14px;
   color: #c9e9fb;
   text-shadow: 2px -1px 0 #076ce93d;
@@ -152,21 +314,35 @@
 
 .weapon-card-footer {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.weapon-card-footer-priceBlock {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
-.weapon-card-footer .weapon-card-list-item {
-  border-bottom: none;
-  padding-bottom: 0;
+.weapon-card-footer-priceBlock-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.weapon-card-footer .weapon-card-list-item-key {
+.weapon-card-footer-priceBlock-price-key {
+  font-size: 11px;
   color: #076ce9;
+  text-shadow: 2px -1px 0 #076ce93d;
 }
 
-.weapon-card-footer-btnWrapper {
+.weapon-card-footer-priceBlock-price-value {
+  font-size: 14px;
+  color: #c9e9fb;
+  text-shadow: 2px -1px 0 #076ce93d;
+}
+
+.weapon-card-main-info-btnWrapper {
   max-width: 110px;
 }
 
@@ -184,104 +360,164 @@
   border: 1px solid #19c1ef50;
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
-.store-card__title {
+.store-card-title {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.store-card__title-rarity {
+  text-align: center;
   font-size: 13px;
-  letter-spacing: 2px;
-  text-shadow: 3px 3px 0 #0974f820;
-  color: #4fb2fe;
-  letter-spacing: 2px;
-}
-
-.store-card__title-text {
   background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-size: 13px;
-  letter-spacing: 2px;
-  text-shadow: 3px 3px 0 #0974f820;
-}
-
-.store-card__body {
+  letter-spacing: 2.5px;
+  text-shadow: 2px 2px 0 #0975f83d;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 4px;
 }
 
-.store-card__body-img {
+.store-card-title-rarity {
+  color: #4fb2fe;
+  background: -webkit-linear-gradient(#4fb2fe, #4fb2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.store-card-main {
+  display: flex;
+  gap: 12px;
+}
+
+.store-card-main-modelBlockWrapper {
   max-width: 154px;
   width: 100%;
 }
 
-.store-card__body-main {
+.store-card-main-modelBlockWrapper-badge {
+  padding: 8px 10px 20px 10px;
+  border: 1px solid #0975f849;
+  border-radius: 6px;
+  font-size: 11px;
+  color: #0974f8;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  max-width: 100px;
+  width: 100%;
+  margin: 0 auto -16px auto;
+}
+
+.store-card-main-modelBlock {
+  background-color: #192d7d;
+  max-width: 154px;
+  width: 100%;
+}
+
+.store-card-main-modelBlock--store {
+  object-fit: contain;
+}
+
+.store-card-main-info {
+  display: flex;
+  flex-direction: column;
+  max-width: 134px;
+  /* width: 100%; */
+  gap: 15px;
+}
+
+.store-card-main-info-title {
+  font-size: 14px;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2.5px;
+  text-shadow: 2px 2px 0 #0975f83d;
+}
+
+.store-card-main-info-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.store-card__body-main-block {
-  display: flex;
-  flex-direction: column;
+.store-card-main-info-list--store {
   gap: 10px;
 }
 
-.store-card__body-main-block-head {
+.store-card-main-info-list-item {
   padding-bottom: 6px;
-  border-bottom: 1px solid #19c1ef36;
+  border-bottom: 1px solid #19c1ef4d;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
-.store-card__body-main-block-head-key {
+.store-card-main-info-list-item-key {
   font-size: 11px;
   color: #19c2ef;
-  text-shadow: 2px -1px 0 #076de936;
+  text-shadow: 2px -1px 0 #076ce93d;
 }
 
-.store-card__body-main-block-head-value {
+.store-card-main-info-list-item-value {
+  font-size: 14px;
+  color: #c9e9fb;
+  text-shadow: 2px -1px 0 #076ce93d;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.store-card-main-info-list-item-value span:nth-child(1) {
+  color: #ff96a2;
+}
+
+.store-card-main-info-list-item-value span:nth-child(2) {
+  color: #0974f8;
+}
+
+.store-card-footer {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.store-card-footer-priceBlock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.store-card-footer-priceBlock-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.store-card-footer-priceBlock-price-key {
+  font-size: 11px;
+  color: #076ce9;
+  text-shadow: 2px -1px 0 #076ce93d;
+}
+
+.store-card-footer-priceBlock-price-value {
   font-size: 14px;
-}
-
-.store-card__body-main-block-head-value-current {
   color: #c9e9fb;
-  text-shadow: 2px -1px 0 #076de936;
+  text-shadow: 2px -1px 0 #076ce93d;
 }
 
-.store-card__body-main-block-head-value-max {
-  text-shadow: 2px -1px 0 #076de936;
-}
-
-.store-card__body-main-block-cuttedBtnWrapper {
-  max-width: 111px;
-  width: 100%;
-}
-
-.store-card__body-main-block-cuttedBtnWrapper .cuttedButtonContainer::before {
-  display: none;
-}
-
-.store-card__body-main-block-cuttedBtnWrapper .cuttedButtonContainer::after {
-  display: none;
+.store-card-main-info-btnWrapper {
+  max-width: 110px;
 }
 
 .store-card__body-main-block-cuttedBtnWrapper .cuttedButton {
-  padding: 7px 12px;
+  max-width: 111px;
+  width: 100%;
+  padding: 7px 14px;
 }
 
 .store-card__body-main-block-cuttedBtnWrapper .cuttedButton__text {
   font-size: 12px;
-  letter-spacing: unset;
+  letter-spacing: 0px;
 }

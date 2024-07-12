@@ -2,20 +2,21 @@
 import { useDrawer } from "../../context/DrawerContext";
 import { CuttedButton } from "../CuttedButton/CuttedButton";
 import closeIcon from "./img/closeIcon.svg";
-import resolvedIcon from "./img/resolved.svg";
 import rejectedIcon from "./img/rejected.svg";
+import resolvedIcon from "./img/resolved.svg";
 
-import telegramIcon from "./img/menu/tg.svg";
-import xIcon from "./img/menu/x.svg";
-import youtubeIcon from "./img/menu/youtube.svg";
-import walletIcon from "./img/menu/wallet.svg";
-import creditIcon from "./img/upgrade/credits.svg";
-import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
-import "./styles//drawer.css";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useState } from "react";
 import { Prices, useUserData } from "../../UserDataService.tsx";
+import { formatWalletString } from "../../utils/index.ts";
 import { CryptoButtons } from "../CryptoButtons/CryptoButtons.tsx";
+import telegramIcon from "./img/menu/tg.svg";
+import walletIcon from "./img/menu/wallet.svg";
+import xIcon from "./img/menu/x.svg";
+import youtubeIcon from "./img/menu/youtube.svg";
+import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
+import creditIcon from "./img/upgrade/credits.svg";
+import "./styles//drawer.css";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
     connectWallet: <ConnectWallet />,
     repair: <Repair />,
     upgrade: <Upgrade />,
+    heal: <Heal />,
   };
 
   return (
@@ -109,6 +111,7 @@ function Rejected({ drawerText }: { drawerText?: string }) {
 }
 
 function Menu() {
+  const [wallet] = useState("");
   const { closeDrawer, openDrawer } = useDrawer();
 
   async function openWalletDrawer() {
@@ -139,10 +142,22 @@ function Menu() {
           <div className="menu__list-item-text">youtube канал</div>
         </a>
 
-        <div className="menu__list-item" onClick={openWalletDrawer}>
-          <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
-          <div className="menu__list-item-text">подключить кошелек</div>
-        </div>
+        {wallet ? (
+          <div
+            className="menu__list-item menu__list-item--Transparent"
+            onClick={openWalletDrawer}
+          >
+            <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
+            <div className="menu__list-item-text">
+              {formatWalletString(wallet)}
+            </div>
+          </div>
+        ) : (
+          <div className="menu__list-item" onClick={openWalletDrawer}>
+            <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
+            <div className="menu__list-item-text">подключить кошелек</div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -435,6 +450,64 @@ function Repair() {
           getBlasterRepairPrice(activeBlaster.level) != 0
             ? "repair__mainBtn"
             : "repair__mainBtn halfTransparent"
+        }
+        text={"Подтвердить"}
+      />
+    </div>
+  );
+}
+
+function Heal() {
+  const { prices, activeBlaster, sendSocketMessage, credits, jwt } =
+    useUserData();
+  const { openDrawer } = useDrawer();
+  const handleRepairClick = () => {
+    if (!activeBlaster || activeBlaster.level == 1) return;
+
+    if (credits < getBlasterRepairPrice(activeBlaster.level)) {
+      openDrawer!("rejected", "bottom", "Недостаточно кредитов для исцеления");
+      return;
+    }
+
+    if (jwt != null && jwt !== "")
+      sendSocketMessage(
+        "repairBlaster:" +
+          JSON.stringify({ jwt_token: jwt, item_level: activeBlaster.level })
+      );
+  };
+
+  const getBlasterRepairPrice = (level: number): number => {
+    switch (level) {
+      case 1:
+        return 0;
+      case 2:
+        return prices.second_blaster_repair;
+      case 3:
+        return prices.third_blaster_repair;
+    }
+    return 0;
+  };
+
+  return (
+    <div className="heal">
+      <div className="heal__text">Исцелить на 100%</div>
+
+      <div className="heal__block">
+        <div className="heal__block-row">
+          <div className="heal__block-row-key">цена:</div>
+          <div className="heal__block-row-value">{"123.45"} TON</div>
+        </div>
+      </div>
+
+      <CuttedButton
+        callback={() => handleRepairClick()}
+        className={
+          activeBlaster &&
+          activeBlaster.level !== 1 &&
+          credits >= getBlasterRepairPrice(activeBlaster.level) &&
+          getBlasterRepairPrice(activeBlaster.level) != 0
+            ? "heal__mainBtn"
+            : "heal__mainBtn halfTransparent"
         }
         text={"Подтвердить"}
       />

@@ -136,7 +136,7 @@ export function Header({
           </div>
         </div>
 
-        {position === "top" ? centerComponent : null}
+        {centerComponent}
       </div>
     </header>
   );
