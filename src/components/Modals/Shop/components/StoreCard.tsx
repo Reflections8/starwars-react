@@ -75,7 +75,7 @@ export function StoreCardModel({
             </div>
 
             <div
-              className={`cuttedButtonContainer player-card-main-info-btnWrapper ${
+              className={`cuttedButtonContainer store-card-main-info-btnWrapper ${
                 !needRestoration ? "halfTransparent" : ""
               }`}
             >

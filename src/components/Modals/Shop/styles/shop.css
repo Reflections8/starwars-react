@@ -137,6 +137,10 @@
   gap: 8px;
 }
 
+.player-card-main-info-list--Player {
+  gap: 20px;
+}
+
 .player-card-main-info-list-item {
   padding-bottom: 6px;
   border-bottom: 1px solid #19c1ef4d;
@@ -201,15 +205,6 @@
 
 .player-card-main-info-btnWrapper {
   max-width: 110px;
-}
-
-.player-card-main-info-btnWrapper .cuttedButton {
-  padding: 7px 14px;
-}
-
-.player-card-main-info-btnWrapper .cuttedButton__text {
-  font-size: 12px;
-  letter-spacing: 0px;
 }
 
 /* WEAPON */
@@ -547,6 +542,15 @@
 }
 
 .store-card__body-main-block-cuttedBtnWrapper .cuttedButton__text {
+  font-size: 12px;
+  letter-spacing: 0px;
+}
+
+.store-card-main-info-btnWrapper .cuttedButton {
+  padding: 7px 14px;
+}
+
+.store-card-main-info-btnWrapper .cuttedButton__text {
   font-size: 12px;
   letter-spacing: 0px;
 }

@@ -1,74 +1,89 @@
+import { useState } from "react";
 import { CuttedButton } from "../../../../ui/CuttedButton/CuttedButton";
-import { ModelType } from "../../../../ui/SlidingPills/types";
+import { ModelTypeNew } from "../../../../ui/SlidingPills/types";
+import { CryptoButtons } from "../../../../ui/CryptoButtons/CryptoButtons";
 
-type PlayerCardProps = ModelType;
+type PlayerCardProps = ModelTypeNew;
 
 export function PlayerCard({
   title,
+  strength,
+  reloadSpeed,
+  health,
+  price,
   imgSrc,
   callback,
-  strength,
-  strengthToHeal,
-  reloadSpeedup,
-  reloadSpeedupToHeal,
-  charge,
-  chargeToHeal,
-  health,
 }: PlayerCardProps) {
+	const [activeCurrency, setActiveCurrency] = useState("ton");
+
   return (
     <div className="player-card">
-      <div className="player-card-title">{title}</div>
-      <div className="player-card-subtitle">Боевые показатели:</div>
+      <div className="player-card-title">
+        <span>{title}</span>
+      </div>
       <div className="player-card-main">
-        <img src={imgSrc} alt="model" className="player-card-main-modelBlock" />
+        <div className="player-card-main-modelBlockWrapper">
+          <img
+            src={imgSrc}
+            alt="model"
+            className="player-card-main-modelBlock player-card-main-modelBlock--Player"
+          />
+        </div>
+
         <div className="player-card-main-info">
-          <div className="player-card-main-info-list">
+          <div className="player-card-main-info-list player-card-main-info-list--Player">
+            {/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
                 сила(урон):
               </div>
               <div className="player-card-main-info-list-item-value">
-                {strength} <span className="green">(+{strengthToHeal}) </span>
-                ед.
+                {strength} ед.
               </div>
             </div>
 
+				{/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
-                перезарядка:
+                ускорение перезарядки:
               </div>
               <div className="player-card-main-info-list-item-value">
-                {reloadSpeedup}{" "}
-                <span className="green">(+{reloadSpeedupToHeal})%</span>/мин
+                {reloadSpeed}%
               </div>
             </div>
 
-            <div className="player-card-main-info-list-item">
-              <div className="player-card-main-info-list-item-key">заряд:</div>
-              <div className="player-card-main-info-list-item-value">
-                {charge} <span className="green">(+{chargeToHeal})</span>
-              </div>
-            </div>
-
+				{/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
                 здоровье:
               </div>
               <div className="player-card-main-info-list-item-value">
-                <span className="red">{health}</span>{" "}
-                <span className="blue">\3000</span>
+                {health} ед.
               </div>
-            </div>
-
-            <div className="player-card-main-info-btnWrapper">
-              <CuttedButton
-                size="small"
-                text={"Исцелить"}
-                callback={callback}
-              />
             </div>
           </div>
         </div>
+      </div>
+      <div className="player-card-footer">
+        <div className="player-card-footer-priceBlock">
+          <div className="player-card-footer-priceBlock-price">
+            <div className="player-card-footer-priceBlock-price-key">цена:</div>
+            <div className="player-card-footer-priceBlock-price-value">
+              {price}
+            </div>
+          </div>
+
+          <div className="player-card-main-info-btnWrapper">
+            <CuttedButton text={"Купить"} callback={callback} />
+          </div>
+        </div>
+
+        <CryptoButtons
+          className="metrics__tabs"
+          soonOptions={["credits", "woopy"]}
+          activeCurrency={activeCurrency}
+          setActiveCurrency={setActiveCurrency}
+        />
       </div>
     </div>
   );

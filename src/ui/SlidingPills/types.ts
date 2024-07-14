@@ -78,3 +78,13 @@ export type StoreWeaponType = {
   durabilityMax: number;
   imgSrc: string;
 };
+
+export type ModelTypeNew = {
+	title: string
+	strength: number
+	reloadSpeed: number
+	health: number
+	price: number
+	imgSrc: string
+	callback: () => void
+}

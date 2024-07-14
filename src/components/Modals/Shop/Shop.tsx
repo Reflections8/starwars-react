@@ -7,6 +7,7 @@ import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import {
   ModelType,
+  ModelTypeNew,
   PillType,
   StoreModelType,
   StoreType,
@@ -41,7 +42,7 @@ const pills: PillType[] = [
 ];
 
 export function Shop() {
-  const [activePill, setActivePill] = useState(pills[2]);
+  const [activePill, setActivePill] = useState(pills[0]);
   return (
     <div className="shop">
       <div className="shop__pillsContainer">
@@ -101,7 +102,30 @@ export function Player() {
     },
   ];
 
+  /* TODO: NEW MOCK DATA FOR MODEL (base on new figma) */
+  const mockPlayerCards: ModelTypeNew[] = [
+    {
+      title: "unique rebel pilot",
+      strength: 1234,
+      reloadSpeed: 478,
+      health: 3000,
+      price: 1234.5678,
+      imgSrc: model1Img,
+      callback: () => console.log("CALLBACK FOR BUY"),
+    },
+    {
+      title: "unique rebel pilot 2",
+      strength: 2,
+      reloadSpeed: 132,
+      health: 333,
+      price: 1234.5678,
+      imgSrc: model2Img,
+      callback: () => console.log("CALLBACK FOR BUY"),
+    },
+  ];
+
   const [models, setModels] = useState<ModelType[]>(initialCharacters);
+  console.log({ models });
 
   useEffect(() => {
     const has1 = characters.some((c) => c.type === 1);
@@ -151,22 +175,16 @@ export function Player() {
 
   return (
     <div className="player">
-      {models.map((card) => {
+      {mockPlayerCards.map((card) => {
         return (
           <PlayerCard
             title={card.title}
-            imgSrc={card.imgSrc}
-            modelYield={card.modelYield}
-            worth={card.worth}
-            callback={card.callback}
             strength={card.strength}
-            strengthToHeal={card.strengthToHeal}
-            reloadSpeedup={card.reloadSpeedup}
-            reloadSpeedupToHeal={card.reloadSpeedupToHeal}
+            reloadSpeed={card.reloadSpeed}
             health={card.health}
-            charge={card.charge}
-            chargeToHeal={card.chargeToHeal}
             price={card.price}
+            imgSrc={card.imgSrc}
+				callback={card.callback}
           />
         );
       })}
