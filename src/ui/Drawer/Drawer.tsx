@@ -437,7 +437,7 @@ function Repair() {
         <CryptoButtons
           activeCurrency={activeCurrency}
           setActiveCurrency={setActiveCurrency}
-          activeOptions={["credits"]}
+          activeOptions={["credits", "woopy"]}
         />
       </div>
 

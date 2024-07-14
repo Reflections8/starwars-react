@@ -58,7 +58,8 @@
 
 .pills__glider {
   position: absolute;
-  max-width: 145px;
+  /* TODO: check of unset max-width is correct */
+  /* max-width: 145px; */
   height: calc(100% - 10px);
   top: 5px;
   display: flex;

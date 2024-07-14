@@ -104,7 +104,6 @@
 }
 
 .player-card-main-modelBlock {
-  background-color: #192d7d;
   max-width: 154px;
   width: 100%;
   object-fit: contain;
@@ -271,7 +270,6 @@
 }
 
 .weapon-card-main-modelBlock {
-  background-color: #192d7d;
   max-width: 154px;
   width: 100%;
 }
@@ -434,7 +432,6 @@
 }
 
 .store-card-main-modelBlock {
-  background-color: #192d7d;
   max-width: 154px;
   width: 100%;
 }

@@ -43,7 +43,10 @@ export function StoreCardModel({
                 сила(урон):
               </div>
               <div className="player-card-main-info-list-item-value">
-                {strength} <span className="green">(+{strengthUpgrade}) </span>
+                {strength}{" "}
+                {needRestoration ? null : (
+                  <span className="green">(+{strengthUpgrade}) </span>
+                )}
                 ед.
               </div>
             </div>
@@ -53,14 +56,21 @@ export function StoreCardModel({
                 перезарядка:
               </div>
               <div className="player-card-main-info-list-item-value">
-                {reload} <span className="green">(+{reloadUpgrade})%</span>/мин
+                {reload}{" "}
+                {needRestoration ? null : (
+                  <span className="green">(+{reloadUpgrade})%</span>
+                )}
+                /мин
               </div>
             </div>
 
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">заряд:</div>
               <div className="player-card-main-info-list-item-value">
-                {charge} <span className="green">(+{chargeUpgrade})</span>
+                {charge}{" "}
+                {needRestoration ? null : (
+                  <span className="green">(+{chargeUpgrade})</span>
+                )}
               </div>
             </div>
 

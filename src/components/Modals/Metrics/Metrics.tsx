@@ -1,118 +1,190 @@
 import { useState } from "react";
-import { CryptoButtons } from "../../../ui/CryptoButtons/CryptoButtons";
+import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
+import { PillType } from "../../../ui/SlidingPills/types";
 import "./styles/metrics.css";
-import icon1 from "./img/1.svg";
-import icon2 from "./img/2.svg";
-import icon3 from "./img/3.svg";
-import icon4 from "./img/4.svg";
-import icon5 from "./img/5.svg";
+import financesIcon1 from "./img/finances/1.svg";
+import financesIcon2 from "./img/finances/2.svg";
+import financesIcon3 from "./img/finances/3.svg";
+import modelIcon3 from "./img/models/heart.svg";
+import modelIconPlayer from "./img/models/model.png";
+
+type MockModelsType = {
+  title: string;
+  deposits: number;
+  earned: string;
+  healthCurrent: number;
+  healthMax: number;
+  imgSrc: string;
+};
 
 export function Metrics() {
-  const [activeCurrency, setActiveCurrency] = useState("credits");
+  const mockModels: MockModelsType[] = [
+    {
+      title: "unique rebel pilot",
+      deposits: 1234,
+      earned: "123k",
+      healthCurrent: 2.594,
+      healthMax: 5000,
+      imgSrc: modelIconPlayer,
+    },
+    {
+      title: "unique rebel pilot",
+      deposits: 1234,
+      earned: "123k",
+      healthCurrent: 2.594,
+      healthMax: 5000,
+      imgSrc: modelIconPlayer,
+    },
+  ];
 
-  const metrics = {
-    credits: {
-      deposit: "1234.56 CREDITS",
-      maxProfit: "12.34%",
-      earned: "1234.56 CREDITS",
-      win: "1234.56 CREDITS",
-      left: "123 CREDITS",
+  const pills: PillType[] = [
+    {
+      label: "Финансы",
+      value: "FINANCES",
+      component: <Finances />,
     },
-    woopy: {
-      deposit: "1234.56 WOOPY",
-      maxProfit: "12.34%",
-      earned: "1234.56 WOOPY",
-      win: "1234.56 WOOPY",
-      left: "123 WOOPY",
+    {
+      label: "Персонажи",
+      value: "MODELS",
+      component: <Models models={mockModels} />,
     },
-    ton: {
-      deposit: "1234.56 TON",
-      maxProfit: "12.34%",
-      earned: "1234.56 TON",
-      win: "1234.56 TON",
-      left: "123 TON",
-    },
-  };
+  ];
+  const [activePill, setActivePill] = useState(pills[1]);
 
   return (
     <div className="metrics">
-      <CryptoButtons
-        className="metrics__tabs"
-        activeCurrency={activeCurrency}
-        setActiveCurrency={setActiveCurrency}
-      />
+      <div className="metrics__pills">
+        <SlidingPills
+          pills={pills}
+          activePill={activePill}
+          setActivePill={setActivePill}
+        />
+      </div>
 
-      <div className="metrics__list">
-        <div className="metrics__list-item">
-          <div className="metrics__list-item-key">
-            <img
-              src={icon1}
-              alt="icon"
-              className="metrics__list-item-key-icon"
-            />
-            <div className="metrics__list-item-key-name">Депозитов:</div>
+      <div className="modal__scrollContainer">{activePill.component}</div>
+      <div className="modal__scrollContainer__bottomGradient"></div>
+    </div>
+  );
+}
+
+export function Finances() {
+  return (
+    <div className="finances">
+      <div className="finances__item">
+        <div className="finances__item-info">
+          <div className="finances__item-info-key">депозитов:</div>
+          <div className="finances__item-info-value">1234 ton</div>
+        </div>
+        <img src={financesIcon1} alt="icon" className="finances__item-icon" />
+      </div>
+
+      <div className="finances__item">
+        <div className="finances__item-info">
+          <div className="finances__item-info-key">заработано:</div>
+          <div className="finances__item-info-value">123456 akron</div>
+        </div>
+        <img src={financesIcon2} alt="icon" className="finances__item-icon" />
+      </div>
+
+      <div className="finances__item finances__item--Complex">
+        <div className="finances__item-top">
+          <div className="finances__item-info">
+            <div className="finances__item-info-key">Выиграно::</div>
           </div>
-          <div className="metrics__list-item-value">
-            {metrics[activeCurrency as keyof typeof metrics].deposit}
-          </div>
+          <img src={financesIcon3} alt="icon" className="finances__item-icon" />
         </div>
 
-        <div className="metrics__list-item">
-          <div className="metrics__list-item-key">
-            <img
-              src={icon2}
-              alt="icon"
-              className="metrics__list-item-key-icon"
-            />
-            <div className="metrics__list-item-key-name">Макс. профит:</div>
+        <div className="finances__item-bottom">
+          <div className="finances__item-bottom-row">
+            <div className="finances__item-bottom-row-key">Кредитов</div>
+            <div className="finances__item-bottom-row-value">12345</div>
           </div>
-          <div className="metrics__list-item-value">
-            {metrics[activeCurrency as keyof typeof metrics].maxProfit}
+          <div className="finances__item-bottom-row">
+            <div className="finances__item-bottom-row-key">akron</div>
+            <div className="finances__item-bottom-row-value">12345</div>
           </div>
-        </div>
 
-        <div className="metrics__list-item">
-          <div className="metrics__list-item-key">
-            <img
-              src={icon3}
-              alt="icon"
-              className="metrics__list-item-key-icon"
-            />
-            <div className="metrics__list-item-key-name">Заработано:</div>
-          </div>
-          <div className="metrics__list-item-value">
-            {metrics[activeCurrency as keyof typeof metrics].earned}
-          </div>
-        </div>
-
-        <div className="metrics__list-item">
-          <div className="metrics__list-item-key">
-            <img
-              src={icon4}
-              alt="icon"
-              className="metrics__list-item-key-icon"
-            />
-            <div className="metrics__list-item-key-name">Выиграно:</div>
-          </div>
-          <div className="metrics__list-item-value">
-            {metrics[activeCurrency as keyof typeof metrics].win}
-          </div>
-        </div>
-
-        <div className="metrics__list-item">
-          <div className="metrics__list-item-key">
-            <img
-              src={icon5}
-              alt="icon"
-              className="metrics__list-item-key-icon"
-            />
-            <div className="metrics__list-item-key-name">Ост. доход:</div>
-          </div>
-          <div className="metrics__list-item-value">
-            {metrics[activeCurrency as keyof typeof metrics].left}
+          <div className="finances__item-bottom-row">
+            <div className="finances__item-bottom-row-key">ton</div>
+            <div className="finances__item-bottom-row-value">12345</div>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+type ModelsProps = {
+  models: MockModelsType[];
+};
+
+export function Models({ models }: ModelsProps) {
+  return (
+    <div className="models">
+      {models.map((item) => {
+        return (
+          <div className="models__item">
+            <div className="models__item-title">{item.title}</div>
+            <div className="models__item-body">
+              <div className="models__item-body-list">
+                <div className="models__item-body-list-item">
+                  <div className="models__item-body-list-item-info">
+                    <div className="models__item-body-list-item-info-key">
+                      депозитов:
+                    </div>
+                    <div className="models__item-body-list-item-info-value">
+                      {item.deposits} TON
+                    </div>
+                  </div>
+                  <img
+                    src={financesIcon1}
+                    alt="icon"
+                    className="models__item-body-list-item-icon"
+                  />
+                </div>
+
+                <div className="models__item-body-list-item">
+                  <div className="models__item-body-list-item-info">
+                    <div className="models__item-body-list-item-info-key">
+                      заработано:
+                    </div>
+                    <div className="models__item-body-list-item-info-value">
+                      {item.earned} AKRON
+                    </div>
+                  </div>
+                  <img
+                    src={financesIcon2}
+                    alt="icon"
+                    className="models__item-body-list-item-icon"
+                  />
+                </div>
+
+                <div className="models__item-body-list-item">
+                  <div className="models__item-body-list-item-info">
+                    <div className="models__item-body-list-item-info-key">
+                      здоровье:
+                    </div>
+                    <div className="models__item-body-list-item-info-value">
+                      <span className="red">{item.healthCurrent}</span>
+                      <span className="white">/{item.healthMax}</span>
+                    </div>
+                  </div>
+                  <img
+                    src={modelIcon3}
+                    alt="icon"
+                    className="models__item-body-list-item-icon"
+                  />
+                </div>
+              </div>
+              <img
+                src={modelIconPlayer}
+                alt="model"
+                className="models__item-body-img"
+              />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
