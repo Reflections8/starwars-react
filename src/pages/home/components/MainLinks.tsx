@@ -58,7 +58,12 @@ export function MainLinks() {
           </div>
         </div>
 
-        <div className="mainLinks__col-item mainLinks__col-item--slideInLeft2">
+        <div
+          className="mainLinks__col-item mainLinks__col-item--slideInLeft2"
+          onClick={() => {
+            openModal!("shop", 2);
+          }}
+        >
           <MainLinkBgIcon color="green" />
           <img
             src={iconBgLeft}

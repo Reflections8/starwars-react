@@ -21,6 +21,7 @@ import model2Img from "./img/player/model2.png";
 import storeImg from "./img/store/store.png";
 import weapon1Img from "./img/weapon/weapon1.png";
 import "./styles/shop.css";
+import { useModal } from "../../../context/ModalContext.tsx";
 
 const pills: PillType[] = [
   {
@@ -41,7 +42,14 @@ const pills: PillType[] = [
 ];
 
 export function Shop() {
-  const [activePill, setActivePill] = useState(pills[0]);
+  const { activePillProp } = useModal();
+
+  const [activePill, setActivePill] = useState(pills[activePillProp!]);
+
+  useEffect(() => {
+    setActivePill(pills[activePillProp!]);
+  }, [activePillProp]);
+
   return (
     <div className="shop">
       <div className="shop__pillsContainer">

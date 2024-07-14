@@ -49,7 +49,7 @@ export function Metrics() {
       component: <Models models={mockModels} />,
     },
   ];
-  const [activePill, setActivePill] = useState(pills[1]);
+  const [activePill, setActivePill] = useState(pills[0]);
 
   return (
     <div className="metrics">

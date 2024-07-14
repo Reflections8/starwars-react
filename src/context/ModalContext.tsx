@@ -16,7 +16,8 @@ type ModalProviderProps = {
 type ModalContextProps = {
   isOpen: boolean;
   modalType: string;
-  openModal: (type: string) => void;
+  activePillProp?: number;
+  openModal: (type: string, activePillProp?: number) => void;
   closeModal: () => void;
 };
 
@@ -25,6 +26,7 @@ const ModalContext = createContext<Partial<ModalContextProps>>({});
 export function ModalProvider({ children }: ModalProviderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState("");
+  const [activePillProp, setActivePillProp] = useState(0);
   const { isOpen: drawerIsOpen } = useDrawer();
 
   useEffect(() => {
@@ -56,17 +58,21 @@ export function ModalProvider({ children }: ModalProviderProps) {
     };
   }, [isOpen, drawerIsOpen]);
 
-  const openModal = (type: string) => {
+  const openModal = (type: string, pillIndex: number = 0) => {
     setModalType(type);
+    setActivePillProp(pillIndex);
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
+    setActivePillProp(0);
   };
 
   return (
-    <ModalContext.Provider value={{ isOpen, modalType, openModal, closeModal }}>
+    <ModalContext.Provider
+      value={{ isOpen, modalType, activePillProp, openModal, closeModal }}
+    >
       {children}
       <Modal isOpen={isOpen} />
     </ModalContext.Provider>
