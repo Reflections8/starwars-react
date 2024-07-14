@@ -28,6 +28,26 @@
   gap: 10px;
 }
 
+.player-card--NeedRestoration {
+  border-color: #e91f38;
+  background: linear-gradient(to right, #e91f3854, #ff697b00);
+}
+
+.player-card--NeedRestoration .player-card-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #ff96a2;
+}
+
+.player-card--NeedRestoration .player-card-subtitle .red {
+  color: #e91f38;
+}
+
+.player-card--NeedRestoration .player-card-main-info-list-item-value {
+  color: #ff96a2;
+}
+
 .player-card-title {
   display: flex;
   justify-content: center;
@@ -363,6 +383,15 @@
   gap: 10px;
 }
 
+.store-card--NeedRestoration {
+  border-color: #e91f38;
+  background: linear-gradient(to right, #e91f3854, #ff697b00);
+}
+
+.store-card--NeedRestoration .store-card-main-info-list-item-value {
+  color: #ff96a2;
+}
+
 .store-card-title {
   display: flex;
   justify-content: center;
@@ -443,7 +472,7 @@
 }
 
 .store-card-main-info-list--store {
-  gap: 10px;
+  gap: 5px;
 }
 
 .store-card-main-info-list-item {

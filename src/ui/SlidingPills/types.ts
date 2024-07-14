@@ -47,3 +47,34 @@ export type StoreType = {
   level: string;
   gunLevel: number;
 };
+
+export type StoreModelType = {
+  title: string;
+  needRestoration: boolean;
+  combatPerfomanceReduction: null | number;
+  strength: number;
+  strengthUpgrade: number;
+  reload: number;
+  reloadUpgrade: number;
+  charge: number;
+  chargeUpgrade: number;
+  healthCurrent: number;
+  healthMax: number;
+  imgSrc: string;
+};
+
+export type StoreWeaponType = {
+  title: string;
+  rarity: string;
+  level: number;
+  needRestoration: boolean;
+  additionalIncomeCurrent: number;
+  additionalIncomeMax: number;
+  damage: number;
+  charge: number;
+  reload: number;
+  rateOfFire: number;
+  durabilityCurrent: number;
+  durabilityMax: number;
+  imgSrc: string;
+};

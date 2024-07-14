@@ -1,24 +1,26 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
 import { useEffect, useState } from "react";
+import { useUserData } from "../../../UserDataService.tsx";
+import { useDrawer } from "../../../context/DrawerContext.tsx";
+import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import {
   ModelType,
   PillType,
+  StoreModelType,
   StoreType,
+  StoreWeaponType,
   WeaponType,
 } from "../../../ui/SlidingPills/types";
 import { PlayerCard } from "./components/PlayerCard";
+import { StoreCardModel, StoreCardWeapon } from "./components/StoreCard";
+import { WeaponCard } from "./components/WeaponCard";
 import model1Img from "./img/player/model1.png";
 import model2Img from "./img/player/model2.png";
-import weapon1Img from "./img/weapon/weapon1.png";
 import storeImg from "./img/store/store.png";
+import weapon1Img from "./img/weapon/weapon1.png";
 import "./styles/shop.css";
-import { WeaponCard } from "./components/WeaponCard";
-import { StoreCard } from "./components/StoreCard";
-import { useUserData } from "../../../UserDataService.tsx";
-import { useDrawer } from "../../../context/DrawerContext.tsx";
-import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
-import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 
 const pills: PillType[] = [
   {
@@ -39,7 +41,7 @@ const pills: PillType[] = [
 ];
 
 export function Shop() {
-  const [activePill, setActivePill] = useState(pills[0]);
+  const [activePill, setActivePill] = useState(pills[2]);
   return (
     <div className="shop">
       <div className="shop__pillsContainer">
@@ -319,6 +321,76 @@ export function Weapon() {
 export function Store() {
   const { blasters, prices } = useUserData();
   const [weapons, setWeapons] = useState<StoreType[]>([]);
+  console.log({ weapons });
+
+  /* NEW MOCK DATA (based on new figma)*/
+  const mockStoreWeapons: StoreWeaponType[] = [
+    {
+      title: "super blaster",
+      rarity: "common",
+      level: 1,
+      needRestoration: false,
+      additionalIncomeCurrent: 133,
+      additionalIncomeMax: 150,
+      damage: 478,
+      charge: 500,
+      reload: 1,
+      rateOfFire: 1,
+      durabilityCurrent: 1851,
+      durabilityMax: 2000,
+      imgSrc: weapon1Img,
+    },
+    {
+      title: "super blaster",
+      rarity: "rare",
+      level: 3,
+      needRestoration: true,
+      additionalIncomeCurrent: 133,
+      additionalIncomeMax: 150,
+      damage: 478,
+      charge: 500,
+      reload: 1,
+      rateOfFire: 1,
+      durabilityCurrent: 1851,
+      durabilityMax: 2000,
+      imgSrc: weapon1Img,
+    },
+  ];
+
+  /* NEW MOCK DATA (based on new figma)*/
+  const mockStoreModels: StoreModelType[] = [
+    {
+      title: "-unique rebel pilot-",
+      needRestoration: false,
+      combatPerfomanceReduction: null,
+      strength: 5,
+      strengthUpgrade: 2,
+      reload: 5,
+      reloadUpgrade: 4,
+      charge: 500,
+      chargeUpgrade: 500,
+      healthCurrent: 1851,
+      healthMax: 2000,
+      imgSrc: model1Img,
+    },
+    {
+      title: "-unique rebel pilot-",
+      needRestoration: true,
+      combatPerfomanceReduction: -90,
+      strength: 5,
+      strengthUpgrade: 2,
+      reload: 5,
+      reloadUpgrade: 4,
+      charge: 500,
+      chargeUpgrade: 500,
+      healthCurrent: 1851,
+      healthMax: 2000,
+      imgSrc: model2Img,
+    },
+  ];
+
+  const [storeModels] = useState(mockStoreModels);
+  const [storeWeapons] = useState(mockStoreWeapons);
 
   useEffect(() => {
     const newWeapons = blasters.map((blaster) => {
@@ -351,16 +423,41 @@ export function Store() {
 
   return (
     <div className="store">
-      {weapons.map((weapon) => {
+      {storeModels.map((model) => {
         return (
-          <StoreCard
-            rarity={weapon.rarity}
+          <StoreCardModel
+            title={model.title}
+            needRestoration={model.needRestoration}
+            combatPerfomanceReduction={model.combatPerfomanceReduction}
+            strength={model.strength}
+            strengthUpgrade={model.strengthUpgrade}
+            reload={model.reload}
+            reloadUpgrade={model.reloadUpgrade}
+            charge={model.charge}
+            chargeUpgrade={model.chargeUpgrade}
+            healthCurrent={model.healthCurrent}
+            healthMax={model.healthMax}
+            imgSrc={model.imgSrc}
+          />
+        );
+      })}
+
+      {storeWeapons.map((weapon) => {
+        return (
+          <StoreCardWeapon
             title={weapon.title}
-            imgSrc={weapon.imgSrc}
-            strength={weapon.strength}
-            maxStrength={weapon.maxStrength}
+            rarity={weapon.rarity}
             level={weapon.level}
-            gunLevel={weapon.gunLevel}
+            needRestoration={weapon.needRestoration}
+            additionalIncomeCurrent={weapon.additionalIncomeCurrent}
+            additionalIncomeMax={weapon.additionalIncomeMax}
+            damage={weapon.damage}
+            charge={weapon.charge}
+            reload={weapon.reload}
+            rateOfFire={weapon.rateOfFire}
+            durabilityCurrent={weapon.durabilityCurrent}
+            durabilityMax={weapon.durabilityMax}
+            imgSrc={weapon.imgSrc}
           />
         );
       })}

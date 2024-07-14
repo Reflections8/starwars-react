@@ -6,6 +6,10 @@
   background: linear-gradient(to bottom, #076de942, #14b4de42);
 }
 
+.cuttedButtonContainer.halfTransparent * {
+  pointer-events: none;
+}
+
 .cuttedButtonContainer::before {
   content: url("../img/corner.svg");
   position: absolute;
