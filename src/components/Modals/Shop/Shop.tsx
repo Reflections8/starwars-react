@@ -6,7 +6,6 @@ import { useDrawer } from "../../../context/DrawerContext.tsx";
 import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import {
-  ModelType,
   ModelTypeNew,
   PillType,
   StoreModelType,
@@ -60,16 +59,17 @@ export function Shop() {
 }
 
 export function Player() {
-  const { characters } = useUserData();
+  const { characters, jwt } = useUserData();
   const { openDrawer } = useDrawer();
-  //   const [tonConnectUI] = useTonConnectUI();
-  const characterPrices = [1, 2];
-  //   const characterPayloads = [
-  //     "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
-  //     "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
-  //   ];
+  const [tonConnectUI] = useTonConnectUI();
+  const characterPrices = [1, 2, 3];
+  const characterPayloads = [
+    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
+    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
+    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAF9/gsCs=",
+  ];
 
-  const initialCharacters: ModelType[] = [
+  /*const initialCharacters: ModelType[] = [
     {
       title: "-unique rebel pilot-",
       imgSrc: model1Img,
@@ -100,42 +100,54 @@ export function Player() {
       price: "1234.5678",
       callback: () => openDrawer!("heal"),
     },
-  ];
+  ];*/
 
   /* TODO: NEW MOCK DATA FOR MODEL (base on new figma) */
   const mockPlayerCards: ModelTypeNew[] = [
     {
-      title: "unique rebel pilot",
+      title: "Droid",
       strength: 1234,
       reloadSpeed: 478,
       health: 3000,
-      price: 1234.5678,
+      price: characterPrices[0],
       imgSrc: model1Img,
-      callback: () => console.log("CALLBACK FOR BUY"),
+      callback: () => handleCharacterBuyClick(1),
     },
     {
-      title: "unique rebel pilot 2",
+      title: "Stormtrooper",
       strength: 2,
       reloadSpeed: 132,
       health: 333,
-      price: 1234.5678,
+      price: characterPrices[1],
       imgSrc: model2Img,
-      callback: () => console.log("CALLBACK FOR BUY"),
+      callback: () => handleCharacterBuyClick(2),
+    },
+    {
+      title: "Driver",
+      strength: 2,
+      reloadSpeed: 132,
+      health: 333,
+      price: characterPrices[2],
+      imgSrc: model2Img,
+      callback: () => handleCharacterBuyClick(3),
     },
   ];
 
-  const [models, setModels] = useState<ModelType[]>(initialCharacters);
-  console.log({ models });
+  const [models, setModels] = useState<ModelTypeNew[]>(mockPlayerCards);
 
   useEffect(() => {
     const has1 = characters.some((c) => c.type === 1);
     const has2 = characters.some((c) => c.type === 2);
+    const has3 = characters.some((c) => c.type === 3);
 
-    const updatedWeapons = initialCharacters.filter((model) => {
+    const updatedWeapons = mockPlayerCards.filter((model) => {
       if (model.title === "Droid" && has1) {
         return false;
       }
       if (model.title === "Stormtrooper" && has2) {
+        return false;
+      }
+      if (model.title === "Driver" && has3) {
         return false;
       }
       return true;
@@ -144,38 +156,37 @@ export function Player() {
     setModels(updatedWeapons);
   }, [characters]);
 
-  //   const handleCharacterBuyClick = async (i: number) => {
-  //     if (jwt == null || jwt === "" || !tonConnectUI.connected) {
-  //       openDrawer!("connectWallet");
-  //     } else {
-  //       const fillTx: SendTransactionRequest = {
-  //         validUntil: Math.floor(Date.now() / 1000) + 600,
-  //         messages: [
-  //           {
-  //             address: PROJECT_CONTRACT_ADDRESS,
-  //             amount: (characterPrices[i - 1] * 1000000000 + 50000000).toString(),
-  //             payload: characterPayloads[i - 1],
-  //           },
-  //         ],
-  //       };
-
-  //       try {
-  //         await tonConnectUI.sendTransaction(fillTx);
-  //         openDrawer!(
-  //           "resolved",
-  //           "bottom",
-  //           "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-  //         );
-  //       } catch (e) {
-  //         console.log(e);
-  //         openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
-  //       }
-  //     }
-  //   };
+  const handleCharacterBuyClick = async (i: number) => {
+    if (jwt == null || jwt === "" || !tonConnectUI.connected) {
+      openDrawer!("connectWallet");
+    } else {
+      const fillTx: SendTransactionRequest = {
+        validUntil: Math.floor(Date.now() / 1000) + 600,
+        messages: [
+          {
+            address: PROJECT_CONTRACT_ADDRESS,
+            amount: (characterPrices[i - 1] * 1000000000 + 50000000).toString(),
+            payload: characterPayloads[i - 1],
+          },
+        ],
+      };
+      try {
+        await tonConnectUI.sendTransaction(fillTx);
+        openDrawer!(
+          "resolved",
+          "bottom",
+          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+        );
+      } catch (e) {
+        console.log(e);
+        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+      }
+    }
+  };
 
   return (
     <div className="player">
-      {mockPlayerCards.map((card) => {
+      {models.map((card) => {
         return (
           <PlayerCard
             title={card.title}
@@ -184,7 +195,7 @@ export function Player() {
             health={card.health}
             price={card.price}
             imgSrc={card.imgSrc}
-				callback={card.callback}
+            callback={card.callback}
           />
         );
       })}

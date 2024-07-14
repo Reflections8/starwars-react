@@ -18,7 +18,11 @@ import badgeWoopy from "./img/badge-woopy.svg";
 import { Select } from "../../../ui/Select/Select";
 import { SelectOptionType } from "../Settings/types";
 import { useUserData } from "../../../UserDataService.tsx";
-import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
+import {
+  SendTransactionRequest,
+  useTonConnectUI,
+  useTonWallet,
+} from "@tonconnect/ui-react";
 import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 import { formatWalletString } from "../../../utils/index.ts";
 import walletIcon from "../../../ui/Drawer/img/menu/wallet.svg";
@@ -44,7 +48,7 @@ const pills: PillType[] = [
 export function Wallet() {
   const { credits, tokens, tons } = useUserData();
 
-  const [wallet] = useState("123");
+  const wallet = useTonWallet();
   const [activePill, setActivePill] = useState(pills[0]);
   return (
     <>
@@ -57,7 +61,9 @@ export function Wallet() {
               className="wallet__connectedWalletBox-icon"
             />
             <div className="wallet__connectedWalletBox-text">
-              {formatWalletString(wallet)}
+              {wallet.account != null
+                ? formatWalletString(wallet.account.address.toString())
+                : ""}
             </div>
           </div>
         ) : null}

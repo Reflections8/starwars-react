@@ -14,7 +14,7 @@ export function PlayerCard({
   imgSrc,
   callback,
 }: PlayerCardProps) {
-	const [activeCurrency, setActiveCurrency] = useState("ton");
+  const [activeCurrency, setActiveCurrency] = useState("ton");
 
   return (
     <div className="player-card">
@@ -42,7 +42,7 @@ export function PlayerCard({
               </div>
             </div>
 
-				{/* ITEM */}
+            {/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
                 ускорение перезарядки:
@@ -52,7 +52,7 @@ export function PlayerCard({
               </div>
             </div>
 
-				{/* ITEM */}
+            {/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
                 здоровье:
@@ -69,7 +69,7 @@ export function PlayerCard({
           <div className="player-card-footer-priceBlock-price">
             <div className="player-card-footer-priceBlock-price-key">цена:</div>
             <div className="player-card-footer-priceBlock-price-value">
-              {price}
+              {price} {activeCurrency.toString().toUpperCase()}
             </div>
           </div>
 
