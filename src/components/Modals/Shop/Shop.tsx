@@ -3,25 +3,24 @@ import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
 import { useEffect, useState } from "react";
 import { useUserData } from "../../../UserDataService.tsx";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
+import { useModal } from "../../../context/ModalContext.tsx";
 import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import {
   ModelTypeNew,
   PillType,
-  StoreModelType,
   StoreType,
   StoreWeaponType,
   WeaponType,
 } from "../../../ui/SlidingPills/types";
 import { PlayerCard } from "./components/PlayerCard";
-import { StoreCardModel, StoreCardWeapon } from "./components/StoreCard";
+import { StoreCardWeapon } from "./components/StoreCard";
 import { WeaponCard } from "./components/WeaponCard";
 import model1Img from "./img/player/model1.png";
 import model2Img from "./img/player/model2.png";
 import storeImg from "./img/store/store.png";
 import weapon1Img from "./img/weapon/weapon1.png";
 import "./styles/shop.css";
-import { useModal } from "../../../context/ModalContext.tsx";
 
 const pills: PillType[] = [
   {
@@ -394,39 +393,6 @@ export function Store() {
     },
   ];
 
-  /* NEW MOCK DATA (based on new figma)*/
-  const mockStoreModels: StoreModelType[] = [
-    {
-      title: "-unique rebel pilot-",
-      needRestoration: false,
-      combatPerfomanceReduction: null,
-      strength: 5,
-      strengthUpgrade: 2,
-      reload: 5,
-      reloadUpgrade: 4,
-      charge: 500,
-      chargeUpgrade: 500,
-      healthCurrent: 1851,
-      healthMax: 2000,
-      imgSrc: model1Img,
-    },
-    {
-      title: "-unique rebel pilot-",
-      needRestoration: true,
-      combatPerfomanceReduction: -90,
-      strength: 5,
-      strengthUpgrade: 2,
-      reload: 5,
-      reloadUpgrade: 4,
-      charge: 500,
-      chargeUpgrade: 500,
-      healthCurrent: 1851,
-      healthMax: 2000,
-      imgSrc: model2Img,
-    },
-  ];
-
-  const [storeModels] = useState(mockStoreModels);
   const [storeWeapons] = useState(mockStoreWeapons);
 
   useEffect(() => {
@@ -460,25 +426,6 @@ export function Store() {
 
   return (
     <div className="store">
-      {storeModels.map((model) => {
-        return (
-          <StoreCardModel
-            title={model.title}
-            needRestoration={model.needRestoration}
-            combatPerfomanceReduction={model.combatPerfomanceReduction}
-            strength={model.strength}
-            strengthUpgrade={model.strengthUpgrade}
-            reload={model.reload}
-            reloadUpgrade={model.reloadUpgrade}
-            charge={model.charge}
-            chargeUpgrade={model.chargeUpgrade}
-            healthCurrent={model.healthCurrent}
-            healthMax={model.healthMax}
-            imgSrc={model.imgSrc}
-          />
-        );
-      })}
-
       {storeWeapons.map((weapon) => {
         return (
           <StoreCardWeapon

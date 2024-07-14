@@ -2,6 +2,7 @@
 import { ChooseGame } from "../../components/Modals/ChooseGame/ChooseGame";
 import { Metrics } from "../../components/Modals/Metrics/Metrics";
 import { Partners } from "../../components/Modals/Partners/Partners";
+import { Player } from "../../components/Modals/Player/Player";
 import { Settings } from "../../components/Modals/Settings/Settings";
 import { Shop } from "../../components/Modals/Shop/Shop";
 import { Tasks } from "../../components/Modals/Tasks/Tasks";
@@ -12,6 +13,7 @@ import { ChartIcon } from "../../icons/Modals/Chart";
 import { CupIcon } from "../../icons/Modals/Cup";
 import { GamepadIcon } from "../../icons/Modals/Gamepad";
 import { GearIcon } from "../../icons/Modals/Gear";
+import { HelmetIcon } from "../../icons/Modals/Helmet";
 import { StoreIcon } from "../../icons/Modals/Store";
 import { TasksIcon } from "../../icons/Modals/Tasks";
 import { TeamIcon } from "../../icons/Modals/Team";
@@ -69,6 +71,11 @@ const modalContentType = {
     title: "Кошелек",
     icon: <WalletIcon />,
     component: <Wallet />,
+  },
+  player: {
+    title: "Игрок",
+    icon: <HelmetIcon />,
+    component: <Player />,
   },
 };
 
