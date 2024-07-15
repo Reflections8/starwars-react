@@ -221,7 +221,7 @@ export function StoreCardWeapon({
             }
             text={"Починить"}
             callback={() => {
-              selectGun(level);
+              selectGun(blasterLevel);
               openDrawer!("repair");
             }}
           />
@@ -232,7 +232,7 @@ export function StoreCardWeapon({
             size="small"
             text={"Улучшить"}
             callback={() => {
-              selectGun(level);
+              selectGun(blasterLevel);
               openDrawer!("upgrade");
             }}
           />

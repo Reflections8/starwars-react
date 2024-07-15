@@ -210,13 +210,12 @@ export function Player() {
     </div>
   );
 }
-
+export const blasterPrices = [2, 10];
 export function Weapon() {
   const { blasters, jwt } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
 
-  const blasterPrices = [2, 10];
   const blasterPayloads = [
     "te6cckEBAQEADgAAGPbRsjsAAAABAAAAAqwzHw4=",
     "te6cckEBAQEADgAAGPbRsjsAAAABAAAAA6+wdPw=",
@@ -328,7 +327,7 @@ export function Weapon() {
 }
 
 export function Store() {
-  const { blasters, prices } = useUserData();
+  const { blasters, prices, gunsEarned, gunsEarnRequired } = useUserData();
   const [weapons, setWeapons] = useState<StoreWeaponType[]>([]);
   const weaponRates = [1.25, 2, 3.3];
   /* NEW MOCK DATA (based on new figma)
@@ -381,18 +380,25 @@ export function Store() {
         blaster.charge_level +
         blaster.damage_level +
         blaster.max_charge_level;
+
+      const earningsPercentage = (gunsEarned / gunsEarnRequired) * 100;
       return {
         title: "super blaster",
         rarity: rarity,
         level: level,
         needRestoration: blaster.usage <= 0,
-        additionalIncomeCurrent: 133,
-        additionalIncomeMax: 150,
+        additionalIncomeCurrent:
+          blaster.level == 1
+            ? 0
+            : (blasterPrices[blaster.level - 2] * 1.5 * earningsPercentage) /
+              100,
+        additionalIncomeMax:
+          blaster.level == 1 ? 0 : blasterPrices[blaster.level - 2] * 1.5,
         damage: blaster.damage,
         charge: blaster.charge,
         reload: blaster.charge_step,
         rateOfFire: weaponRates[blaster.level - 1],
-        durabilityCurrent: blaster.max_usage - blaster.usage,
+        durabilityCurrent: blaster.usage,
         durabilityMax: blaster.max_usage,
         imgSrc: storeImg,
         blasterLevel: blaster.level,

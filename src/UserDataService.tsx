@@ -19,6 +19,8 @@ interface UserDataContextType {
   jwt: string | null;
   checkGun: boolean;
   exchangeRate: number;
+  gunsEarned: number;
+  gunsEarnRequired: number;
   blasters: Blaster[];
   characters: Character[];
   activeBlaster: Blaster | null;
@@ -37,6 +39,8 @@ const defaultValue: UserDataContextType = {
   tokens: 0,
   tons: 0,
   exchangeRate: 0,
+  gunsEarned: 0,
+  gunsEarnRequired: 0,
   jwt: "",
   checkGun: false,
   blasters: [],
@@ -78,6 +82,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [credits, setCredits] = useState(0);
   const [tokens, setTokens] = useState(0);
   const [tons, setTons] = useState(0);
+  const [gunsEarned, setGunsEarned] = useState(0);
+  const [gunsEarnRequired, setGunsEarnRequired] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
 
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
@@ -123,6 +129,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const selectGun = (level: number) => {
     const blaster = blasters.find((item) => item.level === level);
+    console.log(blaster);
     if (blaster) setActiveBlaster(blaster);
   };
 
@@ -186,6 +193,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setTons(data.tons);
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
+      setGunsEarned(data.earned);
+      setGunsEarnRequired(data.earn_required);
     } else if (response.startsWith("exchangeResponse:")) {
       const data = JSON.parse(response.slice("exchangeResponse:".length));
       setCredits(data.credits);
@@ -316,6 +325,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         blasters,
         characters,
         prices,
+        gunsEarned,
+        gunsEarnRequired,
         checkGun,
         selectGun,
         updateCredits,

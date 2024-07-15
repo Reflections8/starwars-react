@@ -5,7 +5,7 @@ import closeIcon from "./img/closeIcon.svg";
 import rejectedIcon from "./img/rejected.svg";
 import resolvedIcon from "./img/resolved.svg";
 
-import { useTonConnectUI } from "@tonconnect/ui-react";
+import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
 import { useState } from "react";
 import { Prices, useUserData } from "../../UserDataService.tsx";
 import { formatWalletString } from "../../utils/index.ts";
@@ -111,7 +111,7 @@ function Rejected({ drawerText }: { drawerText?: string }) {
 }
 
 function Menu() {
-  const [wallet] = useState("");
+  const wallet = useTonWallet();
   const { closeDrawer, openDrawer } = useDrawer();
 
   async function openWalletDrawer() {
@@ -143,13 +143,10 @@ function Menu() {
         </a>
 
         {wallet ? (
-          <div
-            className="menu__list-item menu__list-item--Transparent"
-            onClick={openWalletDrawer}
-          >
+          <div className="menu__list-item menu__list-item--Transparent">
             <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
             <div className="menu__list-item-text">
-              {formatWalletString(wallet)}
+              {formatWalletString(wallet.account.address)}
             </div>
           </div>
         ) : (
@@ -212,7 +209,6 @@ function Upgrade() {
   const handleUpgradeClick = (value: number) => {
     if (!activeBlaster) return;
     if (value != 0 && value != 1 && value != 2) return;
-
     let nextOptionLevel;
     if (value == 0) nextOptionLevel = activeBlaster.damage_level + 1;
     else if (value == 1) nextOptionLevel = activeBlaster.max_charge_level + 1;
