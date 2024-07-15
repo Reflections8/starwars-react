@@ -61,6 +61,11 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInLeft2"
           onClick={() => {
+            if (!tonConnectUI.connected) {
+              openWalletDrawer();
+              return;
+            }
+
             openModal!("player");
           }}
         >

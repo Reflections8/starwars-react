@@ -24,6 +24,7 @@ interface UserDataContextType {
   blasters: Blaster[];
   characters: Character[];
   activeBlaster: Blaster | null;
+  activeCharacter: Character | null;
   prices: Prices;
   selectGun: (value: number) => void;
   updateCredits: (value: number) => void;
@@ -46,6 +47,7 @@ const defaultValue: UserDataContextType = {
   blasters: [],
   characters: [],
   activeBlaster: null,
+  activeCharacter: null,
   prices: {
     second_blaster_repair: 0,
     third_blaster_repair: 0,
@@ -87,6 +89,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [exchangeRate, setExchangeRate] = useState(0);
 
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
+  const [activeCharacter, setActiveCharacter] = useState<Character | null>(
+    null
+  );
   const [blasters, setBlasters] = useState<Blaster[]>([]);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [prices, setPrices] = useState<Prices>({
@@ -129,7 +134,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const selectGun = (level: number) => {
     const blaster = blasters.find((item) => item.level === level);
-    console.log(blaster);
     if (blaster) setActiveBlaster(blaster);
   };
 
@@ -195,6 +199,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setExchangeRate(data.exchange_rate);
       setGunsEarned(data.earned);
       setGunsEarnRequired(data.earn_required);
+      const activeCharacter: Character | null = data.active_character;
+
+      setActiveCharacter(activeCharacter);
     } else if (response.startsWith("exchangeResponse:")) {
       const data = JSON.parse(response.slice("exchangeResponse:".length));
       setCredits(data.credits);
@@ -324,6 +331,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         exchangeRate,
         blasters,
         characters,
+        activeCharacter,
         prices,
         gunsEarned,
         gunsEarnRequired,
@@ -345,7 +353,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
 export const useUserData = () => useContext(UserDataContext);
 
-interface Blaster {
+export interface Blaster {
   id: number; // long в C# соответствует number в TypeScript
   owner: string; // string
   level: number; // int
@@ -360,7 +368,7 @@ interface Blaster {
   charge_step: number;
 }
 
-interface Character {
+export interface Character {
   id: number; // long в C# соответствует number в TypeScript
   owner: string; // string
   type: number; // int
@@ -381,3 +389,28 @@ export interface Prices {
   blaster_3_2: number;
   blaster_3_3: number;
 }
+
+export const CharactersData = [
+  {
+    type: 1,
+    damage: 2,
+    charge_step: 0,
+    price: 2,
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
+  },
+  {
+    type: 2,
+    damage: 10,
+    charge_step: 1,
+    price: 10,
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
+  },
+  {
+    type: 3,
+    damage: 30,
+    charge_step: 2,
+    price: 30,
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAF9/gsCs=",
+  },
+  { type: 4, damage: 70, charge_step: 4, price: 70, payload: "" },
+];

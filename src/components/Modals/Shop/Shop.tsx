@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
 import { useEffect, useState } from "react";
-import { useUserData } from "../../../UserDataService.tsx";
+import { CharactersData, useUserData } from "../../../UserDataService.tsx";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
 import { useModal } from "../../../context/ModalContext.tsx";
 import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
@@ -68,14 +68,6 @@ export function Player() {
   const { characters, jwt } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
-  const characterPrices = [2, 10, 30, 70];
-  const characterDamages = [2, 10, 30, 70];
-  const characterCharges = [0, 1, 2, 4];
-  const characterPayloads = [
-    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
-    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
-    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAF9/gsCs=",
-  ];
 
   /*const initialCharacters: ModelType[] = [
     {
@@ -114,28 +106,28 @@ export function Player() {
   const mockPlayerCards: ModelTypeNew[] = [
     {
       title: "Droid",
-      strength: characterDamages[0],
-      reloadSpeed: characterCharges[0],
+      strength: CharactersData[0].damage,
+      reloadSpeed: CharactersData[0].charge_step,
       health: 2000,
-      price: characterPrices[0],
+      price: CharactersData[0].price,
       imgSrc: model1Img,
       callback: () => handleCharacterBuyClick(1),
     },
     {
       title: "Stormtrooper",
-      strength: characterDamages[1],
-      reloadSpeed: characterCharges[1],
+      strength: CharactersData[1].damage,
+      reloadSpeed: CharactersData[1].charge_step,
       health: 2000,
-      price: characterPrices[1],
+      price: CharactersData[1].price,
       imgSrc: model2Img,
       callback: () => handleCharacterBuyClick(2),
     },
     {
       title: "Driver",
-      strength: characterDamages[2],
-      reloadSpeed: characterCharges[2],
+      strength: CharactersData[2].damage,
+      reloadSpeed: CharactersData[2].charge_step,
       health: 2000,
-      price: characterPrices[2],
+      price: CharactersData[2].price,
       imgSrc: model2Img,
       callback: () => handleCharacterBuyClick(3),
     },
@@ -173,8 +165,11 @@ export function Player() {
         messages: [
           {
             address: PROJECT_CONTRACT_ADDRESS,
-            amount: (characterPrices[i - 1] * 1000000000 + 50000000).toString(),
-            payload: characterPayloads[i - 1],
+            amount: (
+              CharactersData[i - 1].price * 1000000000 +
+              50000000
+            ).toString(),
+            payload: CharactersData[i - 1].payload,
           },
         ],
       };

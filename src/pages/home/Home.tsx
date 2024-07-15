@@ -17,7 +17,11 @@ import { Resources } from "./components/Resources";
 import "./styles/home.css";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useTonConnectUI } from "@tonconnect/ui-react";
-import { useUserData } from "../../UserDataService.tsx";
+import {
+  Blaster,
+  CharactersData,
+  useUserData,
+} from "../../UserDataService.tsx";
 import { Info } from "../../components/Header/components/Info/Info.tsx";
 
 export function Home() {
@@ -28,6 +32,8 @@ export function Home() {
     tokens,
     tons,
     jwt,
+    activeCharacter,
+    blasters,
     updateCredits,
     updateJwt,
     checkGun,
@@ -43,6 +49,12 @@ export function Home() {
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
+
+  const [stats, setStats] = useState({
+    totalDamage: 0,
+    totalChargeStep: 0,
+    charge: 0,
+  });
 
   const sendMessageToUnity = (method: string, param: any) => {
     const message = JSON.stringify({ method, param });
@@ -68,6 +80,32 @@ export function Home() {
     }
     return () => {};
   }, [isUnityLoaded, jwt]);
+
+  useEffect(() => {
+    if (!activeCharacter || !blasters || blasters.length == 0) return;
+
+    const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
+      return blasters.reduce((highest: Blaster, blaster: Blaster) => {
+        return blaster.level > (highest.level || 0) ? blaster : highest;
+      });
+    };
+
+    const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
+    if (!highestLevelBlaster) return;
+
+    const characterData = CharactersData[activeCharacter.type - 1];
+    if (!characterData) return;
+
+    const totalDamage =
+      (highestLevelBlaster.damage || 0) + (characterData.damage || 0);
+
+    const totalChargeStep =
+      (highestLevelBlaster.charge_step || 0) + (characterData.charge_step || 0);
+
+    const charge = highestLevelBlaster.max_charge || 0;
+
+    setStats({ totalDamage, totalChargeStep, charge });
+  }, [activeCharacter, blasters]);
 
   useEffect(() => {
     if (checkGun) {
@@ -189,7 +227,13 @@ export function Home() {
         rightAction={() => {
           openModal!("settings");
         }}
-        centerComponent={<Info damage={150} charge={5} reload={500} />}
+        centerComponent={
+          <Info
+            damage={stats.totalDamage}
+            charge={stats.charge}
+            reload={stats.totalChargeStep}
+          />
+        }
       />
     </>
   );
