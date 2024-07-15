@@ -118,7 +118,7 @@ export function StoreCardWeapon({
   durabilityCurrent,
   durabilityMax,
   imgSrc,
-  blasterLevel
+  blasterLevel,
 }: StoreWeaponType) {
   const { selectGun } = useUserData();
   const { openDrawer } = useDrawer();
@@ -196,17 +196,17 @@ export function StoreCardWeapon({
               <div className="store-card-main-info-list-item-key">
                 прочность:
               </div>
-              {
-                blasterLevel == 1 ?
-                    <div className="store-card-main-info-list-item-value">
-                      <span>♾️</span>
-                    </div>:
-                    <div className="store-card-main-info-list-item-value">
-                      <span>{durabilityCurrent}</span>
-                      <span>\{durabilityMax}</span>
-                    </div>
-              }
-          </div>
+              {blasterLevel == 1 ? (
+                <div className="store-card-main-info-list-item-value">
+                  <span>♾️</span>
+                </div>
+              ) : (
+                <div className="store-card-main-info-list-item-value">
+                  <span>{durabilityCurrent}</span>
+                  <span>\{durabilityMax}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -215,7 +215,7 @@ export function StoreCardWeapon({
           <CuttedButton
             size="small"
             className={
-              level == 1 || durabilityCurrent === durabilityMax
+              blasterLevel == 1 || durabilityCurrent === durabilityMax
                 ? "halfTransparent"
                 : ""
             }
