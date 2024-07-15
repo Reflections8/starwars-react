@@ -341,12 +341,12 @@ interface Blaster {
   usage: number; // int
   max_usage: number;
   charge: number; // int
-  max_charge: number; // int
-  chargeStep: number; // double соответствует number в TypeScript
+  max_charge: number; // int// double соответствует number в TypeScript
   damage: number; // uint в C# соответствует number в TypeScript
   damage_level: number; // int
   max_charge_level: number; // double соответствует number в TypeScript
   charge_level: number;
+  charge_step: number;
 }
 
 interface Character {

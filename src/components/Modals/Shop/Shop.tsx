@@ -9,7 +9,6 @@ import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import {
   ModelTypeNew,
   PillType,
-  StoreType,
   StoreWeaponType,
   WeaponType,
 } from "../../../ui/SlidingPills/types";
@@ -330,10 +329,9 @@ export function Weapon() {
 
 export function Store() {
   const { blasters, prices } = useUserData();
-  const [weapons, setWeapons] = useState<StoreType[]>([]);
-  console.log({ weapons });
-
-  /* NEW MOCK DATA (based on new figma)*/
+  const [weapons, setWeapons] = useState<StoreWeaponType[]>([]);
+  const weaponRates = [1.25, 2, 3.3];
+  /* NEW MOCK DATA (based on new figma)
   const mockStoreWeapons: StoreWeaponType[] = [
     {
       title: "super blaster",
@@ -349,6 +347,7 @@ export function Store() {
       durabilityCurrent: 1851,
       durabilityMax: 2000,
       imgSrc: weapon1Img,
+      blasterLevel: 1,
     },
     {
       title: "super blaster",
@@ -364,10 +363,9 @@ export function Store() {
       durabilityCurrent: 1851,
       durabilityMax: 2000,
       imgSrc: weapon1Img,
+      blasterLevel: 2,
     },
-  ];
-
-  const [storeWeapons] = useState(mockStoreWeapons);
+  ];*/
 
   useEffect(() => {
     const newWeapons = blasters.map((blaster) => {
@@ -383,15 +381,21 @@ export function Store() {
         blaster.charge_level +
         blaster.damage_level +
         blaster.max_charge_level;
-
       return {
-        rarity,
         title: "super blaster",
+        rarity: rarity,
+        level: level,
+        needRestoration: blaster.usage <= 0,
+        additionalIncomeCurrent: 133,
+        additionalIncomeMax: 150,
+        damage: blaster.damage,
+        charge: blaster.charge,
+        reload: blaster.charge_step,
+        rateOfFire: weaponRates[blaster.level - 1],
+        durabilityCurrent: blaster.max_usage - blaster.usage,
+        durabilityMax: blaster.max_usage,
         imgSrc: storeImg,
-        strength: blaster.usage.toString(),
-        maxStrength: blaster.max_usage.toString(),
-        level: level.toString(),
-        gunLevel: blaster.level,
+        blasterLevel: blaster.level,
       };
     });
 
@@ -400,7 +404,7 @@ export function Store() {
 
   return (
     <div className="store">
-      {storeWeapons.map((weapon) => {
+      {weapons.map((weapon) => {
         return (
           <StoreCardWeapon
             title={weapon.title}
@@ -416,6 +420,7 @@ export function Store() {
             durabilityCurrent={weapon.durabilityCurrent}
             durabilityMax={weapon.durabilityMax}
             imgSrc={weapon.imgSrc}
+            blasterLevel={weapon.blasterLevel}
           />
         );
       })}

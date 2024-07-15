@@ -67,6 +67,7 @@ export type StoreWeaponType = {
   title: string;
   rarity: string;
   level: number;
+  blasterLevel: number;
   needRestoration: boolean;
   additionalIncomeCurrent: number;
   additionalIncomeMax: number;
@@ -80,11 +81,11 @@ export type StoreWeaponType = {
 };
 
 export type ModelTypeNew = {
-	title: string
-	strength: number
-	reloadSpeed: number
-	health: number
-	price: number
-	imgSrc: string
-	callback: () => void
-}
+  title: string;
+  strength: number;
+  reloadSpeed: number;
+  health: number;
+  price: number;
+  imgSrc: string;
+  callback: () => void;
+};
