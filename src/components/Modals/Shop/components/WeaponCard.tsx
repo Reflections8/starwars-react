@@ -93,7 +93,7 @@ export function WeaponCard({
                 прочность:
               </div>
               <div className="weapon-card-main-info-list-item-value">
-                {durability}\ед.
+                {durability} ед.
               </div>
             </div>
           </div>
