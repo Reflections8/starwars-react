@@ -16,6 +16,9 @@ import ch1Img from "../src/assets/img/ch/1.png";
 import ch2Img from "../src/assets/img/ch/2.png";
 import ch3Img from "../src/assets/img/ch/3.png";
 import ch4Img from "../src/assets/img/ch/4.png";
+import bl1Img from "../src/assets/img/bl/1.png";
+import bl2Img from "../src/assets/img/bl/2.png";
+import bl3Img from "../src/assets/img/bl/3.png";
 
 interface UserDataContextType {
   credits: number;
@@ -393,6 +396,8 @@ export interface Character {
   type: number; // int
   earn_required: number; // int
   earned: number;
+  total_earned_tokens: number;
+  total_deposited: number;
 }
 
 export interface Prices {
@@ -408,6 +413,33 @@ export interface Prices {
   blaster_3_2: number;
   blaster_3_3: number;
 }
+
+export const BlastersData = [
+  {
+    level: 1,
+    name: "PISTOL M-002",
+    price: 0,
+    payload: "none",
+    rarity: "base",
+    image: bl1Img,
+  },
+  {
+    level: 2,
+    name: "FG-13 ELITE",
+    price: 2,
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAAqwzHw4=",
+    rarity: "common",
+    image: bl2Img,
+  },
+  {
+    level: 3,
+    name: "EF-4 SHORTLIGHT",
+    price: 10,
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAA6+wdPw=",
+    rarity: "uncommon",
+    image: bl3Img,
+  }
+];
 
 export const CharactersData = [
   {

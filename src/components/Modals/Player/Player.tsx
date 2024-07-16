@@ -81,10 +81,13 @@ export function Player() {
     ): StoreModelType => {
       const needRestoration = character.earned >= character.earn_required;
       const combatPerformanceReduction = needRestoration ? -90 : null;
-      const strength =
+      const strength = Math.round(
         (CharactersData[character.type - 1].damage + blaster.damage) *
-        (needRestoration ? 0.1 : 1);
-      const charge = blaster.max_charge;
+          (needRestoration ? 0.1 : 1)
+      );
+      const charge = Math.round(
+        blaster.max_charge * (needRestoration ? 0.1 : 1)
+      );
       const reload =
         (CharactersData[character.type - 1].charge_step + blaster.charge_step) *
         (needRestoration ? 0.1 : 1);
@@ -137,7 +140,7 @@ export function Player() {
               reloadUpgrade={model.reloadUpgrade}
               charge={model.charge}
               chargeUpgrade={model.chargeUpgrade}
-              healthCurrent={model.healthCurrent}
+              healthCurrent={model.healthCurrent <= 0 ? 0 : model.healthCurrent}
               healthMax={model.healthMax}
               imgSrc={model.imgSrc}
               type={model.type}

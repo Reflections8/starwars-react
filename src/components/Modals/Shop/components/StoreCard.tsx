@@ -58,11 +58,12 @@ export function StoreCardModel({
                 перезарядка:
               </div>
               <div className="player-card-main-info-list-item-value">
-                {reload}{" "}
+                {reload}
+                {""}
                 {needRestoration ? null : (
-                  <span className="green">(+{reloadUpgrade})%</span>
+                  <span className="green"> (+{reloadUpgrade})</span>
                 )}
-                /мин
+                %/мин
               </div>
             </div>
 

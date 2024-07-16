@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
 import { useEffect, useState } from "react";
-import { CharactersData, useUserData } from "../../../UserDataService.tsx";
+import {
+  BlastersData,
+  CharactersData,
+  useUserData,
+} from "../../../UserDataService.tsx";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
 import { useModal } from "../../../context/ModalContext.tsx";
 import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
@@ -15,8 +19,6 @@ import {
 import { PlayerCard } from "./components/PlayerCard";
 import { StoreCardWeapon } from "./components/StoreCard";
 import { WeaponCard } from "./components/WeaponCard";
-import storeImg from "./img/store/store.png";
-import weapon1Img from "./img/weapon/weapon1.png";
 import "./styles/shop.css";
 
 const pills: PillType[] = [
@@ -217,47 +219,41 @@ export function Player() {
     </div>
   );
 }
-export const blasterPrices = [2, 10];
 export function Weapon() {
   const { blasters, jwt } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
 
-  const blasterPayloads = [
-    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAAqwzHw4=",
-    "te6cckEBAQEADgAAGPbRsjsAAAABAAAAA6+wdPw=",
-  ];
-
   const initialWeapons: WeaponType[] = [
     {
-      title: "Blaster 2 Lvl",
-      imgSrc: weapon1Img,
-      additionalIncome: (blasterPrices[0] * 1.5).toString(),
+      title: BlastersData[1].name,
+      imgSrc: BlastersData[1].image,
+      additionalIncome: (BlastersData[1].price * 1.5).toString(),
       charge: "1000",
       chargeSpeed: "1.5%",
       rateOfFire: "2",
       damage: "3",
       durability: "100000",
-      worth: blasterPrices[0].toString() + " TON",
+      worth: BlastersData[1].price.toString() + " TON",
       weaponYield: "150%",
-      level: "2",
-      rarity: "common",
-      callback: () => handleWeaponBuyClick(1),
+      level: BlastersData[1].level.toString(),
+      rarity: BlastersData[1].rarity,
+      callback: () => handleWeaponBuyClick(2),
     },
     {
-      title: "Blaster 3 Lvl",
-      imgSrc: weapon1Img,
-      additionalIncome: (blasterPrices[1] * 1.5).toString(),
+      title: BlastersData[2].name,
+      imgSrc: BlastersData[2].image,
+      additionalIncome: (BlastersData[2].price * 1.5).toString(),
       charge: "2000",
       damage: "8",
       rateOfFire: "3.3",
       durability: "150000",
       chargeSpeed: "2.2%",
-      worth: blasterPrices[1].toString() + " TON",
+      worth: BlastersData[2].price.toString() + " TON",
       weaponYield: "150%",
-      level: "3",
-      rarity: "rare",
-      callback: () => handleWeaponBuyClick(2),
+      level: BlastersData[2].level.toString(),
+      rarity: BlastersData[2].rarity,
+      callback: () => handleWeaponBuyClick(3),
     },
   ];
 
@@ -272,8 +268,11 @@ export function Weapon() {
         messages: [
           {
             address: PROJECT_CONTRACT_ADDRESS,
-            amount: (blasterPrices[i - 1] * 1000000000 + 50000000).toString(),
-            payload: blasterPayloads[i - 1],
+            amount: (
+              BlastersData[i - 1].price * 1000000000 +
+              50000000
+            ).toString(),
+            payload: BlastersData[i - 1].payload,
           },
         ],
       };
@@ -296,10 +295,10 @@ export function Weapon() {
     const hasLevel3 = blasters.some((blaster) => blaster.level === 3);
 
     const updatedWeapons = weapons.filter((weapon) => {
-      if (weapon.title === "Blaster 2 Lvl" && hasLevel2) {
+      if (weapon.title === BlastersData[1].name && hasLevel2) {
         return false;
       }
-      if (weapon.title === "Blaster 3 Lvl" && hasLevel3) {
+      if (weapon.title === BlastersData[2].name && hasLevel3) {
         return false;
       }
       return true;
@@ -375,13 +374,6 @@ export function Store() {
 
   useEffect(() => {
     const newWeapons = blasters.map((blaster) => {
-      let rarity = "common";
-      if (blaster.level >= 3) {
-        rarity = "rare";
-      } else if (blaster.level === 2) {
-        rarity = "uncommon";
-      }
-
       const level =
         1 +
         blaster.charge_level +
@@ -390,24 +382,26 @@ export function Store() {
 
       const earningsPercentage = (gunsEarned / gunsEarnRequired) * 100;
       return {
-        title: "super blaster",
-        rarity: rarity,
+        title: BlastersData[blaster.level - 1].name,
+        rarity: BlastersData[blaster.level - 1].rarity,
         level: level,
         needRestoration: blaster.usage <= 0,
         additionalIncomeCurrent:
           blaster.level == 1
             ? 0
-            : (blasterPrices[blaster.level - 2] * 1.5 * earningsPercentage) /
+            : (BlastersData[blaster.level - 1].price *
+                1.5 *
+                earningsPercentage) /
               100,
         additionalIncomeMax:
-          blaster.level == 1 ? 0 : blasterPrices[blaster.level - 2] * 1.5,
+          blaster.level == 1 ? 0 : BlastersData[blaster.level - 1].price * 1.5,
         damage: blaster.damage,
         charge: blaster.charge,
         reload: blaster.charge_step,
         rateOfFire: weaponRates[blaster.level - 1],
         durabilityCurrent: blaster.usage,
         durabilityMax: blaster.max_usage,
-        imgSrc: storeImg,
+        imgSrc: BlastersData[blaster.level - 1].image,
         blasterLevel: blaster.level,
       };
     });

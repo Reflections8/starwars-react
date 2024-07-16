@@ -96,13 +96,21 @@ export function Home() {
     const characterData = CharactersData[activeCharacter.type - 1];
     if (!characterData) return;
 
-    const totalDamage =
-      (highestLevelBlaster.damage || 0) + (characterData.damage || 0);
+    const needHealing = activeCharacter.earned >= activeCharacter.earn_required;
+
+    const totalDamage = Math.round(
+      ((highestLevelBlaster.damage || 0) + (characterData.damage || 0)) *
+        (needHealing ? 0.1 : 1)
+    );
 
     const totalChargeStep =
-      (highestLevelBlaster.charge_step || 0) + (characterData.charge_step || 0);
+      ((highestLevelBlaster.charge_step || 0) +
+        (characterData.charge_step || 0)) *
+      (needHealing ? 0.1 : 1);
 
-    const charge = highestLevelBlaster.max_charge || 0;
+    const charge = Math.round(
+      (highestLevelBlaster.max_charge || 0) * (needHealing ? 0.1 : 1)
+    );
 
     setStats({ totalDamage, totalChargeStep, charge });
   }, [activeCharacter, blasters]);

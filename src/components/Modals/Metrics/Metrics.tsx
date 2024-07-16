@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import { PillType } from "../../../ui/SlidingPills/types";
 import "./styles/metrics.css";
@@ -6,37 +6,13 @@ import financesIcon1 from "./img/finances/1.svg";
 import financesIcon2 from "./img/finances/2.svg";
 import financesIcon3 from "./img/finances/3.svg";
 import modelIcon3 from "./img/models/heart.svg";
-import modelIconPlayer from "./img/models/model.png";
-
-type MockModelsType = {
-  title: string;
-  deposits: number;
-  earned: string;
-  healthCurrent: number;
-  healthMax: number;
-  imgSrc: string;
-};
+import {
+  Character,
+  CharactersData,
+  useUserData,
+} from "../../../UserDataService.tsx";
 
 export function Metrics() {
-  const mockModels: MockModelsType[] = [
-    {
-      title: "unique rebel pilot",
-      deposits: 1234,
-      earned: "123k",
-      healthCurrent: 2.594,
-      healthMax: 5000,
-      imgSrc: modelIconPlayer,
-    },
-    {
-      title: "unique rebel pilot",
-      deposits: 1234,
-      earned: "123k",
-      healthCurrent: 2.594,
-      healthMax: 5000,
-      imgSrc: modelIconPlayer,
-    },
-  ];
-
   const pills: PillType[] = [
     {
       label: "Финансы",
@@ -46,7 +22,7 @@ export function Metrics() {
     {
       label: "Персонажи",
       value: "MODELS",
-      component: <Models models={mockModels} />,
+      component: <Models />,
     },
   ];
   const [activePill, setActivePill] = useState(pills[0]);
@@ -114,11 +90,43 @@ export function Finances() {
   );
 }
 
-type ModelsProps = {
-  models: MockModelsType[];
+type MockModelsType = {
+  title: string;
+  deposits: number;
+  earned: string;
+  healthCurrent: number;
+  healthMax: number;
+  imgSrc: string;
 };
 
-export function Models({ models }: ModelsProps) {
+export function Models() {
+  const [models, setModels] = useState<MockModelsType[]>([]);
+
+  const { characters } = useUserData();
+  useEffect(() => {
+    const createModel = (character: Character): MockModelsType => {
+      const health = Math.round(
+        2000 - (character.earned / character.earn_required) * 2000
+      );
+      return {
+        title: "-" + CharactersData[character.type - 1].name + "-",
+        imgSrc: CharactersData[character.type - 1].image,
+        healthCurrent: health <= 0 ? 0 : health,
+        healthMax: 2000,
+        deposits: character.total_deposited,
+        earned: character.total_earned_tokens.toString(),
+      };
+    };
+
+    const newModels = characters
+      .map((character) => {
+        return createModel(character);
+      })
+      .filter((model) => model !== null);
+
+    setModels(newModels);
+  }, [characters]);
+
   return (
     <div className="models">
       {models.map((item) => {
@@ -177,7 +185,7 @@ export function Models({ models }: ModelsProps) {
                 </div>
               </div>
               <img
-                src={modelIconPlayer}
+                src={item.imgSrc}
                 alt="model"
                 className="models__item-body-img"
               />
