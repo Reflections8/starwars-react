@@ -27,8 +27,7 @@ interface UserDataContextType {
   jwt: string | null;
   checkGun: boolean;
   exchangeRate: number;
-  gunsEarned: number;
-  gunsEarnRequired: number;
+  userMetrics: UserMetrics;
   blasters: Blaster[];
   characters: Character[];
   activeBlaster: Blaster | null;
@@ -50,10 +49,14 @@ const defaultValue: UserDataContextType = {
   tokens: 0,
   tons: 0,
   exchangeRate: 0,
-  gunsEarned: 0,
-  gunsEarnRequired: 0,
   jwt: "",
   checkGun: false,
+  userMetrics: {
+    total_deposited: 0,
+    total_earned_tokens: 0,
+    blaster_earn_required: 0,
+    blaster_earned: 0
+  },
   blasters: [],
   characters: [],
   activeBlaster: null,
@@ -96,8 +99,12 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [credits, setCredits] = useState(0);
   const [tokens, setTokens] = useState(0);
   const [tons, setTons] = useState(0);
-  const [gunsEarned, setGunsEarned] = useState(0);
-  const [gunsEarnRequired, setGunsEarnRequired] = useState(0);
+  const [userMetrics, setUserMetrics] = useState<UserMetrics>({
+    total_deposited: 0,
+    total_earned_tokens: 0,
+    blaster_earn_required: 0,
+    blaster_earned: 0
+  })
   const [exchangeRate, setExchangeRate] = useState(0);
 
   const [healingCharacter, setHealingCharacter] = useState<Character | null>(
@@ -217,8 +224,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setTons(data.tons);
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
-      setGunsEarned(data.earned);
-      setGunsEarnRequired(data.earn_required);
+      const userMetricsData: UserMetrics = data.metrics_response;
+      setUserMetrics(userMetricsData)
       const activeCharacter: Character | null = data.active_character;
 
       setActiveCharacter(activeCharacter);
@@ -354,8 +361,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         activeCharacter,
         healingCharacter,
         prices,
-        gunsEarned,
-        gunsEarnRequired,
+        userMetrics,
         checkGun,
         selectGun,
         selectHealingCharacter,
@@ -398,6 +404,13 @@ export interface Character {
   earned: number;
   total_earned_tokens: number;
   total_deposited: number;
+}
+
+export interface UserMetrics {
+  total_deposited: number;
+  total_earned_tokens: number;
+  blaster_earned: number;
+  blaster_earn_required: number;
 }
 
 export interface Prices {

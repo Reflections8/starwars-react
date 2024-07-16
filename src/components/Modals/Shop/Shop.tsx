@@ -333,7 +333,7 @@ export function Weapon() {
 }
 
 export function Store() {
-  const { blasters, prices, gunsEarned, gunsEarnRequired } = useUserData();
+  const { blasters, prices, userMetrics } = useUserData();
   const [weapons, setWeapons] = useState<StoreWeaponType[]>([]);
   const weaponRates = [1.25, 2, 3.3];
   /* NEW MOCK DATA (based on new figma)
@@ -380,7 +380,7 @@ export function Store() {
         blaster.damage_level +
         blaster.max_charge_level;
 
-      const earningsPercentage = (gunsEarned / gunsEarnRequired) * 100;
+      const earningsPercentage = (userMetrics.blaster_earned / userMetrics.blaster_earn_required) * 100;
       return {
         title: BlastersData[blaster.level - 1].name,
         rarity: BlastersData[blaster.level - 1].rarity,

@@ -44,12 +44,28 @@ export function Metrics() {
 }
 
 export function Finances() {
+  const { userMetrics, characters } = useUserData();
+  const [totalEarned, setTotalEarned] = useState(0);
+
+  useEffect(() => {
+    if (!characters || characters.length == 0) return;
+
+    let earned = userMetrics.total_earned_tokens;
+    characters.forEach((c) => {
+      earned += c.total_earned_tokens;
+    });
+
+    setTotalEarned(earned);
+  }, [characters, userMetrics]);
+
   return (
     <div className="finances">
       <div className="finances__item">
         <div className="finances__item-info">
           <div className="finances__item-info-key">депозитов:</div>
-          <div className="finances__item-info-value">1234 ton</div>
+          <div className="finances__item-info-value">
+            {userMetrics.total_deposited} ton
+          </div>
         </div>
         <img src={financesIcon1} alt="icon" className="finances__item-icon" />
       </div>
@@ -57,7 +73,7 @@ export function Finances() {
       <div className="finances__item">
         <div className="finances__item-info">
           <div className="finances__item-info-key">заработано:</div>
-          <div className="finances__item-info-value">123456 akron</div>
+          <div className="finances__item-info-value">{totalEarned} akron</div>
         </div>
         <img src={financesIcon2} alt="icon" className="finances__item-icon" />
       </div>
@@ -73,16 +89,16 @@ export function Finances() {
         <div className="finances__item-bottom">
           <div className="finances__item-bottom-row">
             <div className="finances__item-bottom-row-key">Кредитов</div>
-            <div className="finances__item-bottom-row-value">12345</div>
+            <div className="finances__item-bottom-row-value">0</div>
           </div>
           <div className="finances__item-bottom-row">
             <div className="finances__item-bottom-row-key">akron</div>
-            <div className="finances__item-bottom-row-value">12345</div>
+            <div className="finances__item-bottom-row-value">0</div>
           </div>
 
           <div className="finances__item-bottom-row">
             <div className="finances__item-bottom-row-key">ton</div>
-            <div className="finances__item-bottom-row-value">12345</div>
+            <div className="finances__item-bottom-row-value">0</div>
           </div>
         </div>
       </div>
