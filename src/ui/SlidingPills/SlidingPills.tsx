@@ -35,7 +35,7 @@ export function SlidingPills({
 
     const currentLabel = Array.from(pillsLabels || []).find((label) => {
       const inputId = label.getAttribute("for") as string;
-      return activePill.value === inputId;
+      return activePill?.value === inputId;
     });
 
     if (currentLabel) {
@@ -73,17 +73,19 @@ export function SlidingPills({
             id={pill.value}
             name="tabs"
             className="pills__input"
-            checked={activePill.value === pill.value}
+            checked={activePill?.value === pill?.value}
           />
           <label className="pills__label" htmlFor={pill.value}>
             <span className="pills__label-text">{pill.label}</span>
           </label>
         </a>
       ))}
-      <span
-        className="pills__glider disciplines__pills-container-glider bg-warning"
-        ref={gliderRef}
-      />
+      {pills.some((item) => item?.value === activePill?.value) ? (
+        <span
+          className="pills__glider disciplines__pills-container-glider bg-warning"
+          ref={gliderRef}
+        />
+      ) : null}
     </div>
   );
 }

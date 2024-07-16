@@ -4,7 +4,7 @@ type CuttedButtonProps = {
   className: string;
   text: string;
   size?: string;
-  callback: () => void;
+  callback: (e?: any) => void;
   iconSrc?: string;
 };
 
@@ -22,7 +22,7 @@ export function CuttedButton({
           {iconSrc ? (
             <img src={iconSrc} alt="icon" className="cuttedButton__icon" />
           ) : null}
-          <div className="cuttedButton__text">{text}</div>
+          {text ? <div className="cuttedButton__text">{text}</div> : null}
         </button>
       </div>
     </div>

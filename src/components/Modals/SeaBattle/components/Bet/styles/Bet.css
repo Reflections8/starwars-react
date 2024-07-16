@@ -1,0 +1,77 @@
+.bet {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 50px;
+}
+
+.bet__title {
+  margin-top: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 10px;
+  color: #076ce9;
+}
+
+.bet__inputBlock {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.bet__inputBlock-sup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bet__inputBlock-sup-label {
+  color: #e1f0ff;
+  font-size: 12px;
+  text-shadow: 2px 2px 0 #0975f83d;
+}
+
+.bet__inputBlock-sup-minValue {
+  font-size: 8px;
+  color: #076ce9;
+  text-shadow: 2px -1px 0 #076ce944;
+}
+
+.bet__inputBlock-inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.bet__inputBlock-input {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #0974f8;
+  padding: 10px 60px 10px 15px;
+  font-size: 20px;
+  color: #19c2ef;
+  width: 100%;
+  background: linear-gradient(to top, #0975f848, #0975f800);
+}
+
+.bet__inputBlock-postfix {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  font-size: 18px;
+  transform: translateY(-50%);
+}
+
+.bet__cuttedButton {
+  max-width: 210px;
+  margin: 0 auto;
+  margin-bottom: 24px;
+}
+
+.bet__footerText {
+  text-align: center;
+  font-size: 10px;
+  color: #076ce9;
+}

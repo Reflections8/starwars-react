@@ -24,7 +24,9 @@ export function CryptoButtons({
         <button
           className={`cryptoButtons__btn ${
             activeCurrency === "credits" ? "cryptoButtons__btn--Active" : ""
-          } ${soonOptions.includes("credits") ? "cryptoButtons__btn--Soon" : ""}`}
+          } ${
+            soonOptions.includes("credits") ? "cryptoButtons__btn--Soon" : ""
+          }`}
           onClick={() => {
             setActiveCurrency("credits");
           }}
@@ -67,6 +69,22 @@ export function CryptoButtons({
         >
           <img src={tonIcon} alt="credit" className="cryptoButtons__btn-icon" />
           <div className="cryptoButtons__btn-text">ton</div>
+        </button>
+      ) : null}
+
+      {activeOptions.includes("akronix") ? (
+        <button
+          className={`cryptoButtons__btn ${
+            activeCurrency === "akronix" ? "cryptoButtons__btn--Active" : ""
+          } ${
+            soonOptions.includes("akronix") ? "cryptoButtons__btn--Soon" : ""
+          }`}
+          onClick={() => {
+            setActiveCurrency("akronix");
+          }}
+        >
+          <img src={tonIcon} alt="credit" className="cryptoButtons__btn-icon" />
+          <div className="cryptoButtons__btn-text">akronix</div>
         </button>
       ) : null}
     </div>

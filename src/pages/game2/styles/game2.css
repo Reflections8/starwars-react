@@ -1,0 +1,11 @@
+[data-page="game2"] .page__container {
+  background-image: url("../img/game2-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+[data-page="game2"] .header__top-left-content,
+[data-page="game2"] .header__top-right-content {
+  gap: 24px;
+}

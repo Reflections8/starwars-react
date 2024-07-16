@@ -35,7 +35,6 @@ export function ModalProvider({ children }: ModalProviderProps) {
 
       // @ts-ignore
       const clickOnDrawer = !!event.target.closest(".drawerBg");
-
       if (
         modalElement &&
         !modalElement.contains(event.target as Node) &&

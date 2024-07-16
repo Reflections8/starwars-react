@@ -1,0 +1,21 @@
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #19c2ef;
+  font-size: 10px;
+  line-height: 150%;
+}
+
+.rules p {
+  margin: 0;
+}
+
+.rules p a {
+  text-decoration: underline;
+  color: #19c2ef;
+}
+
+.rules p a:active {
+  text-decoration: none;
+}

@@ -3,6 +3,7 @@ import { ChooseGame } from "../../components/Modals/ChooseGame/ChooseGame";
 import { Metrics } from "../../components/Modals/Metrics/Metrics";
 import { Partners } from "../../components/Modals/Partners/Partners";
 import { Player } from "../../components/Modals/Player/Player";
+import { SeaBattle } from "../../components/Modals/SeaBattle/SeaBattle";
 import { Settings } from "../../components/Modals/Settings/Settings";
 import { Shop } from "../../components/Modals/Shop/Shop";
 import { Tasks } from "../../components/Modals/Tasks/Tasks";
@@ -14,6 +15,7 @@ import { CupIcon } from "../../icons/Modals/Cup";
 import { GamepadIcon } from "../../icons/Modals/Gamepad";
 import { GearIcon } from "../../icons/Modals/Gear";
 import { HelmetIcon } from "../../icons/Modals/Helmet";
+import { SeaBattleIcon } from "../../icons/Modals/SeaBattle";
 import { StoreIcon } from "../../icons/Modals/Store";
 import { TasksIcon } from "../../icons/Modals/Tasks";
 import { TeamIcon } from "../../icons/Modals/Team";
@@ -76,6 +78,11 @@ const modalContentType = {
     title: "Игрок",
     icon: <HelmetIcon />,
     component: <Player />,
+  },
+  seaBattle: {
+    title: "Морской бой",
+    icon: <SeaBattleIcon />,
+    component: <SeaBattle />,
   },
 };
 

@@ -1,0 +1,54 @@
+.seaBattle__rulesButtonWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  margin-top: -20px;
+  width: fit-content;
+}
+
+.seaBattle__rulesButtonWrapper-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.seaBattle__rulesButtonWrapper-btn:active {
+  opacity: 50%;
+}
+
+.seaBattle__rulesButtonWrapper-btn-corner {
+  position: absolute;
+}
+
+.seaBattle__rulesButtonWrapper-btn-corner--Left {
+  position: relative;
+  left: 4px;
+  bottom: 0;
+}
+
+.seaBattle__rulesButtonWrapper-btn-corner--Right {
+  position: relative;
+  right: 4px;
+  bottom: 0;
+  transform: scaleX(-1);
+}
+
+.seaBattle__pillsContainer {
+  max-width: 300px;
+  margin: 0 auto 16px auto;
+}
+
+.seaBattle__pillsContainer .pills__label {
+  padding: 8px;
+}
+
+.seaBattle .modal__scrollContainer {
+  padding-left: 30px;
+  padding-right: 8px;
+  max-height: 318px;
+}
+
+.seaBattle__cryptoButtons .cryptoButtons__btn {
+  max-width: 96px;
+}
