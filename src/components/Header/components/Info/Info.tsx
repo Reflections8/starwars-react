@@ -57,7 +57,7 @@ export function Info({ damage, charge, reload }: InfoProps) {
             />
             <div className="info__menu-list-item-info">
               <div className="info__menu-list-item-info-key">заряд:</div>
-              <div className="info__menu-list-item-info-value">{reload}</div>
+              <div className="info__menu-list-item-info-value">{charge}</div>
             </div>
           </div>
 
@@ -71,7 +71,7 @@ export function Info({ damage, charge, reload }: InfoProps) {
             <div className="info__menu-list-item-info">
               <div className="info__menu-list-item-info-key">перезарядка:</div>
               <div className="info__menu-list-item-info-value">
-                {charge}%/мин
+                {reload}%/мин
               </div>
             </div>
           </div>

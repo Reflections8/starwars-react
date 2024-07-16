@@ -15,8 +15,6 @@ import {
 import { PlayerCard } from "./components/PlayerCard";
 import { StoreCardWeapon } from "./components/StoreCard";
 import { WeaponCard } from "./components/WeaponCard";
-import model1Img from "./img/player/model1.png";
-import model2Img from "./img/player/model2.png";
 import storeImg from "./img/store/store.png";
 import weapon1Img from "./img/weapon/weapon1.png";
 import "./styles/shop.css";
@@ -105,31 +103,40 @@ export function Player() {
   /* TODO: NEW MOCK DATA FOR MODEL (base on new figma) */
   const mockPlayerCards: ModelTypeNew[] = [
     {
-      title: "Droid",
+      title: CharactersData[0].name,
       strength: CharactersData[0].damage,
       reloadSpeed: CharactersData[0].charge_step,
       health: 2000,
       price: CharactersData[0].price,
-      imgSrc: model1Img,
+      imgSrc: CharactersData[0].image,
       callback: () => handleCharacterBuyClick(1),
     },
     {
-      title: "Stormtrooper",
+      title: CharactersData[1].name,
       strength: CharactersData[1].damage,
       reloadSpeed: CharactersData[1].charge_step,
       health: 2000,
       price: CharactersData[1].price,
-      imgSrc: model2Img,
+      imgSrc: CharactersData[1].image,
       callback: () => handleCharacterBuyClick(2),
     },
     {
-      title: "Driver",
+      title: CharactersData[2].name,
       strength: CharactersData[2].damage,
       reloadSpeed: CharactersData[2].charge_step,
       health: 2000,
       price: CharactersData[2].price,
-      imgSrc: model2Img,
+      imgSrc: CharactersData[2].image,
       callback: () => handleCharacterBuyClick(3),
+    },
+    {
+      title: CharactersData[3].name,
+      strength: CharactersData[3].damage,
+      reloadSpeed: CharactersData[3].charge_step,
+      health: 2000,
+      price: CharactersData[3].price,
+      imgSrc: CharactersData[3].image,
+      callback: () => handleCharacterBuyClick(4),
     },
   ];
 
@@ -139,17 +146,22 @@ export function Player() {
     const has1 = characters.some((c) => c.type === 1);
     const has2 = characters.some((c) => c.type === 2);
     const has3 = characters.some((c) => c.type === 3);
+    const has4 = characters.some((c) => c.type === 4);
 
     const updatedWeapons = mockPlayerCards.filter((model) => {
-      if (model.title === "Droid" && has1) {
+      if (model.title === CharactersData[0].name && has1) {
         return false;
       }
-      if (model.title === "Stormtrooper" && has2) {
+      if (model.title === CharactersData[1].name && has2) {
         return false;
       }
-      if (model.title === "Driver" && has3) {
+      if (model.title === CharactersData[2].name && has3) {
         return false;
       }
+      if (model.title === CharactersData[3].name && has4) {
+        return false;
+      }
+
       return true;
     });
 

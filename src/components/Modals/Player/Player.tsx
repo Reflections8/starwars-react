@@ -1,29 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StoreCardModel } from "../Shop/components/StoreCard";
 import "./styles/Player.css";
 import { StoreModelType } from "../../../ui/SlidingPills/types";
 import model1Img from "../Shop/img/player/model1.png";
 import model2Img from "../Shop/img/player/model2.png";
+import {
+  Blaster,
+  Character,
+  CharactersData,
+  useUserData,
+} from "../../../UserDataService.tsx";
 
 export function Player() {
+  const { characters, blasters } = useUserData();
+
   /* NEW MOCK DATA (based on new figma)*/
   const mockStoreModels: StoreModelType[] = [
     {
-      title: "-unique rebel pilot-",
+      title: "-DROID-",
       needRestoration: false,
       combatPerfomanceReduction: null,
       strength: 5,
       strengthUpgrade: 2,
       reload: 5,
-      reloadUpgrade: 4,
+      reloadUpgrade: -1,
       charge: 500,
       chargeUpgrade: 500,
       healthCurrent: 1851,
       healthMax: 2000,
       imgSrc: model1Img,
+      type: 1,
     },
     {
-      title: "-unique rebel pilot-",
+      title: "-STORMTROOPER-",
       needRestoration: true,
       combatPerfomanceReduction: -90,
       strength: 5,
@@ -35,10 +44,84 @@ export function Player() {
       healthCurrent: 1851,
       healthMax: 2000,
       imgSrc: model2Img,
+      type: 2,
+    },
+    {
+      title: "-DRIVER-",
+      needRestoration: true,
+      combatPerfomanceReduction: -90,
+      strength: 5,
+      strengthUpgrade: 2,
+      reload: 5,
+      reloadUpgrade: 4,
+      charge: 500,
+      chargeUpgrade: 500,
+      healthCurrent: 1851,
+      healthMax: 2000,
+      imgSrc: model2Img,
+      type: 3,
     },
   ];
 
-  const [storeModels] = useState(mockStoreModels);
+  const [storeModels, setStoreModels] = useState(mockStoreModels);
+
+  useEffect(() => {
+    const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
+      return blasters.reduce((highest: Blaster, blaster: Blaster) => {
+        if (blaster.usage > 0 && blaster.level > (highest.level || 0)) {
+          return blaster;
+        }
+        return highest;
+      });
+    };
+
+    const createModel = (
+      character: Character,
+      blaster: Blaster
+    ): StoreModelType => {
+      const needRestoration = character.earned >= character.earn_required;
+      const combatPerformanceReduction = needRestoration ? -90 : null;
+      const strength =
+        (CharactersData[character.type - 1].damage + blaster.damage) *
+        (needRestoration ? 0.1 : 1);
+      const charge = blaster.max_charge;
+      const reload =
+        (CharactersData[character.type - 1].charge_step + blaster.charge_step) *
+        (needRestoration ? 0.1 : 1);
+
+      const reloadUpgrade = !needRestoration ? blaster.charge_step : -1;
+      const strengthUpgrade = !needRestoration ? blaster.damage : -1;
+      const chargeUpgrade = !needRestoration ? blaster.max_charge : -1;
+
+      return {
+        title: "-" + CharactersData[character.type - 1].name + "-",
+        needRestoration: needRestoration,
+        combatPerfomanceReduction: combatPerformanceReduction,
+        strength: strength,
+        strengthUpgrade: strengthUpgrade,
+        reload: reload,
+        reloadUpgrade: reloadUpgrade,
+        charge: charge,
+        chargeUpgrade: chargeUpgrade,
+        healthCurrent: Math.round(
+          2000 - (character.earned / character.earn_required) * 2000
+        ),
+        healthMax: 2000,
+        imgSrc: CharactersData[character.type - 1].image,
+        type: character.type,
+      };
+    };
+
+    const newModels = characters
+      .map((character) => {
+        const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
+        return createModel(character, highestLevelBlaster);
+      })
+      .filter((model) => model !== null);
+
+    setStoreModels(newModels);
+  }, [characters, blasters]);
+
   return (
     <div className="playerModal">
       <div className="modal__scrollContainer">
@@ -57,6 +140,7 @@ export function Player() {
               healthCurrent={model.healthCurrent}
               healthMax={model.healthMax}
               imgSrc={model.imgSrc}
+              type={model.type}
             />
           );
         })}

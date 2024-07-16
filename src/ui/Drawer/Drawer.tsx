@@ -5,9 +5,9 @@ import closeIcon from "./img/closeIcon.svg";
 import rejectedIcon from "./img/rejected.svg";
 import resolvedIcon from "./img/resolved.svg";
 
-import { useTonConnectUI, useTonWallet } from "@tonconnect/ui-react";
+import {SendTransactionRequest, useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
 import { useState } from "react";
-import { Prices, useUserData } from "../../UserDataService.tsx";
+import {CharactersData, Prices, useUserData} from "../../UserDataService.tsx";
 import { formatWalletString } from "../../utils/index.ts";
 import { CryptoButtons } from "../CryptoButtons/CryptoButtons.tsx";
 import telegramIcon from "./img/menu/tg.svg";
@@ -17,6 +17,7 @@ import youtubeIcon from "./img/menu/youtube.svg";
 import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import creditIcon from "./img/upgrade/credits.svg";
 import "./styles//drawer.css";
+import {PROJECT_CONTRACT_ADDRESS} from "../../main.tsx";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -454,35 +455,39 @@ function Repair() {
 }
 
 function Heal() {
-  const { prices, activeBlaster, sendSocketMessage, credits, jwt } =
+  const { healingCharacter, jwt } =
     useUserData();
+  const [tonConnectUI] = useTonConnectUI();
   const { openDrawer } = useDrawer();
-  const handleRepairClick = () => {
-    if (!activeBlaster || activeBlaster.level == 1) return;
+  const handleHealClick = async () => {
+    if (!healingCharacter) return;
 
-    if (credits < getBlasterRepairPrice(activeBlaster.level)) {
-      openDrawer!("rejected", "bottom", "Недостаточно кредитов для исцеления");
-      return;
+    if (jwt == null || jwt === "" || !tonConnectUI.connected) {
+      openDrawer!("connectWallet");
+    } else {
+      const fillTx: SendTransactionRequest = {
+        validUntil: Math.floor(Date.now() / 1000) + 600,
+        messages: [
+          {
+            address: PROJECT_CONTRACT_ADDRESS,
+            amount: (CharactersData[healingCharacter.type - 1].price * 1000000000 + 50000000).toString(),
+            payload: CharactersData[healingCharacter.type - 1].payload_heal,
+          },
+        ],
+      };
+      try {
+        await tonConnectUI.sendTransaction(fillTx);
+        openDrawer!(
+            "resolved",
+            "bottom",
+            "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+        );
+      } catch (e) {
+        console.log(e);
+        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+      }
     }
-
-    if (jwt != null && jwt !== "")
-      sendSocketMessage(
-        "repairBlaster:" +
-          JSON.stringify({ jwt_token: jwt, item_level: activeBlaster.level })
-      );
-  };
-
-  const getBlasterRepairPrice = (level: number): number => {
-    switch (level) {
-      case 1:
-        return 0;
-      case 2:
-        return prices.second_blaster_repair;
-      case 3:
-        return prices.third_blaster_repair;
-    }
-    return 0;
-  };
+  }
 
   return (
     <div className="heal">
@@ -491,19 +496,17 @@ function Heal() {
       <div className="heal__block">
         <div className="heal__block-row">
           <div className="heal__block-row-key">цена:</div>
-          <div className="heal__block-row-value">{"123.45"} TON</div>
+          <div className="heal__block-row-value">{healingCharacter ? CharactersData[healingCharacter.type - 1].price : null} TON</div>
         </div>
       </div>
 
       <CuttedButton
-        callback={() => handleRepairClick()}
+        callback={() => handleHealClick()}
         className={
-          activeBlaster &&
-          activeBlaster.level !== 1 &&
-          credits >= getBlasterRepairPrice(activeBlaster.level) &&
-          getBlasterRepairPrice(activeBlaster.level) != 0
-            ? "heal__mainBtn"
-            : "heal__mainBtn halfTransparent"
+          healingCharacter
+          && healingCharacter.earned >= healingCharacter.earn_required
+              ? "heal__mainBtn"
+              : "heal__mainBtn halfTransparent"
         }
         text={"Подтвердить"}
       />

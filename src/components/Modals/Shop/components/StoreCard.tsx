@@ -19,8 +19,10 @@ export function StoreCardModel({
   healthCurrent,
   healthMax,
   imgSrc,
+  type,
 }: StoreModelType) {
   const { openDrawer } = useDrawer();
+  const { selectHealingCharacter } = useUserData();
   return (
     <div
       className={`player-card ${
@@ -93,6 +95,7 @@ export function StoreCardModel({
                 size="small"
                 text={"Исцелить"}
                 callback={() => {
+                  selectHealingCharacter(type);
                   openDrawer!("heal");
                 }}
               />

@@ -61,6 +61,7 @@ export type StoreModelType = {
   healthCurrent: number;
   healthMax: number;
   imgSrc: string;
+  type: number;
 };
 
 export type StoreWeaponType = {

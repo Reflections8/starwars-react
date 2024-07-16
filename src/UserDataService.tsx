@@ -12,6 +12,11 @@ import { useDrawer } from "./context/DrawerContext.tsx";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Drawer } from "./ui/Drawer/Drawer.tsx";
 
+import ch1Img from "../src/assets/img/ch/1.png";
+import ch2Img from "../src/assets/img/ch/2.png";
+import ch3Img from "../src/assets/img/ch/3.png";
+import ch4Img from "../src/assets/img/ch/4.png";
+
 interface UserDataContextType {
   credits: number;
   tokens: number;
@@ -25,8 +30,10 @@ interface UserDataContextType {
   characters: Character[];
   activeBlaster: Blaster | null;
   activeCharacter: Character | null;
+  healingCharacter: Character | null;
   prices: Prices;
   selectGun: (value: number) => void;
+  selectHealingCharacter: (value: number) => void;
   updateCredits: (value: number) => void;
   updateTokens: (value: number) => void;
   updateJwt: (value: string | null) => void;
@@ -48,6 +55,7 @@ const defaultValue: UserDataContextType = {
   characters: [],
   activeBlaster: null,
   activeCharacter: null,
+  healingCharacter: null,
   prices: {
     second_blaster_repair: 0,
     third_blaster_repair: 0,
@@ -66,6 +74,7 @@ const defaultValue: UserDataContextType = {
   updateTokens: () => {},
   updateJwt: () => {},
   setCheckGun: () => {},
+  selectHealingCharacter: () => {},
   startCheckBalance: () => {},
   sendSocketMessage: () => {},
 };
@@ -88,6 +97,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [gunsEarnRequired, setGunsEarnRequired] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
 
+  const [healingCharacter, setHealingCharacter] = useState<Character | null>(
+    null
+  );
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
   const [activeCharacter, setActiveCharacter] = useState<Character | null>(
     null
@@ -135,6 +147,11 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const selectGun = (level: number) => {
     const blaster = blasters.find((item) => item.level === level);
     if (blaster) setActiveBlaster(blaster);
+  };
+
+  const selectHealingCharacter = (type: number) => {
+    const character = characters.find((item) => item.type === type);
+    if (character) setHealingCharacter(character);
   };
 
   const updateJwt = (value: string | null) => {
@@ -332,11 +349,13 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         blasters,
         characters,
         activeCharacter,
+        healingCharacter,
         prices,
         gunsEarned,
         gunsEarnRequired,
         checkGun,
         selectGun,
+        selectHealingCharacter,
         updateCredits,
         updateTokens,
         updateJwt,
@@ -393,24 +412,42 @@ export interface Prices {
 export const CharactersData = [
   {
     type: 1,
+    name: "B1 BATTLE DROID",
     damage: 2,
     charge_step: 0,
     price: 2,
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAHxC4aaE=",
+    image: ch1Img,
   },
   {
     type: 2,
+    name: "REBEL PILOT",
     damage: 10,
     charge_step: 1,
     price: 10,
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAIIXNmc8=",
+    image: ch2Img,
   },
   {
     type: 3,
+    name: "TATOOINE JAWA",
     damage: 30,
     charge_step: 2,
     price: 30,
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAF9/gsCs=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAIYZO8j0=",
+    image: ch3Img,
   },
-  { type: 4, damage: 70, charge_step: 4, price: 70, payload: "" },
+  {
+    type: 4,
+    name: "STORMTROOPER",
+    damage: 70,
+    charge_step: 4,
+    price: 70,
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAGPvco3U=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAInK9oi4=",
+    image: ch4Img,
+  },
 ];
