@@ -38,6 +38,7 @@ export function Home() {
     updateJwt,
     checkGun,
     setCheckGun,
+    soundSetting,
   } = useUserData();
   const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
@@ -121,6 +122,12 @@ export function Home() {
       setCheckGun(false);
     }
   }, [checkGun]);
+
+  useEffect(() => {
+    if (soundSetting) {
+      sendMessageToUnity("EnableGameSounds", "s");
+    } else sendMessageToUnity("DisableGameSounds", "s");
+  }, [soundSetting]);
 
   const handleAuthTokenChange = (token: string | null) => {
     if (token != null) {

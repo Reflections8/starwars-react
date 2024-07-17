@@ -17,25 +17,17 @@ const pills: PillType[] = [
   },
 ];
 
-/*const graphics: SelectOptionType[] = [
+const graphics: SelectOptionType[] = [
   {
-    label: "MAXIMUM",
-    value: "MAXIMUM",
+    label: "AUTO",
+    value: "AUTO",
   },
-  {
-    label: "MEDIUM",
-    value: "MEDIUM",
-  },
-  {
-    label: "LOW",
-    value: "LOW",
-  },
-];*/
+];
 
 export function Settings() {
-  const { characters, activeCharacter, sendSocketMessage, jwt } = useUserData();
+  const { characters, activeCharacter, sendSocketMessage, jwt, soundSetting, setSoundSetting} = useUserData();
   const [activePill, setActivePill] = useState(pills[0]);
-  //const [activeGraphics, setActiveGraphics] = useState(graphics[0]);
+  const [activeGraphics, setActiveGraphics] = useState(graphics[0]);
 
   const [characterOptions, setCharacterOptions] = useState<SelectOptionType[]>(
     []
@@ -62,6 +54,10 @@ export function Settings() {
     }
   }, [characters, activeCharacter]);
 
+  useEffect(() => {
+    setActivePill(pills[soundSetting ? 1 : 0])
+  }, [soundSetting]);
+
   const handleActiveCharacterChange = (characterId: string) => {
     if (jwt == null || jwt === "") return;
 
@@ -81,6 +77,17 @@ export function Settings() {
         label: `${CharactersData[newActiveCharacter.type - 1].name}`,
       };
       setActiveOption(active);*/
+    }
+  };
+
+  const handleSoundChange = (value: string) => {
+    if(value === "OFF"){
+      setSoundSetting(false);
+      localStorage.setItem("sound_setting", "off");
+    }else
+    {
+      setSoundSetting(true);
+      localStorage.setItem("sound_setting", "on");
     }
   };
 
@@ -106,11 +113,13 @@ export function Settings() {
           <SlidingPills
             pills={pills}
             activePill={activePill}
-            setActivePill={setActivePill}
+            setActivePill={(option) =>
+              handleSoundChange(option.value)
+            }
           />
         </div>
       </div>
-      {/*<div className="settings__row">
+      <div className="settings__row">
         <div className="settings__row-name">Graphic:</div>
         <div className="settings__row-action settings__row-selectContainer">
           <Select
@@ -119,7 +128,7 @@ export function Settings() {
             setActiveOption={setActiveGraphics}
           />
         </div>
-      </div>*/}
+      </div>
     </div>
   );
 }
