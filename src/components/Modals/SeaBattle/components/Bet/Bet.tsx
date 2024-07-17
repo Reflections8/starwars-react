@@ -29,9 +29,11 @@ export function Bet() {
             onChange={(e) => {
               setBet(Number(e.target.value));
             }}
-            className="bet__inputBlock-input"
+            className={`bet__inputBlock-input ${activeCurrency}`}
           />
-          <div className="bet__inputBlock-postfix">SOL</div>
+          <div className="bet__inputBlock-postfix">
+            {activeCurrency.toUpperCase()}
+          </div>
         </div>
       </div>
 
