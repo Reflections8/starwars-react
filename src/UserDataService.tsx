@@ -55,7 +55,7 @@ const defaultValue: UserDataContextType = {
     total_deposited: 0,
     total_earned_tokens: 0,
     blaster_earn_required: 0,
-    blaster_earned: 0
+    blaster_earned: 0,
   },
   blasters: [],
   characters: [],
@@ -103,8 +103,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     total_deposited: 0,
     total_earned_tokens: 0,
     blaster_earn_required: 0,
-    blaster_earned: 0
-  })
+    blaster_earned: 0,
+  });
   const [exchangeRate, setExchangeRate] = useState(0);
 
   const [healingCharacter, setHealingCharacter] = useState<Character | null>(
@@ -225,10 +225,21 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
       const userMetricsData: UserMetrics = data.metrics_response;
-      setUserMetrics(userMetricsData)
+      setUserMetrics(userMetricsData);
       const activeCharacter: Character | null = data.active_character;
-
       setActiveCharacter(activeCharacter);
+    }
+    if (response.startsWith("refreshData:")) {
+      const data = JSON.parse(response.slice("refreshData:".length));
+      setCredits(data.credits);
+      setTons(data.tons);
+      setTokens(data.tokens);
+      setExchangeRate(data.exchange_rate);
+      const userMetricsData: UserMetrics = data.metrics_response;
+      setUserMetrics(userMetricsData);
+      const activeCharacter: Character | null = data.active_character;
+      setActiveCharacter(activeCharacter);
+      setCheckGun(true);
     } else if (response.startsWith("exchangeResponse:")) {
       const data = JSON.parse(response.slice("exchangeResponse:".length));
       setCredits(data.credits);
@@ -451,7 +462,7 @@ export const BlastersData = [
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAA6+wdPw=",
     rarity: "uncommon",
     image: bl3Img,
-  }
+  },
 ];
 
 export const CharactersData = [
