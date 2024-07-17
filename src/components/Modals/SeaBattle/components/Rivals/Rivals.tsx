@@ -4,53 +4,109 @@ import fightIcon from "./img/fight.svg";
 import arrowIcon from "./img/arrow.svg";
 import avatarImg from "./img/ava.png";
 import tonIcon from "./img/ton.svg";
+import akronixIcon from "./img/akronix.svg";
+import creditsIcon from "./img/credit.svg";
+
 import "./styles/Rivals.css";
 import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
 
-// type RivalsProps = {
-//   isCreatingDuel: boolean;
-//   setIsCreatingDuel: (state: boolean) => void;
-// };
+type Rivals = {
+  login: string;
+  bet: string | number;
+  avatarSrc: string;
+};
+
+const rivalsTon: Rivals[] = [
+  {
+    login: "@pashaurofff",
+    bet: 123.456,
+    avatarSrc: avatarImg,
+  },
+  {
+    login: "@pashaurofff",
+    bet: 123.456,
+    avatarSrc: avatarImg,
+  },
+  {
+    login: "@pashaurofff",
+    bet: 1234.456,
+    avatarSrc: avatarImg,
+  },
+  {
+    login: "@pashaurofff",
+    bet: 1234.456,
+    avatarSrc: avatarImg,
+  },
+  {
+    login: "@pashaurofff",
+    bet: 1234.4536,
+    avatarSrc: avatarImg,
+  },
+];
+
+const rivalsAkronix: Rivals[] = [
+  {
+    login: "@pashaurofff",
+    bet: "12.5 млн.",
+    avatarSrc: avatarImg,
+  },
+  {
+    login: "@pashaurofff",
+    bet: "12.5 млн.",
+    avatarSrc: avatarImg,
+  },
+  {
+    login: "@pashaurofff",
+    bet: "12.5 млн.",
+    avatarSrc: avatarImg,
+  },
+];
+
+const rivalsCredits: Rivals[] = [
+  {
+    login: "@pashaurofff",
+    bet: "123k",
+    avatarSrc: avatarImg,
+  },
+  {
+    login: "@pashaurofff",
+    bet: "123k",
+    avatarSrc: avatarImg,
+  },
+];
+
 export function Rivals() {
   const [isCreatingDuel, setIsCreatingDuel] = useState(false);
   const [friendsLogin, setFriendsLogin] = useState("");
   const [bet, setBet] = useState(0);
 
   const [activeCurrency, setActiveCurrency] = useState("ton");
-  const rivalsList = [
-    {
-      login: "@pashaurofff",
-      bet: 123.456,
-      avatarSrc: avatarImg,
-    },
-    {
-      login: "@pashaurofff",
-      bet: 123.456,
-      avatarSrc: avatarImg,
-    },
-    {
-      login: "@pashaurofff",
-      bet: 1234.456,
-      avatarSrc: avatarImg,
-    },
-    {
-      login: "@pashaurofff",
-      bet: 1234.456,
-      avatarSrc: avatarImg,
-    },
-    {
-      login: "@pashaurofff",
-      bet: 1234.4536,
-      avatarSrc: avatarImg,
-    },
-  ];
+  const [rivals, setRivals] = useState<Rivals[]>([]);
+  const [rivalsBetIcon, setRivalsBetIcon] = useState(tonIcon);
 
   function handleDuelCreating(e: Event) {
     e.stopPropagation();
     setIsCreatingDuel(true);
   }
 
-  useEffect(() => {}, [isCreatingDuel]);
+  function fetchRivals(currency: string) {
+    if (currency == "ton") {
+      setRivals(rivalsTon);
+      setRivalsBetIcon(tonIcon);
+    }
+    if (currency == "akronix") {
+      setRivals(rivalsAkronix);
+      setRivalsBetIcon(akronixIcon);
+    }
+    if (currency == "credits") {
+      setRivals(rivalsCredits);
+      setRivalsBetIcon(creditsIcon);
+    }
+  }
+
+  useEffect(() => {
+    fetchRivals(activeCurrency);
+  }, [activeCurrency]);
   return (
     <div className="rivals">
       <CryptoButtons
@@ -87,7 +143,7 @@ export function Rivals() {
               />
             </div>
           </div>
-          {rivalsList.map((item, index) => {
+          {rivals.map((item, index) => {
             return (
               <div className="rivals__list-item" key={index}>
                 <div className="rivals__list-item-start">
@@ -113,7 +169,7 @@ export function Rivals() {
                     </div>
                     <div className="rivals__list-item-start-bet-value">
                       <img
-                        src={tonIcon}
+                        src={rivalsBetIcon}
                         alt="ton"
                         className="rivals__list-item-start-bet-value-icon"
                       />
