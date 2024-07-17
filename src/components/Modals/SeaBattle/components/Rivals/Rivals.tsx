@@ -231,9 +231,11 @@ export function Rivals() {
                 onChange={(e) => {
                   setBet(Number(e.target.value));
                 }}
-                className="rivals__newDuel__inputBlock-input"
+                className={`rivals__newDuel__inputBlock-input ${activeCurrency}`}
               />
-              <div className="rivals__newDuel__inputBlock-postfix">SOL</div>
+              <div className="rivals__newDuel__inputBlock-postfix">
+                {activeCurrency.toUpperCase()}
+              </div>
             </div>
           </div>
 
