@@ -33,6 +33,7 @@ interface UserDataContextType {
   activeBlaster: Blaster | null;
   activeCharacter: Character | null;
   healingCharacter: Character | null;
+  soundSetting: boolean;
   prices: Prices;
   selectGun: (value: number) => void;
   selectHealingCharacter: (value: number) => void;
@@ -42,6 +43,7 @@ interface UserDataContextType {
   startCheckBalance: () => void;
   setCheckGun: (value: boolean) => void;
   sendSocketMessage: (value: string) => void;
+  setSoundSetting: (value: boolean) => void;
 }
 
 const defaultValue: UserDataContextType = {
@@ -55,13 +57,14 @@ const defaultValue: UserDataContextType = {
     total_deposited: 0,
     total_earned_tokens: 0,
     blaster_earn_required: 0,
-    blaster_earned: 0
+    blaster_earned: 0,
   },
   blasters: [],
   characters: [],
   activeBlaster: null,
   activeCharacter: null,
   healingCharacter: null,
+  soundSetting: true,
   prices: {
     second_blaster_repair: 0,
     third_blaster_repair: 0,
@@ -83,6 +86,7 @@ const defaultValue: UserDataContextType = {
   selectHealingCharacter: () => {},
   startCheckBalance: () => {},
   sendSocketMessage: () => {},
+  setSoundSetting: () => {},
 };
 
 const UserDataContext = createContext<UserDataContextType>(defaultValue);
@@ -99,12 +103,13 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [credits, setCredits] = useState(0);
   const [tokens, setTokens] = useState(0);
   const [tons, setTons] = useState(0);
+  const [soundSetting, setSoundSetting] = useState(true);
   const [userMetrics, setUserMetrics] = useState<UserMetrics>({
     total_deposited: 0,
     total_earned_tokens: 0,
     blaster_earn_required: 0,
-    blaster_earned: 0
-  })
+    blaster_earned: 0,
+  });
   const [exchangeRate, setExchangeRate] = useState(0);
 
   const [healingCharacter, setHealingCharacter] = useState<Character | null>(
@@ -225,10 +230,21 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
       const userMetricsData: UserMetrics = data.metrics_response;
-      setUserMetrics(userMetricsData)
+      setUserMetrics(userMetricsData);
       const activeCharacter: Character | null = data.active_character;
-
       setActiveCharacter(activeCharacter);
+    }
+    if (response.startsWith("refreshData:")) {
+      const data = JSON.parse(response.slice("refreshData:".length));
+      setCredits(data.credits);
+      setTons(data.tons);
+      setTokens(data.tokens);
+      setExchangeRate(data.exchange_rate);
+      const userMetricsData: UserMetrics = data.metrics_response;
+      setUserMetrics(userMetricsData);
+      const activeCharacter: Character | null = data.active_character;
+      setActiveCharacter(activeCharacter);
+      setCheckGun(true);
     } else if (response.startsWith("exchangeResponse:")) {
       const data = JSON.parse(response.slice("exchangeResponse:".length));
       setCredits(data.credits);
@@ -345,6 +361,13 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   useEffect(() => {
     setJwt(localStorage.getItem(ProofApiService.localStorageKey));
+    const soundSavedSetting = localStorage.getItem("sound_setting");
+    if(!soundSavedSetting)
+      setSoundSetting(true);
+    else if(soundSavedSetting == "on")
+      setSoundSetting(true);
+    else
+      setSoundSetting(false)
   }, []);
 
   return (
@@ -363,6 +386,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         prices,
         userMetrics,
         checkGun,
+        soundSetting,
+        setSoundSetting,
         selectGun,
         selectHealingCharacter,
         updateCredits,
@@ -451,7 +476,7 @@ export const BlastersData = [
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAA6+wdPw=",
     rarity: "uncommon",
     image: bl3Img,
-  }
+  },
 ];
 
 export const CharactersData = [
