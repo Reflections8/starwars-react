@@ -2,6 +2,7 @@ import "./styles/cryptoButtons.css";
 import creditsIcon from "./img/credit.svg";
 import woopyIcon from "./img/woopy.svg";
 import tonIcon from "./img/ton.svg";
+import akronixIcon from "./img/akronix.svg";
 
 type CryptoButtonsProps = {
   activeCurrency: string;
@@ -83,7 +84,11 @@ export function CryptoButtons({
             setActiveCurrency("akronix");
           }}
         >
-          <img src={tonIcon} alt="credit" className="cryptoButtons__btn-icon" />
+          <img
+            src={akronixIcon}
+            alt="credit"
+            className="cryptoButtons__btn-icon"
+          />
           <div className="cryptoButtons__btn-text">akronix</div>
         </button>
       ) : null}
