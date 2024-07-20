@@ -352,3 +352,21 @@
   letter-spacing: 4px;
   text-shadow: 3px 3px 0 #0974f820;
 }
+
+@media screen and (max-width: 370px) {
+  .modalBg {
+    width: 110vw;
+  }
+
+  .modal {
+    transform: scale(0.9);
+  }
+
+  .fullscreenModalBg {
+    width: 110vw;
+  }
+
+  .fullscreenModal {
+    transform: scale(0.9);
+  }
+}
