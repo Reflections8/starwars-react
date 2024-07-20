@@ -26,6 +26,7 @@ import {
 import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
 import { formatWalletString } from "../../../utils/index.ts";
 import walletIcon from "../../../ui/Drawer/img/menu/wallet.svg";
+import { Balance } from "../../../ui/Balance/Balance.tsx";
 
 const pills: PillType[] = [
   {
@@ -68,46 +69,17 @@ export function Wallet() {
           </div>
         ) : null}
 
-        <div className="wallet__balance">
-          <div className="wallet__balance-box">
-            <div className="wallet__balance-box-key">
-              <img
-                src={creditIcon}
-                alt="icon"
-                className="wallet__balance-box-key-icon"
-              />
-              <div className="wallet__balance-box-key-title">Credit</div>
-            </div>
-
-            <div className="wallet__balance-box-value">{credits}</div>
-          </div>
-
-          <div className="wallet__balance-box">
-            <div className="wallet__balance-box-key">
-              <img
-                src={woopyIcon}
-                alt="icon"
-                className="wallet__balance-box-key-icon"
-              />
-              <div className="wallet__balance-box-key-title">Akron</div>
-            </div>
-
-            <div className="wallet__balance-box-value">{tokens}</div>
-          </div>
-
-          <div className="wallet__balance-box">
-            <div className="wallet__balance-box-key">
-              <img
-                src={tonIcon}
-                alt="icon"
-                className="wallet__balance-box-key-icon"
-              />
-              <div className="wallet__balance-box-key-title">Ton</div>
-            </div>
-
-            <div className="wallet__balance-box-value">{tons}</div>
-          </div>
-        </div>
+        <Balance
+          icon1={creditIcon}
+          name1="Credit"
+          value1={credits}
+          icon2={woopyIcon}
+          name2="Akron"
+          value2={tokens}
+          icon3={tonIcon}
+          name3="Ton"
+          value3={tons}
+        />
         <div className="wallet__pillsContainer">
           <SlidingPills
             pills={pills}

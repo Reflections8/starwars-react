@@ -21,19 +21,30 @@ import { TasksIcon } from "../../icons/Modals/Tasks";
 import { TeamIcon } from "../../icons/Modals/Team";
 import { WalletIcon } from "../../icons/Modals/Wallet";
 import modalBodyBorderBottom from "./img//modal-body-border-title.svg";
-import textureBg from "./img/bg-texture.svg";
 import modalBodyCloseIcon from "./img/close-bg.svg";
 import modalBodyBgShort from "./img/modal-body-short.png";
 import modalBodyBg from "./img/modal-body.png";
 import modalHeaderIconBg from "./img/modal-header-icon-wrapper.png";
 import modalHeaderBg from "./img/modal-header.png";
+import textureBg from "./img/bg-texture.svg";
 import "./styles/modal.css";
+import { Welcome } from "../../components/Modals/Welcome/Welcome";
+import { CurrentStat } from "../../components/Modals/CurrentStat/CurrentStat";
+import { ReactNode } from "react";
 
 type ModalProps = {
   isOpen: boolean;
 };
 
-const modalContentType = {
+type ModalContentType = {
+	[key: string]: {
+		component: ReactNode
+		title?: string
+		icon?: ReactNode
+	}
+}
+
+const modalContentType: ModalContentType = {
   chooseGame: {
     title: "Выбор игры:",
     icon: <GamepadIcon />,
@@ -84,91 +95,138 @@ const modalContentType = {
     icon: <SeaBattleIcon />,
     component: <SeaBattle />,
   },
+  welcome: {
+    component: <Welcome />,
+  },
+  currentStat: {
+    component: <CurrentStat />,
+  },
 };
+
+const fullscreenModals = ["welcome", "currentStat"];
+const shortModals = ["chooseGame"];
 
 export function Modal({ isOpen }: ModalProps) {
   const { closeModal, modalType } = useModal();
-  const shortModalBody = modalType === "chooseGame";
+
+  const shortModalBody = shortModals.includes(modalType!);
+  const fullscreen = fullscreenModals.includes(modalType!);
 
   return (
-    <div
-      className={`modalBg ${!isOpen ? "modalBg--Hidden" : ""} ${
-        shortModalBody ? "modalBg--Short" : ""
-      }`}
-    >
-      <img
-        src={textureBg}
-        alt="texture"
-        className="modalBg__textureBg modalBg__textureBg--Left"
-      />
-      <img
-        src={textureBg}
-        alt="texture"
-        className="modalBg__textureBg modalBg__textureBg--Right"
-      />
-
-      <div className="modal">
-        {/* HEADER */}
-        <div className="modal__header">
+    <>
+      {fullscreen ? (
+        <div
+          className={`fullscreenModalBg ${
+            !isOpen ? "fullscreenModalBg--Hidden" : ""
+          }`}
+        >
+          <div className="fullscreenModalBg__color"></div>
+          {/* <img src={bgImg} alt="bg" className="fullscreenModalBg__img" /> */}
           <img
-            src={modalHeaderBg}
-            alt="modal-header-bg"
-            className="modal__header-bg"
+            src={textureBg}
+            alt="texture"
+            className="fullscreenModalBg__textureBg fullscreenModalBg__textureBg--Left"
+          />
+          <img
+            src={textureBg}
+            alt="texture"
+            className="fullscreenModalBg__textureBg fullscreenModalBg__textureBg--Right"
           />
 
-          <img
-            src={modalHeaderIconBg}
-            alt="modal-header-icon-bg"
-            className="modal__header-iconBg"
-          />
-
-          <div className="modal__header-iconWrapper">
-            {modalContentType[modalType as keyof typeof modalContentType]?.icon}
+          <div className="fullscreenModal">
+            {
+              modalContentType[modalType as keyof typeof modalContentType]
+                ?.component
+            }
           </div>
         </div>
-
-        {/* BODY */}
+      ) : (
         <div
-          className={`modal__body ${
-            shortModalBody ? `modal__body--Short` : ""
+          className={`modalBg ${!isOpen ? "modalBg--Hidden" : ""} ${
+            shortModalBody ? "modalBg--Short" : ""
           }`}
         >
           <img
-            src={shortModalBody ? modalBodyBgShort : modalBodyBg}
-            alt="modal-body"
-            className="modal__body-bg"
+            src={textureBg}
+            alt="texture"
+            className="modalBg__textureBg modalBg__textureBg--Left"
+          />
+          <img
+            src={textureBg}
+            alt="texture"
+            className="modalBg__textureBg modalBg__textureBg--Right"
           />
 
-          <div className="modal__body-top">
-            <button className="modal__body-top-closeBtn" onClick={closeModal}>
+          <div className="modal">
+            {/* HEADER */}
+            <div className="modal__header">
               <img
-                src={modalBodyCloseIcon}
-                alt="closeIcon"
-                className="modal__body-top-closeBtn-bg"
+                src={modalHeaderBg}
+                alt="modal-header-bg"
+                className="modal__header-bg"
               />
-              <span className="modal__body-top-closeBtn-text">Закрыть</span>
-            </button>
 
-            <div className="modal__body-top-title">
-              {
-                modalContentType[modalType as keyof typeof modalContentType]
-                  ?.title
-              }
+              <img
+                src={modalHeaderIconBg}
+                alt="modal-header-icon-bg"
+                className="modal__header-iconBg"
+              />
+
+              <div className="modal__header-iconWrapper">
+                {
+                  modalContentType[modalType as keyof typeof modalContentType]
+                    ?.icon
+                }
+              </div>
             </div>
 
-            <img
-              src={modalBodyBorderBottom}
-              alt="border-bottom"
-              className="modal__body-top__borderBottom"
-            />
-          </div>
+            {/* BODY */}
+            <div
+              className={`modal__body ${
+                shortModalBody ? `modal__body--Short` : ""
+              }`}
+            >
+              <img
+                src={shortModalBody ? modalBodyBgShort : modalBodyBg}
+                alt="modal-body"
+                className="modal__body-bg"
+              />
 
-          {
-            modalContentType[modalType as keyof typeof modalContentType]
-              ?.component
-          }
+              <div className="modal__body-top">
+                <button
+                  className="modal__body-top-closeBtn"
+                  onClick={closeModal}
+                >
+                  <img
+                    src={modalBodyCloseIcon}
+                    alt="closeIcon"
+                    className="modal__body-top-closeBtn-bg"
+                  />
+                  <span className="modal__body-top-closeBtn-text">Закрыть</span>
+                </button>
+
+                <div className="modal__body-top-title">
+                  {
+                    modalContentType[modalType as keyof typeof modalContentType]
+                      ?.title
+                  }
+                </div>
+
+                <img
+                  src={modalBodyBorderBottom}
+                  alt="border-bottom"
+                  className="modal__body-top__borderBottom"
+                />
+              </div>
+
+              {
+                modalContentType[modalType as keyof typeof modalContentType]
+                  ?.component
+              }
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }

@@ -233,3 +233,122 @@
   border-radius: 6px;
   border: 1px solid #2cd1ff81;
 }
+
+/* FULLSCREEN */
+.fullscreenModalBg {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  backdrop-filter: blur(3px);
+  box-shadow: inset 0 0 50px #19c2ef;
+  z-index: 1000;
+  transition: all 0.2s ease-in-out;
+  opacity: 1;
+  max-width: 576px;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow-y: scroll;
+}
+
+.fullscreenModalBg--Hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fullscreenModalBg__textureBg {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.fullscreenModalBg__textureBg--Left {
+  left: 0;
+}
+
+.fullscreenModalBg__textureBg--Right {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.fullscreenModalBg__img {
+  position: fixed;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  object-fit: cover;
+}
+
+.fullscreenModalBg__color {
+  position: fixed;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: #101d976e;
+  backdrop-filter: blur(5px);
+}
+
+.fullscreenModal {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  height: 100%;
+  z-index: 10;
+
+  padding: 25px;
+  padding-top: 65px;
+  position: relative;
+  z-index: 1;
+}
+
+.fullscreenModal__title {
+  margin-bottom: 20px;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 20px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  max-width: 170px;
+  text-align: center;
+  line-height: 150%;
+  position: relative;
+}
+
+.fullscreenModal__title::before {
+  position: absolute;
+  content: url("../img/loader/loader-corner.svg");
+  left: -15px;
+  top: -10px;
+}
+
+.fullscreenModal__title::after {
+  position: absolute;
+  content: url("../img/loader/loader-corner.svg");
+  right: -15px;
+  top: -10px;
+  transform: scaleX(-1);
+}
+
+.fullscreenModal__dots {
+  margin-bottom: 60px;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 20px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+}

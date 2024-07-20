@@ -1,0 +1,88 @@
+.welcome {
+  display: flex;
+  flex-direction: column;
+  max-width: 342px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.welcome__title {
+  text-align: center;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 280px;
+  line-height: 130%;
+}
+
+.welcome__main {
+  margin-bottom: 30px;
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(to bottom, #1848b9e1, #19c2efe1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.welcome__main-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #181d5bb3;
+}
+
+.welcome__main-balance-text {
+  color: #076ce9;
+  font-size: 10px;
+  text-align: center;
+}
+
+.welcome .exchange__badge {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.welcome .exchange__badge-item--Right {
+  gap: 15px;
+}
+
+.welcome .player-card {
+  background-color: #181d5b85;
+  border-radius: 8px;
+}
+
+.welcome__btn {
+  display: flex;
+  justify-content: center;
+  max-width: 112px;
+  height: 52px;
+  width: 100%;
+  position: relative;
+  margin: 0 auto;
+}
+
+.welcome__btn-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.welcome__btn-bg {
+  position: absolute;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -56,6 +56,7 @@ export function Home() {
     totalChargeStep: 0,
     charge: 0,
   });
+  console.log(stats);
 
   const sendMessageToUnity = (method: string, param: any) => {
     const message = JSON.stringify({ method, param });
@@ -172,8 +173,9 @@ export function Home() {
     };
   }, []);
 
+  // Всплывашка при заходе на страницу
   useEffect(() => {
-    //setIsLoading!(true);
+    openModal!("welcome");
   }, []);
 
   async function openWalletDrawer() {
@@ -242,13 +244,7 @@ export function Home() {
         rightAction={() => {
           openModal!("settings");
         }}
-        centerComponent={
-          <Info
-            damage={stats.totalDamage}
-            charge={stats.charge}
-            reload={stats.totalChargeStep}
-          />
-        }
+        centerComponent={<Info />}
       />
     </>
   );
