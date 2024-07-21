@@ -114,7 +114,7 @@
   flex-direction: column;
 }
 
-.modalBg.modalBg--Short {
+.modalBg.modalBg--Short.chooseGame {
   padding-top: 100px;
 }
 

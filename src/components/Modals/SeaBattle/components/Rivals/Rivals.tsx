@@ -9,6 +9,7 @@ import creditsIcon from "./img/credit.svg";
 
 import "./styles/Rivals.css";
 import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
+import { useModal } from "../../../../../context/ModalContext";
 
 type Rivals = {
   login: string;
@@ -88,6 +89,8 @@ export function Rivals() {
     e.stopPropagation();
     setIsCreatingDuel(true);
   }
+
+  const { openModal } = useModal();
 
   function fetchRivals(currency: string) {
     if (currency == "ton") {
@@ -181,6 +184,10 @@ export function Rivals() {
                 </div>
                 <div className="rivals__list-item-end">
                   <CuttedButton
+                    callback={(e) => {
+                      e.stopPropagation();
+                      openModal!("shipsArrangement");
+                    }}
                     size="small"
                     className="rivals__list-item-end-btn"
                     text="Дуэль"

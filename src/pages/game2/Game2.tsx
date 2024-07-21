@@ -9,7 +9,7 @@ export function Game2() {
   const { openModal } = useModal();
 
   useEffect(() => {
-    openModal!("seaBattle");
+    //  openModal!("seaBattle");
   }, []);
   return (
     <div>

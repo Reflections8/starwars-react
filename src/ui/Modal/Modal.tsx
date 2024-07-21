@@ -31,18 +31,19 @@ import "./styles/modal.css";
 import { Welcome } from "../../components/Modals/Welcome/Welcome";
 import { CurrentStat } from "../../components/Modals/CurrentStat/CurrentStat";
 import { ReactNode } from "react";
+import { ShipsArrangement } from "../../components/Modals/ShipsArrangement/ShipsArrangement";
 
 type ModalProps = {
   isOpen: boolean;
 };
 
 type ModalContentType = {
-	[key: string]: {
-		component: ReactNode
-		title?: string
-		icon?: ReactNode
-	}
-}
+  [key: string]: {
+    component: ReactNode;
+    title?: string;
+    icon?: ReactNode;
+  };
+};
 
 const modalContentType: ModalContentType = {
   chooseGame: {
@@ -95,6 +96,11 @@ const modalContentType: ModalContentType = {
     icon: <SeaBattleIcon />,
     component: <SeaBattle />,
   },
+  shipsArrangement: {
+    title: "Расставить флот",
+    icon: <SeaBattleIcon />,
+    component: <ShipsArrangement />,
+  },
   welcome: {
     component: <Welcome />,
   },
@@ -103,8 +109,10 @@ const modalContentType: ModalContentType = {
   },
 };
 
-const fullscreenModals = ["welcome", "currentStat"];
-const shortModals = ["chooseGame"];
+type ModalContentKeys = keyof typeof modalContentType;
+
+const fullscreenModals: ModalContentKeys[] = ["welcome", "currentStat"];
+const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement"];
 
 export function Modal({ isOpen }: ModalProps) {
   const { closeModal, modalType } = useModal();
@@ -144,7 +152,7 @@ export function Modal({ isOpen }: ModalProps) {
         <div
           className={`modalBg ${!isOpen ? "modalBg--Hidden" : ""} ${
             shortModalBody ? "modalBg--Short" : ""
-          }`}
+          } ${modalType}`}
         >
           <img
             src={textureBg}
