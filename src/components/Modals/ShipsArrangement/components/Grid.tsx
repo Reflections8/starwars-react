@@ -1,9 +1,14 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import "../styles/Grid.css";
 import ship1 from "../img/ships/1.png";
 import ship2 from "../img/ships/2.png";
 import ship3 from "../img/ships/3.png";
 import ship4 from "../img/ships/4.png";
+
+import ship1Vertical from "../img/ships/1_vertical.png";
+import ship2Vertical from "../img/ships/2_vertical.png";
+import ship3Vertical from "../img/ships/3_vertical.png";
+import ship4Vertical from "../img/ships/4_vertical.png";
 
 type GridProps = {
   selectedShipToSettle: string | number;
@@ -13,11 +18,26 @@ type GridProps = {
 };
 
 const shipImagesEnum = {
-  ship__1: ship1,
-  ship__2: ship2,
-  ship__3: ship3,
-  ship__4: ship4,
+  ship__1: {
+    horizontal: ship1,
+    vertical: ship1Vertical,
+  },
+  ship__2: {
+    horizontal: ship2,
+    vertical: ship2Vertical,
+  },
+  ship__3: {
+    horizontal: ship3,
+    vertical: ship3Vertical,
+  },
+  ship__4: {
+    horizontal: ship4,
+    vertical: ship4Vertical,
+  },
 };
+
+const gridColumnsOrder = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+const gridRowsOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export function Grid({
   selectedShipToSettle,
@@ -32,6 +52,13 @@ export function Grid({
   // Состояние для хранения классов ячеек
   const [cellClasses, setCellClasses] = useState<Record<string, string[]>>({});
 
+  // Состояние превью
+  const [previewState, setPreviewState] = useState({
+    shipLength: "",
+    direction: "horizontal",
+    settledCells: [],
+  });
+
   const cells = useMemo(() => {
     const tempCells = [];
     for (let row = 1; row <= rows; row++) {
@@ -40,7 +67,6 @@ export function Grid({
         tempCells.push({
           key: className,
           className: `battleships__cell ${className}`,
-          // Применяем классы из состояния
           classes: cellClasses[className] || [],
         });
       }
@@ -48,30 +74,106 @@ export function Grid({
     return tempCells;
   }, [rows, columns, columnLabels, cellClasses]);
 
+  useEffect(() => {
+    // TODO: чекнуть, что компонент нормально рендерится при обновлении previewState
+    console.log({ previewState });
+  }, [previewState]);
+
+  function checkPlacementValidity(
+    selectedShipLength: number,
+    clickedRow: number,
+    clickedColumn: string,
+    direction: string
+  ) {
+    if (direction === "horizontal") {
+      const startIndex = gridColumnsOrder.indexOf(clickedColumn);
+      const correctPlacement =
+        !!gridColumnsOrder[startIndex + (selectedShipLength - 1)];
+      return correctPlacement;
+    }
+
+    if (direction === "vertical") {
+      const startIndex = gridRowsOrder.indexOf(clickedRow);
+      const correctPlacement =
+        !!gridRowsOrder[startIndex + (selectedShipLength - 1)];
+      return correctPlacement;
+    }
+  }
+
+  function returnSettledCells(
+    selectedShipLength: number,
+    clickedRow: number,
+    clickedColumn: string,
+    direction: string
+  ) {
+    const arr = [];
+    if (direction === "horizontal") {
+      const startIndex = gridColumnsOrder.indexOf(clickedColumn);
+      for (let i = startIndex; i < startIndex + selectedShipLength; i++) {
+        arr.push(String(gridColumnsOrder[i] + clickedRow));
+      }
+    }
+
+    if (direction === "vertical") {
+      const startIndex = gridRowsOrder.indexOf(clickedRow);
+      for (let i = startIndex; i < startIndex + selectedShipLength; i++) {
+        arr.push(String(clickedColumn + gridRowsOrder[i]));
+      }
+    }
+
+    return arr;
+  }
+
   function handleGridClick(e: React.MouseEvent<HTMLDivElement>) {
     const clickedCellClass = (e.target as HTMLDivElement).className.split(
       " "
     )[1];
 
     if (selectedShipToSettle) {
-      setCellClasses((prevClasses) => ({
-        ...prevClasses,
-        [clickedCellClass]: [
-          ...(prevClasses[clickedCellClass] || []),
-          "settled",
-          `ship__${selectedShipToSettle}`,
-        ],
-      }));
-      setSelectedShipToSettle(null);
+      const selectedShipLength = Number(selectedShipToSettle);
+      const clickedRow = Number(clickedCellClass[1]);
+      const clickedColumn = clickedCellClass[0];
 
-      setUnsettledShips((prevShips) => {
-        const updatedShips = { ...prevShips };
-        if (updatedShips[selectedShipToSettle] > 0) {
-          updatedShips[selectedShipToSettle] -= 1;
-        }
+      const isPlacementValid = checkPlacementValidity(
+        selectedShipLength,
+        clickedRow,
+        clickedColumn,
+        previewState.direction
+      );
 
-        return updatedShips;
-      });
+      if (isPlacementValid) {
+        setPreviewState({
+          shipLength: String(selectedShipToSettle),
+          direction: "horizontal",
+          settledCells: returnSettledCells(
+            selectedShipLength,
+            clickedRow,
+            clickedColumn,
+            previewState.direction
+          ),
+        });
+
+        setCellClasses((prevClasses) => ({
+          ...prevClasses,
+          [clickedCellClass]: [
+            ...(prevClasses[clickedCellClass] || []),
+            "settled",
+            `ship__${selectedShipToSettle}`,
+          ],
+        }));
+
+        /* TODO: это надо переместить в функцию которая подтверждает расстановку */
+        //   setSelectedShipToSettle(null);
+
+        //   setUnsettledShips((prevShips) => {
+        //     const updatedShips = { ...prevShips };
+        //     if (updatedShips[selectedShipToSettle] > 0) {
+        //       updatedShips[selectedShipToSettle] -= 1;
+        //     }
+
+        //     return updatedShips;
+        //   });
+      }
     }
   }
 
@@ -88,14 +190,22 @@ export function Grid({
           >
             {isSettled ? (
               <img
-                src={shipImagesEnum[currentShipClass[0]]}
+                src={
+                  shipImagesEnum[currentShipClass?.[0]][previewState?.direction]
+                }
                 alt="ship"
-                className="battleships__cell-shipImg"
+                className={`battleships__cell-shipImg ${currentShipClass} ${previewState.direction}`}
               />
             ) : null}
           </div>
         );
       })}
+
+      <div className="battleships__gridAbsolute">
+        {previewState.shipLength ? (
+          <div className="battleships__gridAbsolute-controls">CONTROLS</div>
+        ) : null}
+      </div>
     </div>
   );
 }
