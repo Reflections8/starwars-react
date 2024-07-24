@@ -1,0 +1,161 @@
+.shipsArr {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shipsArr__main {
+  padding: 10px 24px 24px 24px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #1848b900, #181d5b);
+  max-width: 342px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.shipsArr__main-field {
+  margin-bottom: 15px;
+}
+
+.shipsArr__main-ships {
+  margin-bottom: 22px;
+}
+
+.shipsArr__main-field-timerRow {
+  position: relative;
+  margin-bottom: -4px;
+  display: flex;
+  justify-content: center;
+}
+
+.shipsArr__main-field-timerRow-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.shipsArr__main-field-timerRow-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
+  color: #ffd954;
+  font-size: 14px;
+  max-width: 200px;
+}
+
+.shipsArr__main-field-timerRow-content-icon {
+  flex-grow: 1;
+  max-width: 18px;
+}
+
+.shipsArr__main-field-timerRow-content-value {
+  width: 56px;
+}
+
+.shipsArr__main-field-gridWrapper {
+  position: relative;
+  width: 100%;
+  height: 285px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shipsArr__main-field-gridWrapper-bgWrapper {
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 275px;
+  height: 275px;
+}
+
+.shipsArr__main-field-gridWrapper-bgWrapper-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.shipsArr__main-field-gridWrapper-bgWrapper-bottomElement {
+  position: absolute;
+  bottom: -10px;
+  max-width: 105px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* SHIPS */
+.shipsArr__main-ships {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #19c2ef;
+  background-color: #120e2733;
+  max-width: 294px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.shipsArr__main-ships-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.shipsArr__main-ships-item.disabled {
+  pointer-events: none;
+}
+
+.shipsArr__main-ships-item.active .shipsArr__main-ships-item-main {
+  background: #0974f8;
+  box-shadow: inset 0 0 0px 1px #2cd3ff82;
+}
+
+.shipsArr__main-ships-item-main {
+  padding: 2px;
+  border-radius: 1px;
+  background: linear-gradient(to bottom, #0974f87f, #4fb2fe7f);
+  max-height: 27px;
+}
+
+.shipsArr__main-ships-item-main-img {
+  max-height: 23px;
+  width: 100%;
+}
+
+.shipsArr__main-ships-badge {
+  clip-path: polygon(50% 0%, 100% 38%, 100% 100%, 0 100%, 0% 38%);
+  background-color: #0974f8b3;
+  width: 23px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #19c2ef;
+  padding-top: 4px;
+}
+
+/* BUTTONS */
+.shipsArr__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shipsArr__buttons .cuttedButtonContainer {
+  max-width: 110px;
+  width: 100%;
+}
