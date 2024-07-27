@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useModal } from "../../../context/ModalContext";
 
-import playerModel from "./img/playerModel.png";
-import weaponModel from "./img/weaponModel.png";
 import footerBtnBg from "./img/footerButtonBg.svg";
 
 import damageIcon from "./img/broken-skull.svg";
