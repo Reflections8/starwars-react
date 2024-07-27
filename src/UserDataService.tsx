@@ -362,12 +362,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   useEffect(() => {
     setJwt(localStorage.getItem(ProofApiService.localStorageKey));
     const soundSavedSetting = localStorage.getItem("sound_setting");
-    if(!soundSavedSetting)
-      setSoundSetting(true);
-    else if(soundSavedSetting == "on")
-      setSoundSetting(true);
-    else
-      setSoundSetting(false)
+    if (!soundSavedSetting) setSoundSetting(true);
+    else if (soundSavedSetting == "on") setSoundSetting(true);
+    else setSoundSetting(false);
   }, []);
 
   return (

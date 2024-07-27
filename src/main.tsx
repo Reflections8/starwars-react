@@ -8,12 +8,12 @@ import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
 export const PROJECT_CONTRACT_ADDRESS =
   "0:5CE1280FFDD7B96B6A11CD7486355E30061A05B3DCCDEAC3F556FDA941C5592F";
 
-export const SERVER_URL = "wss://socket.purpleguy.dev/menu";
+export const SERVER_URL = "wss://socket.akronix.io/menu";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <TonConnectUIProvider
-      manifestUrl="https://purpleguy.dev/tonconnect/connect.json"
+      manifestUrl="https://akronix.io/tonconnect.json"
       uiPreferences={{ theme: THEME.DARK }}
       restoreConnection={true}
       walletsListConfiguration={{
