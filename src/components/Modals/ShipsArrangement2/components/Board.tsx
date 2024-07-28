@@ -83,7 +83,6 @@ function Field({
           src={
             shipImagesEnum[ship?.length][isVertical ? "vertical" : "horizontal"]
           }
-          alt=""
           className={`battleships__cell-shipImg ship__${ship.length} ${
             isVertical ? "vertical" : "horizontal"
           }`}
@@ -155,6 +154,7 @@ export function Board({ gameboard, enemy, owner, onFieldClick }: Props) {
         }
 
         let fieldComponent = <Field></Field>;
+
         if (owner.name === "Computer") {
           fieldComponent = (
             <Field
