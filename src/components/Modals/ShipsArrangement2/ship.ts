@@ -2,11 +2,13 @@ export class Ship {
   length: number;
   hits: number[];
   vertical: boolean;
+  isHead: boolean;
 
   constructor(length: number) {
     this.length = length;
     this.hits = [];
     this.vertical = false;
+    this.isHead = false;
   }
 
   hit(position: number) {
@@ -17,5 +19,9 @@ export class Ship {
 
   isSunk() {
     return this.hits.length === this.length;
+  }
+
+  copy() {
+    return Object.assign({}, this);
   }
 }

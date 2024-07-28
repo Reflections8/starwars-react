@@ -25,18 +25,31 @@ export class Gameboard {
   }
 
   placeShip(ship: Ship, row: number, column: number, isVertical: boolean) {
-    if (!this.isPlacementPossible(ship, row, column, isVertical)) return false;
+    // if (!this.isPlacementPossible(ship, row, column, isVertical)) return false;
+    // const isPossible = this.isPlacementPossible2(ship, row, column, isVertical);
+    const isPossible = this.isPlacementPossible(ship, row, column, isVertical);
+    if (!isPossible) return false;
 
     if (isVertical) {
       for (let i = 0; i < ship.length; i++) {
-        ship.vertical = true;
-        this.board[row + i][column] = ship;
+        const copyShip = ship.copy();
+        copyShip.isHead = false;
+        if (i === 0) {
+          copyShip.isHead = true;
+        }
+        copyShip.vertical = true;
+        this.board[row + i][column] = copyShip;
         // ship.isVertical = true;
         // this.isVertical[row + i][column] = true;
       }
     } else {
       for (let i = 0; i < ship.length; i++) {
-        this.board[row][column + i] = ship;
+        const copyShip = ship.copy();
+        copyShip.isHead = false;
+        if (i === 0) {
+          copyShip.isHead = true;
+        }
+        this.board[row][column + i] = copyShip;
         // this.isVertical[row][column + i] = false;
       }
     }
@@ -60,7 +73,7 @@ export class Gameboard {
 
     let succesfulPlacements = 0;
 
-    while (succesfulPlacements < 5) {
+    while (succesfulPlacements < sizes.length) {
       const row = Math.floor(Math.random() * 10);
       const column = Math.floor(Math.random() * 10);
       const isVertical = Math.floor(Math.random() * 2) === 1 ? true : false;
@@ -68,7 +81,46 @@ export class Gameboard {
       if (this.placeShip(ships[succesfulPlacements], row, column, isVertical))
         succesfulPlacements++;
     }
+    console.log("Board", this.board);
     return this;
+  }
+
+  isPlacementPossible2(
+    ship: Ship,
+    row: number,
+    column: number,
+    isVertical: boolean
+  ) {
+    const size = ship.length;
+
+    // Check if the ship fits within the grid
+    if (isVertical) {
+      if (row + size > this.board.length) return false;
+    } else {
+      if (column + size > this.board[0].length) return false;
+    }
+
+    // Check for overlap and buffer zone
+    const startRow = Math.max(0, row - 1);
+    const endRow = Math.min(
+      this.board.length - 1,
+      row + (isVertical ? size : 1)
+    );
+    const startColumn = Math.max(0, column - 1);
+    const endColumn = Math.min(
+      this.board[0].length - 1,
+      column + (isVertical ? 1 : size)
+    );
+
+    for (let r = startRow; r <= endRow; r++) {
+      for (let c = startColumn; c <= endColumn; c++) {
+        if (this.board[r][c] !== null) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   isPlacementPossible(

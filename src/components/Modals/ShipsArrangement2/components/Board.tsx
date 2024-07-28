@@ -78,7 +78,7 @@ function Field({
 }: FieldProps) {
   return (
     <div className={`${className} ${isVertical} `}>
-      {ship && (
+      {ship && ship.isHead && (
         <img
           src={
             shipImagesEnum[ship?.length][isVertical ? "vertical" : "horizontal"]
