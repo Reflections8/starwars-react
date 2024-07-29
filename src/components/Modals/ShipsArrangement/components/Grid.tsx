@@ -49,6 +49,7 @@ export function Grid({
   const columns = 10;
   const columnLabels = "abcdefghij".split("");
 
+  console.log({ setSelectedShipToSettle, setUnsettledShips, unsettledShips });
   // Состояние для хранения классов ячеек
   const [cellClasses, setCellClasses] = useState<Record<string, string[]>>({});
 
@@ -145,6 +146,7 @@ export function Grid({
         setPreviewState({
           shipLength: String(selectedShipToSettle),
           direction: "horizontal",
+          // @ts-ignore
           settledCells: returnSettledCells(
             selectedShipLength,
             clickedRow,
@@ -191,6 +193,7 @@ export function Grid({
             {isSettled ? (
               <img
                 src={
+                  // @ts-ignore
                   shipImagesEnum[currentShipClass?.[0]][previewState?.direction]
                 }
                 alt="ship"

@@ -15,6 +15,7 @@ export function Ships({
   unsettledShips,
   setUnsettledShips,
 }: ShipsProps) {
+  console.log(setUnsettledShips);
   return (
     <div className="shipsArr__main-ships">
       {/* ITEM */}

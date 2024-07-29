@@ -73,12 +73,16 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 
-// calculate document height
 document.addEventListener("DOMContentLoaded", () => {
+  // calculate document height
   const documentHeight = () => {
     const doc = document.documentElement;
     doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
   };
   window.addEventListener("resize", documentHeight);
   documentHeight();
+
+  // prevent image dragging
+  const images = document.querySelectorAll("img");
+  console.log(images);
 });

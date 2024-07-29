@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
+import { Info } from "../../components/Header/components/Info/Info.tsx";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useDrawer } from "../../context/DrawerContext";
 import { useLoader } from "../../context/LoaderContext";
 import { useModal } from "../../context/ModalContext";
@@ -15,14 +19,6 @@ import { BackgroundLayers } from "./components/BackgroundLayers";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import "./styles/home.css";
-import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
-import { useTonConnectUI } from "@tonconnect/ui-react";
-import {
-  Blaster,
-  CharactersData,
-  useUserData,
-} from "../../UserDataService.tsx";
-import { Info } from "../../components/Header/components/Info/Info.tsx";
 
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -32,8 +28,6 @@ export function Home() {
     tokens,
     tons,
     jwt,
-    activeCharacter,
-    blasters,
     updateCredits,
     updateJwt,
     checkGun,
@@ -134,9 +128,9 @@ export function Home() {
   }, []);
 
   // Всплывашка при заходе на страницу
-  /*useEffect(() => {
-    openModal!("welcome");
-  }, []);*/
+  //   useEffect(() => {
+  //     openModal!("welcome");
+  //   }, []);
 
   async function openWalletDrawer() {
     closeDrawer!();

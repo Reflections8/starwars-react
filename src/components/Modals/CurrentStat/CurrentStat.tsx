@@ -84,8 +84,9 @@ export function CurrentStat() {
           <img
             src={
               blasters
-                ? BlastersData[calculateHighestLevelBlaster(blasters).level - 1]
-                    .image
+                ? BlastersData?.[
+                    calculateHighestLevelBlaster(blasters).level - 1
+                  ].image
                 : undefined
             }
             alt=""

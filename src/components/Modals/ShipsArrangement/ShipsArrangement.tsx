@@ -78,18 +78,24 @@ export function ShipsArrangement() {
             </div>
 
             <Grid
+              // @ts-ignore
               selectedShipToSettle={selectedShipToSettle}
+              // @ts-ignore
               setSelectedShipToSettle={setSelectedShipToSettle}
               unsettledShips={unsettledShips}
+              // @ts-ignore
               setUnsettledShips={setUnsettledShips}
             />
           </div>
         </div>
 
         <Ships
+          // @ts-ignore
           selectedShipToSettle={selectedShipToSettle}
+          // @ts-ignore
           setSelectedShipToSettle={setSelectedShipToSettle}
           unsettledShips={unsettledShips}
+          // @ts-ignore
           setUnsettledShips={setUnsettledShips}
         />
 

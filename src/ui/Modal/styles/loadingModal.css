@@ -136,6 +136,7 @@
   animation: clockwiseRotate;
   animation-duration: 60s;
   animation-iteration-count: infinite;
+  max-width: 200px;
 }
 
 .loadingModal__loader-outer {
@@ -167,6 +168,7 @@
   animation: pulse;
   animation-duration: 1s;
   animation-iteration-count: infinite;
+  max-width: 90px;
 }
 
 @keyframes bgZoomIn {

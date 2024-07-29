@@ -90,3 +90,9 @@
 .mainLinks__col--Right .mainLinks__col-item-text {
   transform: scaleX(-1);
 }
+
+@media screen and (max-height: 615px) {
+  .mainLinks__col {
+    gap: 0;
+  }
+}
