@@ -17,7 +17,8 @@
 }
 
 img,
-svg {
+svg,
+iframe {
   -webkit-user-drag: none;
   user-drag: none;
 }

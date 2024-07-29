@@ -16,7 +16,7 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  background: radial-gradient(circle, #130b5300 0%, #1202503f 100%);
+  background: radial-gradient(circle, #130b5300, #12025059);
   left: 0;
   z-index: 3;
   pointer-events: none;
@@ -29,7 +29,7 @@
   left: 0;
   z-index: 2;
   pointer-events: none;
-  background: linear-gradient(to top, #120d1f8c, #0f172f00);
+  background: linear-gradient(to top, #120d1fe0, #0f172f00);
   bottom: 0;
 }
 
