@@ -1,8 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useModal } from "../../../context/ModalContext";
 
-import playerModel from "./img/playerModel.png";
-import weaponModel from "./img/weaponModel.png";
 import footerBtnBg from "./img/footerButtonBg.svg";
 
 import damageIcon from "./img/broken-skull.svg";
@@ -10,18 +8,64 @@ import chargeIcon from "./img/battery.svg";
 import reloadIcon from "./img/reload.svg";
 
 import "./styles/CurrentStat.css";
+import {
+  Blaster,
+  BlastersData,
+  CharactersData,
+  useUserData,
+} from "../../../UserDataService.tsx";
 
 export function CurrentStat() {
-  const [damage] = useState(5);
-  const [damageUpgrade] = useState(2);
+  const { activeCharacter, blasters } = useUserData();
+  const [damage, setDamage] = useState(0);
+  const [damageUpgrade, setDamageUpgrade] = useState(0);
 
-  const [charge] = useState(5);
-  const [chargeUpgrade] = useState(4);
+  const [charge, setCharge] = useState(0);
+  const [chargeUpgrade, setChargeUpgrade] = useState(0);
 
-  const [reload] = useState(500);
-  const [reloadUpgrade] = useState(500);
+  const [reload, setReload] = useState(0);
+  const [reloadUpgrade, setReloadUpgrade] = useState(0);
 
   const { closeModal } = useModal();
+
+  const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
+    return blasters.reduce((highest: Blaster, blaster: Blaster) => {
+      return blaster.level > (highest.level || 0) ? blaster : highest;
+    });
+  };
+
+  useEffect(() => {
+    if (!activeCharacter || !blasters || blasters.length == 0) return;
+
+    const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
+    if (!highestLevelBlaster) return;
+
+    const characterData = CharactersData[activeCharacter.type - 1];
+    if (!characterData) return;
+
+    const needHealing = activeCharacter.earned >= activeCharacter.earn_required;
+
+    const totalDamage = Math.round(
+      ((highestLevelBlaster.damage || 0) + (characterData.damage || 0)) *
+        (needHealing ? 0.1 : 1)
+    );
+
+    const totalChargeStep =
+      ((highestLevelBlaster.charge_step || 0) +
+        (characterData.charge_step || 0)) *
+      (needHealing ? 0.1 : 1);
+
+    const charge = Math.round(
+      (highestLevelBlaster.max_charge || 0) * (needHealing ? 0.1 : 1)
+    );
+
+    setDamage(totalDamage);
+    setReload(totalChargeStep);
+    setCharge(charge);
+    setDamageUpgrade(needHealing ? 0 : highestLevelBlaster.damage);
+    setReloadUpgrade(needHealing ? 0 : highestLevelBlaster.charge_step);
+    setChargeUpgrade(needHealing ? 0 : highestLevelBlaster.charge);
+  }, [activeCharacter, blasters]);
 
   return (
     <div className="currentStat">
@@ -29,12 +73,21 @@ export function CurrentStat() {
       <div className="currentStat__main">
         <div className="currentStat__main-images">
           <img
-            src={playerModel}
+            src={
+              activeCharacter
+                ? CharactersData[activeCharacter.type - 1].image
+                : undefined
+            }
             alt=""
             className="currentStat__main-images-img"
           />
           <img
-            src={weaponModel}
+            src={
+              blasters
+                ? BlastersData[calculateHighestLevelBlaster(blasters).level - 1]
+                    .image
+                : undefined
+            }
             alt=""
             className="currentStat__main-images-img"
           />
@@ -58,7 +111,11 @@ export function CurrentStat() {
                 </div>
               </div>
               <div className="currentStat__main-box-list-row-value">
-                {damage} <span className="green">(+{damageUpgrade}) </span>Ед.
+                {damage}{" "}
+                {damageUpgrade != 0 ? (
+                  <span className="green">(+{damageUpgrade}) </span>
+                ) : null}
+                Ед.
               </div>
             </div>
 
@@ -75,7 +132,10 @@ export function CurrentStat() {
                 </div>
               </div>
               <div className="currentStat__main-box-list-row-value">
-                {charge} <span className="green">(+{chargeUpgrade})%</span>/мин
+                {charge}{" "}
+                {chargeUpgrade != 0 ? (
+                  <span className="green">(+{chargeUpgrade})</span>
+                ) : null}
               </div>
             </div>
 
@@ -92,7 +152,11 @@ export function CurrentStat() {
                 </div>
               </div>
               <div className="currentStat__main-box-list-row-value">
-                {reload} <span className="green">(+{reloadUpgrade}) </span>
+                {reload}
+                {reloadUpgrade != 0 ? (
+                  <span className="green">(+{reloadUpgrade})%</span>
+                ) : null}
+                /мин
               </div>
             </div>
           </div>
@@ -104,9 +168,7 @@ export function CurrentStat() {
           closeModal!();
         }}
       >
-        <div className="currentStat__btn-content">
-          {/* сюда текст кнопки */}
-        </div>
+        <div className="currentStat__btn-content">OK</div>
         <img src={footerBtnBg} alt="bg" className="currentStat__btn-bg" />
       </div>
     </div>

@@ -88,6 +88,10 @@ export function Game1() {
         switch (data.type) {
           case "single": {
             if (data.method === "LoadFinish") handleLoadingFinish();
+            if (data.method === "LoadMainMenu") {
+              navigate("/");
+              return;
+            }
             break;
           }
           case "multiple": {
@@ -131,7 +135,7 @@ export function Game1() {
 
       <iframe
         ref={iframeRef}
-        src="https://purpleguy.dev/vader"
+        src="https://akronix.io/unity_vader"
         style={{
           position: "absolute",
           left: 0,

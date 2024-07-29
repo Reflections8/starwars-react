@@ -51,13 +51,6 @@ export function Home() {
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
 
-  const [stats, setStats] = useState({
-    totalDamage: 0,
-    totalChargeStep: 0,
-    charge: 0,
-  });
-  console.log(stats);
-
   const sendMessageToUnity = (method: string, param: any) => {
     const message = JSON.stringify({ method, param });
     if (iframeRef.current) {
@@ -67,6 +60,7 @@ export function Home() {
 
   // отслеживание статуса токена и загрузки приложения
   useEffect(() => {
+    setIsLoading!(true);
     if (isUnityLoaded) {
       setIsLoading!(false);
       const checkTonConnection = async () => {
@@ -82,40 +76,6 @@ export function Home() {
     }
     return () => {};
   }, [isUnityLoaded, jwt]);
-
-  useEffect(() => {
-    if (!activeCharacter || !blasters || blasters.length == 0) return;
-
-    const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
-      return blasters.reduce((highest: Blaster, blaster: Blaster) => {
-        return blaster.level > (highest.level || 0) ? blaster : highest;
-      });
-    };
-
-    const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
-    if (!highestLevelBlaster) return;
-
-    const characterData = CharactersData[activeCharacter.type - 1];
-    if (!characterData) return;
-
-    const needHealing = activeCharacter.earned >= activeCharacter.earn_required;
-
-    const totalDamage = Math.round(
-      ((highestLevelBlaster.damage || 0) + (characterData.damage || 0)) *
-        (needHealing ? 0.1 : 1)
-    );
-
-    const totalChargeStep =
-      ((highestLevelBlaster.charge_step || 0) +
-        (characterData.charge_step || 0)) *
-      (needHealing ? 0.1 : 1);
-
-    const charge = Math.round(
-      (highestLevelBlaster.max_charge || 0) * (needHealing ? 0.1 : 1)
-    );
-
-    setStats({ totalDamage, totalChargeStep, charge });
-  }, [activeCharacter, blasters]);
 
   useEffect(() => {
     if (checkGun) {
@@ -174,9 +134,9 @@ export function Home() {
   }, []);
 
   // Всплывашка при заходе на страницу
-  useEffect(() => {
+  /*useEffect(() => {
     openModal!("welcome");
-  }, []);
+  }, []);*/
 
   async function openWalletDrawer() {
     closeDrawer!();
@@ -213,9 +173,9 @@ export function Home() {
 
       <MainLinks />
 
-      {/*<iframe
+      <iframe
         ref={iframeRef}
-        src="https://purpleguy.dev/main"
+        src="https://akronix.io/unity_main/"
         style={{
           position: "absolute",
           left: 0,
@@ -226,7 +186,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe>*/}
+      ></iframe>
 
       <Header
         position={"bottom"}
