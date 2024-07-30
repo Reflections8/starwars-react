@@ -16,8 +16,19 @@ import {
   letterToNumber,
 } from "../ShipsArrangement/utils/grid";
 import { Ship } from "./ship";
-// import PreviewGame from "../../../pages/game22/PreviewGame";
-// Board
+
+function debounce(func: (...args: unknown[]) => void, wait: number) {
+  let timeout: ReturnType<typeof setTimeout>;
+  return function executedFunction(...args: unknown[]) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 const initialUnsettledShips = {
   "1": 4,
@@ -37,9 +48,15 @@ export function ShipsArrangement2() {
   /* Оставшиеся корабли */
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
-  const [user, setUser] = useState(new Player("User"));
+  const [user] = useState(new Player("User"));
   const g = new Gameboard();
   const [gameboard, setGameboard] = useState(g);
+
+  function handleAuto() {
+    const newGameboard = new Gameboard();
+    newGameboard.placeShipsRandomly();
+    setGameboard(newGameboard);
+  }
 
   function handleCCC() {
     console.log("handleCCC", { gameboard });
@@ -70,7 +87,7 @@ export function ShipsArrangement2() {
       selectedShipToSettle.vertical
     );
     // setGameboard(gameboard);
-    setSelectedShipToSettle(null);
+    // setSelectedShipToSettle(null);
     // setSelectedShipToSettle(selectedShipToSettle);
   };
 
@@ -95,7 +112,16 @@ export function ShipsArrangement2() {
         el2?.classList.remove("marked-ship");
         el2?.classList.remove("marked-buffer");
         el2?.classList.remove("marked-apply");
-        el2?.classList.add(cls);
+        if (el2?.classList.contains("notship")) {
+          document.querySelectorAll(`.notship`).forEach((elem) => {
+            elem.classList.add("marked-warning");
+          });
+          if (cls === "marked-apply") {
+            el2?.classList.add("marked-merged");
+          }
+        } else {
+          el2?.classList.add(cls);
+        }
       };
 
       for (let i = -1; i < size + 1; i++) {
@@ -131,6 +157,8 @@ export function ShipsArrangement2() {
       el.classList.remove("marked-ship");
       el.classList.remove("marked-buffer");
       el.classList.remove("marked-apply");
+      el.classList.remove("marked-warning");
+      el.classList.remove("marked-merged");
     });
   };
 
@@ -212,7 +240,7 @@ export function ShipsArrangement2() {
 
         {/* ACTION BUTTONS */}
         <div className="shipsArr__buttons">
-          <CuttedButton callback={() => handleCCC()} text="Авто" />
+          <CuttedButton callback={() => handleAuto()} text="Авто" />
           <CuttedButton
             text="Играть"
             className={!allShipsSettled ? "halfTransparent" : ""}

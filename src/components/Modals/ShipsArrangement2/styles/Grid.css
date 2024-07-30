@@ -76,3 +76,7 @@
   background-color: #19c2ef30;
   pointer-events: all;
 }
+
+.ship-buffer {
+  background-color: yellow;
+}

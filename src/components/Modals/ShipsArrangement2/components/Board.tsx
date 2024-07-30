@@ -15,6 +15,7 @@ import ship2Vertical from "../img/ships/2_vertical.png";
 import ship3Vertical from "../img/ships/3_vertical.png";
 import ship4Vertical from "../img/ships/4_vertical.png";
 import { Ship } from "../ship";
+import { NotShip } from "../notship";
 
 interface Props {
   gameboard: Gameboard;
@@ -89,7 +90,9 @@ function Field({
       onMouseMove={showValid}
       onMouseLeave={removeValid}
       onClick={onClick}
-      className={`${className} ${isVertical} `}
+      className={`${className} ${isVertical} ${
+        ship instanceof NotShip && `notship ${ship.shipID}`
+      }`}
     >
       {ship && ship.isHead && (
         <img

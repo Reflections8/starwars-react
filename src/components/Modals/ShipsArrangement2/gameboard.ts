@@ -1,9 +1,10 @@
+import { NotShip } from "./notship";
 import { Ship } from "./ship";
 
 const SIZE = 10;
 
 export class Gameboard {
-  board: (Ship | null)[][];
+  board: (Ship | NotShip | null)[][];
 
   missedShots: boolean[][];
 
@@ -35,6 +36,34 @@ export class Gameboard {
     );
     console.log(isPossible);
     if (!isPossible) return false;
+    const shipID = `${row}-${column}`;
+    const fillSpaceAroundCell = (shipPosX: number, shipPosY: number) => {
+      const directions = [
+        [0, -1],
+        [0, 1],
+        [-1, 0],
+        [-1, -1],
+        [-1, 1],
+        [1, 0],
+        [1, -1],
+        [1, 1],
+      ];
+
+      directions.forEach(([dx, dy]) => {
+        const newX = shipPosX + dx;
+        const newY = shipPosY + dy;
+
+        if (
+          newX >= 0 &&
+          newX < 10 &&
+          newY >= 0 &&
+          newY < 10 &&
+          this.board[newX][newY] === null
+        ) {
+          this.board[newX][newY] = new NotShip(shipID);
+        }
+      });
+    };
 
     if (isVertical) {
       for (let i = 0; i < ship.length; i++) {
@@ -44,7 +73,11 @@ export class Gameboard {
           copyShip.isHead = true;
         }
         copyShip.vertical = true;
-        this.board[row + i][column] = copyShip;
+        const shipPosX = row + i;
+        const shipPosY = column;
+        this.board[shipPosX][shipPosY] = copyShip;
+
+        fillSpaceAroundCell(shipPosX, shipPosY);
         // ship.isVertical = true;
         // this.isVertical[row + i][column] = true;
       }
@@ -55,7 +88,10 @@ export class Gameboard {
         if (i === 0) {
           copyShip.isHead = true;
         }
-        this.board[row][column + i] = copyShip;
+        const shipPosX = row;
+        const shipPosY = column + i;
+        this.board[shipPosX][shipPosY] = copyShip;
+        fillSpaceAroundCell(shipPosX, shipPosY);
         // this.isVertical[row][column + i] = false;
       }
     }
@@ -91,44 +127,6 @@ export class Gameboard {
     return this;
   }
 
-  isPlacementPossible2(
-    ship: Ship,
-    row: number,
-    column: number,
-    isVertical: boolean
-  ) {
-    const size = ship.length;
-
-    // Check if the ship fits within the grid
-    if (isVertical) {
-      if (row + size > this.board.length) return false;
-    } else {
-      if (column + size > this.board[0].length) return false;
-    }
-
-    // Check for overlap and buffer zone
-    const startRow = Math.max(0, row - 1);
-    const endRow = Math.min(
-      this.board.length - 1,
-      row + (isVertical ? size : 1)
-    );
-    const startColumn = Math.max(0, column - 1);
-    const endColumn = Math.min(
-      this.board[0].length - 1,
-      column + (isVertical ? 1 : size)
-    );
-
-    for (let r = startRow; r <= endRow; r++) {
-      for (let c = startColumn; c <= endColumn; c++) {
-        if (this.board[r][c] !== null) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-
   isPlacementPossible(
     ship: Ship,
     row: number,
@@ -155,13 +153,13 @@ export class Gameboard {
     // case any of the fields is already taken
     if (isVertical) {
       for (let i = 0; i < ship.length; i++) {
-        if (this?.board?.[row + i]?.[column]) {
+        if (this?.board?.[row + i]?.[column] instanceof Ship) {
           result = false;
         }
       }
     } else {
       for (let i = 0; i < ship.length; i++) {
-        if (this?.board?.[row][column + i]) {
+        if (this?.board?.[row][column + i] instanceof Ship) {
           result = false;
         }
       }
@@ -179,9 +177,11 @@ export class Gameboard {
               column + y >= SIZE
             )
               continue;
-            if (this.board[row + x + i][column + y]) {
+            if (this.board[row + x + i][column + y] instanceof Ship) {
               result = false;
-              badCoords.push({ x: row + x + i, y: column + y });
+              const shipPosX = row + x + i;
+              const shipPosY = column + y;
+              badCoords.push({ x: shipPosX, y: shipPosY });
             }
           }
         }
@@ -197,9 +197,11 @@ export class Gameboard {
               column + y + i >= SIZE
             )
               continue;
-            if (this.board[row + x][column + y + i]) {
+            if (this.board[row + x][column + y + i] instanceof Ship) {
               result = false;
-              badCoords.push({ x: row + x, y: column + y + i });
+              const shipPosX = row + x;
+              const shipPosY = column + y + i;
+              badCoords.push({ x: shipPosX, y: shipPosY });
             }
           }
         }
