@@ -9,6 +9,11 @@ import ship1Vertical from "../img/ships/1_vertical.png";
 import ship2Vertical from "../img/ships/2_vertical.png";
 import ship3Vertical from "../img/ships/3_vertical.png";
 import ship4Vertical from "../img/ships/4_vertical.png";
+import {
+  getCellClassName,
+  initializeGrid,
+  letterToNumber,
+} from "../utils/grid";
 
 type GridProps = {
   selectedShipToSettle: string | number;
@@ -52,6 +57,51 @@ export function Grid({
   // Состояние для хранения классов ячеек
   const [cellClasses, setCellClasses] = useState<Record<string, string[]>>({});
 
+  const [grid, setGrid] = useState(initializeGrid());
+
+  const showValid = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (selectedShipToSettle) {
+      const el = e.target as HTMLDivElement;
+      const pos = (el as HTMLDivElement).className.split(" ")[1];
+      const posX = parseInt(pos[1]);
+      // const posY = pos[0];
+      const posY = letterToNumber(pos[0]);
+      const size = parseInt(selectedShipToSettle as string);
+
+      const newGrid = [...grid];
+
+      const setMarked = (x, y, cls) => {
+        const cellClassName = getCellClassName(x, y);
+        const cellIndex = newGrid.findIndex((cell) =>
+          cell.className.includes(cellClassName)
+        );
+        if (cellIndex !== -1) {
+          const el2 = document.querySelector(`.${cellClassName}`);
+          el2?.classList.add(cls);
+        }
+      };
+
+      for (let i = -1; i < size + 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          // TODO: Add orientation
+          const shipX = posX + j;
+          const shipY = posY + i;
+          if (i >= 0 && i < size && j == 0) {
+            setMarked(shipX, shipY, "marked-ship");
+          } else {
+            setMarked(shipX, shipY, "marked-buffer");
+          }
+        }
+      }
+    }
+  };
+  const removeValid = () => {
+    const elements = document.querySelectorAll(".battleships__cell");
+    elements.forEach((el) => {
+      el.classList.remove("marked-ship");
+      el.classList.remove("marked-buffer");
+    });
+  };
   // Состояние превью
   const [previewState, setPreviewState] = useState({
     shipLength: "",
@@ -87,6 +137,11 @@ export function Grid({
   ) {
     if (direction === "horizontal") {
       const startIndex = gridColumnsOrder.indexOf(clickedColumn);
+      console.log("Order:", gridColumnsOrder);
+      console.log("Lgth:", selectedShipLength);
+      console.log("Row:", clickedRow);
+      console.log("Col:", clickedColumn);
+      console.log("Dir:", direction);
       const correctPlacement =
         !!gridColumnsOrder[startIndex + (selectedShipLength - 1)];
       return correctPlacement;
@@ -128,6 +183,8 @@ export function Grid({
     const clickedCellClass = (e.target as HTMLDivElement).className.split(
       " "
     )[1];
+    console.log(clickedCellClass);
+    // If cell in not empty == ship__3
 
     if (selectedShipToSettle) {
       const selectedShipLength = Number(selectedShipToSettle);
@@ -187,6 +244,8 @@ export function Grid({
           <div
             key={cell.key}
             className={`${cell.className} ${cell.classes.join(" ")}`}
+            onMouseMove={showValid}
+            onMouseLeave={removeValid}
           >
             {isSettled ? (
               <img

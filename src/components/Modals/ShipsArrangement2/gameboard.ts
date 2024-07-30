@@ -27,7 +27,13 @@ export class Gameboard {
   placeShip(ship: Ship, row: number, column: number, isVertical: boolean) {
     // if (!this.isPlacementPossible(ship, row, column, isVertical)) return false;
     // const isPossible = this.isPlacementPossible2(ship, row, column, isVertical);
-    const isPossible = this.isPlacementPossible(ship, row, column, isVertical);
+    const [isPossible] = this.isPlacementPossible(
+      ship,
+      row,
+      column,
+      isVertical
+    );
+    console.log(isPossible);
     if (!isPossible) return false;
 
     if (isVertical) {
@@ -128,26 +134,36 @@ export class Gameboard {
     row: number,
     column: number,
     isVertical: boolean
-  ) {
+  ): [boolean, { y: number; x: number }[]] {
+    let result = true;
+    const badCoords: { x: number; y: number }[] = []; // [{x: 1, y: 1},]
     // case position is out of gameboard
     if (row < 0 || row > SIZE - 1 || column < 0 || column > SIZE - 1)
-      return false;
+      result = false;
 
     // case ship doesn't fit in gameboard
     if (isVertical) {
-      if (row + ship.length > SIZE) return false;
+      if (row + ship.length > SIZE) {
+        result = false;
+      }
     } else {
-      if (column + ship.length > SIZE) return false;
+      if (column + ship.length > SIZE) {
+        result = false;
+      }
     }
 
     // case any of the fields is already taken
     if (isVertical) {
       for (let i = 0; i < ship.length; i++) {
-        if (this?.board?.[row + i][column]) return false;
+        if (this?.board?.[row + i]?.[column]) {
+          result = false;
+        }
       }
     } else {
       for (let i = 0; i < ship.length; i++) {
-        if (this?.board?.[row][column + i]) return false;
+        if (this?.board?.[row][column + i]) {
+          result = false;
+        }
       }
     }
 
@@ -163,7 +179,10 @@ export class Gameboard {
               column + y >= SIZE
             )
               continue;
-            if (this.board[row + x + i][column + y]) return false;
+            if (this.board[row + x + i][column + y]) {
+              result = false;
+              badCoords.push({ x: row + x + i, y: column + y });
+            }
           }
         }
       }
@@ -178,12 +197,15 @@ export class Gameboard {
               column + y + i >= SIZE
             )
               continue;
-            if (this.board[row + x][column + y + i]) return false;
+            if (this.board[row + x][column + y + i]) {
+              result = false;
+              badCoords.push({ x: row + x, y: column + y + i });
+            }
           }
         }
       }
     }
-    return true;
+    return [result, badCoords];
   }
 
   receiveAttack(row: number, column: number) {

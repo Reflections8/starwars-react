@@ -20,7 +20,10 @@ interface Props {
   gameboard: Gameboard;
   owner: Player;
   enemy: Player;
-  onFieldClick?: (positionX: number, positionY: number) => void;
+  onCellClicked: (positionX: number, positionY: number) => void;
+  selectedShipToSettle: Ship | null;
+  showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
+  removeValid: () => void;
 }
 
 interface FieldProps {
@@ -31,6 +34,8 @@ interface FieldProps {
   className?: string;
   isVertical?: boolean;
   ship?: Ship | null;
+  showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
+  removeValid: () => void;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -75,9 +80,17 @@ function Field({
   className,
   ship,
   isVertical = false,
+  onClick,
+  showValid,
+  removeValid,
 }: FieldProps) {
   return (
-    <div className={`${className} ${isVertical} `}>
+    <div
+      onMouseMove={showValid}
+      onMouseLeave={removeValid}
+      onClick={onClick}
+      className={`${className} ${isVertical} `}
+    >
       {ship && ship.isHead && (
         <img
           src={
@@ -134,9 +147,17 @@ function BoardWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Board({ gameboard, enemy, owner, onFieldClick }: Props) {
+export function Board({
+  gameboard,
+  enemy,
+  owner,
+  onCellClicked,
+  showValid,
+  removeValid,
+}: Props) {
   console.log("gameboard", gameboard);
   const columnLabels = "abcdefghij".split("");
+
   const loadFields = () => {
     const fields = [];
     for (let row = 0; row < gameboard.board.length; row++) {
@@ -158,24 +179,29 @@ export function Board({ gameboard, enemy, owner, onFieldClick }: Props) {
         if (owner.name === "Computer") {
           fieldComponent = (
             <Field
+              showValid={showValid}
+              removeValid={removeValid}
               ship={field}
               className={className}
               key={uuidv4()}
               status={status}
               owner={owner}
               isVertical={field?.vertical}
-              onClick={() => onFieldClick?.(row, column)}
+              onClick={() => onCellClicked(row, column)}
             />
           );
         } else {
           fieldComponent = (
             <Field
+              showValid={showValid}
+              removeValid={removeValid}
               ship={field}
               className={className}
               key={uuidv4()}
               status={status}
               isVertical={field?.vertical}
               owner={owner}
+              onClick={() => onCellClicked(row, column)}
             />
           );
         }

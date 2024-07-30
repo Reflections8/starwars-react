@@ -25,6 +25,10 @@ export function ShipsArrangement() {
   /* Оставшиеся корабли */
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
+  const chooseAction = (ship: string) => {
+    console.log("Ship", ship);
+    // Here i should place sprite on cursor or smth. Or set the ship
+  };
   useEffect(() => {
     const allSettled = Object.values(unsettledShips).every(
       (item) => item === 0
@@ -91,6 +95,7 @@ export function ShipsArrangement() {
           setSelectedShipToSettle={setSelectedShipToSettle}
           unsettledShips={unsettledShips}
           setUnsettledShips={setUnsettledShips}
+          chooseAction={chooseAction}
         />
 
         {/* ACTION BUTTONS */}

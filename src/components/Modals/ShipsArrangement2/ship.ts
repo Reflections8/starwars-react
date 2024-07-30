@@ -7,6 +7,7 @@ export class Ship {
   constructor(length: number) {
     this.length = length;
     this.hits = [];
+    // this.vertical = false;
     this.vertical = false;
     this.isHead = false;
   }
@@ -22,6 +23,14 @@ export class Ship {
   }
 
   copy() {
-    return Object.assign({}, this);
+    const r = new Ship(this.length);
+    r.hits = this.hits;
+    r.isHead = this.isHead;
+    r.vertical = this.vertical;
+    return r;
+  }
+
+  rotate() {
+    this.vertical = !this.vertical;
   }
 }

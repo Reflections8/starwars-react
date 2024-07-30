@@ -76,3 +76,13 @@
   background-color: #19c2ef30;
   pointer-events: all;
 }
+
+.marked-buffer {
+  background-color: red;
+}
+.marked-ship {
+  background-color: blue;
+}
+.marked-apply {
+  background-color: green;
+}
