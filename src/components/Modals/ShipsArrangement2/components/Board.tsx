@@ -31,6 +31,7 @@ interface FieldProps {
   className?: string;
   isVertical?: boolean;
   ship?: Ship | null;
+  isTail?: boolean;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -75,18 +76,23 @@ function Field({
   className,
   ship,
   isVertical = false,
+  isTail = false,
 }: FieldProps) {
   return (
     <div className={`${className} ${isVertical} `}>
-      {ship && (
-        <img
-          src={
-            shipImagesEnum[ship?.length][isVertical ? "vertical" : "horizontal"]
-          }
-          className={`battleships__cell-shipImg ship__${ship.length} ${
-            isVertical ? "vertical" : "horizontal"
-          }`}
-        />
+      {ship && ship.head && (
+        <>
+          <img
+            src={
+              shipImagesEnum[ship?.length][
+                isVertical ? "vertical" : "horizontal"
+              ]
+            }
+            className={`battleships__cell-shipImg ship__${ship.length} ${
+              isVertical ? "vertical" : "horizontal"
+            }`}
+          />
+        </>
       )}
       {children}
     </div>
@@ -168,6 +174,8 @@ export function Board({ gameboard, enemy, owner, onFieldClick }: Props) {
             />
           );
         } else {
+          // const v = field?.vertical ? gameboard.board[row + 1][column] : gameboard.board[]
+
           fieldComponent = (
             <Field
               ship={field}

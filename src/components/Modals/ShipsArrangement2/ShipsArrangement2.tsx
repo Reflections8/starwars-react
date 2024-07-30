@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
-import { Grid } from "./components/Grid";
+// import { Grid } from "./components/Grid";
 import { Ships } from "./components/Ships";
 import { Timer } from "./components/Timer";
 import gridBottomElement from "./img/grid-bg-bottom-element.png";
@@ -30,15 +30,16 @@ export function ShipsArrangement2() {
   /* Оставшиеся корабли */
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
-  const [user, setUser] = useState(new Player("User"));
+  const [user] = useState(new Player("User"));
   const g = new Gameboard();
-  const [gameboard, setGameboard] = useState(g);
+  const [gameboard, setGameboard] = useState<Gameboard>(g);
 
-  function handleCCC() {
-    console.log("handleCCC", { gameboard });
-    const upd = g.placeShipsRandomly();
+  function handleAuto() {
+    g.board = [];
+    g.missedShots = [];
+    g.initialize();
+    g.placeShipsRandomly();
     setGameboard(g);
-    console.log("handleCCC after", { gameboard, upd });
   }
 
   useEffect(() => {
@@ -99,7 +100,9 @@ export function ShipsArrangement2() {
               unsettledShips={unsettledShips}
               setUnsettledShips={setUnsettledShips}
             /> */}
-            <Board gameboard={gameboard} enemy={user} owner={user}></Board>
+            {gameboard.board && (
+              <Board gameboard={gameboard} enemy={user} owner={user}></Board>
+            )}
           </div>
         </div>
 
@@ -112,7 +115,7 @@ export function ShipsArrangement2() {
 
         {/* ACTION BUTTONS */}
         <div className="shipsArr__buttons">
-          <CuttedButton callback={() => handleCCC()} text="Авто" />
+          <CuttedButton callback={() => handleAuto()} text="Авто" />
           <CuttedButton
             text="Играть"
             className={!allShipsSettled ? "halfTransparent" : ""}

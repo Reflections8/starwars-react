@@ -29,14 +29,26 @@ export class Gameboard {
 
     if (isVertical) {
       for (let i = 0; i < ship.length; i++) {
-        ship.vertical = true;
-        this.board[row + i][column] = ship;
+        const copy = ship.copy();
+        copy.head = false;
+        copy.vertical = true;
+        if (i === 0) {
+          copy.head = true;
+        }
+        this.board[row + i][column] = copy;
         // ship.isVertical = true;
         // this.isVertical[row + i][column] = true;
       }
     } else {
       for (let i = 0; i < ship.length; i++) {
-        this.board[row][column + i] = ship;
+        const copy = ship.copy();
+        copy.head = false;
+        // this.board[row][column + i] = ship;
+        if (i === 0) {
+          copy.head = true;
+        }
+        this.board[row][column + i] = copy;
+        // ship.tail = i === 0 ? true : false;
         // this.isVertical[row][column + i] = false;
       }
     }
@@ -60,7 +72,7 @@ export class Gameboard {
 
     let succesfulPlacements = 0;
 
-    while (succesfulPlacements < 5) {
+    while (succesfulPlacements < sizes.length) {
       const row = Math.floor(Math.random() * 10);
       const column = Math.floor(Math.random() * 10);
       const isVertical = Math.floor(Math.random() * 2) === 1 ? true : false;
