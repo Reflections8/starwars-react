@@ -80,15 +80,19 @@
 .marked-buffer {
   background-color: red;
 }
+
 .marked-ship {
   background-color: blue;
 }
+
 .marked-apply {
   background-color: rgba(0, 128, 0, 0.539);
 }
+
 .marked-warning {
   background-color: rgba(255, 255, 0, 0.468);
 }
+
 .marked-merged {
   background-color: rgb(0, 255, 213);
 }

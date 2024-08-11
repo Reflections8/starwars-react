@@ -159,3 +159,11 @@
   max-width: 110px;
   width: 100%;
 }
+
+.notship {
+  background: no-repeat center url("../img/preview/lines-blue.svg");
+}
+
+.notship.marked-merged {
+  background: no-repeat center url("../img/preview/lines-red.svg");
+}

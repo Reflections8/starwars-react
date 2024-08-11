@@ -48,6 +48,9 @@ export function ShipsArrangement2() {
   /* Оставшиеся корабли */
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
+  /* Preview-state*/
+  const [previewState, setPreviewState] = useState(false);
+
   const [user] = useState(new Player("User"));
   const g = new Gameboard();
   const [gameboard, setGameboard] = useState(g);
@@ -74,6 +77,7 @@ export function ShipsArrangement2() {
     // console.log({ games });
 
     newGameboard.placeShipsRandomly();
+    setUnsettledShips({ "1": 0, "2": 0, "3": 0, "4": 0 });
 
     setGameboard(newGameboard);
   }
@@ -96,12 +100,33 @@ export function ShipsArrangement2() {
     if (!selectedShipToSettle) {
       return;
     }
-    gameboard.placeShip(
-      selectedShipToSettle,
-      row,
-      column,
-      selectedShipToSettle.vertical
-    );
+
+    console.log({ selectedShipToSettle, row, column });
+
+    setPreviewState(true);
+
+    if (unsettledShips[selectedShipToSettle.length]) {
+      const placed = gameboard.placeShip(
+        selectedShipToSettle,
+        row,
+        column,
+        selectedShipToSettle.vertical
+      );
+
+      if (placed) {
+        setUnsettledShips((prevState) => {
+          return {
+            ...prevState,
+            [selectedShipToSettle.length]:
+              unsettledShips[selectedShipToSettle.length] - 1,
+          };
+        });
+
+        if (unsettledShips[selectedShipToSettle.length] <= 1) {
+          setSelectedShipToSettle(null);
+        }
+      }
+    }
 
     const newGameboard = new Gameboard();
 
