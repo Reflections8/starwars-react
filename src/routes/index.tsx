@@ -4,6 +4,7 @@ import { Home } from "../pages/home/Home";
 import { Page } from "../ui/Page/Page";
 import { Auth } from "../pages/auth/Auth";
 import { Game2 } from "../pages/game2/Game2";
+import { Game22 } from "../pages/game22/Game22";
 
 export const router = createHashRouter([
   {
@@ -17,6 +18,10 @@ export const router = createHashRouter([
   {
     path: "/game2",
     element: <Page dataPage={"game2"} children={<Game2 />} />,
+  },
+  {
+    path: "/game22",
+    element: <Page dataPage={"game2"} children={<Game22 />} />,
   },
   {
     path: "/auth",

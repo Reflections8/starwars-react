@@ -32,6 +32,7 @@ import { Welcome } from "../../components/Modals/Welcome/Welcome";
 import { CurrentStat } from "../../components/Modals/CurrentStat/CurrentStat";
 import { ReactNode } from "react";
 import { ShipsArrangement } from "../../components/Modals/ShipsArrangement/ShipsArrangement";
+import { ShipsArrangement2 } from "../../components/Modals/ShipsArrangement2/ShipsArrangement2";
 
 type ModalProps = {
   isOpen: boolean;
@@ -100,6 +101,11 @@ const modalContentType: ModalContentType = {
     title: "Расставить флот",
     icon: <SeaBattleIcon />,
     component: <ShipsArrangement />,
+  },
+  shipsArrangement2: {
+    title: "Расставить флот 2",
+    icon: <SeaBattleIcon />,
+    component: <ShipsArrangement2 />,
   },
   welcome: {
     component: <Welcome />,
