@@ -1,3 +1,4 @@
+import { combinations } from "./combinations";
 import { NotShip } from "./notship";
 import { Ship } from "./ship";
 
@@ -26,6 +27,7 @@ export class Gameboard {
   }
 
   placeShip(ship: Ship, row: number, column: number, isVertical: boolean) {
+    // console.log("placeship", { ship, row, column, isVertical });
     // if (!this.isPlacementPossible(ship, row, column, isVertical)) return false;
     // const isPossible = this.isPlacementPossible2(ship, row, column, isVertical);
     const [isPossible] = this.isPlacementPossible(
@@ -34,7 +36,7 @@ export class Gameboard {
       column,
       isVertical
     );
-    console.log(isPossible);
+    // console.log(isPossible);
     if (!isPossible) return false;
     const shipID = `${row}-${column}`;
     const fillSpaceAroundCell = (shipPosX: number, shipPosY: number) => {
@@ -71,6 +73,7 @@ export class Gameboard {
         copyShip.isHead = false;
         if (i === 0) {
           copyShip.isHead = true;
+          // copyShip.coords = { x: row, y: column };
         }
         copyShip.vertical = true;
         const shipPosX = row + i;
@@ -87,6 +90,7 @@ export class Gameboard {
         copyShip.isHead = false;
         if (i === 0) {
           copyShip.isHead = true;
+          // copyShip.coords = { x: row, y: column };
         }
         const shipPosX = row;
         const shipPosY = column + i;
@@ -98,10 +102,67 @@ export class Gameboard {
     return true;
   }
 
+  // placeShipsRandomly() {
+  //   if (!this.isEmpty()) return;
+
+  //   const ships = [];
+  //   /**
+  //    * одинарные 4
+  //     двойные 3
+  //     тройные 2
+  //     четверной 1
+  //    */
+
+  //   const sizes = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
+  //     .map((size) => new Ship(size))
+  //     .reverse();
+
+  //   ships.push(...sizes);
+
+  //   let succesfulPlacements = 0;
+  //   let attempts = 0;
+  //   const tries = 100;
+
+  //   while (succesfulPlacements < sizes.length && attempts < tries) {
+  //     const row = Math.floor(Math.random() * 10);
+  //     const column = Math.floor(Math.random() * 10);
+  //     const isVertical = Math.floor(Math.random() * 2) === 1 ? true : false;
+
+  //     if (this.placeShip(ships[succesfulPlacements], row, column, isVertical)) {
+  //       //
+  //       succesfulPlacements++;
+  //     }
+
+  //     attempts++;
+  //   }
+
+  //   if (attempts === tries) {
+  //     this.initialize();
+  //     this.placeShipsRandomly();
+  //   }
+
+  //   return this;
+  // }
   placeShipsRandomly() {
     if (!this.isEmpty()) return;
 
-    const ships = [];
+    // random from 0 to 9
+
+    const idx = Math.floor(Math.random() * 10);
+
+    const game = combinations[idx];
+
+    for (let i = 0; i < game.length; i++) {
+      const ship = new Ship(game[i].length);
+      // { x: row, y: column };
+      const row = game[i].coords.x;
+      const column = game[i].coords.y;
+      const isVertical = game[i].vertical;
+
+      this.placeShip(ship, row, column, isVertical);
+    }
+
+    // const ships = [];
     /**
      * одинарные 4
       двойные 3
@@ -109,21 +170,34 @@ export class Gameboard {
       четверной 1
      */
 
-    const sizes = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4].map((size) => new Ship(size));
+    // const sizes = [1, 1, 1, 1, 2, 2, 2, 3, 3, 4]
+    //   .map((size) => new Ship(size))
+    //   .reverse();
 
-    ships.push(...sizes);
+    // ships.push(...sizes);
 
-    let succesfulPlacements = 0;
+    // let succesfulPlacements = 0;
+    // let attempts = 0;
+    // const tries = 100;
 
-    while (succesfulPlacements < sizes.length) {
-      const row = Math.floor(Math.random() * 10);
-      const column = Math.floor(Math.random() * 10);
-      const isVertical = Math.floor(Math.random() * 2) === 1 ? true : false;
+    // while (succesfulPlacements < sizes.length && attempts < tries) {
+    //   const row = Math.floor(Math.random() * 10);
+    //   const column = Math.floor(Math.random() * 10);
+    //   const isVertical = Math.floor(Math.random() * 2) === 1 ? true : false;
 
-      if (this.placeShip(ships[succesfulPlacements], row, column, isVertical))
-        succesfulPlacements++;
-    }
-    console.log("Board", this.board);
+    //   if (this.placeShip(ships[succesfulPlacements], row, column, isVertical)) {
+    //     //
+    //     succesfulPlacements++;
+    //   }
+
+    //   attempts++;
+    // }
+
+    // if (attempts === tries) {
+    //   this.initialize();
+    //   this.placeShipsRandomly();
+    // }
+
     return this;
   }
 
@@ -156,10 +230,19 @@ export class Gameboard {
         if (this?.board?.[row + i]?.[column] instanceof Ship) {
           result = false;
         }
+        // if (this?.board?.[row + i + 1]?.[column] instanceof NotShip) {
+        if (this?.board?.[row + i]?.[column] instanceof NotShip) {
+          result = false;
+        }
       }
     } else {
       for (let i = 0; i < ship.length; i++) {
         if (this?.board?.[row][column + i] instanceof Ship) {
+          result = false;
+        }
+        // TODO
+        // if (this?.board?.[row][column + i + 1] instanceof NotShip) {
+        if (this?.board?.[row][column + i] instanceof NotShip) {
           result = false;
         }
       }
@@ -183,6 +266,10 @@ export class Gameboard {
               const shipPosY = column + y;
               badCoords.push({ x: shipPosX, y: shipPosY });
             }
+
+            if (this.board[row + x + i][column + y] instanceof NotShip) {
+              result = false;
+            }
           }
         }
       }
@@ -196,17 +283,24 @@ export class Gameboard {
               column + y + i < 0 ||
               column + y + i >= SIZE
             )
+              // console.log(" before ", row + x, column + y + i);
               continue;
             if (this.board[row + x][column + y + i] instanceof Ship) {
+              // console.log(" after ", row + x, column + y + i, ship);
               result = false;
               const shipPosX = row + x;
               const shipPosY = column + y + i;
               badCoords.push({ x: shipPosX, y: shipPosY });
             }
+
+            if (this.board[row + x][column + y + i] instanceof NotShip) {
+              result = false;
+            }
           }
         }
       }
     }
+
     return [result, badCoords];
   }
 
@@ -233,7 +327,9 @@ export class Gameboard {
           i++;
         }
       }
-      this.board[row][column].hit(hitIndex);
+      // @ts-expect-error xui
+      this.board[row][column]?.hit(hitIndex);
+
       return true;
     } else {
       this.missedShots[row][column] = true;
@@ -247,6 +343,7 @@ export class Gameboard {
       for (let j = 0; j < SIZE; j++) {
         if (this.board[i][j]) {
           isBoardEmpty = false;
+          // @ts-expect-error xui
           if (!this.board[i][j]?.isSunk()) {
             return false;
           }

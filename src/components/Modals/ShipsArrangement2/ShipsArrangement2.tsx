@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
-import { Grid } from "./components/Grid";
+// import { Grid } from "./components/Grid";
 import { Ships } from "./components/Ships";
 import { Timer } from "./components/Timer";
 import gridBottomElement from "./img/grid-bg-bottom-element.png";
@@ -52,19 +52,35 @@ export function ShipsArrangement2() {
   const g = new Gameboard();
   const [gameboard, setGameboard] = useState(g);
 
+  const handleAutoArrangement = debounce(() => {
+    handleAuto();
+  }, 300);
+
   function handleAuto() {
     const newGameboard = new Gameboard();
+
+    // const games = new Array(10).map(() => {
+    //   const g = new Gameboard();
+    //   g.placeShipsRandomly();
+    //   return g;
+    // });
+
+    // const games = Array.from({ length: 10 }, () => {
+    //   const g = new Gameboard();
+    //   g.placeShipsRandomly();
+    //   return g;
+    // });
+
+    // console.log({ games });
+
     newGameboard.placeShipsRandomly();
+
     setGameboard(newGameboard);
   }
 
-  function handleCCC() {
-    console.log("handleCCC", { gameboard });
-    const upd = g.placeShipsRandomly();
-    setGameboard(g);
-    console.log("handleCCC after", { gameboard, upd });
-  }
-
+  // useEffect(() => {
+  //   console.log("Gameboard RENDER");
+  // }, [g.board]),
   useEffect(() => {
     const allSettled = Object.values(unsettledShips).every(
       (item) => item === 0
@@ -86,9 +102,12 @@ export function ShipsArrangement2() {
       column,
       selectedShipToSettle.vertical
     );
-    // setGameboard(gameboard);
-    // setSelectedShipToSettle(null);
-    // setSelectedShipToSettle(selectedShipToSettle);
+
+    const newGameboard = new Gameboard();
+
+    newGameboard.board = gameboard.board;
+
+    setGameboard(newGameboard);
   };
 
   const showValid = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -105,6 +124,8 @@ export function ShipsArrangement2() {
         posY,
         selectedShipToSettle.vertical
       );
+
+      // console.log({ badCoords });
 
       const setMarked = (x, y, cls) => {
         const cellClassName = getCellClassName(x, y); // c7, a4
@@ -236,11 +257,11 @@ export function ShipsArrangement2() {
           setUnsettledShips={setUnsettledShips}
         />
 
-        <button onClick={rotateShip}>Fuck</button>
+        <button onClick={rotateShip}>Rotate</button>
 
         {/* ACTION BUTTONS */}
         <div className="shipsArr__buttons">
-          <CuttedButton callback={() => handleAuto()} text="Авто" />
+          <CuttedButton callback={() => handleAutoArrangement()} text="Авто" />
           <CuttedButton
             text="Играть"
             className={!allShipsSettled ? "halfTransparent" : ""}

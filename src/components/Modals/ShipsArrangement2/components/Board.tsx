@@ -89,7 +89,10 @@ function Field({
     <div
       onMouseMove={showValid}
       onMouseLeave={removeValid}
-      onClick={onClick}
+      onClick={(e) => {
+        onClick?.();
+        e.stopPropagation()
+      }}
       className={`${className} ${isVertical} ${
         ship instanceof NotShip && `notship ${ship.shipID}`
       }`}
