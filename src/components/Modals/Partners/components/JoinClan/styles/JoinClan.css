@@ -1,0 +1,80 @@
+.joinClan {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.joinClan__item {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 10px;
+  padding-top: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(25, 194, 239, 0.3) 0%,
+    rgba(25, 194, 239, 0) 30%,
+    rgba(25, 194, 239, 0) 70%,
+    rgba(25, 194, 239, 0.3) 100%
+  );
+  display: flex;
+  flex-direction: column;
+}
+
+.joinClan__item--Mine {
+  border-color: #1bdd15bd;
+}
+
+.joinClan__item-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joinClan__item-title-text {
+  color: #c9e9fb;
+  font-size: 12px;
+  margin-left: -4px;
+  margin-right: -4px;
+  margin-top: 2px;
+}
+
+.joinClan__item-title-img--Right {
+  transform: scaleX(-1);
+}
+
+.joinClan__item-main {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.joinClan__item-main-block {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.joinClan__item-main-block-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.joinClan__item-main-block-info-key {
+  color: #076ce9;
+}
+
+.joinClan__item-main-block-info-value {
+  color: #19c2ef;
+}
+
+.joinClan__item-main-requestBtn * {
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.joinClan__item-main-requestBtn .cuttedButton.small {
+  padding: 7px;
+}

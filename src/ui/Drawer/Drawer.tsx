@@ -5,9 +5,13 @@ import closeIcon from "./img/closeIcon.svg";
 import rejectedIcon from "./img/rejected.svg";
 import resolvedIcon from "./img/resolved.svg";
 
-import {SendTransactionRequest, useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
+import {
+  SendTransactionRequest,
+  useTonConnectUI,
+  useTonWallet,
+} from "@tonconnect/ui-react";
 import { useState } from "react";
-import {CharactersData, Prices, useUserData} from "../../UserDataService.tsx";
+import { CharactersData, Prices, useUserData } from "../../UserDataService.tsx";
 import { formatWalletString } from "../../utils/index.ts";
 import { CryptoButtons } from "../CryptoButtons/CryptoButtons.tsx";
 import telegramIcon from "./img/menu/tg.svg";
@@ -17,7 +21,7 @@ import youtubeIcon from "./img/menu/youtube.svg";
 import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import creditIcon from "./img/upgrade/credits.svg";
 import "./styles//drawer.css";
-import {PROJECT_CONTRACT_ADDRESS} from "../../main.tsx";
+import { PROJECT_CONTRACT_ADDRESS } from "../../main.tsx";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -35,6 +39,7 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
     repair: <Repair />,
     upgrade: <Upgrade />,
     heal: <Heal />,
+    inviteFriend: <InviteFriend />,
   };
 
   return (
@@ -455,8 +460,7 @@ function Repair() {
 }
 
 function Heal() {
-  const { healingCharacter, jwt } =
-    useUserData();
+  const { healingCharacter, jwt } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
   const { openDrawer } = useDrawer();
   const handleHealClick = async () => {
@@ -470,7 +474,10 @@ function Heal() {
         messages: [
           {
             address: PROJECT_CONTRACT_ADDRESS,
-            amount: (CharactersData[healingCharacter.type - 1].price * 1000000000 + 50000000).toString(),
+            amount: (
+              CharactersData[healingCharacter.type - 1].price * 1000000000 +
+              50000000
+            ).toString(),
             payload: CharactersData[healingCharacter.type - 1].payload_heal,
           },
         ],
@@ -478,16 +485,16 @@ function Heal() {
       try {
         await tonConnectUI.sendTransaction(fillTx);
         openDrawer!(
-            "resolved",
-            "bottom",
-            "Транзакция успешно отправлена.\n Ожидайте подтвержения"
+          "resolved",
+          "bottom",
+          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
         );
       } catch (e) {
         console.log(e);
         openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
       }
     }
-  }
+  };
 
   return (
     <div className="heal">
@@ -496,19 +503,55 @@ function Heal() {
       <div className="heal__block">
         <div className="heal__block-row">
           <div className="heal__block-row-key">цена:</div>
-          <div className="heal__block-row-value">{healingCharacter ? CharactersData[healingCharacter.type - 1].price : null} TON</div>
+          <div className="heal__block-row-value">
+            {healingCharacter
+              ? CharactersData[healingCharacter.type - 1].price
+              : null}{" "}
+            TON
+          </div>
         </div>
       </div>
 
       <CuttedButton
         callback={() => handleHealClick()}
         className={
-          healingCharacter
-          && healingCharacter.earned >= healingCharacter.earn_required
-              ? "heal__mainBtn"
-              : "heal__mainBtn halfTransparent"
+          healingCharacter &&
+          healingCharacter.earned >= healingCharacter.earn_required
+            ? "heal__mainBtn"
+            : "heal__mainBtn halfTransparent"
         }
         text={"Подтвердить"}
+      />
+    </div>
+  );
+}
+
+function InviteFriend() {
+  const [link] = useState(
+    "https://wikipedia.org/wiki/%Dahsjdkahsdjkahsdjkahsdklahsdjklasdasd"
+  );
+  return (
+    <div className="inviteFriend">
+      <div className="inviteFriend__text">
+        Пригластите друга вступить в бой против Тьмы
+      </div>
+
+      <div className="inviteFriend-inputBlock-inputWrapper">
+        <input
+          type="decimal"
+          value={link}
+          disabled={true}
+          className={`inviteFriend-inputBlock-input`}
+        />
+      </div>
+
+      <CuttedButton
+        text="скопировать"
+        size="small"
+        callback={(e) => {
+          e.stopPropagation();
+          navigator.clipboard.writeText(link);
+        }}
       />
     </div>
   );

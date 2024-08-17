@@ -1,65 +1,79 @@
+import { useEffect, useState } from "react";
+import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
+import { PillType } from "../../../ui/SlidingPills/types";
 import "./styles/partners.css";
-//import userIcon from "./img/user.svg";
+import { Info } from "./components/Info/Info";
+import { Clans } from "./components/Clans/Clans";
+import { FriendsList } from "./components/FriendsList/FriendsList";
+import { JoinClan } from "./components/JoinClan/JoinClan";
+import { ClanRequests } from "./components/ClanRequests/ClanRequests";
+import { ClanMembers } from "./components/ClanMembers/ClanMembers";
+import { CreateClan } from "./components/CreateClan/CreateClan";
 
 export function Partners() {
-  //const partners = [];
+  const pills: PillType[] = [
+    {
+      label: "Инфо",
+      value: "INFO",
+      component: <Info handleOuterPills={handleOuterPills} />,
+    },
+    {
+      label: "Кланы",
+      value: "CLANS",
+      component: <Clans handleOuterPills={handleOuterPills} />,
+    },
+  ];
+  const [activePill, setActivePill] = useState(pills[0]);
+
+  const outerPills: PillType[] = [
+    {
+      label: "Список друзей",
+      value: "FRIENDS_LIST",
+      component: <FriendsList />,
+    },
+    {
+      label: "Вступить в клан",
+      value: "JOIN_CLAN",
+      component: <JoinClan />,
+    },
+    {
+      label: "Заявки в клан",
+      value: "CLAN_REQUESTS",
+      component: <ClanRequests />,
+    },
+    {
+      label: "Состав клана",
+      value: "CLAN_MEMBERS",
+      component: <ClanMembers />,
+    },
+    {
+      label: "Создат клан",
+      value: "CREATE_CLAN",
+      component: <CreateClan />,
+    },
+  ];
+
+  function handleOuterPills(pillValue: string) {
+    const matchedPill = outerPills.find((pill) => pill.value === pillValue);
+    if (matchedPill) {
+      setActivePill(matchedPill);
+    }
+  }
+
+  useEffect(() => {}, []);
 
   return (
-    <div className="partners modalComingSoon">
-      <div className="modalComingSoon__title">coming soon...</div>
-      <div className="modalComingSoon__text">
-        следите за новостями о реферальной системе в нашем ТГ канале
+    <div className="partners">
+      <div className="partners__pills">
+        <SlidingPills
+          pills={pills}
+          activePill={activePill}
+          setActivePill={setActivePill}
+        />
       </div>
+
+      <div className="modal__scrollContainer">{activePill.component}</div>
+      <div className="modal__scrollContainer__bottomGradient"></div>
     </div>
   );
-  /*
-    // TODO: mock data
-    for (let i = 0; i < 50; i++) {
-     partners.push({
-       link: "#",
-       name: "@1pashadu123123123rov",
-       model: "1droid",
-       profit: 321,
-     });
-    }
-
-    return (
-     <div className="partners">
-       <div className="partners__header">
-         <div className="partners__header-name">Name</div>
-         <div className="partners__header-model">Model</div>
-         <div className="partners__header-profit">Profit</div>
-       </div>
-
-       <div className="modal__scrollContainer">
-         <div className="partners__list">
-           {partners.map((row) => {
-             return (
-               <div className="partners__list-item">
-                 <div className="partners__list-item-nameBlock">
-                   <img
-                     src={userIcon}
-                     alt="user"
-                     className="partners__list-item-nameBlock-icon"
-                   />
-                   <a
-                     href={row.link}
-                     className="partners__list-item-nameBlock-name"
-                   >
-                     {row.name}
-                   </a>
-                 </div>
-
-                 <div className="partners__list-item-model">{row.model}</div>
-
-                 <div className="partners__list-item-profit">{row.profit}</div>
-               </div>
-             );
-           })}
-         </div>
-       </div>
-       <div className="modal__scrollContainer__bottomGradient"></div>
-     </div>
-    );
-    */
 }

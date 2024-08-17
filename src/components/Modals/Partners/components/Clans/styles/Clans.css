@@ -1,0 +1,156 @@
+.clans__title {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  max-width: 220px;
+  width: 100%;
+}
+
+.clans__joinBtn {
+  max-width: 250px;
+  margin: 0 auto 20px auto;
+}
+
+.clans__footer {
+  padding: 20px 12px;
+  border: 1px solid #19c1ef50;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.clans__footer-createBtn {
+  max-width: 210px;
+  margin: 0 auto;
+}
+
+.clans__footer-text {
+  color: #076ce9;
+  font-size: 10px;
+  text-align: center;
+}
+
+.clans__clanBalance {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 10px;
+  background: linear-gradient(
+    90deg,
+    rgba(25, 194, 239, 0.3) 0%,
+    rgba(25, 194, 239, 0) 30%,
+    rgba(25, 194, 239, 0) 70%,
+    rgba(25, 194, 239, 0.3) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.clans__clanBalance-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clans__clanBalance-title-text {
+  color: #c9e9fb;
+  font-size: 12px;
+  margin-left: -4px;
+  margin-right: -4px;
+  margin-top: 2px;
+}
+
+.clans__clanBalance-title-img--Right {
+  transform: scaleX(-1);
+}
+
+.clans__clanBalance-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clans__clanBalance-main-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clans__clanBalance-main-block-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.clans__clanBalance-main-block-info-key {
+  color: #19c2ef;
+  font-size: 10px;
+}
+
+.clans__clanBalance-main-block-info-value {
+  color: #c9e9fb;
+  font-size: 12px;
+}
+
+.clans__clanBalance-main-requestBtn * {
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.clans__clanBalance-main-requestBtn .cuttedButton.small {
+  padding: 7px;
+}
+
+.clans__blocks {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.clans__blocks__item {
+  background-color: #0975f842;
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.clans__blocks__item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.clans__blocks__item-text-key {
+  font-size: 10px;
+  color: #19c2ef;
+}
+
+.clans__blocks__item-text-value {
+  font-size: 12px;
+  color: #c9e9fb;
+}
+
+.clans__footerBtn {
+  max-width: 250px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.clans__ownerFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

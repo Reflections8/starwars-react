@@ -167,7 +167,7 @@ export function Home() {
 
       <MainLinks />
 
-      <iframe
+      {/* <iframe
         ref={iframeRef}
         src="https://akronix.io/unity_main/"
         style={{
@@ -180,7 +180,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe>
+      ></iframe> */}
 
       <Header
         position={"bottom"}
