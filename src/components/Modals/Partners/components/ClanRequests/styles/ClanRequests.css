@@ -1,0 +1,71 @@
+.clanRequests {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 50px;
+}
+
+.clanRequests__item {
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 5px 10px;
+  background: linear-gradient(
+    90deg,
+    rgba(25, 194, 239, 0.3) 0%,
+    rgba(25, 194, 239, 0) 30%,
+    rgba(25, 194, 239, 0) 70%,
+    rgba(25, 194, 239, 0.3) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clanRequests__item-avatar {
+  max-width: 36px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.clanRequests__item-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.clanRequests__item-block-key {
+  color: #076ce9;
+  font-size: 10px;
+}
+
+.clanRequests__item-block-value {
+  color: #19c2ef;
+  font-size: 10px;
+}
+
+.clanRequests__item-block--Name .clanRequests__item-block-value {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 62px;
+  text-decoration: underline;
+}
+
+.clanRequests__item-block--Model .clanRequests__item-block-value {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 90px;
+}
+
+.clanRequests__item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clanRequests__item-block-actions-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.clanRequests__item-block-actions-item:active {
+  opacity: 50%;
+}

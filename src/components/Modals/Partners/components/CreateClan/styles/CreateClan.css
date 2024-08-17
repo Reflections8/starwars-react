@@ -1,0 +1,75 @@
+.createClan__inputBlock-inputWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.createClan__inputBlock-inputWrapper-label {
+  color: #e1f0ff;
+  font-size: 12px;
+}
+
+.createClan__inputBlock-input {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #0974f8;
+  padding: 10px 15px 10px 15px;
+  font-size: 20px;
+  color: #19c2ef;
+  width: 100%;
+  background: linear-gradient(to top, #0975f848, #0975f800);
+}
+
+.createClan__inputBlock-input.ton {
+  padding-right: 60px;
+}
+
+.createClan__inputBlock-input.akronix {
+  padding-right: 110px;
+}
+
+.createClan__inputBlock-input.credits {
+  padding-right: 110px;
+}
+
+.createClan__checkboxBlock {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #19c1ef52;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.createClan__checkboxBlock-checkWrapper {
+  border-radius: 8px;
+  border: 1px solid #19c2ef;
+  background-color: #120e27;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.createClan__checkboxBlock-checkWrapper-img {
+  width: 18px;
+  height: 18px;
+}
+
+.createClan__checkboxBlock-text {
+  font-size: 10px;
+  color: #076ce9;
+}
+
+.createClan__createBtn {
+  max-width: 250px;
+  width: 100%;
+  margin: 0 auto;
+}

@@ -1,13 +1,15 @@
-.partners {
+.friendsList {
   position: relative;
-  padding: 0 20px;
   font-size: 10px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width: 300px;
+  width: 100%;
+  padding-left: 4px;
 }
 
-.partners__header {
+.friendsList__header {
   background-color: #0975f852;
   border-radius: 4px;
   padding: 8px 0;
@@ -16,38 +18,38 @@
   align-items: center;
 }
 
-.partners__header-name {
+.friendsList__header-name {
   max-width: 120px;
   width: 100%;
   margin-right: 32px;
   padding-left: 22px;
 }
 
-.partners__header-profit {
+.friendsList__header-profit {
   margin-left: auto;
-  padding-right: 15px;
+  padding-right: 50px;
 }
 
-.partners__listWrapper {
+.friendsList__listWrapper {
   max-height: 371px;
   overflow-y: scroll;
 }
 
-.partners__list {
+.friendsList__list {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding-bottom: 50px;
 }
 
-.partners__list-item {
+.friendsList__list-item {
   display: flex;
   align-items: center;
   padding-bottom: 8px;
   border-bottom: 1px solid #19c1ef48;
 }
 
-.partners__list-item-nameBlock {
+.friendsList__list-item-nameBlock {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -56,7 +58,7 @@
   margin-right: 32px;
 }
 
-.partners__list-item-nameBlock-name {
+.friendsList__list-item-nameBlock-name {
   text-decoration: underline;
   color: #fff;
   text-shadow: 2px -1px 0 rgba(7, 109, 233, 0.26);
@@ -64,7 +66,7 @@
   overflow: hidden;
 }
 
-.partners__list-item-model {
+.friendsList__list-item-model {
   max-width: 55px;
   width: 100%;
   margin-right: 14px;
@@ -73,25 +75,12 @@
   overflow: hidden;
 }
 
-.partners__list-item-profit {
-  text-align: end;
-  max-width: 70px;
+.friendsList__list-item-profit {
+  max-width: 91px;
   width: 100%;
   margin-left: auto;
   color: #9fff9c;
   text-shadow: 2px -1px 0 rgba(7, 109, 233, 0.26);
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-.partners .modal__scrollContainer {
-  max-width: 342px;
-  height: 357px;
-  padding: 0 10px 0 0;
-}
-
-.partners .modal__scrollContainer__bottomGradient {
-  bottom: 0;
-  left: 20px;
-  max-width: 319px;
 }

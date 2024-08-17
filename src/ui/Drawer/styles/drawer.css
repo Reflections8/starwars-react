@@ -409,3 +409,44 @@
 .upgrade__block-item-cuttedButtonWrapper .cuttedButton__text {
   letter-spacing: normal;
 }
+
+/* INVITE FRIEND */
+.inviteFriend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inviteFriend__text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+  max-width: 300px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.inviteFriend-inputBlock-inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.inviteFriend-inputBlock-input {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #0974f8;
+  padding: 10px 15px 10px 15px;
+  font-size: 14px;
+  color: #19c2ef;
+  width: 100%;
+  background: linear-gradient(to top, #0975f848, #0975f800);
+  text-overflow: ellipsis;
+}

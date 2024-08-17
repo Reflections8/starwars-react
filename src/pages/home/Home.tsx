@@ -165,22 +165,20 @@ export function Home() {
       <Resources credits={credits} woopy={tokens} ton={tons} />
       <MainLinks />
 
-      {false && (
-        <iframe
-          ref={iframeRef}
-          src="https://akronix.io/unity_main/"
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            border: "none",
-          }}
-          id="mainWrapper"
-          className="mainWrapper"
-        ></iframe>
-      )}
+      {/* <iframe
+        ref={iframeRef}
+        src="https://akronix.io/unity_main/"
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+          border: "none",
+        }}
+        id="mainWrapper"
+        className="mainWrapper"
+      ></iframe> */}
 
       <Header
         position={"bottom"}

@@ -19,7 +19,7 @@ export function LoaderProvider({ children }: LoaderProviderProps) {
   return (
     <LoaderContext.Provider value={{ isLoading, setIsLoading }}>
       {children}
-      {false && <LoadingModal isOpen={isLoading} />}
+      {/* <LoadingModal isOpen={isLoading} /> */}
     </LoaderContext.Provider>
   );
 }
