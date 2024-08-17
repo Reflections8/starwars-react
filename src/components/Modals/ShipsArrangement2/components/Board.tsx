@@ -1,6 +1,5 @@
-// import { Gameboard } from "../gameboard";
-// import Player from "../player";
-import { v4 as uuidv4 } from "uuid";
+//@ts-ignore
+import { v4 } from "uuid";
 import Player from "../player";
 import { Gameboard } from "../gameboard";
 import "../styles/Grid.css";
@@ -15,7 +14,6 @@ import ship2Vertical from "../img/ships/2_vertical.png";
 import ship3Vertical from "../img/ships/3_vertical.png";
 import ship4Vertical from "../img/ships/4_vertical.png";
 import { Ship } from "../ship";
-import { NotShip } from "../notship";
 
 interface Props {
   gameboard: Gameboard;
@@ -33,10 +31,11 @@ interface FieldProps {
   onClick?: () => void;
   children?: React.ReactNode;
   className?: string;
-  isVertical?: boolean;
-  ship?: Ship | null;
+  type?: string; //"empty" | "ship" | "nearShip" | "error";
   showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
   removeValid: () => void;
+  ship?: Ship | null;
+  isHead?: boolean;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -59,31 +58,17 @@ const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
     },
   };
 
-{
-  /* <img
-                src={
-                  shipImagesEnum[currentShipClass?.[0]][previewState?.direction]
-                }
-                alt="ship"
-                className={`battleships__cell-shipImg ${currentShipClass} ${previewState.direction}`}
-              /> */
-}
-
-// .battleships__cell-shipImg.ship__4.vertical {
-//   width: 25px;
-//   max-height: 100px;
-// }
-
 function Field({
   status,
   owner,
   children,
   className,
-  ship,
-  isVertical = false,
+  type,
   onClick,
   showValid,
   removeValid,
+  ship = null,
+  isHead = false,
 }: FieldProps) {
   return (
     <div
@@ -93,17 +78,17 @@ function Field({
         onClick?.();
         e.stopPropagation();
       }}
-      className={`${className} ${isVertical} ${
-        ship instanceof NotShip && `notship ${ship.shipID}`
-      }`}
+      className={`${className} ${type}`}
     >
-      {ship && ship.isHead && (
+      {ship && isHead && (
         <img
           src={
-            shipImagesEnum[ship?.length][isVertical ? "vertical" : "horizontal"]
+            shipImagesEnum[ship?.length][
+              ship.vertical ? "vertical" : "horizontal"
+            ]
           }
           className={`battleships__cell-shipImg ship__${ship.length} ${
-            isVertical ? "vertical" : "horizontal"
+            ship.vertical ? "vertical" : "horizontal"
           }`}
         />
       )}
@@ -111,27 +96,6 @@ function Field({
     </div>
   );
 }
-
-// const BoardWrapper = styled.div`
-//   display: grid;
-//   width: 40rem;
-//   height: 40rem;
-//   grid-template-columns: repeat(10, 1fr);
-//   grid-template-rows: repeat(10, 1fr);
-//   border: 1px solid ${({ theme }) => theme.colors.dark.primary};
-// `
-
-// .battleships__grid {
-//   width: 250px;
-//   height: 250px;
-//   position: relative;
-//   z-index: 1;
-//   bottom: -2px;
-//   display: grid;
-//   grid-template-columns: repeat(10, 25px);
-//   grid-template-rows: repeat(10, 25px);
-//   background-color: #070c2733;
-// }
 
 function BoardWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -153,6 +117,17 @@ function BoardWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
+const isNearField = (
+  row: number,
+  column: number,
+  nearFields: { x: number; y: number; err: boolean }[]
+) => {
+  const matchingField = nearFields.find(
+    (field) => field.x === row && field.y === column
+  );
+  return matchingField || null;
+};
+
 export function Board({
   gameboard,
   enemy,
@@ -161,56 +136,43 @@ export function Board({
   showValid,
   removeValid,
 }: Props) {
-  console.log("gameboard", gameboard);
+  //console.log("gameboard", gameboard);
   const columnLabels = "abcdefghij".split("");
+  const nearFields = gameboard.getFieldsNearShips();
 
   const loadFields = () => {
     const fields = [];
     for (let row = 0; row < gameboard.board.length; row++) {
       for (let column = 0; column < gameboard.board[row].length; column++) {
-        const field = gameboard.board[row][column];
+        const shipPos = gameboard.getShipRC(row, column);
+        let ship = null;
+        let isHead = false;
+        let type = "empty";
+        if (shipPos) {
+          ship = shipPos.ship;
+          const {
+            pos: { row: r, column: c },
+          } = shipPos;
+          isHead = r === row && c === column;
+        }
         const className = `battleships__cell ${columnLabels[column]}${row}`;
-        // className: `battleships__cell ${className}`,
+        const nearField = isNearField(row, column, nearFields);
+        if (nearField) type = nearField.err ? "errorShip" : "nearShip";
 
-        let status = "default";
-        if (field) {
-          if (owner.name !== "Computer") status = "ship";
-          if (enemy.hasAlreadyHit(row, column)) status = "hit";
-        } else {
-          if (gameboard.missedShots[row][column]) status = "missed";
-        }
-
-        let fieldComponent = <Field></Field>;
-
-        if (owner.name === "Computer") {
-          fieldComponent = (
-            <Field
-              showValid={showValid}
-              removeValid={removeValid}
-              ship={field}
-              className={className}
-              key={uuidv4()}
-              status={status}
-              owner={owner}
-              isVertical={field?.vertical}
-              onClick={() => onCellClicked(row, column)}
-            />
-          );
-        } else {
-          fieldComponent = (
-            <Field
-              showValid={showValid}
-              removeValid={removeValid}
-              ship={field}
-              className={className}
-              key={uuidv4()}
-              status={status}
-              isVertical={field?.vertical}
-              owner={owner}
-              onClick={() => onCellClicked(row, column)}
-            />
-          );
-        }
+        let fieldComponent = (
+          <Field
+            showValid={showValid}
+            removeValid={removeValid}
+            type={type}
+            className={className}
+            key={v4()}
+            status={status}
+            owner={owner}
+            ship={ship}
+            isHead={isHead}
+            onClick={() => onCellClicked(row, column)}
+          />
+        );
         fields.push(fieldComponent);
       }
     }

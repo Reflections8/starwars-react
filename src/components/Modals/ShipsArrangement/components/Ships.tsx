@@ -8,14 +8,12 @@ type ShipsProps = {
   selectedShipToSettle: string | number;
   setSelectedShipToSettle: (ship: string | number) => void;
   unsettledShips: Record<string, number>;
-  setUnsettledShips: (ship: string | number) => void;
   chooseAction: (ship: string | number) => void;
 };
 export function Ships({
   selectedShipToSettle,
   setSelectedShipToSettle,
   unsettledShips,
-  setUnsettledShips,
   chooseAction,
 }: ShipsProps) {
   const ships: Array<Ship> = [

@@ -8,13 +8,12 @@ type ShipsProps = {
   selectedShipToSettle: Ship | null;
   setSelectedShipToSettle: (ship: Ship) => void;
   unsettledShips: Record<string, number>;
-  setUnsettledShips: (ship: string | number) => void;
 };
+
 export function Ships({
   selectedShipToSettle,
   setSelectedShipToSettle,
   unsettledShips,
-  setUnsettledShips,
 }: ShipsProps) {
   const ships = [
     { ship: new Ship(1), image: ship1 },

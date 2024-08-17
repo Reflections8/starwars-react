@@ -164,6 +164,13 @@
   background: no-repeat center url("../img/preview/lines-blue.svg");
 }
 
+.nearShip {
+  background: no-repeat center url("../img/preview/lines-blue.svg");
+}
+.errorShip {
+  background: no-repeat center url("../img/preview/lines-red.svg");
+}
+
 .notship.marked-merged {
   background: no-repeat center url("../img/preview/lines-red.svg");
 }

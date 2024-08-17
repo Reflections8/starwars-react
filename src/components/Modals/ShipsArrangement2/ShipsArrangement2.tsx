@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
-// import { Grid } from "./components/Grid";
 import { Ships } from "./components/Ships";
 import { Timer } from "./components/Timer";
 import gridBottomElement from "./img/grid-bg-bottom-element.png";
@@ -11,11 +10,11 @@ import "./styles/ShipsArrangement.css";
 import { Board } from "./components/Board";
 import { Gameboard } from "./gameboard";
 import Player from "./player";
+import { Ship } from "./ship";
 import {
   getCellClassName,
   letterToNumber,
 } from "../ShipsArrangement/utils/grid";
-import { Ship } from "./ship";
 
 function debounce(func: (...args: unknown[]) => void, wait: number) {
   let timeout: ReturnType<typeof setTimeout>;
@@ -36,102 +35,55 @@ const initialUnsettledShips = {
   "3": 2,
   "4": 1,
 };
-export function ShipsArrangement2() {
-  /* Расставлены ли все корабли */
-  const [allShipsSettled, setAllShipsSettled] = useState(false);
 
-  /* Выбранный тип корабля */
+export function ShipsArrangement2() {
+  const [allShipsSettled, setAllShipsSettled] = useState(false);
   const [selectedShipToSettle, setSelectedShipToSettle] = useState<Ship | null>(
     null
   );
-
-  /* Оставшиеся корабли */
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
   /* Preview-state*/
-  const [previewState, setPreviewState] = useState(false);
-
   const [user] = useState(new Player("User"));
-  const g = new Gameboard();
-  const [gameboard, setGameboard] = useState(g);
+  const [gameboard, setGameboard] = useState(new Gameboard());
 
   const handleAutoArrangement = debounce(() => {
     handleAuto();
   }, 300);
 
   function handleAuto() {
-    const newGameboard = new Gameboard();
-
-    // const games = new Array(10).map(() => {
-    //   const g = new Gameboard();
-    //   g.placeShipsRandomly();
-    //   return g;
-    // });
-
-    // const games = Array.from({ length: 10 }, () => {
-    //   const g = new Gameboard();
-    //   g.placeShipsRandomly();
-    //   return g;
-    // });
-
-    // console.log({ games });
-
-    newGameboard.placeShipsRandomly();
+    gameboard.placeShipsRandomly();
     setUnsettledShips({ "1": 0, "2": 0, "3": 0, "4": 0 });
-
-    setGameboard(newGameboard);
   }
 
-  // useEffect(() => {
-  //   console.log("Gameboard RENDER");
-  // }, [g.board]),
   useEffect(() => {
-    const allSettled = Object.values(unsettledShips).every(
-      (item) => item === 0
+    setAllShipsSettled(
+      Object.values(unsettledShips).every((item) => item === 0)
     );
-    if (allSettled) {
-      setAllShipsSettled(true);
-    } else {
-      setAllShipsSettled(false);
-    }
   }, [unsettledShips]);
 
   const onCellClicked = (row: number, column: number) => {
-    if (!selectedShipToSettle) {
-      return;
-    }
+    if (!selectedShipToSettle) return;
+    //@ts-ignore
+    if (!unsettledShips[selectedShipToSettle.length]) return;
 
-    console.log({ selectedShipToSettle, row, column });
-
-    setPreviewState(true);
-
-    if (unsettledShips[selectedShipToSettle.length]) {
-      const placed = gameboard.placeShip(
-        selectedShipToSettle,
-        row,
-        column,
-        selectedShipToSettle.vertical
-      );
-
-      if (placed) {
-        setUnsettledShips((prevState) => {
-          return {
-            ...prevState,
-            [selectedShipToSettle.length]:
-              unsettledShips[selectedShipToSettle.length] - 1,
-          };
-        });
-
-        if (unsettledShips[selectedShipToSettle.length] <= 1) {
-          setSelectedShipToSettle(null);
-        }
-      }
-    }
+    const placed = gameboard.placeShip(selectedShipToSettle, row, column);
+    if (!placed) return;
+    setUnsettledShips((prevState) => {
+      return {
+        ...prevState,
+        [selectedShipToSettle.length]:
+          //@ts-ignore
+          unsettledShips[selectedShipToSettle.length] - 1,
+      };
+    });
+    //@ts-ignore
+    if (unsettledShips[selectedShipToSettle.length] <= 1)
+      setSelectedShipToSettle(null);
 
     const newGameboard = new Gameboard();
-
     newGameboard.board = gameboard.board;
-
+    newGameboard.ships = gameboard.ships;
     setGameboard(newGameboard);
   };
 
@@ -146,13 +98,12 @@ export function ShipsArrangement2() {
       const [, badCoords] = gameboard.isPlacementPossible(
         selectedShipToSettle,
         posX,
-        posY,
-        selectedShipToSettle.vertical
+        posY
       );
 
       // console.log({ badCoords });
 
-      const setMarked = (x, y, cls) => {
+      const setMarked = (x: number, y: number, cls: string) => {
         const cellClassName = getCellClassName(x, y); // c7, a4
         const el2 = document.querySelector(`.${cellClassName}`);
         el2?.classList.remove("marked-ship");
@@ -208,6 +159,12 @@ export function ShipsArrangement2() {
     });
   };
 
+  //useEffect(() => {
+  //  for (let i = 0; i <= 10; i++) {
+  //    for (let j = 0; j <= 10; j++) {}
+  //  }
+  //}, [unsettledShips]);
+
   const rotateShip = () => {
     const cp = selectedShipToSettle!.copy();
     console.log("isVert", cp.vertical);
@@ -218,7 +175,6 @@ export function ShipsArrangement2() {
 
   return (
     <div className="shipsArr">
-      {/* RULES BADGE */}
       <div className="seaBattle__rulesButtonWrapper">
         <img
           src={rulesCornerImg}
@@ -236,7 +192,6 @@ export function ShipsArrangement2() {
           className="seaBattle__rulesButtonWrapper-btn-corner--Right"
         />
       </div>
-
       {/* MAIN CONTENT */}
       <div className="shipsArr__main">
         {/* FIELD */}
@@ -257,12 +212,6 @@ export function ShipsArrangement2() {
               />
             </div>
 
-            {/* <Grid
-              selectedShipToSettle={selectedShipToSettle}
-              setSelectedShipToSettle={setSelectedShipToSettle}
-              unsettledShips={unsettledShips}
-              setUnsettledShips={setUnsettledShips}
-            /> */}
             <Board
               selectedShipToSettle={selectedShipToSettle}
               gameboard={gameboard}
@@ -274,16 +223,12 @@ export function ShipsArrangement2() {
             ></Board>
           </div>
         </div>
-
         <Ships
           selectedShipToSettle={selectedShipToSettle}
           setSelectedShipToSettle={setSelectedShipToSettle}
           unsettledShips={unsettledShips}
-          setUnsettledShips={setUnsettledShips}
         />
-
         <button onClick={rotateShip}>Rotate</button>
-
         {/* ACTION BUTTONS */}
         <div className="shipsArr__buttons">
           <CuttedButton callback={() => handleAutoArrangement()} text="Авто" />

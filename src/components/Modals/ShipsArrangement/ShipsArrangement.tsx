@@ -101,6 +101,7 @@ export function ShipsArrangement() {
           unsettledShips={unsettledShips}
           // @ts-ignore
           setUnsettledShips={setUnsettledShips}
+          // @ts-ignore
           chooseAction={chooseAction}
         />
 

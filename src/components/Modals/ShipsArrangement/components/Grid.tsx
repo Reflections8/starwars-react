@@ -71,7 +71,7 @@ export function Grid({
 
       const newGrid = [...grid];
 
-      const setMarked = (x, y, cls) => {
+      const setMarked = (x: number, y: number, cls: string) => {
         const cellClassName = getCellClassName(x, y);
         const cellIndex = newGrid.findIndex((cell) =>
           cell.className.includes(cellClassName)
