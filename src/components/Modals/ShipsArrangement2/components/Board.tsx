@@ -1,7 +1,6 @@
 //@ts-ignore
 import { v4 } from "uuid";
-import Player from "../player";
-import { Gameboard } from "../gameboard";
+import { Gameboard, ShipPosition } from "../gameboard";
 import "../styles/Grid.css";
 
 import ship1 from "../img/ships/1.png";
@@ -13,29 +12,32 @@ import ship1Vertical from "../img/ships/1_vertical.png";
 import ship2Vertical from "../img/ships/2_vertical.png";
 import ship3Vertical from "../img/ships/3_vertical.png";
 import ship4Vertical from "../img/ships/4_vertical.png";
-import { Ship } from "../ship";
+
+import { ApplyIcon, CancelIcon, RotateIcon } from "../../../../icons";
 
 interface Props {
   gameboard: Gameboard;
-  owner: Player;
-  enemy: Player;
   onCellClicked: (positionX: number, positionY: number) => void;
-  selectedShipToSettle: Ship | null;
   showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
   removeValid: () => void;
+  handleShipAction: (
+    ship: ShipPosition
+  ) => (action: "rotateShip" | "confirmShip" | "removeShip") => void;
 }
 
 interface FieldProps {
-  status?: string;
-  owner?: Player;
   onClick?: () => void;
-  children?: React.ReactNode;
   className?: string;
   type?: string; //"empty" | "ship" | "nearShip" | "error";
   showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
   removeValid: () => void;
-  ship?: Ship | null;
+  shipPos?: ShipPosition | null;
   isHead?: boolean;
+  confirmed?: boolean;
+  gameboard: Gameboard;
+  handleShipAction: (
+    action: "rotateShip" | "confirmShip" | "removeShip"
+  ) => void;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -59,17 +61,96 @@ const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
   };
 
 function Field({
-  status,
-  owner,
-  children,
   className,
   type,
   onClick,
   showValid,
   removeValid,
-  ship = null,
+  shipPos = null,
   isHead = false,
+  confirmed = false,
+  handleShipAction,
 }: FieldProps) {
+  const renderImg = () => {
+    if (!shipPos || !isHead) return null;
+    const { ship } = shipPos;
+    return (
+      <img
+        style={{ zIndex: 20 }}
+        src={
+          shipImagesEnum[ship?.length][
+            ship.vertical ? "vertical" : "horizontal"
+          ]
+        }
+        className={`battleships__cell-shipImg ship__${ship.length} ${
+          ship.vertical ? "vertical" : "horizontal"
+        }`}
+      />
+    );
+  };
+  const renderConfirmButtons = () => {
+    if (!isHead || !shipPos || confirmed) return null;
+    const styleBase = {
+      position: "absolute",
+      width: 25,
+      height: 25,
+      color: "crimson",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 10,
+    };
+    const { ship } = shipPos;
+    return (
+      <>
+        <div
+          //@ts-ignore
+          style={{
+            ...styleBase,
+            left: -25,
+            top: ship.vertical ? 25 * Math.floor(ship.length / 2) : 0,
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleShipAction("rotateShip");
+          }}
+        >
+          <RotateIcon />
+        </div>
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleShipAction("removeShip");
+          }}
+          //@ts-ignore
+          style={{
+            ...styleBase,
+            left: ship.vertical ? 25 : 25 * ship.length,
+            top: ship.vertical ? 25 * Math.floor(ship.length / 2) : 0,
+          }}
+        >
+          <CancelIcon />
+        </div>
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            //handleShipAction("confirmShip");
+          }}
+          //@ts-ignore
+          style={{
+            ...styleBase,
+            left: ship.vertical ? 0 : 25 * Math.floor(ship.length / 2),
+            top: ship.vertical ? 25 * ship.length : 25,
+          }}
+        >
+          <ApplyIcon />
+        </div>
+      </>
+    );
+  };
   return (
     <div
       onMouseMove={showValid}
@@ -78,21 +159,21 @@ function Field({
         onClick?.();
         e.stopPropagation();
       }}
-      className={`${className} ${type}`}
+      style={{ position: "relative" }}
     >
-      {ship && isHead && (
-        <img
-          src={
-            shipImagesEnum[ship?.length][
-              ship.vertical ? "vertical" : "horizontal"
-            ]
-          }
-          className={`battleships__cell-shipImg ship__${ship.length} ${
-            ship.vertical ? "vertical" : "horizontal"
-          }`}
-        />
-      )}
-      {children}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: -1,
+        }}
+        className={`${className} ${type}`}
+      ></div>
+      {renderConfirmButtons()}
+      {renderImg()}
     </div>
   );
 }
@@ -130,26 +211,24 @@ const isNearField = (
 
 export function Board({
   gameboard,
-  enemy,
-  owner,
   onCellClicked,
   showValid,
   removeValid,
+  handleShipAction,
 }: Props) {
-  //console.log("gameboard", gameboard);
   const columnLabels = "abcdefghij".split("");
   const nearFields = gameboard.getFieldsNearShips();
 
-  const loadFields = () => {
+  const renderFields = () => {
     const fields = [];
     for (let row = 0; row < gameboard.board.length; row++) {
       for (let column = 0; column < gameboard.board[row].length; column++) {
         const shipPos = gameboard.getShipRC(row, column);
-        let ship = null;
         let isHead = false;
         let type = "empty";
+        let confirmed = true;
         if (shipPos) {
-          ship = shipPos.ship;
+          confirmed = !!shipPos.confirmed;
           const {
             pos: { row: r, column: c },
           } = shipPos;
@@ -161,15 +240,16 @@ export function Board({
 
         let fieldComponent = (
           <Field
+            confirmed={confirmed}
+            gameboard={gameboard}
             showValid={showValid}
             removeValid={removeValid}
             type={type}
             className={className}
             key={v4()}
-            status={status}
-            owner={owner}
-            ship={ship}
+            shipPos={shipPos}
             isHead={isHead}
+            handleShipAction={shipPos ? handleShipAction(shipPos) : () => {}}
             onClick={() => onCellClicked(row, column)}
           />
         );
@@ -178,5 +258,5 @@ export function Board({
     }
     return fields;
   };
-  return <BoardWrapper>{loadFields()}</BoardWrapper>;
+  return <BoardWrapper>{renderFields()}</BoardWrapper>;
 }

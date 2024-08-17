@@ -125,11 +125,6 @@ export function Grid({
     return tempCells;
   }, [rows, columns, columnLabels, cellClasses]);
 
-  useEffect(() => {
-    // TODO: чекнуть, что компонент нормально рендерится при обновлении previewState
-    console.log({ previewState });
-  }, [previewState]);
-
   function checkPlacementValidity(
     selectedShipLength: number,
     clickedRow: number,

@@ -2,14 +2,12 @@ export class Ship {
   length: number;
   hits: number[];
   vertical: boolean;
-  isHead: boolean;
 
   constructor(length: number) {
     this.length = length;
     this.hits = [];
     // this.vertical = false;
     this.vertical = false;
-    this.isHead = false;
   }
 
   hit(position: number) {
@@ -25,7 +23,6 @@ export class Ship {
   copy() {
     const r = new Ship(this.length);
     r.hits = this.hits;
-    r.isHead = this.isHead;
     r.vertical = this.vertical;
     return r;
   }

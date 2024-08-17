@@ -8,7 +8,7 @@ import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
 import "./styles/ShipsArrangement.css";
 import { Board } from "./components/Board";
-import { Gameboard } from "./gameboard";
+import { Gameboard, ShipPosition } from "./gameboard";
 import Player from "./player";
 import { Ship } from "./ship";
 import {
@@ -62,6 +62,29 @@ export function ShipsArrangement2() {
     );
   }, [unsettledShips]);
 
+  const updateGameboard = () => {
+    const newGameboard = new Gameboard();
+    newGameboard.board = gameboard.board;
+    newGameboard.ships = gameboard.ships;
+    setGameboard(newGameboard);
+  };
+
+  const handleShipAction =
+    (ship: ShipPosition) =>
+    (action: "rotateShip" | "confirmShip" | "removeShip") => {
+      gameboard[action](ship.pos.row, ship.pos.column);
+      if (action === "removeShip") {
+        setUnsettledShips((prevState) => {
+          return {
+            ...prevState,
+            // @ts-ignore
+            [ship.ship.length]: prevState[ship.ship.length] + 1,
+          };
+        });
+      }
+      updateGameboard();
+    };
+
   const onCellClicked = (row: number, column: number) => {
     if (!selectedShipToSettle) return;
     //@ts-ignore
@@ -81,10 +104,7 @@ export function ShipsArrangement2() {
     if (unsettledShips[selectedShipToSettle.length] <= 1)
       setSelectedShipToSettle(null);
 
-    const newGameboard = new Gameboard();
-    newGameboard.board = gameboard.board;
-    newGameboard.ships = gameboard.ships;
-    setGameboard(newGameboard);
+    updateGameboard();
   };
 
   const showValid = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -167,9 +187,7 @@ export function ShipsArrangement2() {
 
   const rotateShip = () => {
     const cp = selectedShipToSettle!.copy();
-    console.log("isVert", cp.vertical);
     cp.vertical = !cp.vertical;
-    console.log("isVert2", cp.vertical);
     setSelectedShipToSettle(cp);
   };
 
@@ -211,12 +229,9 @@ export function ShipsArrangement2() {
                 className="shipsArr__main-field-gridWrapper-bgWrapper-bottomElement"
               />
             </div>
-
             <Board
-              selectedShipToSettle={selectedShipToSettle}
+              handleShipAction={handleShipAction}
               gameboard={gameboard}
-              enemy={user}
-              owner={user}
               onCellClicked={onCellClicked}
               showValid={showValid}
               removeValid={removeValid}

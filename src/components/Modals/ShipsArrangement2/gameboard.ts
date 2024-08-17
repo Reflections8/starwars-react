@@ -4,12 +4,13 @@ import { Ship } from "./ship";
 
 const SIZE = 10;
 
-type ShipPosition = {
+export type ShipPosition = {
   ship: Ship;
   pos: {
     row: number;
     column: number;
   };
+  confirmed?: boolean;
 };
 
 export class Gameboard {
@@ -100,11 +101,35 @@ export class Gameboard {
 
     return res;
   }
+  confirmShip(row: number, column: number) {
+    const shipPos = this.ships.find(
+      ({ pos }) => pos.row === row && pos.column === column
+    );
+    if (!shipPos) return false;
+    shipPos.confirmed = true;
+  }
+
+  rotateShip(row: number, column: number) {
+    const shipPos = this.ships.find(
+      ({ pos }) => pos.row === row && pos.column === column
+    );
+    if (!shipPos) return false;
+    shipPos.ship.vertical = !shipPos.ship.vertical;
+  }
+
+  removeShip(row: number, column: number) {
+    this.ships = this.ships.filter(
+      ({ pos }) => pos.row !== row || pos.column !== column
+    );
+  }
 
   placeShip(ship: Ship, row: number, column: number) {
     const [isPossible] = this.isPlacementPossible(ship, row, column);
     if (!isPossible) return false;
-    this.ships = [...this.ships, { ship, pos: { row, column } }];
+    this.ships = [
+      ...this.ships,
+      { ship, pos: { row, column }, confirmed: false },
+    ];
     return true;
   }
 
