@@ -85,7 +85,6 @@ export class Gameboard {
   }
   getShipRC(r: number, c: number): null | ShipPosition {
     let res = null;
-
     this.ships.forEach((shipPos) => {
       const { pos, ship } = shipPos;
       const { row, column } = pos;
@@ -110,6 +109,7 @@ export class Gameboard {
   removeUncofirmendShip() {
     this.ships = this.ships.filter(({ confirmed }) => confirmed);
   }
+
   replaceShip(shipPos: ShipPosition, row: number, column: number) {
     const [isPossible] = this.isPlacementPossible(shipPos.ship, row, column);
     if (!isPossible) return false;
@@ -156,9 +156,7 @@ export class Gameboard {
 
   placeShipsRandomly() {
     if (!this.isEmpty()) return;
-
     const idx = Math.floor(Math.random() * 10);
-
     const game = combinations[idx];
     this.ships = [];
     for (let i = 0; i < game.length; i++) {
@@ -168,7 +166,6 @@ export class Gameboard {
       ship.vertical = game[i].vertical;
       this.placeShip(ship, row, column);
     }
-
     return this;
   }
 
@@ -182,9 +179,11 @@ export class Gameboard {
     if (row < 0 || row > SIZE - 1 || column < 0 || column > SIZE - 1)
       result = false;
 
-    if (ship.vertical)
+    if (ship.vertical) {
       if (row + ship.length > SIZE) result = false;
-      else if (column + ship.length > SIZE) result = false;
+    } else {
+      if (column + ship.length > SIZE) result = false;
+    }
 
     if (this.ships.some(({ pos }) => pos.row === row && pos.column === column))
       result = false;
