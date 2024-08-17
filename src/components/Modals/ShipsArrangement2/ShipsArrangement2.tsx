@@ -9,7 +9,7 @@ import rulesImg from "./img/rules-button.svg";
 import "./styles/ShipsArrangement.css";
 import { Board } from "./components/Board";
 import { Gameboard, ShipPosition } from "./gameboard";
-import Player from "./player";
+//import Player from "./player";
 import { Ship } from "./ship";
 import {
   getCellClassName,
@@ -43,8 +43,8 @@ export function ShipsArrangement2() {
   );
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
-  /* Preview-state*/
-  const [user] = useState(new Player("User"));
+  ///* Preview-state*/
+  //const [user] = useState(new Player("User"));
   const [gameboard, setGameboard] = useState(new Gameboard());
 
   const handleAutoArrangement = debounce(() => {
@@ -86,10 +86,23 @@ export function ShipsArrangement2() {
     };
 
   const onCellClicked = (row: number, column: number) => {
+    const unconfirmed = gameboard.getUnconfirmedShips();
+    if (unconfirmed) {
+      gameboard.replaceShip(unconfirmed, row, column);
+      updateGameboard();
+      return;
+    }
+    const ship = gameboard.getShipRC(row, column);
+    if (ship) {
+      gameboard.unconfirmShipAtRC(row, column);
+      updateGameboard();
+      return;
+    }
+
     if (!selectedShipToSettle) return;
+
     //@ts-ignore
     if (!unsettledShips[selectedShipToSettle.length]) return;
-
     const placed = gameboard.placeShip(selectedShipToSettle, row, column);
     if (!placed) return;
     setUnsettledShips((prevState) => {
@@ -168,6 +181,7 @@ export function ShipsArrangement2() {
       }
     }
   };
+
   const removeValid = () => {
     const elements = document.querySelectorAll(".battleships__cell");
     elements.forEach((el) => {
@@ -184,12 +198,6 @@ export function ShipsArrangement2() {
   //    for (let j = 0; j <= 10; j++) {}
   //  }
   //}, [unsettledShips]);
-
-  const rotateShip = () => {
-    const cp = selectedShipToSettle!.copy();
-    cp.vertical = !cp.vertical;
-    setSelectedShipToSettle(cp);
-  };
 
   return (
     <div className="shipsArr">
@@ -240,10 +248,13 @@ export function ShipsArrangement2() {
         </div>
         <Ships
           selectedShipToSettle={selectedShipToSettle}
-          setSelectedShipToSettle={setSelectedShipToSettle}
+          setSelectedShipToSettle={(v) => {
+            setSelectedShipToSettle(v);
+            gameboard.removeUncofirmendShip();
+            updateGameboard();
+          }}
           unsettledShips={unsettledShips}
         />
-        <button onClick={rotateShip}>Rotate</button>
         {/* ACTION BUTTONS */}
         <div className="shipsArr__buttons">
           <CuttedButton callback={() => handleAutoArrangement()} text="Авто" />

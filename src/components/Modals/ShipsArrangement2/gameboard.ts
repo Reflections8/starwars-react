@@ -10,7 +10,7 @@ export type ShipPosition = {
     row: number;
     column: number;
   };
-  confirmed?: boolean;
+  confirmed: boolean;
 };
 
 export class Gameboard {
@@ -85,21 +85,42 @@ export class Gameboard {
   }
   getShipRC(r: number, c: number): null | ShipPosition {
     let res = null;
-    this.ships.forEach(({ ship, pos }) => {
+
+    this.ships.forEach((shipPos) => {
+      const { pos, ship } = shipPos;
       const { row, column } = pos;
       const { length, vertical } = ship;
       if (vertical) {
-        if (r >= row && r < row + length && c === column) {
-          res = { ship, pos };
-        }
+        if (r >= row && r < row + length && c === column) res = shipPos;
       } else {
         if (c >= column && c < column + length && r === row) {
-          res = { ship, pos };
+          res = shipPos;
         }
       }
     });
 
     return res;
+  }
+
+  unconfirmShipAtRC(row: number, column: number) {
+    const shipPos = this.getShipRC(row, column);
+    if (shipPos) shipPos.confirmed = false;
+  }
+
+  removeUncofirmendShip() {
+    this.ships = this.ships.filter(({ confirmed }) => confirmed);
+  }
+  replaceShip(shipPos: ShipPosition, row: number, column: number) {
+    const [isPossible] = this.isPlacementPossible(shipPos.ship, row, column);
+    if (!isPossible) return false;
+    shipPos.pos.row = row;
+    shipPos.pos.column = column;
+    return true;
+  }
+  getUnconfirmedShips() {
+    const unconfirmed = this.ships.filter(({ confirmed }) => !confirmed);
+    if (unconfirmed.length === 0) return null;
+    return unconfirmed[0];
   }
   confirmShip(row: number, column: number) {
     const shipPos = this.ships.find(

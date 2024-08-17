@@ -137,12 +137,12 @@ function Field({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            //handleShipAction("confirmShip");
+            handleShipAction("confirmShip");
           }}
           //@ts-ignore
           style={{
             ...styleBase,
-            left: ship.vertical ? 0 : 25 * Math.floor(ship.length / 2),
+            left: ship.vertical ? 0 : 25 * ((ship.length - 1) / 2),
             top: ship.vertical ? 25 * ship.length : 25,
           }}
         >
@@ -229,10 +229,8 @@ export function Board({
         let confirmed = true;
         if (shipPos) {
           confirmed = !!shipPos.confirmed;
-          const {
-            pos: { row: r, column: c },
-          } = shipPos;
-          isHead = r === row && c === column;
+          const { pos } = shipPos;
+          isHead = pos.row === row && pos.column === column;
         }
         const className = `battleships__cell ${columnLabels[column]}${row}`;
         const nearField = isNearField(row, column, nearFields);
