@@ -251,7 +251,7 @@ export function Board({
 
         if (nearField) {
           if (nearField.err) type = "errorShip";
-          else type = "nearShip";
+          else type = shipPos ? "empty" : "nearShip";
         }
 
         let fieldComponent = (
