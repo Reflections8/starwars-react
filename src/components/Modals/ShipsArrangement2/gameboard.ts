@@ -154,13 +154,10 @@ export class Gameboard {
     );
   }
 
-  placeShip(ship: Ship, row: number, column: number) {
+  placeShip(ship: Ship, row: number, column: number, confirmed = false) {
     const [isPossible] = this.isPlacementPossible(ship, row, column);
     if (!isPossible) return false;
-    this.ships = [
-      ...this.ships,
-      { ship, pos: { row, column }, confirmed: false },
-    ];
+    this.ships = [...this.ships, { ship, pos: { row, column }, confirmed }];
     return true;
   }
 
@@ -174,7 +171,7 @@ export class Gameboard {
       const row = game[i].coords.x;
       const column = game[i].coords.y;
       ship.vertical = game[i].vertical;
-      this.placeShip(ship, row, column);
+      this.placeShip(ship, row, column, true);
     }
     return this;
   }
