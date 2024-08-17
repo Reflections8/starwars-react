@@ -14,6 +14,7 @@ import ship3Vertical from "../img/ships/3_vertical.png";
 import ship4Vertical from "../img/ships/4_vertical.png";
 
 import { ApplyIcon, CancelIcon, RotateIcon } from "../../../../icons";
+import { useEffect, useState } from "react";
 
 interface Props {
   gameboard: Gameboard;
@@ -38,6 +39,7 @@ interface FieldProps {
   handleShipAction: (
     action: "rotateShip" | "confirmShip" | "removeShip"
   ) => void;
+  badPlacement: boolean;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -70,6 +72,7 @@ function Field({
   isHead = false,
   confirmed = false,
   handleShipAction,
+  badPlacement,
 }: FieldProps) {
   const renderImg = () => {
     if (!shipPos || !isHead) return null;
@@ -100,6 +103,7 @@ function Field({
       alignItems: "center",
       zIndex: 10,
     };
+    console.log(badPlacement);
     const { ship } = shipPos;
     return (
       <>
@@ -137,6 +141,7 @@ function Field({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
+            if (badPlacement) return;
             handleShipAction("confirmShip");
           }}
           //@ts-ignore
@@ -144,6 +149,7 @@ function Field({
             ...styleBase,
             left: ship.vertical ? 0 : 25 * ((ship.length - 1) / 2),
             top: ship.vertical ? 25 * ship.length : 25,
+            filter: !badPlacement ? "none" : "brightness(0.5)",
           }}
         >
           <ApplyIcon />
@@ -218,6 +224,14 @@ export function Board({
 }: Props) {
   const columnLabels = "abcdefghij".split("");
   const nearFields = gameboard.getFieldsNearShips();
+  const [badPlacement, setBadPlacement] = useState(false);
+
+  useEffect(() => {
+    setBadPlacement(false);
+    if (nearFields.some(({ err }) => err)) {
+      setBadPlacement(true);
+    }
+  }, [gameboard]);
 
   const renderFields = () => {
     const fields = [];
@@ -234,7 +248,11 @@ export function Board({
         }
         const className = `battleships__cell ${columnLabels[column]}${row}`;
         const nearField = isNearField(row, column, nearFields);
-        if (nearField) type = nearField.err ? "errorShip" : "nearShip";
+
+        if (nearField) {
+          if (nearField.err) type = "errorShip";
+          else type = "nearShip";
+        }
 
         let fieldComponent = (
           <Field
@@ -249,6 +267,7 @@ export function Board({
             isHead={isHead}
             handleShipAction={shipPos ? handleShipAction(shipPos) : () => {}}
             onClick={() => onCellClicked(row, column)}
+            badPlacement={badPlacement}
           />
         );
         fields.push(fieldComponent);

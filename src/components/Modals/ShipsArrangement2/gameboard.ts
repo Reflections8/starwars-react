@@ -135,7 +135,17 @@ export class Gameboard {
       ({ pos }) => pos.row === row && pos.column === column
     );
     if (!shipPos) return false;
+
     shipPos.ship.vertical = !shipPos.ship.vertical;
+    if (shipPos.ship.vertical) {
+      if (row + shipPos.ship.length > SIZE) {
+        shipPos.pos.row = SIZE - shipPos.ship.length;
+      }
+    } else {
+      if (column + shipPos.ship.length > SIZE) {
+        shipPos.pos.column = SIZE - shipPos.ship.length;
+      }
+    }
   }
 
   removeShip(row: number, column: number) {
