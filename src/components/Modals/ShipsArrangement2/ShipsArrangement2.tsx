@@ -10,10 +10,6 @@ import "./styles/ShipsArrangement.css";
 import { Board } from "./components/Board";
 import { Gameboard } from "./gameboard";
 import { Ship } from "./ship";
-import {
-  getCellClassName,
-  letterToNumber,
-} from "../ShipsArrangement/utils/grid";
 
 function debounce(func: (...args: unknown[]) => void, wait: number) {
   let timeout: ReturnType<typeof setTimeout>;
@@ -22,7 +18,6 @@ function debounce(func: (...args: unknown[]) => void, wait: number) {
       clearTimeout(timeout);
       func(...args);
     };
-
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
@@ -120,85 +115,6 @@ export function ShipsArrangement2() {
     updateGameboard();
   };
 
-  const showValid = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (selectedShipToSettle) {
-      const el = e.target as HTMLDivElement;
-      const pos = (el as HTMLDivElement).className.split(" ")[1];
-      const posX = parseInt(pos[1]);
-      const posY = letterToNumber(pos[0]);
-      const size = selectedShipToSettle.length;
-
-      const [, badCoords] = gameboard.isPlacementPossible(
-        selectedShipToSettle,
-        posX,
-        posY
-      );
-
-      // console.log({ badCoords });
-
-      const setMarked = (x: number, y: number, cls: string) => {
-        const cellClassName = getCellClassName(x, y); // c7, a4
-        const el2 = document.querySelector(`.${cellClassName}`);
-        el2?.classList.remove("marked-ship");
-        el2?.classList.remove("marked-buffer");
-        el2?.classList.remove("marked-apply");
-        if (el2?.classList.contains("notship")) {
-          document.querySelectorAll(`.notship`).forEach((elem) => {
-            elem.classList.add("marked-warning");
-          });
-          if (cls === "marked-apply") {
-            el2?.classList.add("marked-merged");
-          }
-        } else {
-          el2?.classList.add(cls);
-        }
-      };
-
-      for (let i = -1; i < size + 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-          // TODO: Handle vertical ships
-          let shipX, shipY;
-          if (selectedShipToSettle.vertical) {
-            // Vertical ship handling
-            shipX = posX + i;
-            shipY = posY + j;
-          } else {
-            // Horizontal ship handling
-            shipX = posX + j;
-            shipY = posY + i;
-          }
-
-          if (i >= 0 && i < size && j == 0) {
-            setMarked(shipX, shipY, "marked-ship");
-          } else {
-            setMarked(shipX, shipY, "marked-apply");
-          }
-        }
-      }
-      for (let i = 0; i < badCoords.length; i++) {
-        const coord = badCoords[i];
-        setMarked(coord.x, coord.y, "marked-buffer");
-      }
-    }
-  };
-
-  const removeValid = () => {
-    const elements = document.querySelectorAll(".battleships__cell");
-    elements.forEach((el) => {
-      el.classList.remove("marked-ship");
-      el.classList.remove("marked-buffer");
-      el.classList.remove("marked-apply");
-      el.classList.remove("marked-warning");
-      el.classList.remove("marked-merged");
-    });
-  };
-
-  //useEffect(() => {
-  //  for (let i = 0; i <= 10; i++) {
-  //    for (let j = 0; j <= 10; j++) {}
-  //  }
-  //}, [unsettledShips]);
-
   return (
     <div className="shipsArr">
       <div className="seaBattle__rulesButtonWrapper">
@@ -241,8 +157,6 @@ export function ShipsArrangement2() {
               handleShipAction={handleShipAction}
               gameboard={gameboard}
               onCellClicked={onCellClicked}
-              showValid={showValid}
-              removeValid={removeValid}
             ></Board>
           </div>
         </div>

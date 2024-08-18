@@ -130,17 +130,20 @@ export class Gameboard {
   }
 
   rotateShip() {
-    const shipPos = this.ships.find(({ confirmed }) => !confirmed);
-    if (!shipPos) return false;
-
-    shipPos.ship.vertical = !shipPos.ship.vertical;
-    if (shipPos.ship.vertical) {
-      if (shipPos.pos.row + shipPos.ship.length > SIZE)
-        shipPos.pos.row = SIZE - shipPos.ship.length;
-    } else {
-      if (shipPos.pos.column + shipPos.ship.length > SIZE)
-        shipPos.pos.column = SIZE - shipPos.ship.length;
-    }
+    this.ships = this.ships.map((shipPos) => {
+      if (shipPos.confirmed) return shipPos;
+      console.log({ POSROTATE: shipPos.pos });
+      const newShipPos = { ...shipPos };
+      newShipPos.ship.vertical = !newShipPos.ship.vertical;
+      if (newShipPos.ship.vertical) {
+        if (newShipPos.pos.row + newShipPos.ship.length > SIZE)
+          newShipPos.pos.row = SIZE - newShipPos.ship.length;
+      } else {
+        if (newShipPos.pos.column + newShipPos.ship.length > SIZE)
+          newShipPos.pos.column = SIZE - newShipPos.ship.length;
+      }
+      return newShipPos;
+    });
   }
 
   removeShip() {

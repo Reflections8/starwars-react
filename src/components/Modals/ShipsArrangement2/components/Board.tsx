@@ -19,8 +19,6 @@ import { useEffect, useState } from "react";
 interface Props {
   gameboard: Gameboard;
   onCellClicked: (positionX: number, positionY: number) => void;
-  showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
-  removeValid: () => void;
   handleShipAction: (
     action: "rotateShip" | "confirmShip" | "removeShip"
   ) => void;
@@ -30,8 +28,6 @@ interface FieldProps {
   onClick?: () => void;
   className?: string;
   type?: string; //"empty" | "ship" | "nearShip" | "error";
-  showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
-  removeValid: () => void;
   shipPos?: ShipPosition | null;
   isHead?: boolean;
   confirmed?: boolean;
@@ -66,8 +62,6 @@ function Field({
   className,
   type,
   onClick,
-  showValid,
-  removeValid,
   shipPos = null,
   isHead = false,
   confirmed = false,
@@ -173,8 +167,6 @@ function Field({
   };
   return (
     <div
-      onMouseMove={showValid}
-      onMouseLeave={removeValid}
       onClick={(e) => {
         onClick?.();
         e.stopPropagation();
@@ -229,13 +221,7 @@ const isNearField = (
   return matchingField || null;
 };
 
-export function Board({
-  gameboard,
-  onCellClicked,
-  showValid,
-  removeValid,
-  handleShipAction,
-}: Props) {
+export function Board({ gameboard, onCellClicked, handleShipAction }: Props) {
   const columnLabels = "abcdefghij".split("");
   const nearFields = gameboard.getFieldsNearShips();
   const [badPlacement, setBadPlacement] = useState(false);
@@ -272,8 +258,6 @@ export function Board({
           <Field
             confirmed={confirmed}
             gameboard={gameboard}
-            showValid={showValid}
-            removeValid={removeValid}
             type={type}
             className={className}
             key={JSON.stringify({ row, column })}
