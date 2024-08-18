@@ -4,14 +4,20 @@ type ShipType = {
   length: number;
   vertical: boolean;
 };
+type Position = {
+  row: number;
+  column: number;
+};
 
 export type ShipPosition = {
   ship: ShipType;
-  pos: {
-    row: number;
-    column: number;
-  };
+  pos: Position;
   confirmed: boolean;
+};
+
+export type HitCell = {
+  isSuccess: boolean;
+  pos: Position;
 };
 
 function deepCopy<T>(obj: T): T {
@@ -20,10 +26,11 @@ function deepCopy<T>(obj: T): T {
 
 export class Gameboard {
   ships: ShipPosition[];
-  missedShots: boolean[][];
+  hitCells: HitCell[];
   SIZE: number;
+
   constructor() {
-    this.missedShots = [];
+    this.hitCells = [];
     this.initialize();
     this.ships = [];
     this.SIZE = 10;
@@ -31,6 +38,7 @@ export class Gameboard {
 
   initialize() {}
 
+  //SHIP ARRANGEMENT
   getFieldsNearShips() {
     let res: { x: number; y: number; err: boolean }[] = [];
     const directions = [
@@ -83,29 +91,10 @@ export class Gameboard {
 
     return res;
   }
-  getShipRC(r: number, c: number): null | ShipPosition {
-    let res = null;
-    this.ships.forEach((shipPos) => {
-      const { pos, ship } = shipPos;
-      const { row, column } = pos;
-      const { length, vertical } = ship;
-      if (vertical) {
-        if (r >= row && r < row + length && c === column) res = shipPos;
-      } else {
-        if (c >= column && c < column + length && r === row) {
-          res = shipPos;
-        }
-      }
-    });
-
-    return res;
-  }
-
   unconfirmShipAtRC(row: number, column: number) {
     const shipPos = this.getShipRC(row, column);
     if (shipPos) shipPos.confirmed = false;
   }
-
   replaceShip(shipPos: ShipPosition, row: number, column: number) {
     const [isPossible] = this.isPlacementPossible(shipPos.ship, row, column);
     if (!isPossible) return false;
@@ -113,7 +102,6 @@ export class Gameboard {
     shipPos.pos.column = column;
     return true;
   }
-
   getUnconfirmedShips() {
     const unconfirmed = this.ships.filter(({ confirmed }) => !confirmed);
     if (unconfirmed.length === 0) return null;
@@ -124,7 +112,6 @@ export class Gameboard {
     if (!shipPos) return false;
     shipPos.confirmed = true;
   }
-
   rotateShip() {
     const shipPos = this.ships.find(({ confirmed }) => !confirmed);
     if (!shipPos) return false;
@@ -138,11 +125,9 @@ export class Gameboard {
         shipPos.pos.column = this.SIZE - shipPos.ship.length;
     }
   }
-
   removeShip() {
     this.ships = this.ships.filter(({ confirmed }) => confirmed);
   }
-
   placeShip(ship: ShipType, row: number, column: number, confirmed = false) {
     const [isPossible] = this.isPlacementPossible(ship, row, column);
     if (!isPossible) return false;
@@ -152,7 +137,6 @@ export class Gameboard {
     ];
     return true;
   }
-
   placeShipsRandomly() {
     const idx = Math.floor(Math.random() * 10);
     const game = combinations[idx];
@@ -165,7 +149,6 @@ export class Gameboard {
     }
     return this;
   }
-
   isPlacementPossible(
     ship: ShipType,
     row: number,
@@ -186,5 +169,23 @@ export class Gameboard {
       result = false;
 
     return [result, badCoords];
+  }
+  //GAMEPLAY
+  getShipRC(r: number, c: number): null | ShipPosition {
+    let res = null;
+    this.ships.forEach((shipPos) => {
+      const { pos, ship } = shipPos;
+      const { row, column } = pos;
+      const { length, vertical } = ship;
+      if (vertical) {
+        if (r >= row && r < row + length && c === column) res = shipPos;
+      } else {
+        if (c >= column && c < column + length && r === row) {
+          res = shipPos;
+        }
+      }
+    });
+
+    return res;
   }
 }
