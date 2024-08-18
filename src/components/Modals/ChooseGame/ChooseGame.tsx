@@ -54,7 +54,7 @@ export function ChooseGame() {
             alt="game-2"
             className="chooseGame__game-main-icon"
           />
-          <div className="chooseGame__game-main-text">Звездные войны</div>
+          <div className="chooseGame__game-main-text">Морской бой</div>
         </div>
         <CuttedButton
           text="Играть"

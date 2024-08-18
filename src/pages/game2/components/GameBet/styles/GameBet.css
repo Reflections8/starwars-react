@@ -1,0 +1,42 @@
+.gameBet {
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  width: 220px;
+  height: 130px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: -11px;
+}
+
+.gameBet__bg {
+  position: absolute;
+}
+
+.gameBet__info {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 54px;
+  align-items: center;
+  gap: 5px;
+}
+
+.gameBet__info-value {
+  position: relative;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 16px;
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 0 #0974f820;
+}
+
+.gameBet__info-key {
+  font-size: 10px;
+  color: #9fff9c;
+  text-shadow: 2px 0 0 #9fff9c31;
+}

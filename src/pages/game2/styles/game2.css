@@ -9,3 +9,10 @@
 [data-page="game2"] .header__top-right-content {
   gap: 24px;
 }
+
+.game2 {
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

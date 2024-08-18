@@ -1,0 +1,57 @@
+.gameFields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gameFields__top {
+  width: 302px;
+  height: 292px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gameFields__top-bg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gameFields__top-board {
+  position: relative;
+  background: red;
+  width: 250px;
+  height: 250px;
+}
+
+.gameFields__timer {
+  position: relative;
+  margin-top: -14px;
+  margin-bottom: -7px;
+}
+
+.gameFields__bottom {
+  width: 302px;
+  height: 292px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gameFields__bottom-bg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.gameFields__bottom-board {
+  position: relative;
+  background: red;
+  width: 250px;
+  height: 250px;
+}
