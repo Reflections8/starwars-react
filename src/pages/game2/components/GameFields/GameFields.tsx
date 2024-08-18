@@ -4,7 +4,7 @@ import boardBgBottom from "./img/board-bg-bottom.svg";
 import { Timer } from "../../../../components/Modals/ShipsArrangement2/components/Timer";
 import { UserBoard } from "./UserBoard";
 import { Gameboard } from "./gameboard";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { EnemyBoard } from "./EnemyBoard";
 
 const MOCK_SHIPS_ENEMY = [
@@ -28,50 +28,6 @@ const MOCK_SHIPS_ENEMY = [
   },
 ];
 
-const MOCK_SHIPS = [
-  {
-    isDead: false,
-    length: 3,
-    vertical: true,
-    head: {
-      row: 0,
-      column: 3,
-    },
-    cells: [],
-  },
-  {
-    cells: [
-      { row: 0, column: 6 },
-      { row: 0, column: 7 },
-    ],
-    isDead: false,
-    length: 4,
-    vertical: false,
-    head: {
-      row: 0,
-      column: 6,
-    },
-  },
-  {
-    cells: [],
-    isDead: false,
-    length: 2,
-    vertical: true,
-    head: {
-      row: 1,
-      column: 0,
-    },
-  },
-];
-const MOCK_FIELD_DATA = {
-  isMe: true,
-  misses: [
-    { row: 8, column: 8 },
-    { row: 9, column: 9 },
-    { row: 5, column: 5 },
-  ],
-  ships: MOCK_SHIPS,
-};
 const MOCK_ENEMY_FIELD = {
   isMe: false,
   misses: [
@@ -82,33 +38,12 @@ const MOCK_ENEMY_FIELD = {
   ships: MOCK_SHIPS_ENEMY,
 };
 
-export function GameFields() {
-  const [userBoard, setUserBoard] = useState(new Gameboard());
-  const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
-
-  const updateUserboard = () => {
-    const newGameboard = new Gameboard();
-    newGameboard.ships = userBoard.ships;
-    newGameboard.hits = userBoard.hits;
-    newGameboard.misses = userBoard.misses;
-    setUserBoard(newGameboard);
-  };
-  const updateEnemyBoard = () => {
-    const newGameboard = new Gameboard();
-    newGameboard.ships = enemyBoard.ships;
-    newGameboard.hits = enemyBoard.hits;
-    newGameboard.misses = enemyBoard.misses;
-    newGameboard.preHit = enemyBoard.preHit;
-    setEnemyBoard(newGameboard);
-  };
-
-  useEffect(() => {
-    userBoard.updateUserBoard(MOCK_FIELD_DATA);
-    enemyBoard.updateEnemyBoard(MOCK_ENEMY_FIELD);
-    updateUserboard();
-    updateEnemyBoard();
-  }, []);
-
+export const GameFields: FC<{
+  userBoard: Gameboard;
+  enemyBoard: Gameboard;
+  updateEnemyBoard: () => void;
+  sendHit: (p: { row: number; column: number }) => void;
+}> = ({ userBoard, enemyBoard, updateEnemyBoard, sendHit }) => {
   const clickEnemyField = (row: number, column: number, zalupa: boolean) => {
     if (!zalupa) return;
     enemyBoard.setPreHit({ row, column });
@@ -116,7 +51,8 @@ export function GameFields() {
   };
 
   const confirmHit = () => {
-    console.log("OBOSRIS PIDORAS");
+    if (!enemyBoard.preHit) return;
+    sendHit(enemyBoard.preHit);
     enemyBoard.setPreHit(null);
     updateEnemyBoard();
   };
@@ -149,4 +85,4 @@ export function GameFields() {
       </div>
     </div>
   );
-}
+};

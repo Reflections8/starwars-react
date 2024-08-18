@@ -11,6 +11,7 @@ import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
 import { Ship } from "./ship";
 import "./styles/ShipsArrangement.css";
+import { useBattleships } from "../../../context/BattleshipsContext";
 
 function debounce(func: (...args: unknown[]) => void, wait: number) {
   let timeout: ReturnType<typeof setTimeout>;
@@ -42,7 +43,7 @@ export function ShipsArrangement2() {
   const handleAutoArrangement = debounce(() => {
     handleAuto();
   }, 300);
-
+  const { setUserShips } = useBattleships();
   function handleAuto() {
     gameboard.placeShipsRandomly();
     setUnsettledShips({ "1": 0, "2": 0, "3": 0, "4": 0 });
@@ -115,7 +116,8 @@ export function ShipsArrangement2() {
   };
 
   const handleTimerStart = () => {
-    console.log("START GAME");
+    setUserShips!(gameboard.ships);
+    closeModal!();
   };
 
   return (
@@ -178,7 +180,7 @@ export function ShipsArrangement2() {
           <CuttedButton
             text="Играть"
             className={!allShipsSettled ? "halfTransparent" : ""}
-            callback={closeModal}
+            callback={handleTimerStart}
           />
         </div>
       </div>

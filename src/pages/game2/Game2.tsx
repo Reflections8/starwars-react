@@ -11,11 +11,31 @@ import { GameFields } from "./components/GameFields/GameFields";
 import { GameHeader } from "./components/GameHeader/GameHeader";
 import "./styles/game2.css";
 import createMockServer from "./mock-socket/mockServer";
+import { Gameboard } from "./components/GameFields/gameboard";
 
 export function Game2() {
   const { openModal } = useModal();
   const { openDrawer, closeDrawer } = useDrawer();
-  const { gameState } = useBattleships();
+  const { gameState, userShips } = useBattleships();
+
+  const [userBoard, setUserBoard] = useState(new Gameboard());
+  const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
+
+  const updateUserboard = () => {
+    const newGameboard = new Gameboard();
+    newGameboard.ships = userBoard.ships;
+    newGameboard.hits = userBoard.hits;
+    newGameboard.misses = userBoard.misses;
+    setUserBoard(newGameboard);
+  };
+  const updateEnemyBoard = () => {
+    const newGameboard = new Gameboard();
+    newGameboard.ships = enemyBoard.ships;
+    newGameboard.hits = enemyBoard.hits;
+    newGameboard.misses = enemyBoard.misses;
+    newGameboard.preHit = enemyBoard.preHit;
+    setEnemyBoard(newGameboard);
+  };
 
   // TODO: это useEffect чтобы затестить модалки победы/поражения, потом перенести в основной
   useEffect(() => {
@@ -34,7 +54,7 @@ export function Game2() {
   // TODO: моковый стэйт, заменить на нужный, либо брать из BattleshipsContext
   const [messages, setMessages] = useState([]);
   const [player, setPlayer] = useState(null);
-  const [socket, setSocket] = useState(null);
+  const [socket, setSocket] = useState<null | WebSocket>(null);
 
   // TODO: это основной useEffect который должен менять стэйт на клиенте получая сообщения по WS
   useEffect(() => {
@@ -46,13 +66,19 @@ export function Game2() {
       newSocket.send(JSON.stringify({ type: "join" }));
     };
 
-    console.log({ newSocket });
-
     newSocket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      setMessages((prevMessages) => [...prevMessages, message]);
+      const { message, type } = JSON.parse(event.data);
+      //setMessages((prevMessages) => [...prevMessages, message]);
 
-      if (message.type === "joined") {
+      if (type === "updateBoard") {
+        userBoard.updateUserBoard(message);
+        updateUserboard();
+      }
+      if (type === "fireResult") {
+        enemyBoard.updateEnemyBoard(message);
+        updateEnemyBoard();
+      }
+      if (type === "joined") {
         setPlayer(message.player);
       }
     };
@@ -87,11 +113,35 @@ export function Game2() {
     };
   }, [player]);
 
+  useEffect(() => {
+    if (userShips && userShips.length > 0) {
+      socket &&
+        socket.send(JSON.stringify({ type: "shipsInit", message: userShips }));
+    } else {
+      openModal!("shipsArrangement2");
+    }
+  }, [JSON.stringify(userShips), socket]);
+
+  const sendHit = (p: any) => {
+    socket &&
+      socket.send(
+        JSON.stringify({ type: "fire", message: p, source: "player1" })
+      );
+  };
+
   return (
     <div className="game2">
       <GameHeader />
       <EnemyShips />
-      <GameFields />
+      <GameFields
+        {...{
+          enemyBoard,
+          userBoard,
+          updateEnemyBoard,
+          updateUserboard,
+          sendHit,
+        }}
+      />
       <GameBet />
 
       <Header

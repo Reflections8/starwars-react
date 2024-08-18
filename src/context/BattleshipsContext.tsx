@@ -8,6 +8,8 @@ type BattleshipsProviderProps = {
 type BattleshipsContextProps = {
   gameState: GameState;
   setGameState: (gameState: GameState) => void;
+  userShips: any[];
+  setUserShips: (ships: any[]) => void;
 };
 
 // TODO: переделать потом, пока вроде достаточно
@@ -21,9 +23,12 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [gameState, setGameState] = useState({
     status: "NOT_STARTED",
   });
+  const [userShips, setUserShips] = useState<any[]>([]);
 
   return (
-    <BattleshipsContext.Provider value={{ gameState, setGameState }}>
+    <BattleshipsContext.Provider
+      value={{ gameState, setGameState, userShips, setUserShips }}
+    >
       {children}
     </BattleshipsContext.Provider>
   );
