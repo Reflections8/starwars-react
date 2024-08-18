@@ -186,7 +186,7 @@ export function Rivals() {
                   <CuttedButton
                     callback={(e) => {
                       e.stopPropagation();
-                      openModal!("shipsArrangement");
+                      openModal!("shipsArrangement2");
                     }}
                     size="small"
                     className="rivals__list-item-end-btn"
