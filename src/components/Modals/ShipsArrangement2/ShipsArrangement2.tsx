@@ -114,6 +114,10 @@ export function ShipsArrangement2() {
     updateGameboard();
   };
 
+  const handleTimerStart = () => {
+    console.log("START GAME");
+  };
+
   return (
     <div className="shipsArr">
       <div className="seaBattle__rulesButtonWrapper">
@@ -137,7 +141,7 @@ export function ShipsArrangement2() {
       <div className="shipsArr__main">
         {/* FIELD */}
         <div className="shipsArr__main-field">
-          <Timer />
+          <Timer onRandom={handleAutoArrangement} onStart={handleTimerStart} />
           {/* GRID WRAPPER */}
           <div className="shipsArr__main-field-gridWrapper">
             <div className="shipsArr__main-field-gridWrapper-bgWrapper">
