@@ -13,23 +13,24 @@ class Player {
     if (this.hasAlreadyHit(positionX, positionY)) return;
 
     this.alreadyHitCoords.push([positionX, positionY]);
+    // @ts-ignore
     gameboard.receiveAttack(positionX, positionY);
   }
 
-  randomAttack(gameboard: Gameboard) {
-    if (this.alreadyHitCoords.length === 100) return;
+  //   randomAttack(gameboard: Gameboard) {
+  //     if (this.alreadyHitCoords.length === 100) return;
 
-    let positionX = Math.floor(Math.random() * 10);
-    let positionY = Math.floor(Math.random() * 10);
+  //     let positionX = Math.floor(Math.random() * 10);
+  //     let positionY = Math.floor(Math.random() * 10);
 
-    while (this.hasAlreadyHit(positionX, positionY)) {
-      positionX = Math.floor(Math.random() * 10);
-      positionY = Math.floor(Math.random() * 10);
-    }
+  //     while (this.hasAlreadyHit(positionX, positionY)) {
+  //       positionX = Math.floor(Math.random() * 10);
+  //       positionY = Math.floor(Math.random() * 10);
+  //     }
 
-    this.alreadyHitCoords.push([positionX, positionY]);
-    gameboard.receiveAttack(positionX, positionY);
-  }
+  //     this.alreadyHitCoords.push([positionX, positionY]);
+  //     //  gameboard.receiveAttack(positionX, positionY);
+  //   }
 
   hasAlreadyHit(positionX: number, positionY: number) {
     for (let i = 0; i < this.alreadyHitCoords.length; i++) {

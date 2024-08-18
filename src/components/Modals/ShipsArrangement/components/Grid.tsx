@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useEffect } from "react";
-import "../styles/Grid.css";
+import React, { useMemo, useState } from "react";
 import ship1 from "../img/ships/1.png";
 import ship2 from "../img/ships/2.png";
 import ship3 from "../img/ships/3.png";
 import ship4 from "../img/ships/4.png";
+import "../styles/Grid.css";
 
 import ship1Vertical from "../img/ships/1_vertical.png";
 import ship2Vertical from "../img/ships/2_vertical.png";
@@ -58,7 +58,7 @@ export function Grid({
   // Состояние для хранения классов ячеек
   const [cellClasses, setCellClasses] = useState<Record<string, string[]>>({});
 
-  const [grid, setGrid] = useState(initializeGrid());
+  const [grid] = useState(initializeGrid());
 
   const showValid = (e: React.MouseEvent<HTMLDivElement>) => {
     if (selectedShipToSettle) {
