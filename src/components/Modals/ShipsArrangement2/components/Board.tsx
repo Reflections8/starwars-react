@@ -156,7 +156,7 @@ function Field({
           style={{
             ...styleBase,
             left: ship.vertical ? 0 : 25 * ((ship.length - 1) / 2),
-            top: ship.vertical ? 25 * ship.length : 25,
+            top: ship.vertical ? 25 * ship.length + 8 : 25 + 8,
             filter: !badPlacement ? "none" : "brightness(0.5)",
           }}
         >
@@ -235,8 +235,8 @@ export function Board({ gameboard, onCellClicked, handleShipAction }: Props) {
 
   const renderFields = () => {
     const fields = [];
-    for (let row = 0; row < gameboard.board.length; row++) {
-      for (let column = 0; column < gameboard.board[row].length; column++) {
+    for (let row = 0; row < gameboard.SIZE; row++) {
+      for (let column = 0; column < gameboard.SIZE; column++) {
         const shipPos = gameboard.getShipRC(row, column);
         let isHead = false;
         let type = "empty";

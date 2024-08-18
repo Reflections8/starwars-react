@@ -56,7 +56,6 @@ export function ShipsArrangement2() {
 
   const updateGameboard = () => {
     const newGameboard = new Gameboard();
-    newGameboard.board = gameboard.board;
     newGameboard.ships = gameboard.ships;
     setGameboard(newGameboard);
   };
