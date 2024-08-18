@@ -14,6 +14,10 @@ export type ShipPosition = {
   confirmed: boolean;
 };
 
+function deepCopy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 export class Gameboard {
   ships: ShipPosition[];
   missedShots: boolean[][];
@@ -124,6 +128,7 @@ export class Gameboard {
   rotateShip() {
     const shipPos = this.ships.find(({ confirmed }) => !confirmed);
     if (!shipPos) return false;
+
     shipPos.ship.vertical = !shipPos.ship.vertical;
     if (shipPos.ship.vertical) {
       if (shipPos.pos.row + shipPos.ship.length > this.SIZE)
@@ -141,7 +146,10 @@ export class Gameboard {
   placeShip(ship: ShipType, row: number, column: number, confirmed = false) {
     const [isPossible] = this.isPlacementPossible(ship, row, column);
     if (!isPossible) return false;
-    this.ships = [...this.ships, { ship, pos: { row, column }, confirmed }];
+    this.ships = [
+      ...this.ships,
+      { ship: deepCopy(ship), pos: { row, column }, confirmed },
+    ];
     return true;
   }
 
