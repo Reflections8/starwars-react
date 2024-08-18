@@ -24,8 +24,8 @@ type ModalContextProps = {
 const ModalContext = createContext<Partial<ModalContextProps>>({});
 
 export function ModalProvider({ children }: ModalProviderProps) {
-  const [isOpen, setIsOpen] = useState(true);
-  const [modalType, setModalType] = useState("shipsArrangement2");
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalType, setModalType] = useState("");
   const [activePillProp, setActivePillProp] = useState(0);
   const { isOpen: drawerIsOpen } = useDrawer();
 

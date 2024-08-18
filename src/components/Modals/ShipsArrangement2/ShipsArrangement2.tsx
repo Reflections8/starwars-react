@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
+import { useModal } from "../../../context/ModalContext";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
+import { Board } from "./components/Board";
 import { Ships } from "./components/Ships";
 import { Timer } from "./components/Timer";
+import { Gameboard } from "./gameboard";
 import gridBottomElement from "./img/grid-bg-bottom-element.png";
 import gridBg from "./img/grid-bg.svg";
 import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
-import "./styles/ShipsArrangement.css";
-import { Board } from "./components/Board";
-import { Gameboard } from "./gameboard";
 import { Ship } from "./ship";
+import "./styles/ShipsArrangement.css";
 
 function debounce(func: (...args: unknown[]) => void, wait: number) {
   let timeout: ReturnType<typeof setTimeout>;
@@ -31,6 +32,7 @@ const initialUnsettledShips = {
 };
 
 export function ShipsArrangement2() {
+  const { closeModal } = useModal();
   const [allShipsSettled, setAllShipsSettled] = useState(false);
   const [selectedShipToSettle, setSelectedShipToSettle] = useState<Ship | null>(
     null
@@ -172,6 +174,7 @@ export function ShipsArrangement2() {
           <CuttedButton
             text="Играть"
             className={!allShipsSettled ? "halfTransparent" : ""}
+            callback={closeModal}
           />
         </div>
       </div>

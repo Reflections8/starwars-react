@@ -1,9 +1,9 @@
-export const letterToNumber = (letter) => {
+export const letterToNumber = (letter: any) => {
   const letters = "abcdefghij";
   return letters.indexOf(letter);
 };
 
-export const getCellClassName = (x, y) => {
+export const getCellClassName = (x: any, y: any) => {
   const letters = "abcdefghij";
   return `${letters[y]}${x}`;
 };
