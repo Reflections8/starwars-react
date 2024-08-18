@@ -12,9 +12,13 @@ import ship4Vertical from "../../../../components/Modals/ShipsArrangement2/img/s
 
 import { XIcon } from "../../../../icons/Modals/XIcon";
 import { OIcon } from "../../../../icons/Modals/OIcon";
+import { PreShotIcon } from "../../../../icons/Modals/PreShotIcon";
+import { ShotIcon } from "../../../../icons/Modals/ShotIcon";
 
 interface Props {
   gameboard: Gameboard;
+  onCellClicked: (r: number, c: number, b: boolean) => void;
+  confirmHit: () => void;
 }
 
 interface FieldProps {
@@ -23,6 +27,9 @@ interface FieldProps {
   isHead?: boolean;
   isHit?: boolean;
   isMiss?: boolean;
+  onCellClicked: () => void;
+  confirmHit: () => void;
+  isPreHit?: boolean;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -51,7 +58,21 @@ function Field({
   isHead = false,
   isHit = false,
   isMiss = false,
+  onCellClicked,
+  isPreHit = false,
+  confirmHit,
 }: FieldProps) {
+  const styleBase = {
+    position: "absolute",
+    width: 25,
+    height: 25,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
+    top: 0,
+    left: 0,
+  };
   const renderImg = () => {
     if (!shipPos || !isHead) return null;
     const { ship } = shipPos;
@@ -70,30 +91,63 @@ function Field({
     );
   };
 
+  const renderPreHit = () => {
+    if (isPreHit) {
+      return (
+        <>
+          <div
+            //@ts-ignore
+            style={{
+              ...styleBase,
+            }}
+          >
+            <PreShotIcon />
+          </div>
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              confirmHit();
+            }}
+            //@ts-ignore
+            style={{
+              cursor: "pointer",
+              position: "absolute",
+              width: 74,
+              height: 25,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 200,
+              top: 23,
+              left: -25,
+            }}
+          >
+            <ShotIcon />
+          </div>
+        </>
+      );
+    }
+  };
+
   const renderIcon = () => {
     if (isHit || isMiss) {
       return (
-        <div
-          style={{
-            position: "absolute",
-            width: 25,
-            height: 25,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 10,
-            top: 0,
-            left: 0,
-          }}
-        >
-          {isHit ? <OIcon /> : <XIcon />}
-        </div>
+        //@ts-ignore
+        <div style={{ ...styleBase }}>{isHit ? <OIcon /> : <XIcon />}</div>
       );
     }
   };
 
   return (
-    <div style={{ position: "relative" }}>
+    <div
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onCellClicked();
+      }}
+      style={{ position: "relative" }}
+    >
       <div
         style={{
           position: "absolute",
@@ -105,6 +159,7 @@ function Field({
         }}
         className={`battleships__cell ${type}`}
       ></div>
+      {renderPreHit()}
       {renderIcon()}
       {renderImg()}
     </div>
@@ -142,7 +197,7 @@ const isNearField = (
   return matchingField || null;
 };
 
-export function EnemyBoard({ gameboard }: Props) {
+export function EnemyBoard({ gameboard, onCellClicked, confirmHit }: Props) {
   const nearFields = gameboard.getFieldsNearShips();
 
   const renderFields = () => {
@@ -151,25 +206,25 @@ export function EnemyBoard({ gameboard }: Props) {
       for (let column = 0; column < gameboard.SIZE; column++) {
         const shipPos = gameboard.getShipRC(row, column);
         let isHead = false;
-        let type = "empty";
         const nearField = isNearField(row, column, nearFields);
-        if (nearField) {
-          type = "nearShip";
-          console.log("YAY");
-        }
+        let type = nearField ? "nearShip" : "empty";
         if (shipPos) {
           const { pos } = shipPos;
           isHead = pos.row === row && pos.column === column;
         }
+        let shouldTry = true;
+        const isMiss = gameboard.getIfMiss(row, column);
+        const isHit = gameboard.getIfHit(row, column);
+
+        if (type !== "empty") shouldTry = false;
+        if (isMiss || isHit) shouldTry = false;
+        const isPreHit = gameboard.getIfPreHit(row, column);
 
         let fieldComponent = (
           <Field
-            isMiss={gameboard.getIfMiss(row, column)}
-            isHit={gameboard.getIfHit(row, column)}
-            type={type}
+            {...{ confirmHit, isMiss, isHit, type, shipPos, isHead, isPreHit }}
+            onCellClicked={() => onCellClicked(row, column, shouldTry)}
             key={JSON.stringify({ row, column })}
-            shipPos={shipPos}
-            isHead={isHead}
           />
         );
         fields.push(fieldComponent);

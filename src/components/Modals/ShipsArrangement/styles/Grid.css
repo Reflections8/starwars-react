@@ -32,43 +32,43 @@
 }
 
 .battleships__cell-shipImg.ship__1.horizontal {
-  max-width: 25px;
-  height: 25px;
+  max-width: 23px;
+  height: 23px;
 }
 
 .battleships__cell-shipImg.ship__2.horizontal {
-  max-width: 50px;
-  height: 25px;
+  max-width: 47px;
+  height: 23px;
 }
 
 .battleships__cell-shipImg.ship__3.horizontal {
-  max-width: 75px;
-  height: 25px;
+  max-width: 73px;
+  height: 23px;
 }
 
 .battleships__cell-shipImg.ship__4.horizontal {
-  max-width: 100px;
-  height: 25px;
+  max-width: 97px;
+  height: 23px;
 }
 
 .battleships__cell-shipImg.ship__1.vertical {
-  width: 25px;
-  max-height: 25px;
+  width: 23px;
+  max-height: 23px;
 }
 
 .battleships__cell-shipImg.ship__2.vertical {
-  width: 25px;
-  max-height: 50px;
+  width: 23px;
+  max-height: 47px;
 }
 
 .battleships__cell-shipImg.ship__3.vertical {
-  width: 25px;
-  max-height: 75px;
+  width: 23px;
+  max-height: 73px;
 }
 
 .battleships__cell-shipImg.ship__4.vertical {
-  width: 25px;
-  max-height: 100px;
+  width: 23px;
+  max-height: 97px;
 }
 
 .battleships__gridAbsolute-controls {

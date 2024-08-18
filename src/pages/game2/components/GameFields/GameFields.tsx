@@ -98,6 +98,7 @@ export function GameFields() {
     newGameboard.ships = enemyBoard.ships;
     newGameboard.hits = enemyBoard.hits;
     newGameboard.misses = enemyBoard.misses;
+    newGameboard.preHit = enemyBoard.preHit;
     setEnemyBoard(newGameboard);
   };
 
@@ -108,14 +109,30 @@ export function GameFields() {
     updateEnemyBoard();
   }, []);
 
+  const clickEnemyField = (row: number, column: number, zalupa: boolean) => {
+    if (!zalupa) return;
+    enemyBoard.setPreHit({ row, column });
+    updateEnemyBoard();
+  };
+
+  const confirmHit = () => {
+    console.log("OBOSRIS PIDORAS");
+    enemyBoard.setPreHit(null);
+    updateEnemyBoard();
+  };
+
   return (
     <div className="gameFields">
       {/* TOP WRAPPER */}
       <div className="gameFields__top">
         <img src={boardBgTop} alt="" className="gameFields__top-bg" />
 
-        <div className="">
-          <EnemyBoard gameboard={enemyBoard} />
+        <div style={{ zIndex: 200 }} className="">
+          <EnemyBoard
+            gameboard={enemyBoard}
+            confirmHit={confirmHit}
+            onCellClicked={clickEnemyField}
+          />
         </div>
       </div>
       {/* TIMER WRAPPER */}

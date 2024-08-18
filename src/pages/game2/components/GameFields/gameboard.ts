@@ -52,15 +52,25 @@ export class Gameboard {
   hits: Cell[];
   misses: Cell[];
 
+  preHit: null | Cell;
+
   constructor() {
+    this.preHit = null;
     this.hits = [];
     this.misses = [];
     this.initialize();
     this.ships = [];
     this.SIZE = 10;
   }
-
   initialize() {}
+  setPreHit(pos: Cell | null) {
+    this.preHit = pos;
+    console.log("preHit", pos);
+  }
+  getIfPreHit(row: number, column: number) {
+    if (!this.preHit) return false;
+    return this.preHit.row === row && this.preHit.column === column;
+  }
   updateEnemyBoard(data: UpdateEnemyData) {
     let newHits: any[] = [];
     let newShips: any[] = [];
