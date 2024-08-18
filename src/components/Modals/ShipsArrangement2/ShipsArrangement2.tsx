@@ -36,9 +36,7 @@ export function ShipsArrangement2() {
     null
   );
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
-
   const [gameboard, setGameboard] = useState(new Gameboard());
-
   const handleAutoArrangement = debounce(() => {
     handleAuto();
   }, 300);

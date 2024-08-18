@@ -28,16 +28,13 @@ export class Gameboard {
   ships: ShipPosition[];
   hitCells: HitCell[];
   SIZE: number;
-
   constructor() {
     this.hitCells = [];
     this.initialize();
     this.ships = [];
     this.SIZE = 10;
   }
-
   initialize() {}
-
   //SHIP ARRANGEMENT
   getFieldsNearShips() {
     let res: { x: number; y: number; err: boolean }[] = [];
@@ -149,6 +146,7 @@ export class Gameboard {
     }
     return this;
   }
+
   isPlacementPossible(
     ship: ShipType,
     row: number,
@@ -187,5 +185,12 @@ export class Gameboard {
     });
 
     return res;
+  }
+
+  placeHitCell(pos: Position) {
+    const { row, column } = pos;
+    const shipPos = this.getShipRC(row, column);
+    this.hitCells.push({ isSuccess: !!shipPos, pos });
+    return !!shipPos;
   }
 }
