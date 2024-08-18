@@ -23,6 +23,7 @@ body {
   font-family: "Bicubik", sans-serif;
   background: #0f0d24;
   color: #076ce9;
+  overflow: hidden;
 }
 
 #root {

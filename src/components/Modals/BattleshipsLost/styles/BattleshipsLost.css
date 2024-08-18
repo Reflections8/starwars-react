@@ -1,0 +1,41 @@
+.fullscreenModalBg.battleshipsLost {
+  box-shadow: inset 0 0 50px #e91f38;
+  background: linear-gradient(to bottom, #63159f80, #120e2780);
+}
+
+.battleshipsLost {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.battleshipsLost__bg {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  top: 5%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+.battleshipsLost__textImg {
+  max-width: 390px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.battleshipsLost__okBtn {
+  max-width: 110px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.battleshipsLost__okBtn * {
+  font-size: 24px;
+}
+
+.battleshipsLost__okBtn .cuttedButton {
+  padding: 4px;
+}

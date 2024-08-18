@@ -4,6 +4,7 @@ import { ModalProvider } from "../../context/ModalContext";
 import { DrawerProvider } from "../../context/DrawerContext";
 import { LoaderProvider } from "../../context/LoaderContext";
 import { UserDataProvider } from "../../UserDataService.tsx";
+import { BattleshipsProvider } from "../../context/BattleshipsContext.tsx";
 
 type PageProps = {
   dataPage: string;
@@ -13,19 +14,21 @@ type PageProps = {
 export function Page({ dataPage, children }: PageProps) {
   return (
     <LoaderProvider>
-      <DrawerProvider>
-        <UserDataProvider>
-          <ModalProvider>
-            <div className="page" data-page={dataPage}>
-              <div className="page__container">
-                <div className="page__container-gradient page__container-gradient--Left"></div>
-                <div className="page__container-gradient page__container-gradient--Right"></div>
-                {children}
+      <BattleshipsProvider>
+        <DrawerProvider>
+          <UserDataProvider>
+            <ModalProvider>
+              <div className="page" data-page={dataPage}>
+                <div className="page__container">
+                  <div className="page__container-gradient page__container-gradient--Left"></div>
+                  <div className="page__container-gradient page__container-gradient--Right"></div>
+                  {children}
+                </div>
               </div>
-            </div>
-          </ModalProvider>
-        </UserDataProvider>
-      </DrawerProvider>
+            </ModalProvider>
+          </UserDataProvider>
+        </DrawerProvider>
+      </BattleshipsProvider>
     </LoaderProvider>
   );
 }

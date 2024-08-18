@@ -1,0 +1,64 @@
+.fullscreenModalBg.battleshipsLWon {
+  box-shadow: inset 0 0 50px #e91f38;
+  background: linear-gradient(to bottom, #63159f80, #120e2780);
+}
+
+.battleshipsWon {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.battleshipsWon__bg {
+  position: absolute;
+  width: 100%;
+  left: 50%;
+  top: 3%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+.battleshipsWon__textImg {
+  max-width: 390px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.battleshipsWon__okBtn {
+  max-width: 110px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.battleshipsWon__okBtn * {
+  font-size: 24px;
+}
+
+.battleshipsWon__okBtn .cuttedButton {
+  padding: 4px;
+}
+
+.battleshipsWon__text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.battleshipsWon__text-key {
+  font-size: 12px;
+  color: #19c2ef;
+  text-shadow: 2px -1px 0 #076ce970;
+}
+
+.battleshipsWon__text-value {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 32px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+}

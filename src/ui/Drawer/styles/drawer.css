@@ -450,3 +450,24 @@
   background: linear-gradient(to top, #0975f848, #0975f800);
   text-overflow: ellipsis;
 }
+
+/* GIVEUP */
+.giveUp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 200px;
+}
+
+.giveUp__text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+  max-width: 300px;
+  text-align: center;
+  margin-bottom: 20px;
+}

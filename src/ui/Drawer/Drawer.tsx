@@ -22,6 +22,7 @@ import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import creditIcon from "./img/upgrade/credits.svg";
 import "./styles//drawer.css";
 import { PROJECT_CONTRACT_ADDRESS } from "../../main.tsx";
+import { useBattleships } from "../../context/BattleshipsContext.tsx";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -40,6 +41,7 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
     upgrade: <Upgrade />,
     heal: <Heal />,
     inviteFriend: <InviteFriend />,
+    giveUp: <GiveUp />,
   };
 
   return (
@@ -551,6 +553,30 @@ function InviteFriend() {
         callback={(e) => {
           e.stopPropagation();
           navigator.clipboard.writeText(link);
+        }}
+      />
+    </div>
+  );
+}
+
+function GiveUp() {
+  const { setGameState } = useBattleships();
+  const { closeDrawer } = useDrawer();
+  return (
+    <div className="giveUp">
+      <div className="giveUp__text">Вы точно хотите сдаться?</div>
+
+      <CuttedButton
+        text="Подтвердить"
+        size="small"
+        callback={(e) => {
+          e.stopPropagation();
+          closeDrawer!();
+          // @ts-ignore
+          setGameState((prevState) => ({
+            ...prevState,
+            status: "LOST",
+          }));
         }}
       />
     </div>

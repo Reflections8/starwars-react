@@ -47,7 +47,9 @@ export function EnemyShips() {
                   className="enemyShips__main-content-item-xImg"
                 />
               ) : null}
-              <div className="enemyShips__main-content-item-value">4</div>
+              <div className="enemyShips__main-content-item-value">
+                {mockShipsLeft["1"]}
+              </div>
             </div>
           </div>
 
@@ -68,7 +70,9 @@ export function EnemyShips() {
                   className="enemyShips__main-content-item-xImg"
                 />
               ) : null}
-              <div className="enemyShips__main-content-item-value">3</div>
+              <div className="enemyShips__main-content-item-value">
+                {mockShipsLeft["2"]}
+              </div>
             </div>
           </div>
 
@@ -89,7 +93,9 @@ export function EnemyShips() {
                   className="enemyShips__main-content-item-xImg"
                 />
               ) : null}
-              <div className="enemyShips__main-content-item-value">2</div>
+              <div className="enemyShips__main-content-item-value">
+                {mockShipsLeft["3"]}
+              </div>
             </div>
           </div>
 
@@ -110,7 +116,9 @@ export function EnemyShips() {
                   className="enemyShips__main-content-item-xImg"
                 />
               ) : null}
-              <div className="enemyShips__main-content-item-value">1</div>
+              <div className="enemyShips__main-content-item-value">
+                {mockShipsLeft["4"]}
+              </div>
             </div>
           </div>
         </div>

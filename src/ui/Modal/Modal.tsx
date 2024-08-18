@@ -33,6 +33,8 @@ import { CurrentStat } from "../../components/Modals/CurrentStat/CurrentStat";
 import { ReactNode } from "react";
 import { ShipsArrangement } from "../../components/Modals/ShipsArrangement/ShipsArrangement";
 import { ShipsArrangement2 } from "../../components/Modals/ShipsArrangement2/ShipsArrangement2";
+import { BattleshipsWon } from "../../components/Modals/BattleshipsWon/BattleshipsWon";
+import { BattleshipsLost } from "../../components/Modals/BattleshipsLost/BattleshipsLost";
 
 type ModalProps = {
   isOpen: boolean;
@@ -113,11 +115,22 @@ const modalContentType: ModalContentType = {
   currentStat: {
     component: <CurrentStat />,
   },
+  battleshipsWon: {
+    component: <BattleshipsWon />,
+  },
+  battleshipsLost: {
+    component: <BattleshipsLost />,
+  },
 };
 
 type ModalContentKeys = keyof typeof modalContentType;
 
-const fullscreenModals: ModalContentKeys[] = ["welcome", "currentStat"];
+const fullscreenModals: ModalContentKeys[] = [
+  "welcome",
+  "currentStat",
+  "battleshipsWon",
+  "battleshipsLost",
+];
 const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement"];
 
 export function Modal({ isOpen }: ModalProps) {
@@ -130,7 +143,7 @@ export function Modal({ isOpen }: ModalProps) {
     <>
       {fullscreen ? (
         <div
-          className={`fullscreenModalBg ${
+          className={`fullscreenModalBg ${modalType} ${
             !isOpen ? "fullscreenModalBg--Hidden" : ""
           }`}
         >
