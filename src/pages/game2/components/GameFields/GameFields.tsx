@@ -4,39 +4,8 @@ import boardBgBottom from "./img/board-bg-bottom.svg";
 import { Timer } from "../../../../components/Modals/ShipsArrangement2/components/Timer";
 import { UserBoard } from "./UserBoard";
 import { Gameboard } from "./gameboard";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { EnemyBoard } from "./EnemyBoard";
-
-const MOCK_SHIPS_ENEMY = [
-  {
-    isDead: false,
-    cells: [
-      {
-        row: 5,
-        column: 3,
-      },
-    ],
-  },
-  {
-    cells: [
-      { row: 2, column: 4 },
-      { row: 2, column: 5 },
-      { row: 2, column: 6 },
-      { row: 2, column: 7 },
-    ],
-    isDead: true,
-  },
-];
-
-const MOCK_ENEMY_FIELD = {
-  isMe: false,
-  misses: [
-    { row: 8, column: 8 },
-    { row: 9, column: 9 },
-    { row: 5, column: 5 },
-  ],
-  ships: MOCK_SHIPS_ENEMY,
-};
 
 export const GameFields: FC<{
   userBoard: Gameboard;
