@@ -22,7 +22,10 @@ type Cell = {
   row: number;
   column: number;
 };
-
+type EnemyShip = {
+  isDead: boolean;
+  cells: Cell[];
+};
 type Ship = {
   vertical: boolean;
   isDead: boolean;
@@ -35,6 +38,12 @@ type UpdateData = {
   isMe: boolean;
   misses: Cell[];
   ships: Ship[];
+};
+
+type UpdateEnemyData = {
+  isMe: boolean;
+  misses: Cell[];
+  ships: EnemyShip[];
 };
 
 export class Gameboard {
@@ -52,7 +61,25 @@ export class Gameboard {
   }
 
   initialize() {}
-
+  updateEnemyBoard(data: UpdateEnemyData) {
+    let newHits: any[] = [];
+    let newShips: any[] = [];
+    data.ships.forEach((ship) => {
+      const { cells, isDead } = ship;
+      newHits.push(...cells);
+      if (isDead) {
+        const vertical = cells.every((cell) => cell.column === cells[0].column);
+        const length = cells.length;
+        const head = [...cells].sort((a, b) =>
+          vertical ? a.row - b.row : a.column - b.column
+        )[0];
+        newShips.push({ ship: { vertical, length }, pos: head });
+      }
+    });
+    this.ships = newShips;
+    this.hits = newHits;
+    this.misses = data.misses;
+  }
   updateUserBoard(data: UpdateData) {
     let newHits: any[] = [];
     this.ships = data.ships.map((ship) => {
@@ -84,39 +111,29 @@ export class Gameboard {
       { x: 0, y: 0 },
     ];
 
-    let fieldCount = new Map();
+    const addField = (x: number, y: number) => {
+      if (!res.some((field) => field.x === x && field.y === y)) {
+        res.push({ x, y, err: false });
+      }
+    };
 
-    this.ships.forEach(({ ship, pos }, idx) => {
+    this.ships.forEach((shipPos) => {
+      const { pos, ship } = shipPos;
       const { row, column } = pos;
       const { length, vertical } = ship;
+
       for (let i = 0; i < length; i++) {
-        const shipPosX = vertical ? row + i : row;
-        const shipPosY = vertical ? column : column + i;
-        directions.forEach(({ x, y }) => {
-          const newX = shipPosX + x;
-          const newY = shipPosY + y;
-          if (newX >= 0 && newX < this.SIZE && newY >= 0 && newY < this.SIZE) {
-            const fieldKey = `${newX},${newY}`;
-            if (!fieldCount.has(fieldKey)) {
-              fieldCount.set(fieldKey, new Set());
-            }
-            fieldCount.get(fieldKey).add(idx);
+        const currentRow = vertical ? row + i : row;
+        const currentColumn = vertical ? column : column + i;
+
+        directions.forEach((dir) => {
+          const newX = currentRow + dir.x;
+          const newY = currentColumn + dir.y;
+          if (newX >= 0 && newY >= 0 && newX < 10 && newY < 10) {
+            // Assuming the board is 10x10
+            addField(newX, newY);
           }
         });
-      }
-    });
-
-    fieldCount.forEach((shipIndices, fieldKey) => {
-      //@ts-ignore
-      const [x, y] = fieldKey.split(",").map(Number);
-      const hasError = shipIndices.size > 1;
-      const isNearUnconfirmedShip = Array.from(shipIndices).some(
-        //@ts-ignore
-        (idx) => !this.ships[idx].confirmed
-      );
-
-      if (hasError || !isNearUnconfirmedShip) {
-        res.push({ x, y, err: hasError });
       }
     });
 

@@ -131,14 +131,32 @@ function BoardWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function UserBoard({ gameboard }: Props) {
+const isNearField = (
+  row: number,
+  column: number,
+  nearFields: { x: number; y: number; err: boolean }[]
+) => {
+  const matchingField = nearFields.find(
+    (field) => field.x === row && field.y === column
+  );
+  return matchingField || null;
+};
+
+export function EnemyBoard({ gameboard }: Props) {
+  const nearFields = gameboard.getFieldsNearShips();
+
   const renderFields = () => {
     const fields = [];
     for (let row = 0; row < gameboard.SIZE; row++) {
       for (let column = 0; column < gameboard.SIZE; column++) {
         const shipPos = gameboard.getShipRC(row, column);
         let isHead = false;
-
+        let type = "empty";
+        const nearField = isNearField(row, column, nearFields);
+        if (nearField) {
+          type = "nearShip";
+          console.log("YAY");
+        }
         if (shipPos) {
           const { pos } = shipPos;
           isHead = pos.row === row && pos.column === column;
@@ -148,7 +166,7 @@ export function UserBoard({ gameboard }: Props) {
           <Field
             isMiss={gameboard.getIfMiss(row, column)}
             isHit={gameboard.getIfHit(row, column)}
-            type={"empty"}
+            type={type}
             key={JSON.stringify({ row, column })}
             shipPos={shipPos}
             isHead={isHead}

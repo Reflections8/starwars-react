@@ -5,6 +5,28 @@ import { Timer } from "../../../../components/Modals/ShipsArrangement2/component
 import { UserBoard } from "./UserBoard";
 import { Gameboard } from "./gameboard";
 import { useEffect, useState } from "react";
+import { EnemyBoard } from "./EnemyBoard";
+
+const MOCK_SHIPS_ENEMY = [
+  {
+    isDead: false,
+    cells: [
+      {
+        row: 5,
+        column: 3,
+      },
+    ],
+  },
+  {
+    cells: [
+      { row: 2, column: 4 },
+      { row: 2, column: 5 },
+      { row: 2, column: 6 },
+      { row: 2, column: 7 },
+    ],
+    isDead: true,
+  },
+];
 
 const MOCK_SHIPS = [
   {
@@ -50,9 +72,19 @@ const MOCK_FIELD_DATA = {
   ],
   ships: MOCK_SHIPS,
 };
+const MOCK_ENEMY_FIELD = {
+  isMe: false,
+  misses: [
+    { row: 8, column: 8 },
+    { row: 9, column: 9 },
+    { row: 5, column: 5 },
+  ],
+  ships: MOCK_SHIPS_ENEMY,
+};
 
 export function GameFields() {
   const [userBoard, setUserBoard] = useState(new Gameboard());
+  const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
 
   const updateUserboard = () => {
     const newGameboard = new Gameboard();
@@ -61,10 +93,19 @@ export function GameFields() {
     newGameboard.misses = userBoard.misses;
     setUserBoard(newGameboard);
   };
+  const updateEnemyBoard = () => {
+    const newGameboard = new Gameboard();
+    newGameboard.ships = enemyBoard.ships;
+    newGameboard.hits = enemyBoard.hits;
+    newGameboard.misses = enemyBoard.misses;
+    setEnemyBoard(newGameboard);
+  };
 
   useEffect(() => {
     userBoard.updateUserBoard(MOCK_FIELD_DATA);
+    enemyBoard.updateEnemyBoard(MOCK_ENEMY_FIELD);
     updateUserboard();
+    updateEnemyBoard();
   }, []);
 
   return (
@@ -73,7 +114,9 @@ export function GameFields() {
       <div className="gameFields__top">
         <img src={boardBgTop} alt="" className="gameFields__top-bg" />
 
-        <div className="gameFields__top-board"></div>
+        <div className="">
+          <EnemyBoard gameboard={enemyBoard} />
+        </div>
       </div>
       {/* TIMER WRAPPER */}
       <div className="gameFields__timer">
