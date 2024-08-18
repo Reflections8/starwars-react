@@ -22,8 +22,8 @@ interface Props {
   showValid: (e: React.MouseEvent<HTMLDivElement>) => void;
   removeValid: () => void;
   handleShipAction: (
-    ship: ShipPosition
-  ) => (action: "rotateShip" | "confirmShip" | "removeShip") => void;
+    action: "rotateShip" | "confirmShip" | "removeShip"
+  ) => void;
 }
 
 interface FieldProps {
@@ -91,28 +91,42 @@ function Field({
       />
     );
   };
+
   const renderConfirmButtons = () => {
     if (!isHead || !shipPos || confirmed) return null;
     const styleBase = {
       position: "absolute",
       width: 25,
       height: 25,
-      color: "crimson",
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       zIndex: 10,
     };
-    console.log(badPlacement);
     const { ship } = shipPos;
+    const rectBase = 25;
     return (
       <>
+        <div
+          style={{
+            position: "absolute",
+            left: -25,
+            top: -25,
+            width: ship.vertical ? rectBase * 3 : rectBase * (ship.length + 2),
+            height: !ship.vertical
+              ? rectBase * 3
+              : rectBase * (ship.length + 2),
+            backgroundColor: "rgba(25, 194, 239, 0.3)",
+            borderRadius: 6,
+            zIndex: -1,
+          }}
+        />
         <div
           //@ts-ignore
           style={{
             ...styleBase,
             left: -25,
-            top: ship.vertical ? 25 * Math.floor(ship.length / 2) : 0,
+            top: 0,
           }}
           onClick={(e) => {
             e.preventDefault();
@@ -132,7 +146,7 @@ function Field({
           style={{
             ...styleBase,
             left: ship.vertical ? 25 : 25 * ship.length,
-            top: ship.vertical ? 25 * Math.floor(ship.length / 2) : 0,
+            top: 0,
           }}
         >
           <CancelIcon />
@@ -262,10 +276,10 @@ export function Board({
             removeValid={removeValid}
             type={type}
             className={className}
-            key={v4()}
+            key={JSON.stringify({ row, column })}
             shipPos={shipPos}
             isHead={isHead}
-            handleShipAction={shipPos ? handleShipAction(shipPos) : () => {}}
+            handleShipAction={shipPos ? handleShipAction : () => {}}
             onClick={() => onCellClicked(row, column)}
             badPlacement={badPlacement}
           />

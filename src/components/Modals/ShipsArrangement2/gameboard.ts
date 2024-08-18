@@ -74,10 +74,14 @@ export class Gameboard {
     fieldCount.forEach((shipIndices, fieldKey) => {
       //@ts-ignore
       const [x, y] = fieldKey.split(",").map(Number);
-      if (shipIndices.size > 1) {
-        res.push({ x, y, err: true });
-      } else {
-        res.push({ x, y, err: false });
+      const hasError = shipIndices.size > 1;
+      const isNearUnconfirmedShip = Array.from(shipIndices).some(
+        //@ts-ignore
+        (idx) => !this.ships[idx].confirmed
+      );
+
+      if (hasError || !isNearUnconfirmedShip) {
+        res.push({ x, y, err: hasError });
       }
     });
 
@@ -106,10 +110,6 @@ export class Gameboard {
     if (shipPos) shipPos.confirmed = false;
   }
 
-  removeUncofirmendShip() {
-    this.ships = this.ships.filter(({ confirmed }) => confirmed);
-  }
-
   replaceShip(shipPos: ShipPosition, row: number, column: number) {
     const [isPossible] = this.isPlacementPossible(shipPos.ship, row, column);
     if (!isPossible) return false;
@@ -117,41 +117,34 @@ export class Gameboard {
     shipPos.pos.column = column;
     return true;
   }
+
   getUnconfirmedShips() {
     const unconfirmed = this.ships.filter(({ confirmed }) => !confirmed);
     if (unconfirmed.length === 0) return null;
     return unconfirmed[0];
   }
-  confirmShip(row: number, column: number) {
-    const shipPos = this.ships.find(
-      ({ pos }) => pos.row === row && pos.column === column
-    );
+  confirmShip() {
+    const shipPos = this.ships.find(({ confirmed }) => !confirmed);
     if (!shipPos) return false;
     shipPos.confirmed = true;
   }
 
-  rotateShip(row: number, column: number) {
-    const shipPos = this.ships.find(
-      ({ pos }) => pos.row === row && pos.column === column
-    );
+  rotateShip() {
+    const shipPos = this.ships.find(({ confirmed }) => !confirmed);
     if (!shipPos) return false;
 
     shipPos.ship.vertical = !shipPos.ship.vertical;
     if (shipPos.ship.vertical) {
-      if (row + shipPos.ship.length > SIZE) {
+      if (shipPos.pos.row + shipPos.ship.length > SIZE)
         shipPos.pos.row = SIZE - shipPos.ship.length;
-      }
     } else {
-      if (column + shipPos.ship.length > SIZE) {
+      if (shipPos.pos.column + shipPos.ship.length > SIZE)
         shipPos.pos.column = SIZE - shipPos.ship.length;
-      }
     }
   }
 
-  removeShip(row: number, column: number) {
-    this.ships = this.ships.filter(
-      ({ pos }) => pos.row !== row || pos.column !== column
-    );
+  removeShip() {
+    this.ships = this.ships.filter(({ confirmed }) => confirmed);
   }
 
   placeShip(ship: Ship, row: number, column: number, confirmed = false) {

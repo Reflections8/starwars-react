@@ -8,8 +8,7 @@ import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
 import "./styles/ShipsArrangement.css";
 import { Board } from "./components/Board";
-import { Gameboard, ShipPosition } from "./gameboard";
-//import Player from "./player";
+import { Gameboard } from "./gameboard";
 import { Ship } from "./ship";
 import {
   getCellClassName,
@@ -43,8 +42,6 @@ export function ShipsArrangement2() {
   );
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
-  ///* Preview-state*/
-  //const [user] = useState(new Player("User"));
   const [gameboard, setGameboard] = useState(new Gameboard());
 
   const handleAutoArrangement = debounce(() => {
@@ -69,21 +66,24 @@ export function ShipsArrangement2() {
     setGameboard(newGameboard);
   };
 
-  const handleShipAction =
-    (ship: ShipPosition) =>
-    (action: "rotateShip" | "confirmShip" | "removeShip") => {
-      gameboard[action](ship.pos.row, ship.pos.column);
-      if (action === "removeShip") {
+  const handleShipAction = (
+    action: "rotateShip" | "confirmShip" | "removeShip"
+  ) => {
+    if (action === "removeShip") {
+      const unconfirmed = gameboard.getUnconfirmedShips();
+      if (unconfirmed) {
         setUnsettledShips((prevState) => {
           return {
             ...prevState,
             // @ts-ignore
-            [ship.ship.length]: prevState[ship.ship.length] + 1,
+            [unconfirmed.ship.length]: prevState[unconfirmed.ship.length] + 1,
           };
         });
       }
-      updateGameboard();
-    };
+    }
+    gameboard[action]();
+    updateGameboard();
+  };
 
   const onCellClicked = (row: number, column: number) => {
     const unconfirmed = gameboard.getUnconfirmedShips();
@@ -250,7 +250,7 @@ export function ShipsArrangement2() {
           selectedShipToSettle={selectedShipToSettle}
           setSelectedShipToSettle={(v) => {
             setSelectedShipToSettle(v);
-            gameboard.removeUncofirmendShip();
+            gameboard.removeShip();
             updateGameboard();
           }}
           unsettledShips={unsettledShips}
