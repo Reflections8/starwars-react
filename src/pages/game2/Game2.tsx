@@ -24,7 +24,7 @@ export function Game2() {
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
   const [myTurn, setMyTurn] = useState(true);
-  const [player, setPlayer] = useState("player1");
+  const [player] = useState("player1");
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
   const timer = useTimer(

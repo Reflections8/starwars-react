@@ -16,6 +16,7 @@ import { GamesIcon } from "../../icons/Games";
 import { MenuIcon } from "../../icons/Menu";
 import { OptionsIcon } from "../../icons/Options";
 import { BackgroundLayers } from "./components/BackgroundLayers";
+import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import "./styles/home.css";
@@ -142,6 +143,7 @@ export function Home() {
     <>
       <ProofManager onValueChange={handleAuthTokenChange} />
       <BackgroundLayers />
+      <BinksBackgroundVideo />
 
       <Header
         leftIcon={<ExitIcon />}

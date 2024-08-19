@@ -35,6 +35,7 @@ const createMockServer = () => {
 
   mockServer.on("connection", (socket) => {
     socket.on("message", (data) => {
+      // @ts-ignore
       const { message, source, type }: any = JSON.parse(data);
       switch (type) {
         case "giveUp":
