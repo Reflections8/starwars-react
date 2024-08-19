@@ -1,11 +1,12 @@
 import "./styles/GameFields.css";
 import boardBgTop from "./img/board-bg-top.svg";
 import boardBgBottom from "./img/board-bg-bottom.svg";
-import { Timer } from "../../../../components/Modals/ShipsArrangement2/components/Timer";
+
 import { UserBoard } from "./UserBoard";
 import { Gameboard } from "./gameboard";
 import { FC } from "react";
 import { EnemyBoard } from "./EnemyBoard";
+import { TimerII } from "./TimerII";
 
 export const GameFields: FC<{
   userBoard: Gameboard;
@@ -13,7 +14,15 @@ export const GameFields: FC<{
   updateEnemyBoard: () => void;
   sendHit: (p: { row: number; column: number }) => void;
   myTurn: boolean;
-}> = ({ userBoard, enemyBoard, updateEnemyBoard, sendHit, myTurn }) => {
+  timerValue: number;
+}> = ({
+  userBoard,
+  enemyBoard,
+  updateEnemyBoard,
+  sendHit,
+  myTurn,
+  timerValue,
+}) => {
   const clickEnemyField = (row: number, column: number, zalupa: boolean) => {
     if (!zalupa) return;
     if (!myTurn) return;
@@ -44,7 +53,7 @@ export const GameFields: FC<{
       </div>
       {/* TIMER WRAPPER */}
       <div className="gameFields__timer">
-        <Timer onRandom={() => {}} onStart={() => {}} />
+        <TimerII timerValue={timerValue} />
       </div>
 
       {/* BOTTOM WRAPPER */}

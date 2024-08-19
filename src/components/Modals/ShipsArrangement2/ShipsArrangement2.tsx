@@ -31,8 +31,12 @@ const initialUnsettledShips = {
   "3": 2,
   "4": 1,
 };
-
 export function ShipsArrangement2() {
+  const { gameState } = useBattleships();
+  if (gameState?.status !== "NOT_STARTED") return null;
+  return <ShipsArrangementChild />;
+}
+export function ShipsArrangementChild() {
   const { closeModal } = useModal();
   const [allShipsSettled, setAllShipsSettled] = useState(false);
   const [selectedShipToSettle, setSelectedShipToSettle] = useState<Ship | null>(

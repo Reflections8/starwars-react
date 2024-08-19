@@ -37,6 +37,14 @@ const createMockServer = () => {
     socket.on("message", (data) => {
       const { message, source, type }: any = JSON.parse(data);
       switch (type) {
+        case "timeOut":
+          socket.send(
+            JSON.stringify({
+              type: "turn",
+              message: { player: gameState.players[getEnemy(source)] },
+            })
+          );
+          break;
         case "shipsInit":
           if (!gameState.players.I) gameState.players.I = source;
           else gameState.players.II = source;

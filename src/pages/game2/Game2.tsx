@@ -13,15 +13,43 @@ import "./styles/game2.css";
 import createMockServer from "./mock-socket/mockServer";
 import { Gameboard } from "./components/GameFields/gameboard";
 
+import { useTimer } from "react-use-precision-timer";
+const timerSeconds = 60;
+
 export function Game2() {
+  const [socket, setSocket] = useState<null | WebSocket>(null);
   const { openModal } = useModal();
   const { openDrawer, closeDrawer } = useDrawer();
-  const { gameState, userShips, setGameState } = useBattleships();
-
+  const { gameState, userShips, setGameState, setUserShips } = useBattleships();
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
   const [myTurn, setMyTurn] = useState(true);
   const [player, setPlayer] = useState("player1");
+
+  const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
+  const timer = useTimer(
+    { runOnce: true, startImmediately: false, delay: timerSeconds * 1000 },
+    () => {
+      myTurn &&
+        socket &&
+        socket.send(JSON.stringify({ type: "timeOut", source: player }));
+    }
+  );
+
+  useEffect(() => {
+    timer.stop();
+    timer.start();
+  }, [myTurn]);
+
+  useEffect(() => {
+    let interval: any;
+    interval = setInterval(() => {
+      setTimerValue(timer.getRemainingTime());
+    });
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const updateUserboard = () => {
     const newGameboard = new Gameboard();
@@ -56,7 +84,7 @@ export function Game2() {
             source: "mock",
           })
         );
-    }, 1000);
+    }, 2500);
     return () => {
       clearTimeout(timer);
     };
@@ -68,9 +96,12 @@ export function Game2() {
       openModal!("battleshipsWon");
       closeDrawer!();
     }
+    if (gameState?.status === "NOT_STARTED") {
+      restartBoards();
+      setUserShips!([]);
+      openModal!("shipsArrangement2");
+    }
   }, [gameState?.status]);
-
-  const [socket, setSocket] = useState<null | WebSocket>(null);
 
   useEffect(() => {
     if (socket === null) return;
@@ -91,7 +122,6 @@ export function Game2() {
       if (type === "recieveFire") {
         setMyTurn(true);
         userBoard.updateUserBoard(message);
-
         updateUserboard();
       }
       if (type === "gameOver") {
@@ -120,6 +150,8 @@ export function Game2() {
 
   useEffect(() => {
     if (userShips && userShips.length > 0) {
+      timer.start();
+      setGameState!({ status: "IN_PROGRESS" });
       socket &&
         socket.send(
           JSON.stringify({
@@ -128,8 +160,6 @@ export function Game2() {
             source: player,
           })
         );
-    } else {
-      openModal!("shipsArrangement2");
     }
   }, [JSON.stringify(userShips), socket]);
 
@@ -143,6 +173,7 @@ export function Game2() {
       <EnemyShips ships={enemyBoard.getShipsRemain()} />
       <GameFields
         {...{
+          timerValue,
           enemyBoard,
           userBoard,
           updateEnemyBoard,
