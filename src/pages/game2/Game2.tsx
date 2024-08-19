@@ -12,12 +12,11 @@ import { GameHeader } from "./components/GameHeader/GameHeader";
 import "./styles/game2.css";
 import createMockServer from "./mock-socket/mockServer";
 import { Gameboard } from "./components/GameFields/gameboard";
-let lastEnemyHit = { row: 0, column: -1 };
 
 export function Game2() {
   const { openModal } = useModal();
   const { openDrawer, closeDrawer } = useDrawer();
-  const { gameState, userShips } = useBattleships();
+  const { gameState, userShips, setGameState } = useBattleships();
 
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
@@ -39,22 +38,21 @@ export function Game2() {
     newGameboard.preHit = enemyBoard.preHit;
     setEnemyBoard(newGameboard);
   };
+  const restartBoards = () => {
+    setUserBoard(new Gameboard());
+    setEnemyBoard(new Gameboard());
+  };
 
   useEffect(() => {
     let timer;
     if (myTurn) return;
     timer = setTimeout(() => {
-      if (lastEnemyHit.column <= 9) {
-        lastEnemyHit.column++;
-      } else {
-        lastEnemyHit.column = 0;
-        lastEnemyHit.row++;
-      }
+      const hit = userBoard.getRandomHitPlace();
       socket &&
         socket.send(
           JSON.stringify({
             type: "fire",
-            message: lastEnemyHit,
+            message: hit,
             source: "mock",
           })
         );
@@ -62,7 +60,7 @@ export function Game2() {
     return () => {
       clearTimeout(timer);
     };
-  }, [myTurn]);
+  }, [myTurn, userBoard]);
 
   useEffect(() => {
     if (gameState?.status === "LOST") openModal!("battleshipsLost");
@@ -93,11 +91,12 @@ export function Game2() {
       if (type === "recieveFire") {
         setMyTurn(true);
         userBoard.updateUserBoard(message);
-        console.log(message);
+
         updateUserboard();
       }
-      if (type === "joined") {
-        setPlayer(message.player);
+      if (type === "gameOver") {
+        setGameState!({ status: message.victory ? "WON" : "LOST" });
+        restartBoards();
       }
     };
   }, [userBoard, enemyBoard, socket, player]);

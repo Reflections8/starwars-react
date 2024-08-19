@@ -46,13 +46,6 @@ type UpdateEnemyData = {
   ships: EnemyShip[];
 };
 
-const totalShips = {
-  "1": 4,
-  "2": 3,
-  "3": 2,
-  "4": 1,
-};
-
 export class Gameboard {
   ships: ShipPosition[];
   SIZE: number;
@@ -70,6 +63,23 @@ export class Gameboard {
     this.SIZE = 10;
   }
   initialize() {}
+
+  getRandomHitPlace() {
+    let row: number;
+    let column: number;
+    let isUnique: boolean;
+    do {
+      row = Math.floor(Math.random() * this.SIZE);
+      column = Math.floor(Math.random() * this.SIZE);
+
+      isUnique =
+        !this.hits.some((hit) => hit.row === row && hit.column === column) &&
+        !this.misses.some((miss) => miss.row === row && miss.column === column);
+    } while (!isUnique);
+
+    return { row, column };
+  }
+
   setPreHit(pos: Cell | null) {
     this.preHit = pos;
     console.log("preHit", pos);

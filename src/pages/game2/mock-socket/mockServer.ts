@@ -86,15 +86,13 @@ const createMockServer = () => {
             const { length, vertical, head } = s;
             const { row: r, column: c } = message;
             const { row, column } = head;
+
             if (vertical) {
-              if (r >= row && r < row + length && c === column) {
-                isHit = true;
-              }
+              if (r >= row && r < row + length && c === column) isHit = true;
             } else {
-              if (c >= column && c < column + length && r === row) {
-                isHit = true;
-              }
+              if (c >= column && c < column + length && r === row) isHit = true;
             }
+
             if (isHit) {
               // @ts-ignore
               ships[idx].cells.push({
@@ -102,18 +100,31 @@ const createMockServer = () => {
                 column: c,
               });
               // @ts-ignore
-              if (ships[idx].cells.length === length) {
-                // @ts-ignore
-                ships[idx].isDead = true;
-              }
+              if (ships[idx].cells.length === length) ships[idx].isDead = true;
             }
           });
           // @ts-ignore
           if (!isHit) misses.push(message);
           //to source of fire player send fireResult, to enemy recieveFire
-
-          //IF SOMEONE IS FUCKED
-
+          //@ts-ignore
+          if (ships.filter((s) => s.isDead).length === 10) {
+            if (source === "mock") {
+              socket.send(
+                JSON.stringify({
+                  type: "gameOver",
+                  message: { victory: false },
+                })
+              );
+            } else {
+              socket.send(
+                JSON.stringify({
+                  type: "gameOver",
+                  message: { victory: true },
+                })
+              );
+            }
+            return;
+          }
           //
 
           if (source === "mock") {
