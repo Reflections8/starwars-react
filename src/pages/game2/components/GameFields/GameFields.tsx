@@ -12,9 +12,11 @@ export const GameFields: FC<{
   enemyBoard: Gameboard;
   updateEnemyBoard: () => void;
   sendHit: (p: { row: number; column: number }) => void;
-}> = ({ userBoard, enemyBoard, updateEnemyBoard, sendHit }) => {
+  myTurn: boolean;
+}> = ({ userBoard, enemyBoard, updateEnemyBoard, sendHit, myTurn }) => {
   const clickEnemyField = (row: number, column: number, zalupa: boolean) => {
     if (!zalupa) return;
+    if (!myTurn) return;
     enemyBoard.setPreHit({ row, column });
     updateEnemyBoard();
   };

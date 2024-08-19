@@ -1,13 +1,10 @@
 import { Server } from "mock-socket";
-import { version } from "react";
 
 const createMockServer = () => {
   const mockServer = new Server("ws://localhost:8080");
 
-  // Инициализация состояния игры
   const gameState = {
     players: { I: "", II: "" },
-    currentPlayer: null,
     boards: {
       I: {
         misses: [],
@@ -20,9 +17,6 @@ const createMockServer = () => {
     },
   };
 
-  const getNextPlayer = (currentPlayer: string) => {
-    return currentPlayer === "player1" ? "player2" : "player1";
-  };
   const getMe = (source: string): "I" | "II" =>
     gameState.players.I === source ? "I" : "II";
   const getEnemy = (source: string): "I" | "II" =>
@@ -44,12 +38,9 @@ const createMockServer = () => {
       const { message, source, type }: any = JSON.parse(data);
       switch (type) {
         case "shipsInit":
-          //decide which board this source uses
-          if (!gameState.players.I) {
-            gameState.players.I = source;
-          } else {
-            gameState.players.II = source;
-          }
+          if (!gameState.players.I) gameState.players.I = source;
+          else gameState.players.II = source;
+
           gameState.boards[getMe(source)].misses = [];
           gameState.boards[getMe(source)].ships = message.map(
             (shipPos: any) => {
@@ -62,8 +53,18 @@ const createMockServer = () => {
             }
           );
           ///SET MOCK ENEMY BOARD
-          gameState.boards.II = gameState.boards.I;
+          gameState.boards.II = JSON.parse(JSON.stringify(gameState.boards.I));
+          gameState.players.II = "mock";
           ///
+          if (gameState.players.I && gameState.players.II) {
+            const turn = Math.random() > 0.5 ? "I" : "II";
+            socket.send(
+              JSON.stringify({
+                type: "turn",
+                message: { player: gameState.players[turn] },
+              })
+            );
+          }
           socket.send(
             JSON.stringify({
               type: "updateBoard",
@@ -76,8 +77,9 @@ const createMockServer = () => {
           break;
         case "fire":
           let isHit = false;
+          const { ships, misses } = gameState.boards[getEnemy(source)];
 
-          gameState.boards[getEnemy(source)].ships.forEach((s, idx) => {
+          ships.forEach((s, idx) => {
             if (isHit) return;
             const { length, vertical, head } = s;
             const { row: r, column: c } = message;
@@ -92,27 +94,37 @@ const createMockServer = () => {
               }
             }
             if (isHit) {
-              gameState.boards[getEnemy(source)].ships[idx].cells.push({
+              // @ts-ignore
+              ships[idx].cells.push({
                 row: r,
                 column: c,
               });
-              if (
-                gameState.boards[getEnemy(source)].ships[idx].cells.length ===
-                length
-              ) {
-                gameState.boards[getEnemy(source)].ships[idx].isDead = true;
+              // @ts-ignore
+              if (ships[idx].cells.length === length) {
+                // @ts-ignore
+                ships[idx].isDead = true;
               }
             }
           });
-          if (!isHit) {
-            gameState.boards[getEnemy(source)].misses.push(message);
+          // @ts-ignore
+          if (!isHit) misses.push(message);
+          //to source of fire player send fireResult, to enemy recieveFire
+          if (source === "mock") {
+            socket.send(
+              JSON.stringify({
+                type: "recieveFire",
+                isMe: true,
+                message: gameState.boards[getEnemy(source)],
+              })
+            );
+          } else {
+            socket.send(
+              JSON.stringify({
+                type: "fireResult",
+                message: hideInfo(gameState.boards[getEnemy(source)]),
+              })
+            );
           }
-          socket.send(
-            JSON.stringify({
-              type: "fireResult",
-              message: hideInfo(gameState.boards[getEnemy(source)]),
-            })
-          );
           break;
         case "join":
           break;

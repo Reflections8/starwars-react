@@ -12,6 +12,7 @@ import { GameHeader } from "./components/GameHeader/GameHeader";
 import "./styles/game2.css";
 import createMockServer from "./mock-socket/mockServer";
 import { Gameboard } from "./components/GameFields/gameboard";
+let lastEnemyHit = { row: 0, column: -1 };
 
 export function Game2() {
   const { openModal } = useModal();
@@ -20,6 +21,8 @@ export function Game2() {
 
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
+  const [myTurn, setMyTurn] = useState(true);
+  const [player, setPlayer] = useState("player1");
 
   const updateUserboard = () => {
     const newGameboard = new Gameboard();
@@ -37,101 +40,107 @@ export function Game2() {
     setEnemyBoard(newGameboard);
   };
 
-  // TODO: это useEffect чтобы затестить модалки победы/поражения, потом перенести в основной
   useEffect(() => {
-    if (gameState?.status === "LOST") {
-      // TODO: END GAME
-      openModal!("battleshipsLost");
-    }
+    let timer;
+    if (myTurn) return;
+    timer = setTimeout(() => {
+      if (lastEnemyHit.column <= 9) {
+        lastEnemyHit.column++;
+      } else {
+        lastEnemyHit.column = 0;
+        lastEnemyHit.row++;
+      }
+      socket &&
+        socket.send(
+          JSON.stringify({
+            type: "fire",
+            message: lastEnemyHit,
+            source: "mock",
+          })
+        );
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [myTurn]);
 
+  useEffect(() => {
+    if (gameState?.status === "LOST") openModal!("battleshipsLost");
     if (gameState?.status === "WON") {
-      // TODO: END GAME
       openModal!("battleshipsWon");
       closeDrawer!();
     }
   }, [gameState?.status]);
 
-  // TODO: моковый стэйт, заменить на нужный, либо брать из BattleshipsContext
-  const [messages, setMessages] = useState([]);
-  const [player, setPlayer] = useState(null);
   const [socket, setSocket] = useState<null | WebSocket>(null);
 
-  // TODO: это основной useEffect который должен менять стэйт на клиенте получая сообщения по WS
   useEffect(() => {
-    const mockServer = createMockServer();
-
-    const newSocket = new WebSocket("ws://localhost:8080");
-
-    newSocket.onopen = () => {
-      newSocket.send(JSON.stringify({ type: "join" }));
-    };
-
-    newSocket.onmessage = (event) => {
+    if (socket === null) return;
+    socket.onmessage = (event) => {
       const { message, type } = JSON.parse(event.data);
-      //setMessages((prevMessages) => [...prevMessages, message]);
-
+      if (type === "turn") {
+        setMyTurn(message.player === player);
+      }
       if (type === "updateBoard") {
         userBoard.updateUserBoard(message);
         updateUserboard();
       }
       if (type === "fireResult") {
+        setMyTurn(false);
         enemyBoard.updateEnemyBoard(message);
         updateEnemyBoard();
+      }
+      if (type === "recieveFire") {
+        setMyTurn(true);
+        userBoard.updateUserBoard(message);
+        console.log(message);
+        updateUserboard();
       }
       if (type === "joined") {
         setPlayer(message.player);
       }
     };
+  }, [userBoard, enemyBoard, socket, player]);
 
+  // TODO: это основной useEffect который должен менять стэйт на клиенте получая сообщения по WS
+  useEffect(() => {
+    const mockServer = createMockServer();
+    const newSocket = new WebSocket("ws://localhost:8080");
+    newSocket.onopen = () => {
+      newSocket.send(JSON.stringify({ type: "join" }));
+    };
     newSocket.onclose = () => {
       console.log("Disconnected from WebSocket server");
     };
-
     setSocket(newSocket);
-
-    // Генерация случайных сообщений от второго клиента
-    const generateRandomMessages = () => {
-      if (player === "player1") {
-        const randomMessage = {
-          type: "move",
-          player: "player2",
-          move: [
-            Math.floor(Math.random() * 10),
-            Math.floor(Math.random() * 10),
-          ],
-        };
-        mockServer.emit("message", JSON.stringify(randomMessage));
-      }
-    };
-
-    const intervalId = setInterval(generateRandomMessages, 5000);
-
     return () => {
       newSocket.close();
       mockServer.stop();
-      clearInterval(intervalId);
     };
   }, [player]);
 
   useEffect(() => {
     if (userShips && userShips.length > 0) {
       socket &&
-        socket.send(JSON.stringify({ type: "shipsInit", message: userShips }));
+        socket.send(
+          JSON.stringify({
+            type: "shipsInit",
+            message: userShips,
+            source: player,
+          })
+        );
     } else {
       openModal!("shipsArrangement2");
     }
   }, [JSON.stringify(userShips), socket]);
 
-  const sendHit = (p: any) => {
+  const sendHit = (p: any) =>
     socket &&
-      socket.send(
-        JSON.stringify({ type: "fire", message: p, source: "player1" })
-      );
-  };
+    socket.send(JSON.stringify({ type: "fire", message: p, source: player }));
 
   return (
     <div className="game2">
-      <GameHeader />
+      <GameHeader myTurn={myTurn} />
       <EnemyShips />
       <GameFields
         {...{
@@ -140,6 +149,7 @@ export function Game2() {
           updateEnemyBoard,
           updateUserboard,
           sendHit,
+          myTurn,
         }}
       />
       <GameBet />

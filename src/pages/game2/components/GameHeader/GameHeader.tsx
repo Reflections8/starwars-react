@@ -3,11 +3,11 @@ import leftBg from "./img/left-bg.svg";
 import rightBg from "./img/turn-bg.svg";
 import avatarBg from "./img/avatar-bg.png";
 import avatar from "./img/avatar.png";
-import { useState } from "react";
+import { FC, useState } from "react";
 
-export function GameHeader() {
+export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
   const [rivalName] = useState("@pashadurovoffasdjaksd");
-  const [isMyTurn] = useState(false);
+
   return (
     <div className="gameHeader">
       {/* LEFT BLOCK */}
@@ -42,9 +42,9 @@ export function GameHeader() {
 
         <div className="gameHeader__right-key">Ходит:</div>
         <div className="gameHeader__right-value">
-          {isMyTurn ? "Вы" : "Соперник"}
+          {myTurn ? "Вы" : "Соперник"}
         </div>
       </div>
     </div>
   );
-}
+};
