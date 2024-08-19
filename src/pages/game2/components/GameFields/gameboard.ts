@@ -46,6 +46,13 @@ type UpdateEnemyData = {
   ships: EnemyShip[];
 };
 
+const totalShips = {
+  "1": 4,
+  "2": 3,
+  "3": 2,
+  "4": 1,
+};
+
 export class Gameboard {
   ships: ShipPosition[];
   SIZE: number;
@@ -157,6 +164,26 @@ export class Gameboard {
     return this.misses.some(
       (miss) => miss.row === row && miss.column === column
     );
+  }
+  /*{
+    "1": 4,
+    "2": 3,
+    "3": 2,
+    "4": 1,
+  }; */
+  getShipsRemain() {
+    let res: { [key: string]: number } = {
+      "1": 4,
+      "2": 3,
+      "3": 2,
+      "4": 1,
+    };
+    this.ships.forEach((shipPos) => {
+      const { ship } = shipPos;
+      const { length } = ship;
+      res[length] -= 1;
+    });
+    return res;
   }
 
   getShipRC(r: number, c: number): null | ShipPosition {

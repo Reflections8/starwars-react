@@ -141,7 +141,7 @@ export function Game2() {
   return (
     <div className="game2">
       <GameHeader myTurn={myTurn} />
-      <EnemyShips />
+      <EnemyShips ships={enemyBoard.getShipsRemain()} />
       <GameFields
         {...{
           enemyBoard,

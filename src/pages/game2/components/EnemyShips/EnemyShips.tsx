@@ -5,18 +5,14 @@ import shipImg2 from "./img/2.png";
 import shipImg3 from "./img/3.png";
 import shipImg4 from "./img/4.png";
 import xImg from "./img/X.svg";
+import { FC } from "react";
 
-export function EnemyShips() {
-  const mockShipsLeft = {
-    "1": 4,
-    "2": 3,
-    "3": 2,
-    "4": 1,
-  };
-
+export const EnemyShips: FC<{ ships: { [key: string]: number } }> = ({
+  ships,
+}) => {
   function checkShipsLeft(length: string) {
     // @ts-ignore
-    if (!mockShipsLeft[length]) {
+    if (!ships[length]) {
       return false;
     } else {
       return true;
@@ -48,7 +44,7 @@ export function EnemyShips() {
                 />
               ) : null}
               <div className="enemyShips__main-content-item-value">
-                {mockShipsLeft["1"]}
+                {ships["1"]}
               </div>
             </div>
           </div>
@@ -71,7 +67,7 @@ export function EnemyShips() {
                 />
               ) : null}
               <div className="enemyShips__main-content-item-value">
-                {mockShipsLeft["2"]}
+                {ships["2"]}
               </div>
             </div>
           </div>
@@ -94,7 +90,7 @@ export function EnemyShips() {
                 />
               ) : null}
               <div className="enemyShips__main-content-item-value">
-                {mockShipsLeft["3"]}
+                {ships["3"]}
               </div>
             </div>
           </div>
@@ -117,7 +113,7 @@ export function EnemyShips() {
                 />
               ) : null}
               <div className="enemyShips__main-content-item-value">
-                {mockShipsLeft["4"]}
+                {ships["4"]}
               </div>
             </div>
           </div>
@@ -125,4 +121,4 @@ export function EnemyShips() {
       </div>
     </div>
   );
-}
+};

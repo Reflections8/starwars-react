@@ -44,14 +44,16 @@ const createMockServer = () => {
           gameState.boards[getMe(source)].misses = [];
           gameState.boards[getMe(source)].ships = message.map(
             (shipPos: any) => {
+              console.log(shipPos);
               return {
                 length: shipPos.ship.length,
-                version: shipPos.ship.vertical,
+                vertical: shipPos.ship.vertical,
                 head: { row: shipPos.pos.row, column: shipPos.pos.column },
                 cells: [],
               };
             }
           );
+          console.log(gameState.boards[getMe(source)]);
           ///SET MOCK ENEMY BOARD
           gameState.boards.II = JSON.parse(JSON.stringify(gameState.boards.I));
           gameState.players.II = "mock";
@@ -109,6 +111,11 @@ const createMockServer = () => {
           // @ts-ignore
           if (!isHit) misses.push(message);
           //to source of fire player send fireResult, to enemy recieveFire
+
+          //IF SOMEONE IS FUCKED
+
+          //
+
           if (source === "mock") {
             socket.send(
               JSON.stringify({
