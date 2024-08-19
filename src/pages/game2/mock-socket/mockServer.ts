@@ -37,6 +37,14 @@ const createMockServer = () => {
     socket.on("message", (data) => {
       const { message, source, type }: any = JSON.parse(data);
       switch (type) {
+        case "giveUp":
+          socket.send(
+            JSON.stringify({
+              type: "gameOver",
+              message: { victory: false },
+            })
+          );
+          break;
         case "timeOut":
           socket.send(
             JSON.stringify({

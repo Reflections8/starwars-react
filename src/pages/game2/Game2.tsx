@@ -101,6 +101,9 @@ export function Game2() {
       setUserShips!([]);
       openModal!("shipsArrangement2");
     }
+    if (gameState?.status === "GIVE_UP") {
+      socket && socket.send(JSON.stringify({ type: "giveUp", source: player }));
+    }
   }, [gameState?.status]);
 
   useEffect(() => {

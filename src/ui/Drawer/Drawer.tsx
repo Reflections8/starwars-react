@@ -575,7 +575,7 @@ function GiveUp() {
           // @ts-ignore
           setGameState((prevState) => ({
             ...prevState,
-            status: "LOST",
+            status: "GIVE_UP",
           }));
         }}
       />
