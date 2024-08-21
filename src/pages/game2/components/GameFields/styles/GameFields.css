@@ -109,7 +109,7 @@
   height: 250px;
 }
 
-@media screen and (max-height: 770px) {
+/* @media screen and (max-height: 770px) {
   .gameFieldsMainContent {
     transform: scale(0.9);
   }
@@ -123,4 +123,4 @@
   .gameFieldsMainContent {
     transform: scale(0.8);
   }
-}
+} */
