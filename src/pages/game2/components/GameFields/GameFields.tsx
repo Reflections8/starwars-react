@@ -9,6 +9,8 @@ import { Gameboard } from "./gameboard";
 import { FC } from "react";
 import { EnemyBoard } from "./EnemyBoard";
 import { TimerII } from "./TimerII";
+import greenBlaster from "../../img/green-blaster.svg";
+import redBlaster from "../../img/red-blaster.svg";
 
 export const GameFields: FC<{
   userBoard: Gameboard;
@@ -48,6 +50,17 @@ export const GameFields: FC<{
       <img src={rightBg} alt="right-bg" className="gameFields__rightBg" />
 
       <div className="gameFieldsMainContent">
+        <img
+          src={greenBlaster}
+          alt=""
+          className="gameFieldsMainContent__greenBlaster"
+        />
+        <img
+          src={redBlaster}
+          alt=""
+          className="gameFieldsMainContent__redBlaster"
+        />
+
         {/* TOP WRAPPER */}
         <div className="gameFields__top">
           <img src={boardBgTop} alt="" className="gameFields__top-bg" />

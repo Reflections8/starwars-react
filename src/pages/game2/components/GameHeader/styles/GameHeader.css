@@ -79,6 +79,25 @@
   padding-right: 16px;
 }
 
+.gameHeader__right.animate {
+  transform: translateX(-100%);
+  animation: slide-back 0.75s forwards;
+}
+
+@keyframes slide-back {
+  0% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .gameHeader__right-bg {
   position: absolute;
   left: 2px;

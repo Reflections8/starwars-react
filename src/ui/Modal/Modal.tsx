@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { ReactNode } from "react";
+import { BattleshipsLost } from "../../components/Modals/BattleshipsLost/BattleshipsLost";
+import { BattleshipsWon } from "../../components/Modals/BattleshipsWon/BattleshipsWon";
+import { Binks } from "../../components/Modals/Binks/Binks";
 import { ChooseGame } from "../../components/Modals/ChooseGame/ChooseGame";
+import { CurrentStat } from "../../components/Modals/CurrentStat/CurrentStat";
 import { Metrics } from "../../components/Modals/Metrics/Metrics";
 import { Partners } from "../../components/Modals/Partners/Partners";
 import { Player } from "../../components/Modals/Player/Player";
 import { SeaBattle } from "../../components/Modals/SeaBattle/SeaBattle";
 import { Settings } from "../../components/Modals/Settings/Settings";
+import { ShipsArrangement2 } from "../../components/Modals/ShipsArrangement2/ShipsArrangement2";
 import { Shop } from "../../components/Modals/Shop/Shop";
 import { Tasks } from "../../components/Modals/Tasks/Tasks";
 import { Tournament } from "../../components/Modals/Tournament/Tournament";
 import { Wallet } from "../../components/Modals/Wallet/Wallet";
+import { Welcome } from "../../components/Modals/Welcome/Welcome";
 import { useModal } from "../../context/ModalContext";
 import { ChartIcon } from "../../icons/Modals/Chart";
 import { CupIcon } from "../../icons/Modals/Cup";
@@ -21,20 +28,13 @@ import { TasksIcon } from "../../icons/Modals/Tasks";
 import { TeamIcon } from "../../icons/Modals/Team";
 import { WalletIcon } from "../../icons/Modals/Wallet";
 import modalBodyBorderBottom from "./img//modal-body-border-title.svg";
+import textureBg from "./img/bg-texture.svg";
 import modalBodyCloseIcon from "./img/close-bg.svg";
 import modalBodyBgShort from "./img/modal-body-short.png";
 import modalBodyBg from "./img/modal-body.png";
 import modalHeaderIconBg from "./img/modal-header-icon-wrapper.png";
 import modalHeaderBg from "./img/modal-header.png";
-import textureBg from "./img/bg-texture.svg";
 import "./styles/modal.css";
-import { Welcome } from "../../components/Modals/Welcome/Welcome";
-import { CurrentStat } from "../../components/Modals/CurrentStat/CurrentStat";
-import { ReactNode } from "react";
-import { ShipsArrangement } from "../../components/Modals/ShipsArrangement/ShipsArrangement";
-import { ShipsArrangement2 } from "../../components/Modals/ShipsArrangement2/ShipsArrangement2";
-import { BattleshipsWon } from "../../components/Modals/BattleshipsWon/BattleshipsWon";
-import { BattleshipsLost } from "../../components/Modals/BattleshipsLost/BattleshipsLost";
 
 type ModalProps = {
   isOpen: boolean;
@@ -99,13 +99,8 @@ const modalContentType: ModalContentType = {
     icon: <SeaBattleIcon />,
     component: <SeaBattle />,
   },
-  shipsArrangement: {
-    title: "Расставить флот",
-    icon: <SeaBattleIcon />,
-    component: <ShipsArrangement />,
-  },
   shipsArrangement2: {
-    title: "Расставить флот 2",
+    title: "Расставить флот",
     icon: <SeaBattleIcon />,
     component: <ShipsArrangement2 />,
   },
@@ -121,6 +116,11 @@ const modalContentType: ModalContentType = {
   battleshipsLost: {
     component: <BattleshipsLost />,
   },
+  binks: {
+    title: "Обучение",
+    icon: <GearIcon />,
+    component: <Binks />,
+  },
 };
 
 type ModalContentKeys = keyof typeof modalContentType;
@@ -131,7 +131,7 @@ const fullscreenModals: ModalContentKeys[] = [
   "battleshipsWon",
   "battleshipsLost",
 ];
-const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement"];
+const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement2"];
 
 export function Modal({ isOpen }: ModalProps) {
   const { closeModal, modalType } = useModal();
