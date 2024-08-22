@@ -5,6 +5,7 @@ import { DrawerProvider } from "../../context/DrawerContext";
 import { LoaderProvider } from "../../context/LoaderContext";
 import { UserDataProvider } from "../../UserDataService.tsx";
 import { BattleshipsProvider } from "../../context/BattleshipsContext.tsx";
+import { BackgroundVideoProvider } from "../../context/BackgroundVideoContext.tsx";
 
 type PageProps = {
   dataPage: string;
@@ -14,21 +15,23 @@ type PageProps = {
 export function Page({ dataPage, children }: PageProps) {
   return (
     <LoaderProvider>
-      <BattleshipsProvider>
-        <DrawerProvider>
-          <UserDataProvider>
-            <ModalProvider>
-              <div className="page" data-page={dataPage}>
-                <div className="page__container">
-                  <div className="page__container-gradient page__container-gradient--Left"></div>
-                  <div className="page__container-gradient page__container-gradient--Right"></div>
-                  {children}
+      <BackgroundVideoProvider>
+        <BattleshipsProvider>
+          <DrawerProvider>
+            <UserDataProvider>
+              <ModalProvider>
+                <div className="page" data-page={dataPage}>
+                  <div className="page__container">
+                    <div className="page__container-gradient page__container-gradient--Left"></div>
+                    <div className="page__container-gradient page__container-gradient--Right"></div>
+                    {children}
+                  </div>
                 </div>
-              </div>
-            </ModalProvider>
-          </UserDataProvider>
-        </DrawerProvider>
-      </BattleshipsProvider>
+              </ModalProvider>
+            </UserDataProvider>
+          </DrawerProvider>
+        </BattleshipsProvider>
+      </BackgroundVideoProvider>
     </LoaderProvider>
   );
 }

@@ -19,6 +19,8 @@ import { BackgroundLayers } from "./components/BackgroundLayers";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import "./styles/home.css";
+import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
+import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
 
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -41,6 +43,7 @@ export function Home() {
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
+  const { readyState, activeVideo, setActiveVideo } = useBackgroundVideo();
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
@@ -167,6 +170,27 @@ export function Home() {
           />
         }
       />
+
+      {activeVideo === "2" ? (
+        <button
+          style={{
+            position: "absolute",
+            zIndex: "1000",
+            top: "190px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontSize: "10px",
+          }}
+          onClick={() => {
+            setActiveVideo!("3");
+          }}
+        >
+          КНИЖКА
+        </button>
+      ) : null}
+
+      <BinksBackgroundVideo readyState={readyState} activeVideo={activeVideo} />
+
       <Resources credits={credits} woopy={tokens} ton={tons} />
       <MainLinks />
 
