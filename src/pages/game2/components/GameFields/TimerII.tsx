@@ -7,11 +7,12 @@ export const TimerII: FC<{
 }> = ({ timerValue }) => {
   const formatTime = (milliseconds: number) => {
     const seconds = Math.floor(milliseconds / 1000);
-    const ms = milliseconds % 1000;
-    if (seconds < 10) {
-      return `0${seconds}:${ms.toString().padStart(3, "0")}`;
-    }
-    return `${seconds}:${ms.toString().padStart(3, "0")}`;
+    const minutes = Math.floor(seconds / 60);
+    let s: any = seconds % 60;
+    let m: any = minutes;
+    m = m.toString().length === 1 ? `0${m}` : m;
+    s = s.toString().length === 1 ? `0${s}` : s;
+    return `${m}:${s}`;
   };
 
   return (
