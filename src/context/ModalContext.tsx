@@ -35,6 +35,12 @@ export function ModalProvider({ children }: ModalProviderProps) {
 
       // @ts-ignore
       const clickOnDrawer = !!event.target.closest(".drawerBg");
+
+      // Если это расстановка кораблей, то не закрываем при клике по background
+      const isShipArrangementModal =
+        // @ts-ignore
+        event.target.classList.contains("shipsArrangement2");
+      if (isShipArrangementModal) return;
       if (
         modalElement &&
         !modalElement.contains(event.target as Node) &&

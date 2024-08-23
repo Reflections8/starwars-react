@@ -176,7 +176,7 @@ export function Home() {
           style={{
             position: "absolute",
             zIndex: "1000",
-            top: "190px",
+            top: "31%",
             left: "50%",
             transform: "translateX(-50%)",
             fontSize: "10px",

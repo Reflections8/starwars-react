@@ -12,42 +12,50 @@ export function BinksBackgroundVideo({
   readyState,
   activeVideo,
 }: BinksBackgroundVideoProps) {
-  const videoRef = useRef(null);
+  const videoRef2 = useRef<HTMLVideoElement>(null);
+  const videoRef3 = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    console.log(readyState, activeVideo);
-    const videoElement = videoRef.current as unknown as HTMLVideoElement;
+    if (readyState) {
+      const video2 = videoRef2.current;
+      const video3 = videoRef3.current;
+      if (activeVideo === "2" && video2) {
+        video2.play().catch(console.error);
+        video2.muted = false;
+      }
 
-    if (videoElement) {
-      videoElement.muted = false;
-      videoElement.play().catch((error) => {
-        console.error("Error attempting to play video:", error);
-      });
+      if (activeVideo === "3" && video2 && video3) {
+        video2.pause();
+        video3.play().catch(console.error);
+        video3.muted = false;
+      }
     }
   }, [readyState, activeVideo]);
 
   return (
     <>
-      {readyState && activeVideo === "2" ? (
-        <video
-          ref={videoRef}
-          className="binksBackgroundVideo"
-          src={videoSrc2}
-          muted
-          playsInline
-        ></video>
-      ) : null}
+      <video
+        ref={videoRef2}
+        className={`binksBackgroundVideo ${
+          activeVideo === "2" ? "active" : "hidden"
+        }`}
+        src={videoSrc2}
+        muted
+        preload="auto"
+        playsInline
+      ></video>
 
-      {readyState && activeVideo === "3" ? (
-        <video
-          ref={videoRef}
-          className="binksBackgroundVideo"
-          src={videoSrc3}
-          muted
-          loop
-          playsInline
-        ></video>
-      ) : null}
+      <video
+        ref={videoRef3}
+        className={`binksBackgroundVideo ${
+          activeVideo === "3" ? "active" : "hidden"
+        }`}
+        src={videoSrc3}
+        muted
+        preload="auto"
+        loop
+        playsInline
+      ></video>
     </>
   );
 }

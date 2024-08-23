@@ -2,6 +2,10 @@
   margin-top: -30px;
 }
 
+.modalBg.shipsArrangement2 .modal__body-top-closeBtn {
+  display: none;
+}
+
 .shipsArr {
   margin-top: 20px;
   display: flex;
