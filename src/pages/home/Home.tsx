@@ -213,6 +213,7 @@ export function Home() {
         position={"bottom"}
         leftIcon={<GamesIcon />}
         leftText={"Игры"}
+        leftClassName={"games"}
         leftAction={() => {
           if (!tonConnectUI.connected) {
             openWalletDrawer();

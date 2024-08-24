@@ -12,6 +12,7 @@ import rulesImg from "./img/rules-button.svg";
 import "./styles/ShipsArrangement.css";
 import { useBattleships } from "../../../context/BattleshipsContext";
 
+// @ts-ignore
 function debounce(func: (...args: unknown[]) => void, wait: number) {
   let timeout: ReturnType<typeof setTimeout>;
   return function executedFunction(...args: unknown[]) {
@@ -23,7 +24,7 @@ function debounce(func: (...args: unknown[]) => void, wait: number) {
     timeout = setTimeout(later, wait);
   };
 }
-
+// @ts-ignore
 const initialUnsettledShips = {
   "1": 4,
   "2": 3,
