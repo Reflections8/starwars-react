@@ -37,19 +37,11 @@
   z-index: 10;
 }
 
-.game2__greenBlaster {
-  position: absolute;
-}
-
-.game2__redBlaster {
-  position: absolute;
-}
-
 .beam-animation-green {
   position: absolute;
   top: 100%;
-  left: 50%;
-  width: 80px;
+  left: 100%;
+  width: 100px;
   border-radius: 50%;
   height: 5px; /* Adjust height as needed */
   background-color: greenyellow;
@@ -62,8 +54,8 @@
 .beam-animation-red {
   position: absolute;
   top: 0;
-  left: 50%;
-  width: 80px;
+  left: 0%;
+  width: 100px;
   border-radius: 50%;
   height: 5px; /* Adjust height as needed */
   background-color: crimson;
