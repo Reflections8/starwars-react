@@ -1,7 +1,73 @@
 .gameFields {
   display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.gameFieldsMainContent__greenBlaster {
+  position: absolute;
+  bottom: 20px;
+  right: -30px;
+}
+
+.gameFieldsMainContent__redBlaster {
+  position: absolute;
+  top: -30px;
+  left: -30px;
+}
+
+.gameFieldsMainContent {
+  display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+}
+
+.gameFields__leftBg {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  max-width: 87px;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+.gameFields__rightBg {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  max-width: 87px;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+@media screen and (max-width: 400px) {
+  .gameFields__leftBg,
+  .gameFields__rightBg {
+    max-width: 67px;
+  }
+}
+
+@media screen and (max-width: 370px) {
+  .gameFields__leftBg,
+  .gameFields__rightBg {
+    max-width: 57px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .gameFields__leftBg,
+  .gameFields__rightBg {
+    max-width: 40px;
+  }
+}
+
+@media screen and (max-width: 340px) {
+  .gameFields__leftBg,
+  .gameFields__rightBg {
+    max-width: 32px;
+  }
 }
 
 .gameFields__top {
@@ -55,3 +121,19 @@
   width: 250px;
   height: 250px;
 }
+
+/* @media screen and (max-height: 770px) {
+  .gameFieldsMainContent {
+    transform: scale(0.9);
+  }
+}
+
+@media screen and (max-height: 740px) {
+  .gameFields {
+    height: 470px;
+  }
+
+  .gameFieldsMainContent {
+    transform: scale(0.8);
+  }
+} */

@@ -1,12 +1,16 @@
 import "./styles/GameFields.css";
 import boardBgTop from "./img/board-bg-top.svg";
 import boardBgBottom from "./img/board-bg-bottom.svg";
+import leftBg from "./img/left-bg.png";
+import rightBg from "./img/right-bg.png";
 
 import { UserBoard } from "./UserBoard";
 import { Gameboard } from "./gameboard";
 import { FC } from "react";
 import { EnemyBoard } from "./EnemyBoard";
 import { TimerII } from "./TimerII";
+import greenBlaster from "../../img/green-blaster.svg";
+import redBlaster from "../../img/red-blaster.svg";
 
 export const GameFields: FC<{
   userBoard: Gameboard;
@@ -39,28 +43,47 @@ export const GameFields: FC<{
 
   return (
     <div className="gameFields">
-      {/* TOP WRAPPER */}
-      <div className="gameFields__top">
-        <img src={boardBgTop} alt="" className="gameFields__top-bg" />
+      {/* LEFT BG */}
+      <img src={leftBg} alt="left-bg" className="gameFields__leftBg" />
 
-        <div style={{ zIndex: 200 }} className="">
-          <EnemyBoard
-            gameboard={enemyBoard}
-            confirmHit={confirmHit}
-            onCellClicked={clickEnemyField}
-          />
+      {/* RIGHT BG */}
+      <img src={rightBg} alt="right-bg" className="gameFields__rightBg" />
+
+      <div className="gameFieldsMainContent">
+        <img
+          src={greenBlaster}
+          alt=""
+          className="gameFieldsMainContent__greenBlaster"
+        />
+        <img
+          src={redBlaster}
+          alt=""
+          className="gameFieldsMainContent__redBlaster"
+        />
+
+        {/* TOP WRAPPER */}
+        <div className="gameFields__top">
+          <img src={boardBgTop} alt="" className="gameFields__top-bg" />
+
+          <div style={{ zIndex: 200 }} className="">
+            <EnemyBoard
+              gameboard={enemyBoard}
+              confirmHit={confirmHit}
+              onCellClicked={clickEnemyField}
+            />
+          </div>
         </div>
-      </div>
-      {/* TIMER WRAPPER */}
-      <div className="gameFields__timer">
-        <TimerII timerValue={timerValue} />
-      </div>
+        {/* TIMER WRAPPER */}
+        <div className="gameFields__timer">
+          <TimerII timerValue={timerValue} />
+        </div>
 
-      {/* BOTTOM WRAPPER */}
-      <div className="gameFields__bottom">
-        <img src={boardBgBottom} alt="" className="gameFields__bottom-bg" />
-        <div className="">
-          <UserBoard gameboard={userBoard} />
+        {/* BOTTOM WRAPPER */}
+        <div className="gameFields__bottom">
+          <img src={boardBgBottom} alt="" className="gameFields__bottom-bg" />
+          <div className="">
+            <UserBoard gameboard={userBoard} />
+          </div>
         </div>
       </div>
     </div>

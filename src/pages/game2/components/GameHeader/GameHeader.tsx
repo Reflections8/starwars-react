@@ -3,11 +3,24 @@ import leftBg from "./img/left-bg.svg";
 import rightBg from "./img/turn-bg.svg";
 import avatarBg from "./img/avatar-bg.png";
 import avatar from "./img/avatar.png";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
   const [rivalName] = useState("@pashadurovoffasdjaksd");
 
+  const [myTurnDebounced, setMyTurnDebounced] = useState(myTurn);
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    setAnimate(true);
+
+    setTimeout(() => {
+      setMyTurnDebounced(myTurn);
+    }, 375);
+
+    const timer = setTimeout(() => setAnimate(false), 750);
+    return () => clearTimeout(timer);
+  }, [myTurn]);
   return (
     <div className="gameHeader">
       {/* LEFT BLOCK */}
@@ -37,12 +50,12 @@ export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
       </div>
 
       {/* RIGHT BLOCK */}
-      <div className="gameHeader__right">
+      <div className={`gameHeader__right ${animate ? "animate" : ""}`}>
         <img src={rightBg} alt="" className="gameHeader__right-bg" />
 
         <div className="gameHeader__right-key">Ходит:</div>
         <div className="gameHeader__right-value">
-          {myTurn ? "Вы" : "Соперник"}
+          {myTurnDebounced ? "Вы" : "Соперник"}
         </div>
       </div>
     </div>

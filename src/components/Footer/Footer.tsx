@@ -63,7 +63,7 @@ export function Footer({ clip, power, charges }: Partial<FooterProps>) {
                 className={`segment ${
                   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                   //@ts-ignore
-                  index < charges
+                  index < charges!
                     ? "footer__bottom-bar-item footer__bottom-bar-item--Charged"
                     : "footer__bottom-bar-item"
                 }`}

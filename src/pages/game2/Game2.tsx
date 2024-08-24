@@ -7,11 +7,11 @@ import { LeaveIcon } from "../../icons/Leave";
 import { RulesIcon } from "../../icons/Rules";
 import { EnemyShips } from "./components/EnemyShips/EnemyShips";
 import { GameBet } from "./components/GameBet/GameBet";
+import { Gameboard } from "./components/GameFields/gameboard";
 import { GameFields } from "./components/GameFields/GameFields";
 import { GameHeader } from "./components/GameHeader/GameHeader";
-import "./styles/game2.css";
 import createMockServer from "./mock-socket/mockServer";
-import { Gameboard } from "./components/GameFields/gameboard";
+import "./styles/game2.css";
 
 import { useTimer } from "react-use-precision-timer";
 const timerSeconds = 60;
@@ -24,7 +24,7 @@ export function Game2() {
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
   const [myTurn, setMyTurn] = useState(true);
-  const [player, setPlayer] = useState("player1");
+  const [player] = useState("player1");
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
   const timer = useTimer(
@@ -172,6 +172,9 @@ export function Game2() {
 
   return (
     <div className="game2">
+      <div className="game2__gradientTop"></div>
+      <div className="game2__gradientBottom"></div>
+
       <GameHeader myTurn={myTurn} />
       <EnemyShips ships={enemyBoard.getShipsRemain()} />
       <GameFields
