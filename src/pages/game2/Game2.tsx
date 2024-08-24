@@ -71,6 +71,50 @@ export function Game2() {
     setEnemyBoard(new Gameboard());
   };
 
+  const playBeamAnimation = ({ row, column }: any, me: boolean) => {
+    const targetCell = document.getElementById(
+      `${me ? "enemy" : "user"}Cell${row}-${column}`
+    ) as HTMLElement;
+    return new Promise<void>((resolve) => {
+      const beam = document.createElement("div");
+      beam.className = "beam-animation-" + (me ? "green" : "red");
+      document.body.appendChild(beam);
+
+      // Calculate the position of the target cell
+      const targetRect = targetCell.getBoundingClientRect();
+      const beamRect = beam.getBoundingClientRect();
+      const startX = beamRect.left;
+      const startY = beamRect.top;
+
+      let targetX = targetRect.left + targetRect.width / 2;
+      let targetY = targetRect.top + targetRect.height / 2;
+      if (me) {
+        targetX += 1;
+        targetY += 7;
+      } else {
+        targetX -= 1;
+        targetY -= 7;
+      }
+
+      const deltaX = targetX - startX;
+      const deltaY = targetY - startY;
+      const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+      beam.style.transform = `rotate(${angle}deg)`;
+
+      setTimeout(() => {
+        beam.style.left = `${targetX}px`;
+        beam.style.top = `${targetY}px`;
+        beam.style.width = "10px";
+      }, 10);
+
+      // Remove the beam after the animation completes
+      beam.addEventListener("transitionend", () => {
+        document.body.removeChild(beam);
+        resolve();
+      });
+    });
+  };
+
   useEffect(() => {
     let timer;
     if (myTurn) return;
@@ -109,7 +153,7 @@ export function Game2() {
   useEffect(() => {
     if (socket === null) return;
     socket.onmessage = (event) => {
-      const { message, type } = JSON.parse(event.data);
+      const { message, type, attack } = JSON.parse(event.data);
       if (type === "turn") {
         setMyTurn(message.player === player);
       }
@@ -122,8 +166,10 @@ export function Game2() {
         updateEnemyBoard();
       }
       if (type === "recieveFire") {
-        userBoard.updateUserBoard(message);
-        updateUserboard();
+        playBeamAnimation(attack, false).then(() => {
+          userBoard.updateUserBoard(message);
+          updateUserboard();
+        });
       }
       if (type === "gameOver") {
         setGameState!({ status: message.victory ? "WON" : "LOST" });
@@ -132,7 +178,6 @@ export function Game2() {
     };
   }, [userBoard, enemyBoard, socket, player]);
 
-  // TODO: это основной useEffect который должен менять стэйт на клиенте получая сообщения по WS
   useEffect(() => {
     const mockServer = createMockServer();
     const newSocket = new WebSocket("ws://localhost:8080");
@@ -164,15 +209,19 @@ export function Game2() {
     }
   }, [JSON.stringify(userShips), socket]);
 
-  const sendHit = (p: any) =>
-    socket &&
-    socket.send(JSON.stringify({ type: "fire", message: p, source: player }));
+  const sendHit = (p: any) => {
+    playBeamAnimation(p, true).then(() => {
+      socket &&
+        socket.send(
+          JSON.stringify({ type: "fire", message: p, source: player })
+        );
+    });
+  };
 
   return (
     <div className="game2">
       <div className="game2__gradientTop"></div>
       <div className="game2__gradientBottom"></div>
-
       <GameHeader myTurn={myTurn} />
       <EnemyShips ships={enemyBoard.getShipsRemain()} />
       <GameFields

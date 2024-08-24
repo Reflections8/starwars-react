@@ -154,6 +154,7 @@ const createMockServer = () => {
                 type: "recieveFire",
                 isMe: true,
                 message: gameState.boards[getEnemy(source)],
+                attack: message,
               })
             );
           } else {

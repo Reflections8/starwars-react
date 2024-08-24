@@ -23,6 +23,7 @@ interface FieldProps {
   isHead?: boolean;
   isHit?: boolean;
   isMiss?: boolean;
+  id: string;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -51,6 +52,7 @@ function Field({
   isHead = false,
   isHit = false,
   isMiss = false,
+  id,
 }: FieldProps) {
   const renderImg = () => {
     if (!shipPos || !isHead) return null;
@@ -95,6 +97,7 @@ function Field({
   return (
     <div style={{ position: "relative" }}>
       <div
+        id={id}
         style={{
           position: "absolute",
           top: 0,
@@ -146,6 +149,7 @@ export function UserBoard({ gameboard }: Props) {
 
         let fieldComponent = (
           <Field
+            id={`userCell${row}-${column}`}
             isMiss={gameboard.getIfMiss(row, column)}
             isHit={gameboard.getIfHit(row, column)}
             type={"empty"}

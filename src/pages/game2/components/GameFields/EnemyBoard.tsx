@@ -30,6 +30,7 @@ interface FieldProps {
   onCellClicked: () => void;
   confirmHit: () => void;
   isPreHit?: boolean;
+  id: string;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -61,6 +62,7 @@ function Field({
   onCellClicked,
   isPreHit = false,
   confirmHit,
+  id,
 }: FieldProps) {
   const styleBase = {
     position: "absolute",
@@ -157,6 +159,7 @@ function Field({
           height: "100%",
           zIndex: -1,
         }}
+        id={id}
         className={`battleships__cell ${type}`}
       ></div>
       {renderPreHit()}
@@ -222,6 +225,7 @@ export function EnemyBoard({ gameboard, onCellClicked, confirmHit }: Props) {
 
         let fieldComponent = (
           <Field
+            id={`enemyCell${row}-${column}`}
             {...{ confirmHit, isMiss, isHit, type, shipPos, isHead, isPreHit }}
             onCellClicked={() => onCellClicked(row, column, shouldTry)}
             key={JSON.stringify({ row, column })}

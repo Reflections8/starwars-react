@@ -44,3 +44,32 @@
 .game2__redBlaster {
   position: absolute;
 }
+
+.beam-animation-green {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 80px;
+  border-radius: 50%;
+  height: 5px; /* Adjust height as needed */
+  background-color: greenyellow;
+  transition: left 500ms ease, top 500ms ease, width 600ms ease;
+  z-index: 1000;
+  transform-origin: left center; /* Ensure rotation is around the left end */
+  box-shadow: 0 0 5px 1px greenyellow; /* Green glowing shadow */
+  background-color: greenyellow;
+}
+.beam-animation-red {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 80px;
+  border-radius: 50%;
+  height: 5px; /* Adjust height as needed */
+  background-color: crimson;
+  transition: left 500ms ease, top 500ms ease, width 600ms ease;
+  z-index: 1000;
+  transform-origin: left center; /* Ensure rotation is around the left end */
+  box-shadow: 0 0 5px 1px crimson; /* Green glowing shadow */
+  background-color: crimson;
+}
