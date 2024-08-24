@@ -1,6 +1,6 @@
 import { combinations } from "./combinations";
 
-type ShipType = {
+export type ShipType = {
   length: number;
   vertical: boolean;
 };
@@ -24,17 +24,42 @@ function deepCopy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
 
+const unsettledMax = {
+  "1": 4,
+  "2": 3,
+  "3": 2,
+  "4": 1,
+};
+
 export class Gameboard {
   ships: ShipPosition[];
   hitCells: HitCell[];
   SIZE: number;
+  dragndrop: ShipPosition | null;
   constructor() {
+    this.dragndrop = null;
     this.hitCells = [];
     this.initialize();
     this.ships = [];
     this.SIZE = 10;
   }
   initialize() {}
+
+  getUnsettledShips() {
+    const res: Record<string, number> = {};
+    for (let i = 1; i <= 4; i++) {
+      //@ts-ignore
+      res[i] = unsettledMax[i];
+    }
+    this.ships.forEach(({ ship }) => {
+      res[ship.length]--;
+    });
+    if (this.dragndrop) {
+      res[this.dragndrop.ship.length]--;
+    }
+    return res;
+  }
+
   //SHIP ARRANGEMENT
   getFieldsNearShips() {
     let res: { x: number; y: number; err: boolean }[] = [];
@@ -51,8 +76,13 @@ export class Gameboard {
     ];
 
     let fieldCount = new Map();
+    let shipsToSearch = [...this.ships];
 
-    this.ships.forEach(({ ship, pos }, idx) => {
+    if (this.dragndrop) {
+      shipsToSearch.push(this.dragndrop);
+    }
+
+    shipsToSearch.forEach(({ ship, pos }, idx) => {
       const { row, column } = pos;
       const { length, vertical } = ship;
       for (let i = 0; i < length; i++) {
@@ -78,7 +108,7 @@ export class Gameboard {
       const hasError = shipIndices.size > 1;
       const isNearUnconfirmedShip = Array.from(shipIndices).some(
         //@ts-ignore
-        (idx) => !this.ships[idx].confirmed
+        (idx) => !shipsToSearch[idx].confirmed
       );
 
       if (hasError || !isNearUnconfirmedShip) {
@@ -88,10 +118,12 @@ export class Gameboard {
 
     return res;
   }
+
   unconfirmShipAtRC(row: number, column: number) {
     const shipPos = this.getShipRC(row, column);
     if (shipPos) shipPos.confirmed = false;
   }
+
   replaceShip(shipPos: ShipPosition, row: number, column: number) {
     const [isPossible] = this.isPlacementPossible(shipPos.ship, row, column);
     if (!isPossible) return false;
@@ -99,32 +131,42 @@ export class Gameboard {
     shipPos.pos.column = column;
     return true;
   }
+
   getUnconfirmedShips() {
     const unconfirmed = this.ships.filter(({ confirmed }) => !confirmed);
     if (unconfirmed.length === 0) return null;
     return unconfirmed[0];
   }
-  confirmShip() {
-    const shipPos = this.ships.find(({ confirmed }) => !confirmed);
-    if (!shipPos) return false;
-    shipPos.confirmed = true;
-  }
-  rotateShip() {
-    const shipPos = this.ships.find(({ confirmed }) => !confirmed);
-    if (!shipPos) return false;
 
-    shipPos.ship.vertical = !shipPos.ship.vertical;
-    if (shipPos.ship.vertical) {
-      if (shipPos.pos.row + shipPos.ship.length > this.SIZE)
-        shipPos.pos.row = this.SIZE - shipPos.ship.length;
+  confirmShip() {
+    if (!this.dragndrop) return false;
+    this.dragndrop.confirmed = true;
+    this.ships = [...this.ships, JSON.parse(JSON.stringify(this.dragndrop))];
+    this.dragndrop = null;
+  }
+
+  rotateShip() {
+    if (!this.dragndrop) return false;
+    this.dragndrop.ship.vertical = !this.dragndrop.ship.vertical;
+
+    if (this.dragndrop.ship.vertical) {
+      if (this.dragndrop.pos.row + this.dragndrop.ship.length > this.SIZE)
+        this.dragndrop.pos.row = this.SIZE - this.dragndrop.ship.length;
     } else {
-      if (shipPos.pos.column + shipPos.ship.length > this.SIZE)
-        shipPos.pos.column = this.SIZE - shipPos.ship.length;
+      if (this.dragndrop.pos.column + this.dragndrop.ship.length > this.SIZE)
+        this.dragndrop.pos.column = this.SIZE - this.dragndrop.ship.length;
     }
   }
+
   removeShip() {
     this.ships = this.ships.filter(({ confirmed }) => confirmed);
   }
+  removeShipAtRC(row: number, column: number) {
+    this.ships = this.ships.filter(
+      ({ pos }) => pos.row !== row || pos.column !== column
+    );
+  }
+
   placeShip(ship: ShipType, row: number, column: number, confirmed = false) {
     const [isPossible] = this.isPlacementPossible(ship, row, column);
     if (!isPossible) return false;
@@ -134,6 +176,7 @@ export class Gameboard {
     ];
     return true;
   }
+
   placeShipsRandomly() {
     const idx = Math.floor(Math.random() * 10);
     const game = combinations[idx];
@@ -169,9 +212,13 @@ export class Gameboard {
     return [result, badCoords];
   }
   //GAMEPLAY
-  getShipRC(r: number, c: number): null | ShipPosition {
+  getShipRC(r: number, c: number, searchHover = true): null | ShipPosition {
     let res = null;
-    this.ships.forEach((shipPos) => {
+    let shipsToSearch = [...this.ships];
+    if (this.dragndrop && searchHover) {
+      shipsToSearch.push(this.dragndrop);
+    }
+    shipsToSearch.forEach((shipPos) => {
       const { pos, ship } = shipPos;
       const { row, column } = pos;
       const { length, vertical } = ship;

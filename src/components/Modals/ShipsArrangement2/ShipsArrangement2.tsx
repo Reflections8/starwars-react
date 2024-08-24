@@ -4,12 +4,11 @@ import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import { Board } from "./components/Board";
 import { Ships } from "./components/Ships";
 import { Timer } from "./components/Timer";
-import { Gameboard } from "./gameboard";
+import { Gameboard, ShipPosition, ShipType } from "./gameboard";
 import gridBottomElement from "./img/grid-bg-bottom-element.png";
 import gridBg from "./img/grid-bg.svg";
 import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
-import { Ship } from "./ship";
 import "./styles/ShipsArrangement.css";
 import { useBattleships } from "../../../context/BattleshipsContext";
 
@@ -31,6 +30,7 @@ const initialUnsettledShips = {
   "3": 2,
   "4": 1,
 };
+
 export function ShipsArrangement2() {
   const { gameState } = useBattleships();
   if (gameState?.status !== "NOT_STARTED") return null;
@@ -39,64 +39,46 @@ export function ShipsArrangement2() {
 export function ShipsArrangementChild() {
   const { closeModal } = useModal();
   const [allShipsSettled, setAllShipsSettled] = useState(false);
-  const [selectedShipToSettle, setSelectedShipToSettle] = useState<Ship | null>(
-    null
-  );
-  const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
+  const [selectedShipToSettle, setSelectedShipToSettle] =
+    useState<ShipType | null>(null);
   const [gameboard, setGameboard] = useState(new Gameboard());
   const handleAutoArrangement = debounce(() => {
     handleAuto();
   }, 300);
   const { setUserShips } = useBattleships();
+
   function handleAuto() {
     gameboard.placeShipsRandomly();
-    setUnsettledShips({ "1": 0, "2": 0, "3": 0, "4": 0 });
   }
 
   useEffect(() => {
     setAllShipsSettled(
-      Object.values(unsettledShips).every((item) => item === 0)
+      Object.values(gameboard.getUnsettledShips()).every((item) => item === 0)
     );
-  }, [unsettledShips]);
+  }, [gameboard.getUnsettledShips()]);
 
   const updateGameboard = () => {
     const newGameboard = new Gameboard();
     newGameboard.ships = gameboard.ships;
+    newGameboard.dragndrop = gameboard.dragndrop;
     setGameboard(newGameboard);
   };
 
   const handleShipAction = (
     action: "rotateShip" | "confirmShip" | "removeShip"
   ) => {
-    if (action === "removeShip") {
-      const unconfirmed = gameboard.getUnconfirmedShips();
-      if (unconfirmed) {
-        setUnsettledShips((prevState) => {
-          return {
-            ...prevState,
-            // @ts-ignore
-            [unconfirmed.ship.length]: prevState[unconfirmed.ship.length] + 1,
-          };
-        });
-      }
-    }
     gameboard[action]();
     updateGameboard();
   };
 
   const onCellClicked = (row: number, column: number) => {
-    const unconfirmed = gameboard.getUnconfirmedShips();
-    if (unconfirmed) {
-      gameboard.replaceShip(unconfirmed, row, column);
-      updateGameboard();
-      return;
-    }
-    const ship = gameboard.getShipRC(row, column);
-    if (ship) {
-      gameboard.unconfirmShipAtRC(row, column);
-      updateGameboard();
-      return;
-    }
+    //const shipPos = gameboard.getShipRC(row, column, false);
+    //if (shipPos) {
+    //  gameboard.removeShipAtRC(row, column);
+    //  setSelectedShipToSettle(shipPos.ship);
+    //  updateGameboard();
+    //  return;
+    //}
 
     if (!selectedShipToSettle) return;
 
@@ -104,17 +86,9 @@ export function ShipsArrangementChild() {
     if (!unsettledShips[selectedShipToSettle.length]) return;
     const placed = gameboard.placeShip(selectedShipToSettle, row, column);
     if (!placed) return;
-    setUnsettledShips((prevState) => {
-      return {
-        ...prevState,
-        [selectedShipToSettle.length]:
-          //@ts-ignore
-          unsettledShips[selectedShipToSettle.length] - 1,
-      };
-    });
-    //@ts-ignore
-    if (unsettledShips[selectedShipToSettle.length] <= 1)
-      setSelectedShipToSettle(null);
+
+    gameboard.dragndrop = null;
+    setSelectedShipToSettle(null);
 
     updateGameboard();
   };
@@ -122,6 +96,44 @@ export function ShipsArrangementChild() {
   const handleTimerStart = () => {
     setUserShips!(gameboard.ships);
     closeModal!();
+  };
+
+  const dragOnThisBalls = (i: any) => {
+    if (!selectedShipToSettle) {
+      gameboard.dragndrop = null;
+      return;
+    }
+    const [isPossible] = gameboard.isPlacementPossible(
+      selectedShipToSettle,
+      i.row,
+      i.column
+    );
+    if (!isPossible) return;
+    gameboard.dragndrop = {
+      ship: selectedShipToSettle,
+      pos: i,
+      confirmed: false,
+    };
+    updateGameboard();
+  };
+
+  const handleDragStart = (ship: ShipType) => {
+    setSelectedShipToSettle(ship);
+    gameboard.removeShip();
+    updateGameboard();
+  };
+
+  const handleDragEnd = () => {
+    setSelectedShipToSettle(null);
+    console.log("ZALUPA");
+    //const ship = gameboard.dragndrop?.ship;
+  };
+
+  const handleDragBoardStart = (shipPos: ShipPosition) => {
+    gameboard.dragndrop = shipPos;
+    gameboard.removeShipAtRC(shipPos.pos.row, shipPos.pos.column);
+    setSelectedShipToSettle(shipPos.ship);
+    updateGameboard();
   };
 
   return (
@@ -163,6 +175,9 @@ export function ShipsArrangementChild() {
               />
             </div>
             <Board
+              onDragEnd={handleDragEnd}
+              onDragStart={handleDragBoardStart}
+              hoverCell={dragOnThisBalls}
               handleShipAction={handleShipAction}
               gameboard={gameboard}
               onCellClicked={onCellClicked}
@@ -170,13 +185,10 @@ export function ShipsArrangementChild() {
           </div>
         </div>
         <Ships
+          onDragEnd={handleDragEnd}
+          onDragStart={handleDragStart}
           selectedShipToSettle={selectedShipToSettle}
-          setSelectedShipToSettle={(v) => {
-            setSelectedShipToSettle(v);
-            gameboard.removeShip();
-            updateGameboard();
-          }}
-          unsettledShips={unsettledShips}
+          gameboard={gameboard}
         />
         {/* ACTION BUTTONS */}
         <div className="shipsArr__buttons">

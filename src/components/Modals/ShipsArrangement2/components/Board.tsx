@@ -22,9 +22,13 @@ interface Props {
   handleShipAction: (
     action: "rotateShip" | "confirmShip" | "removeShip"
   ) => void;
+  hoverCell: (i: any) => void;
+  onDragEnd: () => void;
+  onDragStart: (ship: ShipPosition) => void;
 }
 
 interface FieldProps {
+  hoverCell: () => void;
   onClick?: () => void;
   className?: string;
   type?: string; //"empty" | "ship" | "nearShip" | "error";
@@ -36,6 +40,8 @@ interface FieldProps {
     action: "rotateShip" | "confirmShip" | "removeShip"
   ) => void;
   badPlacement: boolean;
+  onDragEnd: () => void;
+  onDragStart: (ship: ShipPosition) => void;
 }
 
 const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
@@ -61,19 +67,31 @@ const shipImagesEnum: Record<number, { horizontal: string; vertical: string }> =
 function Field({
   className,
   type,
-  onClick,
+  onDragEnd,
+  onDragStart,
   shipPos = null,
   isHead = false,
   confirmed = false,
   handleShipAction,
   badPlacement,
+  hoverCell,
 }: FieldProps) {
   const renderImg = () => {
     if (!shipPos || !isHead) return null;
     const { ship } = shipPos;
     return (
       <img
-        style={{ zIndex: 20 }}
+        draggable={true}
+        onDragStart={() => {
+          onDragStart(shipPos);
+        }}
+        onDragEnd={() => {
+          onDragEnd();
+        }}
+        style={{
+          zIndex: 100,
+          position: "absolute",
+        }}
         src={
           shipImagesEnum[ship?.length][
             ship.vertical ? "vertical" : "horizontal"
@@ -166,13 +184,7 @@ function Field({
     );
   };
   return (
-    <div
-      onClick={(e) => {
-        onClick?.();
-        e.stopPropagation();
-      }}
-      style={{ position: "relative" }}
-    >
+    <div onDragOver={() => hoverCell()} style={{ position: "relative" }}>
       <div
         style={{
           position: "absolute",
@@ -183,7 +195,7 @@ function Field({
           zIndex: -1,
         }}
         className={`${className} ${type}`}
-      ></div>
+      />
       {renderConfirmButtons()}
       {renderImg()}
     </div>
@@ -221,7 +233,14 @@ const isNearField = (
   return matchingField || null;
 };
 
-export function Board({ gameboard, onCellClicked, handleShipAction }: Props) {
+export function Board({
+  gameboard,
+  onCellClicked,
+  handleShipAction,
+  hoverCell,
+  onDragEnd,
+  onDragStart,
+}: Props) {
   const columnLabels = "abcdefghij".split("");
   const nearFields = gameboard.getFieldsNearShips();
   const [badPlacement, setBadPlacement] = useState(false);
@@ -256,6 +275,9 @@ export function Board({ gameboard, onCellClicked, handleShipAction }: Props) {
 
         let fieldComponent = (
           <Field
+            onDragEnd={onDragEnd}
+            onDragStart={onDragStart}
+            hoverCell={() => hoverCell({ row, column })}
             confirmed={confirmed}
             gameboard={gameboard}
             type={type}

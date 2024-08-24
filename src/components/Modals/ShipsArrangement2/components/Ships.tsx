@@ -1,3 +1,4 @@
+import { Gameboard } from "../gameboard";
 import ship1 from "../img/ships/1.png";
 import ship2 from "../img/ships/2.png";
 import ship3 from "../img/ships/3.png";
@@ -6,14 +7,16 @@ import { Ship } from "../ship";
 
 type ShipsProps = {
   selectedShipToSettle: Ship | null;
-  setSelectedShipToSettle: (ship: Ship) => void;
-  unsettledShips: Record<string, number>;
+  gameboard: Gameboard;
+  onDragEnd: () => void;
+  onDragStart: (ship: Ship) => void;
 };
 
 export function Ships({
   selectedShipToSettle,
-  setSelectedShipToSettle,
-  unsettledShips,
+  gameboard,
+  onDragEnd,
+  onDragStart,
 }: ShipsProps) {
   const ships = [
     { ship: new Ship(1), image: ship1 },
@@ -21,16 +24,17 @@ export function Ships({
     { ship: new Ship(3), image: ship3 },
     { ship: new Ship(4), image: ship4 },
   ];
+  const unsettledShips = gameboard.getUnsettledShips();
   return (
     <div className="shipsArr__main-ships">
       {ships.map((s) => (
         <div
+          draggable={true}
           className={`shipsArr__main-ships-item ${
             selectedShipToSettle?.length === s.ship.length ? "active" : ""
           } ${unsettledShips[`${s.ship.length}`] === 0 ? "disabled" : ""}`}
-          onClick={() => {
-            setSelectedShipToSettle(s.ship);
-          }}
+          onDragEnd={onDragEnd}
+          onDragStart={() => onDragStart(s.ship)}
         >
           <div className="shipsArr__main-ships-item-main">
             <img
