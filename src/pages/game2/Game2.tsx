@@ -118,12 +118,10 @@ export function Game2() {
         updateUserboard();
       }
       if (type === "fireResult") {
-        setMyTurn(false);
         enemyBoard.updateEnemyBoard(message);
         updateEnemyBoard();
       }
       if (type === "recieveFire") {
-        setMyTurn(true);
         userBoard.updateUserBoard(message);
         updateUserboard();
       }

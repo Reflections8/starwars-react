@@ -181,13 +181,14 @@ export class Gameboard {
     const idx = Math.floor(Math.random() * 10);
     const game = combinations[idx];
     this.ships = [];
+    this.dragndrop = null;
+
     for (let i = 0; i < game.length; i++) {
       const ship = { length: game[i].length, vertical: game[i].vertical };
       const row = game[i].coords.x;
       const column = game[i].coords.y;
       this.placeShip(ship, row, column, true);
     }
-    return this;
   }
 
   isPlacementPossible(
@@ -232,12 +233,5 @@ export class Gameboard {
     });
 
     return res;
-  }
-
-  placeHitCell(pos: Position) {
-    const { row, column } = pos;
-    const shipPos = this.getShipRC(row, column);
-    this.hitCells.push({ isSuccess: !!shipPos, pos });
-    return !!shipPos;
   }
 }

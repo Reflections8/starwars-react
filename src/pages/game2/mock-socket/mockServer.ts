@@ -4,6 +4,7 @@ const createMockServer = () => {
   const mockServer = new Server("ws://localhost:8080");
 
   const gameState = {
+    turn: "",
     players: { I: "", II: "" },
     boards: {
       I: {
@@ -47,10 +48,11 @@ const createMockServer = () => {
           );
           break;
         case "timeOut":
+          gameState.turn = gameState.players[getEnemy(source)];
           socket.send(
             JSON.stringify({
               type: "turn",
-              message: { player: gameState.players[getEnemy(source)] },
+              message: { player: gameState.turn },
             })
           );
           break;
@@ -70,17 +72,17 @@ const createMockServer = () => {
               };
             }
           );
-          console.log(gameState.boards[getMe(source)]);
           ///SET MOCK ENEMY BOARD
           gameState.boards.II = JSON.parse(JSON.stringify(gameState.boards.I));
           gameState.players.II = "mock";
           ///
           if (gameState.players.I && gameState.players.II) {
-            const turn = Math.random() > 0.5 ? "I" : "II";
+            gameState.turn =
+              gameState.players[Math.random() > 0.5 ? "I" : "II"];
             socket.send(
               JSON.stringify({
                 type: "turn",
-                message: { player: gameState.players[turn] },
+                message: { player: gameState.turn },
               })
             );
           }
@@ -95,6 +97,8 @@ const createMockServer = () => {
           );
           break;
         case "fire":
+          if (gameState.turn !== source) return;
+
           let isHit = false;
           const { ships, misses } = gameState.boards[getEnemy(source)];
 
@@ -160,6 +164,15 @@ const createMockServer = () => {
               })
             );
           }
+          if (isHit) gameState.turn = source;
+          else gameState.turn = gameState.players[getEnemy(source)];
+          //send to both players
+          socket.send(
+            JSON.stringify({
+              type: "turn",
+              message: { player: gameState.turn },
+            })
+          );
           break;
         case "join":
           break;

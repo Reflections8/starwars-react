@@ -42,14 +42,7 @@ export function ShipsArrangementChild() {
   const [selectedShipToSettle, setSelectedShipToSettle] =
     useState<ShipType | null>(null);
   const [gameboard, setGameboard] = useState(new Gameboard());
-  const handleAutoArrangement = debounce(() => {
-    handleAuto();
-  }, 300);
   const { setUserShips } = useBattleships();
-
-  function handleAuto() {
-    gameboard.placeShipsRandomly();
-  }
 
   useEffect(() => {
     setAllShipsSettled(
@@ -159,7 +152,13 @@ export function ShipsArrangementChild() {
       <div className="shipsArr__main">
         {/* FIELD */}
         <div className="shipsArr__main-field">
-          <Timer onRandom={handleAutoArrangement} onStart={handleTimerStart} />
+          <Timer
+            onRandom={() => {
+              gameboard.placeShipsRandomly();
+              updateGameboard();
+            }}
+            onStart={handleTimerStart}
+          />
           {/* GRID WRAPPER */}
           <div className="shipsArr__main-field-gridWrapper">
             <div className="shipsArr__main-field-gridWrapper-bgWrapper">
@@ -192,7 +191,13 @@ export function ShipsArrangementChild() {
         />
         {/* ACTION BUTTONS */}
         <div className="shipsArr__buttons">
-          <CuttedButton callback={() => handleAutoArrangement()} text="Авто" />
+          <CuttedButton
+            callback={() => {
+              gameboard.placeShipsRandomly();
+              updateGameboard();
+            }}
+            text="Авто"
+          />
           <CuttedButton
             text="Играть"
             className={!allShipsSettled ? "halfTransparent" : ""}
