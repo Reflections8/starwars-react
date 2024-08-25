@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import bgImgBlur from "./img/left-bg-blur.png";
 import bgImg from "./img/left-bg.png";
+import highlightBg from "../../pages/home/video/highlight-1.svg";
 import "./styles/Header.css";
 import "./styles/HeaderAnimation.css";
 
@@ -82,7 +83,7 @@ export function Header({
           {!!leftAction && (
             <div
               onClick={leftAction}
-              className={`header__top-link header__top-left ${
+              className={`header__top-link header__top-left  ${leftClassName} ${
                 onlyRight ? "header__top-link--Disabled" : ""
               } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
             >
@@ -96,12 +97,16 @@ export function Header({
               {!onlyRight && (
                 <div className={`header__top-left-content`}>
                   <div className="header__top-left-content-iconWrapper">
+                    <img
+                      src={highlightBg}
+                      className={`${leftClassName} highlighter`}
+                    />
                     {leftIcon}
                     <div className="header__top-left-content-iconWrapper-blur">
                       {leftIcon}
                     </div>
                   </div>
-                  <span className="header__top-left-content-text">
+                  <span className={`header__top-left-content-text`}>
                     {leftText}
                   </span>
                 </div>

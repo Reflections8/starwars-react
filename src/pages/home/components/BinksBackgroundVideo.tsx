@@ -36,37 +36,43 @@ export function BinksBackgroundVideo({
     if (videoRef3.current) {
       setInterval(() => {
         // @ts-ignore
-        highlightElement(videoRef3.current?.currentTime);
+        findTimeFunction(videoRef3.current?.currentTime);
       }, 1000);
     }
   }, []);
 
-  function highlightElement(currentTime: number) {
+  function findTimeFunction(currentTime: number) {
     const fixedTime = currentTime?.toFixed(0);
-    console.log(fixedTime);
     // @ts-ignore
     if (fixedTime == 8) {
-      highlightShopIcon();
+      highlightElement("shop");
     }
     // @ts-ignore
-    if (fixedTime === 11) {
-      highlightGamesIcon();
+    if (fixedTime == 11) {
+      highlightElement("games");
+    }
+    // @ts-ignore
+    if (fixedTime == 15) {
+      highlightElement("credits");
+    }
+    // @ts-ignore
+    if (fixedTime == 17) {
+      highlightElement("akron");
     }
   }
 
-  function highlightShopIcon() {
-    const shopIcon = document.querySelector(".header__bottom-main--Shop");
-    shopIcon?.classList.add("highlightPulse");
+  function highlightElement(className: string) {
+    const element = document.querySelector(`.highlighter.${className}`);
+    element?.classList.add("active");
     setTimeout(() => {
-      shopIcon?.classList.remove("highlightPulse");
+      element?.classList.add("pulsation");
+    }, 250);
+    setTimeout(() => {
+      element?.classList.remove("active");
     }, 2500);
-  }
-
-  function highlightGamesIcon() {
-    const gamesContent = document.querySelector(
-      ".header__top-bg.header__top-left-bg"
-    );
-    gamesContent?.classList.add("highlightPulse");
+    setTimeout(() => {
+      element?.classList.remove("pulsation");
+    }, 2750);
   }
 
   return (

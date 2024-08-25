@@ -5,7 +5,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   gap: 1rem;
   position: relative;
 }
@@ -16,6 +16,7 @@
   position: relative;
   z-index: 1;
   text-align: center;
+  margin-top: 32px;
 }
 
 .binks__video2 {
@@ -51,4 +52,8 @@
   max-height: 407px;
   z-index: 0;
   transition: all 0.2s ease-in-out;
+}
+
+.binks__btnReady {
+  margin-bottom: 32px;
 }
