@@ -12,8 +12,11 @@ import { GameFields } from "./components/GameFields/GameFields";
 import { GameHeader } from "./components/GameHeader/GameHeader";
 import createMockServer from "./mock-socket/mockServer";
 import "./styles/game2.css";
-
 import { useTimer } from "react-use-precision-timer";
+//@ts-ignore
+import { enableDragDropTouch } from "../../mobileDrag";
+enableDragDropTouch();
+
 const timerSeconds = 60;
 
 export function Game2() {
