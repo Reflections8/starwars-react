@@ -120,7 +120,7 @@ function Field({
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      zIndex: 10,
+      zIndex: 100,
     };
     const { ship } = shipPos;
     const rectBase = 25;
@@ -164,6 +164,7 @@ function Field({
           //@ts-ignore
           style={{
             ...styleBase,
+            zIndex: 200,
             left: ship.vertical ? 25 : 25 * ship.length,
             top: 0,
           }}
@@ -180,6 +181,7 @@ function Field({
           //@ts-ignore
           style={{
             ...styleBase,
+            zIndex: 300,
             left: ship.vertical ? 0 : 25 * ((ship.length - 1) / 2),
             top: ship.vertical ? 25 * ship.length + 8 : 25 + 8,
             filter: !badPlacement ? "none" : "brightness(0.5)",
@@ -191,14 +193,7 @@ function Field({
     );
   };
   return (
-    <div
-      onDragEnterCapture={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        hoverCell();
-      }}
-      style={{ position: "relative" }}
-    >
+    <div onDragEnterCapture={hoverCell} style={{ position: "relative" }}>
       <div
         style={{
           position: "absolute",
@@ -223,10 +218,8 @@ function Field({
           width: getWidth(),
           height: getHeight(),
         }}
-        onDragStart={(e) => {
-          shipPos && onDragStart(shipPos);
-        }}
-        onDragEnd={() => onDragEnd()}
+        onDragStart={() => shipPos && onDragStart(shipPos)}
+        onDragEnd={onDragEnd}
         draggable={true}
       />
     </div>
