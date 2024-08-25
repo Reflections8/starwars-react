@@ -185,6 +185,7 @@
   max-width: 200px;
   position: relative;
   top: -30px;
+  transition: all .2s ease-in-out;
 }
 
 .header__bottom-main-bg {
