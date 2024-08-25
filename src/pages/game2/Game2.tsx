@@ -27,6 +27,7 @@ export function Game2() {
   const [socket, setSocket] = useState<null | WebSocket>(null);
   const { openModal } = useModal();
   const { openDrawer, closeDrawer } = useDrawer();
+  // @ts-ignore
   const { gameState, userShips, setGameState, setUserShips } = useBattleships();
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
@@ -154,9 +155,10 @@ export function Game2() {
       closeDrawer!();
     }
     if (gameState?.status === "NOT_STARTED") {
-      restartBoards();
-      setUserShips!([]);
-      openModal!("shipsArrangement2");
+      // restartBoards();
+      // setUserShips!([]);
+      // openModal!("shipsArrangement2");
+      openModal!("seaBattle");
     }
     if (gameState?.status === "GIVE_UP") {
       socket && socket.send(JSON.stringify({ type: "giveUp", source: player }));
