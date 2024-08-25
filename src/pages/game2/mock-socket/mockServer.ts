@@ -147,7 +147,6 @@ const createMockServer = () => {
             return;
           }
           //
-
           if (source === "mock") {
             socket.send(
               JSON.stringify({
@@ -162,6 +161,7 @@ const createMockServer = () => {
               JSON.stringify({
                 type: "fireResult",
                 message: hideInfo(gameState.boards[getEnemy(source)]),
+                isHit,
               })
             );
           }

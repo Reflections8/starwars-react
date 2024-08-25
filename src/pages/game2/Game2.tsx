@@ -156,7 +156,7 @@ export function Game2() {
   useEffect(() => {
     if (socket === null) return;
     socket.onmessage = (event) => {
-      const { message, type, attack } = JSON.parse(event.data);
+      const { message, type, attack, isHit } = JSON.parse(event.data);
       if (type === "turn") {
         setMyTurn(message.player === player);
       }
@@ -165,6 +165,10 @@ export function Game2() {
         updateUserboard();
       }
       if (type === "fireResult") {
+        console.log(
+          "Was your hit successfull? " +
+            (isHit ? "Hell yeah" : "Nope, you suck")
+        );
         enemyBoard.updateEnemyBoard(message);
         updateEnemyBoard();
       }
