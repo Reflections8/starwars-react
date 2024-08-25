@@ -118,15 +118,12 @@ export function ShipsArrangementChild() {
 
   const handleDragEnd = () => {
     setSelectedShipToSettle(null);
-    console.log("ZALUPA");
-    //const ship = gameboard.dragndrop?.ship;
   };
 
   const handleDragBoardStart = (shipPos: ShipPosition) => {
-    gameboard.dragndrop = shipPos;
     gameboard.removeShipAtRC(shipPos.pos.row, shipPos.pos.column);
-    setSelectedShipToSettle(shipPos.ship);
     updateGameboard();
+    setSelectedShipToSettle(shipPos.ship);
   };
 
   return (

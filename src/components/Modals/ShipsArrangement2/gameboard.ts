@@ -159,7 +159,7 @@ export class Gameboard {
   }
 
   removeShip() {
-    this.ships = this.ships.filter(({ confirmed }) => confirmed);
+    this.dragndrop = null;
   }
   removeShipAtRC(row: number, column: number) {
     this.ships = this.ships.filter(

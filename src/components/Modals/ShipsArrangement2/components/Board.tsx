@@ -76,21 +76,28 @@ function Field({
   badPlacement,
   hoverCell,
 }: FieldProps) {
+  const getWidth = () => {
+    if (!shipPos) return 25;
+    const { ship } = shipPos;
+    return ship.vertical ? 25 : 25 * ship.length;
+  };
+  const getHeight = () => {
+    if (!shipPos) return 25;
+    const { ship } = shipPos;
+    return ship.vertical ? 25 * ship.length : 25;
+  };
+
   const renderImg = () => {
     if (!shipPos || !isHead) return null;
     const { ship } = shipPos;
     return (
       <img
-        draggable={true}
-        onDragStart={() => {
-          onDragStart(shipPos);
-        }}
-        onDragEnd={() => {
-          onDragEnd();
-        }}
+        draggable={false}
         style={{
           zIndex: 100,
           position: "absolute",
+          top: 0,
+          left: 0,
         }}
         src={
           shipImagesEnum[ship?.length][
@@ -184,7 +191,14 @@ function Field({
     );
   };
   return (
-    <div onDragOver={() => hoverCell()} style={{ position: "relative" }}>
+    <div
+      onDragEnterCapture={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        hoverCell();
+      }}
+      style={{ position: "relative" }}
+    >
       <div
         style={{
           position: "absolute",
@@ -198,6 +212,23 @@ function Field({
       />
       {renderConfirmButtons()}
       {renderImg()}
+      <div
+        style={{
+          zIndex: 100,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          minWidth: 22,
+          minHeight: 22,
+          width: getWidth(),
+          height: getHeight(),
+        }}
+        onDragStart={(e) => {
+          shipPos && onDragStart(shipPos);
+        }}
+        onDragEnd={() => onDragEnd()}
+        draggable={true}
+      />
     </div>
   );
 }
@@ -277,7 +308,10 @@ export function Board({
           <Field
             onDragEnd={onDragEnd}
             onDragStart={onDragStart}
-            hoverCell={() => hoverCell({ row, column })}
+            hoverCell={() => {
+              console.log("HOVERCELL");
+              hoverCell({ row, column });
+            }}
             confirmed={confirmed}
             gameboard={gameboard}
             type={type}
