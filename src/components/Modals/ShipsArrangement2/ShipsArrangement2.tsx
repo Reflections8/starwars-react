@@ -73,9 +73,21 @@ export function ShipsArrangementChild() {
       gameboard.removeShipAtRC(shipPos.pos.row, shipPos.pos.column);
       gameboard.dragndrop = { ...shipPos, confirmed: false };
     } else if (gameboard.dragndrop) {
+      const [isPossible] = gameboard.isPlacementPossible(
+        gameboard.dragndrop.ship,
+        row,
+        column
+      );
+      if (!isPossible) return;
       gameboard.dragndrop.pos.row = row;
       gameboard.dragndrop.pos.column = column;
     } else if (selectedShipToSettle) {
+      const [isPossible] = gameboard.isPlacementPossible(
+        selectedShipToSettle,
+        row,
+        column
+      );
+      if (!isPossible) return;
       gameboard.dragndrop = {
         ship: selectedShipToSettle,
         pos: { row, column },
