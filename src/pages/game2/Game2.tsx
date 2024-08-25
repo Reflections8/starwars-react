@@ -173,6 +173,12 @@ export function Game2() {
         updateEnemyBoard();
       }
       if (type === "recieveFire") {
+        console.log(
+          "Was your enemy hit successfull? " +
+            (isHit
+              ? "Sadly, m'lord, we took damage"
+              : "Nope, he sucks, and his crew are monkeys")
+        );
         playBeamAnimation(attack, false).then(() => {
           userBoard.updateUserBoard(message);
           updateUserboard();

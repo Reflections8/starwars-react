@@ -154,6 +154,7 @@ const createMockServer = () => {
                 isMe: true,
                 message: gameState.boards[getEnemy(source)],
                 attack: message,
+                isHit,
               })
             );
           } else {
