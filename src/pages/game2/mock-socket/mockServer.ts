@@ -100,6 +100,7 @@ const createMockServer = () => {
           if (gameState.turn !== source) return;
 
           let isHit = false;
+          let isDead = false;
           const { ships, misses } = gameState.boards[getEnemy(source)];
 
           ships.forEach((s, idx) => {
@@ -121,7 +122,13 @@ const createMockServer = () => {
                 column: c,
               });
               // @ts-ignore
-              if (ships[idx].cells.length === length) ships[idx].isDead = true;
+              if (ships[idx].cells.length === length) {
+                // @ts-ignore
+                ships[idx].isDead = true;
+                isDead = true;
+              } else {
+                isDead = false;
+              }
             }
           });
           // @ts-ignore
@@ -155,6 +162,7 @@ const createMockServer = () => {
                 message: gameState.boards[getEnemy(source)],
                 attack: message,
                 isHit,
+                isDead,
               })
             );
           } else {
@@ -163,6 +171,7 @@ const createMockServer = () => {
                 type: "fireResult",
                 message: hideInfo(gameState.boards[getEnemy(source)]),
                 isHit,
+                isDead,
               })
             );
           }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTimer } from "react-use-precision-timer";
 import { Header } from "../../components/Header/Header";
 import { useBattleships } from "../../context/BattleshipsContext";
 import { useDrawer } from "../../context/DrawerContext";
@@ -12,13 +13,13 @@ import { GameFields } from "./components/GameFields/GameFields";
 import { GameHeader } from "./components/GameHeader/GameHeader";
 import createMockServer from "./mock-socket/mockServer";
 import "./styles/game2.css";
-import { useTimer } from "react-use-precision-timer";
 //@ts-ignore
 import { enableDragDropTouch } from "../../mobileDrag";
 import audioBg from "./audio/game.mp3";
-import audioShot from "./audio/shot.mp3";
-import audioSuccessShot from "./audio/shot-success.mp3";
+import audioKilledShot from "./audio/shot-killed.mp3";
 import audioMissedShot from "./audio/shot-missed.mp3";
+import audioSuccessShot from "./audio/shot-success.mp3";
+import audioShot from "./audio/shot.mp3";
 enableDragDropTouch();
 
 const timerSeconds = 60;
@@ -129,6 +130,15 @@ export function Game2() {
     shotAudioRef.current.play().catch();
   };
 
+  const stopBackgroundAudio = () => {
+    if (audioBgRef.current) {
+      // @ts-ignore
+      audioBgRef.current.pause();
+      // @ts-ignore
+      audioBgRef.current.currentTime = 0;
+    }
+  };
+
   useEffect(() => {
     let timer;
     if (myTurn) return;
@@ -149,26 +159,33 @@ export function Game2() {
   }, [myTurn, userBoard]);
 
   useEffect(() => {
-    if (gameState?.status === "LOST") openModal!("battleshipsLost");
+    if (gameState?.status === "LOST") {
+      stopBackgroundAudio();
+      openModal!("battleshipsLost");
+    }
     if (gameState?.status === "WON") {
+      stopBackgroundAudio();
       openModal!("battleshipsWon");
       closeDrawer!();
     }
     if (gameState?.status === "NOT_STARTED") {
+      // TODO: пока убрал
       // restartBoards();
       // setUserShips!([]);
       // openModal!("shipsArrangement2");
+
       openModal!("seaBattle");
     }
     if (gameState?.status === "GIVE_UP") {
       socket && socket.send(JSON.stringify({ type: "giveUp", source: player }));
+      stopBackgroundAudio();
     }
   }, [gameState?.status]);
 
   useEffect(() => {
     if (socket === null) return;
     socket.onmessage = (event) => {
-      const { message, type, attack, isHit } = JSON.parse(event.data);
+      const { message, type, attack, isHit, isDead } = JSON.parse(event.data);
       if (type === "turn") {
         setMyTurn(message.player === player);
       }
@@ -177,31 +194,27 @@ export function Game2() {
         updateUserboard();
       }
       if (type === "fireResult") {
-        console.log(
-          "Was your hit successfull? " +
-            (isHit ? "Hell yeah" : "Nope, you suck")
-        );
         isHit
-          ? // @ts-ignore
-            shotSuccessAudioRef.current.play().catch()
+          ? isDead
+            ? // @ts-ignore
+              shotKilledAudioRef.current.play().catch()
+            : // @ts-ignore
+              shotSuccessAudioRef.current.play().catch()
           : // @ts-ignore
             shotMissAudioRef.current.play().catch();
         enemyBoard.updateEnemyBoard(message);
         updateEnemyBoard();
       }
       if (type === "recieveFire") {
-        console.log(
-          "Was your enemy hit successfull? " +
-            (isHit
-              ? "Sadly, m'lord, we took damage"
-              : "Nope, he sucks, and his crew are monkeys")
-        );
-
+        console.log({ isDead });
         playBeamAnimation(attack, false).then(() => {
           userBoard.updateUserBoard(message);
           isHit
-            ? // @ts-ignore
-              shotSuccessAudioRef.current.play().catch()
+            ? isDead
+              ? // @ts-ignore
+                shotKilledAudioRef.current.play().catch()
+              : // @ts-ignore
+                shotSuccessAudioRef.current.play().catch()
             : // @ts-ignore
               shotMissAudioRef.current.play().catch();
           updateUserboard();
@@ -224,6 +237,7 @@ export function Game2() {
       console.log("Disconnected from WebSocket server");
     };
     setSocket(newSocket);
+
     return () => {
       newSocket.close();
       mockServer.stop();
@@ -258,6 +272,7 @@ export function Game2() {
   const shotAudioRef = useRef(null);
   const shotSuccessAudioRef = useRef(null);
   const shotMissAudioRef = useRef(null);
+  const shotKilledAudioRef = useRef(null);
 
   useEffect(() => {
     if (gameState?.status === "IN_PROGRESS") {
@@ -289,7 +304,11 @@ export function Game2() {
         src={audioMissedShot}
         style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
       />
-
+      <audio
+        ref={shotKilledAudioRef}
+        src={audioKilledShot}
+        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
+      />
       <div className="game2__gradientTop"></div>
       <div className="game2__gradientBottom"></div>
       <GameHeader myTurn={myTurn} />
