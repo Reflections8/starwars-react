@@ -127,7 +127,38 @@ export function Game2() {
 
   const playBeamSound = () => {
     // @ts-ignore
+    shotAudioRef.current.pause();
+    // @ts-ignore
+    shotAudioRef.current.currentTime = 0;
+    // @ts-ignore
     shotAudioRef.current.play().catch();
+  };
+
+  const playSuccessShotAudio = () => {
+    // @ts-ignore
+    shotSuccessAudioRef.current.pause();
+    // @ts-ignore
+    shotSuccessAudioRef.current.currentTime = 0;
+    // @ts-ignore
+    shotSuccessAudioRef.current.play().catch();
+  };
+
+  const playKilledShopAudio = () => {
+    // @ts-ignore
+    shotKilledAudioRef.current.pause();
+    // @ts-ignore
+    shotKilledAudioRef.current.currentTime = 0;
+    // @ts-ignore
+    shotKilledAudioRef.current.play().catch();
+  };
+
+  const playMissedShotAudio = () => {
+    // @ts-ignore
+    shotMissAudioRef.current.pause();
+    // @ts-ignore
+    shotMissAudioRef.current.currentTime = 0;
+    // @ts-ignore
+    shotMissAudioRef.current.play().catch();
   };
 
   const stopBackgroundAudio = () => {
@@ -196,12 +227,9 @@ export function Game2() {
       if (type === "fireResult") {
         isHit
           ? isDead
-            ? // @ts-ignore
-              shotKilledAudioRef.current.play().catch()
-            : // @ts-ignore
-              shotSuccessAudioRef.current.play().catch()
-          : // @ts-ignore
-            shotMissAudioRef.current.play().catch();
+            ? playKilledShopAudio()
+            : playSuccessShotAudio()
+          : playMissedShotAudio();
         enemyBoard.updateEnemyBoard(message);
         updateEnemyBoard();
       }
@@ -211,12 +239,9 @@ export function Game2() {
           userBoard.updateUserBoard(message);
           isHit
             ? isDead
-              ? // @ts-ignore
-                shotKilledAudioRef.current.play().catch()
-              : // @ts-ignore
-                shotSuccessAudioRef.current.play().catch()
-            : // @ts-ignore
-              shotMissAudioRef.current.play().catch();
+              ? playKilledShopAudio()
+              : playSuccessShotAudio()
+            : playMissedShotAudio();
           updateUserboard();
         });
       }
