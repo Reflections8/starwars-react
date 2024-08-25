@@ -39,7 +39,9 @@ export function ModalProvider({ children }: ModalProviderProps) {
       // Если это расстановка кораблей, то не закрываем при клике по background
       const isShipArrangementModal =
         // @ts-ignore
-        event.target.classList.contains("shipsArrangement2");
+        event.target.classList.contains("shipsArrangement2") ||
+        // @ts-ignore
+        event.target.classList.contains("arrangementRules");
       if (isShipArrangementModal) return;
       if (
         modalElement &&

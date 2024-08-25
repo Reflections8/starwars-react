@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useModal } from "../../../context/ModalContext";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import { Board } from "./components/Board";
@@ -11,6 +11,9 @@ import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
 import "./styles/ShipsArrangement.css";
 import { useBattleships } from "../../../context/BattleshipsContext";
+import { Rules } from "../SeaBattle/components/Rules/Rules";
+import backImg from "../SeaBattle/img/back-button.svg";
+import bgAudio from "./audio/arrangement.mp3";
 
 // @ts-ignore
 function debounce(func: (...args: unknown[]) => void, wait: number) {
@@ -137,82 +140,132 @@ export function ShipsArrangementChild() {
     setSelectedShipToSettle(shipPos.ship);
   };
 
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    // @ts-ignore
+    audioRef.current.play();
+  }, []);
+
   return (
-    <div className="shipsArr">
-      <div className="seaBattle__rulesButtonWrapper">
-        <img
-          src={rulesCornerImg}
-          alt="rules-corner"
-          className="seaBattle__rulesButtonWrapper-btn-corner--Left"
-        />
-        <img
-          src={rulesImg}
-          alt="rules"
-          className="seaBattle__rulesButtonWrapper-btn"
-        />
-        <img
-          src={rulesCornerImg}
-          alt="rules-corner"
-          className="seaBattle__rulesButtonWrapper-btn-corner--Right"
-        />
-      </div>
-      {/* MAIN CONTENT */}
-      <div className="shipsArr__main">
-        {/* FIELD */}
-        <div className="shipsArr__main-field">
-          <Timer
-            onRandom={() => {
-              gameboard.placeShipsRandomly();
-              updateGameboard();
-            }}
-            onStart={handleTimerStart}
+    <>
+      <audio
+        ref={audioRef}
+        src={bgAudio}
+        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
+      />
+      <div className={`shipsArr ${rulesOpen ? "hidden" : ""}`}>
+        <div className="seaBattle__rulesButtonWrapper">
+          <img
+            src={rulesCornerImg}
+            alt="rules-corner"
+            className="seaBattle__rulesButtonWrapper-btn-corner--Left"
           />
-          {/* GRID WRAPPER */}
-          <div className="shipsArr__main-field-gridWrapper">
-            <div className="shipsArr__main-field-gridWrapper-bgWrapper">
-              <img
-                src={gridBg}
-                alt="grid"
-                className="shipsArr__main-field-gridWrapper-bgWrapper-bg"
-              />
-              <img
-                src={gridBottomElement}
-                alt="bottomElement"
-                className="shipsArr__main-field-gridWrapper-bgWrapper-bottomElement"
-              />
+          <img
+            src={rulesImg}
+            alt="rules"
+            className="seaBattle__rulesButtonWrapper-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              // @ts-ignore
+              audioRef.current.play();
+              setRulesOpen(true);
+            }}
+          />
+          <img
+            src={rulesCornerImg}
+            alt="rules-corner"
+            className="seaBattle__rulesButtonWrapper-btn-corner--Right"
+          />
+        </div>
+        {/* MAIN CONTENT */}
+        <div className="shipsArr__main">
+          {/* FIELD */}
+          <div className="shipsArr__main-field">
+            <Timer
+              onRandom={() => {
+                gameboard.placeShipsRandomly();
+                updateGameboard();
+              }}
+              onStart={handleTimerStart}
+            />
+            {/* GRID WRAPPER */}
+            <div className="shipsArr__main-field-gridWrapper">
+              <div className="shipsArr__main-field-gridWrapper-bgWrapper">
+                <img
+                  src={gridBg}
+                  alt="grid"
+                  className="shipsArr__main-field-gridWrapper-bgWrapper-bg"
+                />
+                <img
+                  src={gridBottomElement}
+                  alt="bottomElement"
+                  className="shipsArr__main-field-gridWrapper-bgWrapper-bottomElement"
+                />
+              </div>
+              <Board
+                onDragEnd={handleDragEnd}
+                onDragStart={handleDragBoardStart}
+                hoverCell={dragOnThisBalls}
+                handleShipAction={handleShipAction}
+                gameboard={gameboard}
+                onCellClicked={onCellClicked}
+              ></Board>
             </div>
-            <Board
-              onDragEnd={handleDragEnd}
-              onDragStart={handleDragBoardStart}
-              hoverCell={dragOnThisBalls}
-              handleShipAction={handleShipAction}
-              gameboard={gameboard}
-              onCellClicked={onCellClicked}
-            ></Board>
+          </div>
+          <Ships
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+            selectedShipToSettle={selectedShipToSettle}
+            gameboard={gameboard}
+          />
+          {/* ACTION BUTTONS */}
+          <div className="shipsArr__buttons">
+            <CuttedButton
+              callback={() => {
+                gameboard.placeShipsRandomly();
+                updateGameboard();
+              }}
+              text="Авто"
+            />
+            <CuttedButton
+              text="Играть"
+              className={!allShipsSettled ? "halfTransparent" : ""}
+              callback={handleTimerStart}
+            />
           </div>
         </div>
-        <Ships
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-          selectedShipToSettle={selectedShipToSettle}
-          gameboard={gameboard}
-        />
-        {/* ACTION BUTTONS */}
-        <div className="shipsArr__buttons">
-          <CuttedButton
-            callback={() => {
-              gameboard.placeShipsRandomly();
-              updateGameboard();
-            }}
-            text="Авто"
+      </div>
+
+      {/* RULES */}
+      <div className={`seaBattle shipsArrRules ${rulesOpen ? "visible" : ""}`}>
+        <div className="seaBattle__rulesButtonWrapper">
+          <img
+            src={rulesCornerImg}
+            alt="rules-corner"
+            className="seaBattle__rulesButtonWrapper-btn-corner--Left"
           />
-          <CuttedButton
-            text="Играть"
-            className={!allShipsSettled ? "halfTransparent" : ""}
-            callback={handleTimerStart}
+          <img
+            src={backImg}
+            alt="rules"
+            className="seaBattle__rulesButtonWrapper-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              setRulesOpen(false);
+            }}
+          />
+          <img
+            src={rulesCornerImg}
+            alt="rules-corner"
+            className="seaBattle__rulesButtonWrapper-btn-corner--Right"
           />
         </div>
+        <div className="modal__scrollContainer">
+          <Rules />
+        </div>
+        {/* <div className="modal__scrollContainer__bottomGradient"></div> */}
       </div>
-    </div>
+    </>
   );
 }

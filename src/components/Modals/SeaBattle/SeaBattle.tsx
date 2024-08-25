@@ -48,7 +48,6 @@ export function SeaBattle() {
   }, [activePillProp]);
 
   useEffect(() => {}, [activePill]);
-
   return (
     <div className="seaBattle">
       <div className="seaBattle__rulesButtonWrapper">

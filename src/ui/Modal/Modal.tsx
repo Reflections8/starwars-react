@@ -9,6 +9,7 @@ import { Metrics } from "../../components/Modals/Metrics/Metrics";
 import { Partners } from "../../components/Modals/Partners/Partners";
 import { Player } from "../../components/Modals/Player/Player";
 import { SeaBattle } from "../../components/Modals/SeaBattle/SeaBattle";
+import { SeaBattleRules } from "../../components/Modals/SeaBattle/SeaBattleRules";
 import { Settings } from "../../components/Modals/Settings/Settings";
 import { ShipsArrangement2 } from "../../components/Modals/ShipsArrangement2/ShipsArrangement2";
 import { Shop } from "../../components/Modals/Shop/Shop";
@@ -120,6 +121,11 @@ const modalContentType: ModalContentType = {
     title: "Обучение",
     icon: <GearIcon />,
     component: <Binks />,
+  },
+  rules: {
+    title: "Правила",
+    icon: <SeaBattleIcon />,
+    component: <SeaBattleRules />,
   },
 };
 

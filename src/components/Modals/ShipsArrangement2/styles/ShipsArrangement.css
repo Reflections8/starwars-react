@@ -6,11 +6,29 @@
   display: none;
 }
 
+.modalBg.arrangementRules .modal__body-top-closeBtn {
+  display: none;
+}
+
 .shipsArr {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.shipsArr.hidden {
+  display: none;
+}
+
+.shipsArrRules {
+  display: none;
+  margin-top: 20px;
+  position: relative;
+}
+
+.shipsArrRules.visible {
+  display: block;
 }
 
 .shipsArr__main {
@@ -45,6 +63,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .shipsArr__main-field-timerRow-content {

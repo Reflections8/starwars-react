@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "../../components/Header/Header";
 import { useBattleships } from "../../context/BattleshipsContext";
 import { useDrawer } from "../../context/DrawerContext";
@@ -15,6 +15,10 @@ import "./styles/game2.css";
 import { useTimer } from "react-use-precision-timer";
 //@ts-ignore
 import { enableDragDropTouch } from "../../mobileDrag";
+import audioBg from "./audio/game.mp3";
+import audioShot from "./audio/shot.mp3";
+import audioSuccessShot from "./audio/shot-success.mp3";
+import audioMissedShot from "./audio/shot-missed.mp3";
 enableDragDropTouch();
 
 const timerSeconds = 60;
@@ -75,6 +79,7 @@ export function Game2() {
   };
 
   const playBeamAnimation = ({ row, column }: any, me: boolean) => {
+    playBeamSound();
     const targetCell = document.getElementById(
       `${me ? "enemy" : "user"}Cell${row}-${column}`
     ) as HTMLElement;
@@ -116,6 +121,11 @@ export function Game2() {
         resolve();
       });
     });
+  };
+
+  const playBeamSound = () => {
+    // @ts-ignore
+    shotAudioRef.current.play().catch();
   };
 
   useEffect(() => {
@@ -169,6 +179,11 @@ export function Game2() {
           "Was your hit successfull? " +
             (isHit ? "Hell yeah" : "Nope, you suck")
         );
+        isHit
+          ? // @ts-ignore
+            shotSuccessAudioRef.current.play().catch()
+          : // @ts-ignore
+            shotMissAudioRef.current.play().catch();
         enemyBoard.updateEnemyBoard(message);
         updateEnemyBoard();
       }
@@ -179,8 +194,14 @@ export function Game2() {
               ? "Sadly, m'lord, we took damage"
               : "Nope, he sucks, and his crew are monkeys")
         );
+
         playBeamAnimation(attack, false).then(() => {
           userBoard.updateUserBoard(message);
+          isHit
+            ? // @ts-ignore
+              shotSuccessAudioRef.current.play().catch()
+            : // @ts-ignore
+              shotMissAudioRef.current.play().catch();
           updateUserboard();
         });
       }
@@ -231,8 +252,42 @@ export function Game2() {
     });
   };
 
+  const audioBgRef = useRef(null);
+  const shotAudioRef = useRef(null);
+  const shotSuccessAudioRef = useRef(null);
+  const shotMissAudioRef = useRef(null);
+
+  useEffect(() => {
+    if (gameState?.status === "IN_PROGRESS") {
+      // @ts-ignore
+      audioBgRef.current.play().catch();
+    }
+  }, [gameState?.status]);
+
   return (
     <div className="game2">
+      {/* AUDIO */}
+      <audio
+        ref={audioBgRef}
+        src={audioBg}
+        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
+      />
+      <audio
+        ref={shotAudioRef}
+        src={audioShot}
+        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
+      />
+      <audio
+        ref={shotSuccessAudioRef}
+        src={audioSuccessShot}
+        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
+      />
+      <audio
+        ref={shotMissAudioRef}
+        src={audioMissedShot}
+        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
+      />
+
       <div className="game2__gradientTop"></div>
       <div className="game2__gradientBottom"></div>
       <GameHeader myTurn={myTurn} />
@@ -255,7 +310,7 @@ export function Game2() {
         leftIcon={<RulesIcon />}
         leftText={"Правила"}
         leftAction={() => {
-          openModal!("seaBattle", -1);
+          openModal!("rules");
         }}
         rightIcon={<LeaveIcon />}
         rightText={"Сдаться"}
