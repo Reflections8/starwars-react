@@ -34,6 +34,7 @@ export function Ships({
             selectedShipToSettle?.length === s.ship.length ? "active" : ""
           } ${unsettledShips[`${s.ship.length}`] === 0 ? "disabled" : ""}`}
           onDragEnd={onDragEnd}
+          onClick={() => onDragStart(s.ship)}
           onTouchStart={() => onDragStart(s.ship)}
           onTouchEnd={onDragEnd}
           onDragStart={() => onDragStart(s.ship)}

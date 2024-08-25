@@ -65,24 +65,22 @@ export function ShipsArrangementChild() {
   };
 
   const onCellClicked = (row: number, column: number) => {
-    //const shipPos = gameboard.getShipRC(row, column, false);
-    //if (shipPos) {
-    //  gameboard.removeShipAtRC(row, column);
-    //  setSelectedShipToSettle(shipPos.ship);
-    //  updateGameboard();
-    //  return;
-    //}
+    const shipPos = gameboard.getShipRC(row, column, false);
 
-    if (!selectedShipToSettle) return;
-
-    //@ts-ignore
-    if (!unsettledShips[selectedShipToSettle.length]) return;
-    const placed = gameboard.placeShip(selectedShipToSettle, row, column);
-    if (!placed) return;
-
-    gameboard.dragndrop = null;
-    setSelectedShipToSettle(null);
-
+    if (shipPos) {
+      gameboard.dragndrop = null;
+      gameboard.removeShipAtRC(shipPos.pos.row, shipPos.pos.column);
+      gameboard.dragndrop = { ...shipPos, confirmed: false };
+    } else if (gameboard.dragndrop) {
+      gameboard.dragndrop.pos.row = row;
+      gameboard.dragndrop.pos.column = column;
+    } else if (selectedShipToSettle) {
+      gameboard.dragndrop = {
+        ship: selectedShipToSettle,
+        pos: { row, column },
+        confirmed: false,
+      };
+    }
     updateGameboard();
   };
 

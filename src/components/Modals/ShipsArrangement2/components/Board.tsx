@@ -75,6 +75,7 @@ function Field({
   handleShipAction,
   badPlacement,
   hoverCell,
+  onClick,
 }: FieldProps) {
   const getWidth = () => {
     if (!shipPos) return 25;
@@ -193,7 +194,11 @@ function Field({
     );
   };
   return (
-    <div onDragEnterCapture={hoverCell} style={{ position: "relative" }}>
+    <div
+      onDragEnterCapture={hoverCell}
+      onClick={onClick}
+      style={{ position: "relative" }}
+    >
       <div
         style={{
           position: "absolute",
