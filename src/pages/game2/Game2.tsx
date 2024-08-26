@@ -47,8 +47,9 @@ export function Game2() {
 
   useEffect(() => {
     timer.stop();
+    if (gameState?.status !== "IN_PROGRESS") return;
     timer.start();
-  }, [myTurn]);
+  }, [myTurn, gameState?.status]);
 
   useEffect(() => {
     let interval: any;
@@ -75,6 +76,7 @@ export function Game2() {
     newGameboard.preHit = enemyBoard.preHit;
     setEnemyBoard(newGameboard);
   };
+
   const restartBoards = () => {
     setUserBoard(new Gameboard());
     setEnemyBoard(new Gameboard());
@@ -193,17 +195,18 @@ export function Game2() {
     if (gameState?.status === "LOST") {
       stopBackgroundAudio();
       openModal!("battleshipsLost");
+      restartBoards();
     }
     if (gameState?.status === "WON") {
       stopBackgroundAudio();
       openModal!("battleshipsWon");
       closeDrawer!();
+      restartBoards();
     }
     if (gameState?.status === "NOT_STARTED") {
-      // TODO: пока убрал
-      // restartBoards();
-      // setUserShips!([]);
-      // openModal!("shipsArrangement2");
+      restartBoards();
+      setUserShips!([]);
+      openModal!("shipsArrangement2");
 
       openModal!("seaBattle");
     }
@@ -285,6 +288,7 @@ export function Game2() {
   }, [JSON.stringify(userShips), socket]);
 
   const sendHit = (p: any) => {
+    if (gameState?.status !== "IN_PROGRESS") return;
     playBeamAnimation(p, true).then(() => {
       socket &&
         socket.send(

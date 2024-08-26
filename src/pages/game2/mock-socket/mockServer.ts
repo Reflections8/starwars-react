@@ -34,6 +34,20 @@ const createMockServer = () => {
     };
   };
 
+  const restart = () => {
+    gameState.turn = "";
+    gameState.players = { I: "", II: "" };
+    gameState.boards = {
+      I: {
+        misses: [],
+        ships: [],
+      },
+      II: {
+        misses: [],
+        ships: [],
+      },
+    };
+  };
   mockServer.on("connection", (socket) => {
     socket.on("message", (data) => {
       // @ts-ignore
@@ -46,6 +60,7 @@ const createMockServer = () => {
               message: { victory: false },
             })
           );
+          restart();
           break;
         case "timeOut":
           gameState.turn = gameState.players[getEnemy(source)];
@@ -137,6 +152,7 @@ const createMockServer = () => {
           //@ts-ignore
           if (ships.filter((s) => s.isDead).length === 10) {
             if (source === "mock") {
+              restart();
               socket.send(
                 JSON.stringify({
                   type: "gameOver",
@@ -144,6 +160,7 @@ const createMockServer = () => {
                 })
               );
             } else {
+              restart();
               socket.send(
                 JSON.stringify({
                   type: "gameOver",
