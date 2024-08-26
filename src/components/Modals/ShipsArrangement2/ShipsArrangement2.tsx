@@ -49,9 +49,11 @@ export function ShipsArrangementChild() {
   const { setUserShips } = useBattleships();
 
   useEffect(() => {
-    setAllShipsSettled(
-      Object.values(gameboard.getUnsettledShips()).every((item) => item === 0)
+    const isSettledAll = Object.values(gameboard.getUnsettledShips()).every(
+      (item) => item === 0
     );
+    console.log(isSettledAll);
+    setAllShipsSettled(isSettledAll);
   }, [gameboard.getUnsettledShips()]);
 
   const updateGameboard = () => {

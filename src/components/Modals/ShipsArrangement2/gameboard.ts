@@ -51,12 +51,10 @@ export class Gameboard {
       //@ts-ignore
       res[i] = unsettledMax[i];
     }
-    this.ships.forEach(({ ship }) => {
+    this.ships.forEach(({ ship, confirmed }) => {
+      if (!confirmed) return;
       res[ship.length]--;
     });
-    if (this.dragndrop) {
-      res[this.dragndrop.ship.length]--;
-    }
     return res;
   }
 
