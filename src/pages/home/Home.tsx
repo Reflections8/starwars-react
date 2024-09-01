@@ -211,7 +211,7 @@ export function Home() {
 
       <Header
         position={"bottom"}
-        leftIcon={<GamesIcon />}
+        leftIcon={<GamesIcon className={`highlighterParent games`} />}
         leftText={"Игры"}
         leftClassName={"games"}
         leftAction={() => {

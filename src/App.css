@@ -32,32 +32,47 @@ iframe {
   transform: translate(-50%, -50%);
 }
 
+.highlighter.undefined {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .highlighter.active {
   transition: all 0.2s ease-in-out;
   opacity: 1;
 }
 
-.highlighter.pulsation {
-  animation: highlighterPulse 1.25s ease-in-out 2;
-}
-
 .highlighter.games {
-  left: 70%;
+  left: 170%;
+  top: 6px;
+  z-index: -1;
 }
 
-@keyframes highlighterPulse {
+.highlighter.credits {
+  z-index: -1;
+}
+
+.highlighter.akron {
+  z-index: -1;
+}
+
+.highlighterParent.pulsation {
+  animation: highlighterParentPulse 1.25s ease-in-out 2;
+}
+
+@keyframes highlighterParentPulse {
   0% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 
   50% {
-    transform: translate(-50%, -50%) scale(1.1);
+    transform: scale(1.1);
     opacity: 0.6;
   }
 
   100% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
     opacity: 1;
   }
 }

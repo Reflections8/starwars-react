@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import shopBg from "../../img/ShopBg.png";
-import hightlightBg from "../../../../pages/home/video/highlight-1.svg";
+import hightlightShop from "../../../../pages/home/video/shop.svg";
 
 type HeaderCenterShopProps = {
   onClick: () => void;
@@ -20,10 +20,10 @@ export function HeaderCenterShop({ onClick }: HeaderCenterShopProps) {
       }`}
     >
       <div
-        className="header__bottom-main header__bottom-main--Shop"
+        className="header__bottom-main header__bottom-main--Shop highlighterParent shop"
         onClick={onClick}
       >
-        <img src={hightlightBg} className={`shop highlighter`} />
+        <img src={hightlightShop} className={`highlighter shop`} />
         <img
           src={shopBg}
           alt="shop-bg"

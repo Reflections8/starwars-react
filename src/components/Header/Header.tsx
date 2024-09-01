@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import bgImgBlur from "./img/left-bg-blur.png";
 import bgImg from "./img/left-bg.png";
-import highlightBg from "../../pages/home/video/highlight-1.svg";
+import highlightHeader from "../../pages/home/video/header.svg";
 import "./styles/Header.css";
 import "./styles/HeaderAnimation.css";
 
@@ -98,7 +98,7 @@ export function Header({
                 <div className={`header__top-left-content`}>
                   <div className="header__top-left-content-iconWrapper">
                     <img
-                      src={highlightBg}
+                      src={highlightHeader}
                       className={`${leftClassName} highlighter`}
                     />
                     {leftIcon}

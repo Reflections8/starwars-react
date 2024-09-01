@@ -65,14 +65,16 @@ export function BinksBackgroundVideo({
     const element = document.querySelector(`.highlighter.${className}`);
     element?.classList.add("active");
     setTimeout(() => {
-      element?.classList.add("pulsation");
-    }, 250);
-    setTimeout(() => {
       element?.classList.remove("active");
     }, 2500);
+
+    const parentElement = document.querySelector(
+      `.highlighterParent.${className}`
+    );
+    parentElement?.classList.add("pulsation");
     setTimeout(() => {
-      element?.classList.remove("pulsation");
-    }, 2750);
+      parentElement?.classList.remove("pulsation");
+    }, 2500);
   }
 
   return (

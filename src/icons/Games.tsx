@@ -1,4 +1,8 @@
-export function GamesIcon() {
+type IconProps = {
+  className: string;
+};
+
+export function GamesIcon({ className }: IconProps) {
   return (
     <svg
       width="36"
@@ -6,6 +10,7 @@ export function GamesIcon() {
       viewBox="0 0 36 36"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g clip-path="url(#clip0_123_2322)">
         <rect
