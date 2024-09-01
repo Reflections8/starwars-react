@@ -81,8 +81,4 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   window.addEventListener("resize", documentHeight);
   documentHeight();
-
-  // prevent image dragging
-  const images = document.querySelectorAll("img");
-  console.log(images);
 });

@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import "./styles/Page.css";
 import { ModalProvider } from "../../context/ModalContext";
 import { DrawerProvider } from "../../context/DrawerContext";
@@ -13,6 +13,17 @@ type PageProps = {
 };
 
 export function Page({ dataPage, children }: PageProps) {
+  function setDraggableFalse() {
+    const images = document.querySelectorAll("img");
+    const svgs = document.querySelectorAll("svg");
+
+    images.forEach((img) => img.setAttribute("draggable", "false"));
+    svgs.forEach((svg) => svg.setAttribute("draggable", "false"));
+  }
+
+  useEffect(() => {
+    setDraggableFalse();
+  }, [dataPage]);
   return (
     <LoaderProvider>
       <BackgroundVideoProvider>
