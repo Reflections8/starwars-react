@@ -3,17 +3,17 @@ import topBg from "../img/resources/top-bg.svg";
 import mainBg from "../img/resources/main-bg.png";
 import bottomBg from "../img/resources/bottom-bg.svg";
 import creditsIcon from "../img/resources/credit.svg";
-import coinIcon from "../img/resources/coin.svg";
+import akronIcon from "../img/resources/akron.svg";
 import tonIcon from "../img/resources/ton.svg";
 import highlighCurrency from "../video/currency.svg";
 
 type ResourcesProps = {
   credits: number;
-  woopy: number;
+  akron: number;
   ton: number;
 };
 
-export function Resources({ credits, woopy, ton }: Partial<ResourcesProps>) {
+export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
   // {formatNumberWithCommas(credits)}
   return (
     <div className="resources">
@@ -48,12 +48,12 @@ export function Resources({ credits, woopy, ton }: Partial<ResourcesProps>) {
         </div>
       </div>
 
-      {/* WOOPY */}
+      {/* AKRON */}
       <div className="resources__item">
         <div className="resources__item-top">
           <img src={topBg} alt="top-bg" className="resources__item-top-bg" />
           <img
-            src={coinIcon}
+            src={akronIcon}
             alt="top-bg"
             className="resources__item-top-icon"
           />
@@ -66,7 +66,7 @@ export function Resources({ credits, woopy, ton }: Partial<ResourcesProps>) {
             alt="main-bg"
             className="resources__item-main-bg highlighterParent akron"
           />
-          <div className="resources__item-main-value">{woopy}</div>
+          <div className="resources__item-main-value">{akron}</div>
         </div>
 
         <div className="resources__item-bottom">

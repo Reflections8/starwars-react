@@ -1,6 +1,6 @@
 import "./styles/cryptoButtons.css";
 import creditsIcon from "./img/credit.svg";
-import woopyIcon from "./img/woopy.svg";
+import akronIcon from "./img/akron.svg";
 import tonIcon from "./img/ton.svg";
 import akronixIcon from "./img/akronix.svg";
 
@@ -16,7 +16,7 @@ export function CryptoButtons({
   activeCurrency,
   setActiveCurrency,
   className,
-  activeOptions = ["credits", "woopy", "ton"],
+  activeOptions = ["credits", "akron", "ton"],
   soonOptions = [],
 }: CryptoButtonsProps) {
   return (
@@ -41,21 +41,21 @@ export function CryptoButtons({
         </button>
       ) : null}
 
-      {activeOptions.includes("woopy") ? (
+      {activeOptions.includes("akron") ? (
         <button
           className={`cryptoButtons__btn ${
-            activeCurrency === "woopy" ? "cryptoButtons__btn--Active" : ""
-          } ${soonOptions.includes("woopy") ? "cryptoButtons__btn--Soon" : ""}`}
+            activeCurrency === "akron" ? "cryptoButtons__btn--Active" : ""
+          } ${soonOptions.includes("akron") ? "cryptoButtons__btn--Soon" : ""}`}
           onClick={() => {
-            setActiveCurrency("woopy");
+            setActiveCurrency("akron");
           }}
         >
           <img
-            src={woopyIcon}
+            src={akronIcon}
             alt="credit"
             className="cryptoButtons__btn-icon"
           />
-          <div className="cryptoButtons__btn-text">woopy</div>
+          <div className="cryptoButtons__btn-text">akron</div>
         </button>
       ) : null}
 

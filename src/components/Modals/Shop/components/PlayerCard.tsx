@@ -80,7 +80,7 @@ export function PlayerCard({
 
         <CryptoButtons
           className="metrics__tabs"
-          soonOptions={["credits", "woopy"]}
+          soonOptions={["credits", "akron"]}
           activeCurrency={activeCurrency}
           setActiveCurrency={setActiveCurrency}
         />

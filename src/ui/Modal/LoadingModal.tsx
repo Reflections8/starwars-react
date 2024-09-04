@@ -6,12 +6,23 @@ import outerBorder from "./img/loader/outer-border.svg";
 import innerBorder from "./img/loader/inner-border.svg";
 import planet from "./img/loader/planet.png";
 import "./styles/loadingModal.css";
+import { useEffect } from "react";
 
 type LoadingModalProps = {
   isOpen: boolean;
 };
 
 export function LoadingModal({ isOpen }: LoadingModalProps) {
+  useEffect(() => {
+    const green = document.querySelector(".loadingModal__loader-green");
+    const outer = document.querySelector(".loadingModal__loader-outer");
+    const inner = document.querySelector(".loadingModal__loader-inner");
+    const planet = document.querySelector(".loadingModal__loader-planet");
+
+    [green, outer, inner, planet].forEach((item) => {
+      item?.classList.remove("animationPaused");
+    });
+  }, []);
   return (
     <div
       className={`loadingModalBg ${!isOpen ? "loadingModalBg--Hidden" : ""}`}
@@ -37,19 +48,23 @@ export function LoadingModal({ isOpen }: LoadingModalProps) {
           <img
             src={greenBorder}
             alt="green"
-            className="loadingModal__loader-green"
+            className="loadingModal__loader-green animationPaused"
           />
           <img
             src={outerBorder}
             alt="green"
-            className="loadingModal__loader-outer"
+            className="loadingModal__loader-outer animationPaused"
           />
           <img
             src={innerBorder}
             alt="green"
-            className="loadingModal__loader-inner"
+            className="loadingModal__loader-inner animationPaused"
           />
-          <img src={planet} alt="" className="loadingModal__loader-planet" />
+          <img
+            src={planet}
+            alt=""
+            className="loadingModal__loader-planet animationPaused"
+          />
         </div>
       </div>
     </div>

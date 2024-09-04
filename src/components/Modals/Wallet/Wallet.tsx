@@ -7,14 +7,14 @@ import "./styles/fill.css";
 import "./styles/withdraw.css";
 import "./styles/exchange.css";
 import creditIcon from "./img/credit.svg";
-import woopyIcon from "./img/woopy.svg";
+import akronIcon from "./img/akron.svg";
 import tonIcon from "./img/ton.svg";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import { useDrawer } from "../../../context/DrawerContext";
 import exchangeBadgeBgLeft from "./img/exchange-bg-left.svg";
 import exchangeBadgeBgRight from "./img/exchange-bg-right.svg";
 import badgeCredit from "./img/badge-credit.svg";
-import badgeWoopy from "./img/badge-woopy.svg";
+import badgeAkron from "./img/badge-akron.svg";
 import { Select } from "../../../ui/Select/Select";
 import { SelectOptionType } from "../Settings/types";
 import { useUserData } from "../../../UserDataService.tsx";
@@ -73,7 +73,7 @@ export function Wallet() {
           icon1={creditIcon}
           name1="Credit"
           value1={credits}
-          icon2={woopyIcon}
+          icon2={akronIcon}
           name2="Akron"
           value2={tokens}
           icon3={tonIcon}
@@ -289,7 +289,7 @@ export function Exchange() {
 
           <div className="exchange__badge-item-name">
             <img
-              src={badgeWoopy}
+              src={badgeAkron}
               alt="icon"
               className="exchange__badge-item-name-icon"
             />
@@ -340,7 +340,7 @@ export function Exchange() {
           />
           <div className="exchange__inputBlock-iconBox">
             <img
-              src={woopyIcon}
+              src={akronIcon}
               alt="icon"
               className="exchange__inputBlock-iconBox-icon"
             />

@@ -21,6 +21,7 @@ import { Resources } from "./components/Resources";
 import "./styles/home.css";
 import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
 import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
+import bookImg from "./img/book.svg";
 
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -172,7 +173,7 @@ export function Home() {
       />
 
       {activeVideo === "2" ? (
-        <button
+        <img
           style={{
             position: "absolute",
             zIndex: "1000",
@@ -184,14 +185,14 @@ export function Home() {
           onClick={() => {
             setActiveVideo!("3");
           }}
-        >
-          КНИЖКА
-        </button>
+          src={bookImg}
+          alt="book"
+        />
       ) : null}
 
       <BinksBackgroundVideo readyState={readyState} activeVideo={activeVideo} />
 
-      <Resources credits={credits} woopy={tokens} ton={tons} />
+      <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
       {/* <iframe
