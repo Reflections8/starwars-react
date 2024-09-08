@@ -446,6 +446,21 @@ export function Withdraw() {
             await updateUserInfo(jwt);
             return;
           }
+        } else if (response.status === 400) {
+          const reason = await response.text();
+          if (reason === "you can withdraw 1 time per hour")
+            openDrawer!("rejected", "bottom", "Вы можете выводить 1 раз в час");
+          else if (reason === "not enough ton balance")
+            openDrawer!("rejected", "bottom", "Недостаточно TON для вывода");
+          else if (reason === "not enough jetton balance")
+            openDrawer!("rejected", "bottom", "Недостаточно AKRON для вывода");
+          else if (reason === "not enough ton fee for jetton withdraw")
+            openDrawer!(
+              "rejected",
+              "bottom",
+              "Недостаточно TON для оплаты комиссии для вывода AKRON\nНеобходимо минимум: 0.05 TON"
+            );
+          return;
         }
         openDrawer!("rejected", "bottom", "Произошла ошибка во время вывода");
       } catch (error) {
