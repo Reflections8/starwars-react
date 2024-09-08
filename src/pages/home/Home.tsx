@@ -30,11 +30,10 @@ export function Home() {
     credits,
     tokens,
     tons,
-    jwt,
     updateCredits,
     updateJwt,
-    checkGun,
-    setCheckGun,
+    activeCharacter,
+    higherBlaster,
     soundSetting,
   } = useUserData();
   const navigate = useNavigate();
@@ -61,26 +60,16 @@ export function Home() {
     setIsLoading!(true);
     if (isUnityLoaded) {
       setIsLoading!(false);
-      const checkTonConnection = async () => {
-        if (jwt == null || jwt == "") {
-          if (tonConnectUI.connected) await tonConnectUI.disconnect();
-          return;
-        }
-
-        sendMessageToUnity("OnUserTokenReceive", jwt);
-      };
-
-      checkTonConnection().catch(console.error);
+    }
+    if (activeCharacter != null && higherBlaster != null) {
+      const json = JSON.stringify({
+        blaster: higherBlaster.level,
+        character: activeCharacter.type,
+      });
+      sendMessageToUnity("OnUserModelInitReceive", json);
     }
     return () => {};
-  }, [isUnityLoaded, jwt]);
-
-  useEffect(() => {
-    if (checkGun) {
-      sendMessageToUnity("RefreshUserConfig", "s");
-      setCheckGun(false);
-    }
-  }, [checkGun]);
+  }, [isUnityLoaded, activeCharacter, higherBlaster]);
 
   useEffect(() => {
     if (soundSetting) {
@@ -194,7 +183,7 @@ export function Home() {
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      {/* <iframe
+      <iframe
         ref={iframeRef}
         src="https://akronix.io/unity_main/"
         style={{
@@ -207,7 +196,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe> */}
+      ></iframe>
 
       <Header
         position={"bottom"}

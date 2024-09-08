@@ -105,19 +105,10 @@ export function Player() {
   /* TODO: NEW MOCK DATA FOR MODEL (base on new figma) */
   const mockPlayerCards: ModelTypeNew[] = [
     {
-      title: CharactersData[0].name,
-      strength: CharactersData[0].damage,
-      reloadSpeed: CharactersData[0].charge_step,
-      health: 2000,
-      price: CharactersData[0].price,
-      imgSrc: CharactersData[0].image,
-      callback: () => handleCharacterBuyClick(1),
-    },
-    {
       title: CharactersData[1].name,
       strength: CharactersData[1].damage,
       reloadSpeed: CharactersData[1].charge_step,
-      health: 2000,
+      health: CharactersData[1].price * 2000,
       price: CharactersData[1].price,
       imgSrc: CharactersData[1].image,
       callback: () => handleCharacterBuyClick(2),
@@ -126,7 +117,7 @@ export function Player() {
       title: CharactersData[2].name,
       strength: CharactersData[2].damage,
       reloadSpeed: CharactersData[2].charge_step,
-      health: 2000,
+      health: CharactersData[2].price * 2000,
       price: CharactersData[2].price,
       imgSrc: CharactersData[2].image,
       callback: () => handleCharacterBuyClick(3),
@@ -135,32 +126,41 @@ export function Player() {
       title: CharactersData[3].name,
       strength: CharactersData[3].damage,
       reloadSpeed: CharactersData[3].charge_step,
-      health: 2000,
+      health: CharactersData[3].price * 2000,
       price: CharactersData[3].price,
       imgSrc: CharactersData[3].image,
       callback: () => handleCharacterBuyClick(4),
+    },
+    {
+      title: CharactersData[4].name,
+      strength: CharactersData[4].damage,
+      reloadSpeed: CharactersData[4].charge_step,
+      health: CharactersData[4].price * 2000,
+      price: CharactersData[4].price,
+      imgSrc: CharactersData[4].image,
+      callback: () => handleCharacterBuyClick(5),
     },
   ];
 
   const [models, setModels] = useState<ModelTypeNew[]>(mockPlayerCards);
 
   useEffect(() => {
-    const has1 = characters.some((c) => c.type === 1);
-    const has2 = characters.some((c) => c.type === 2);
-    const has3 = characters.some((c) => c.type === 3);
-    const has4 = characters.some((c) => c.type === 4);
+    const has1 = characters.some((c) => c.type === 2);
+    const has2 = characters.some((c) => c.type === 3);
+    const has3 = characters.some((c) => c.type === 4);
+    const has4 = characters.some((c) => c.type === 5);
 
     const updatedWeapons = mockPlayerCards.filter((model) => {
-      if (model.title === CharactersData[0].name && has1) {
+      if (model.title === CharactersData[1].name && has1) {
         return false;
       }
-      if (model.title === CharactersData[1].name && has2) {
+      if (model.title === CharactersData[2].name && has2) {
         return false;
       }
-      if (model.title === CharactersData[2].name && has3) {
+      if (model.title === CharactersData[3].name && has3) {
         return false;
       }
-      if (model.title === CharactersData[3].name && has4) {
+      if (model.title === CharactersData[4].name && has4) {
         return false;
       }
 
@@ -380,7 +380,8 @@ export function Store() {
         blaster.damage_level +
         blaster.max_charge_level;
 
-      const earningsPercentage = (userMetrics.blaster_earned / userMetrics.blaster_earn_required) * 100;
+      const earningsPercentage =
+        (userMetrics.blaster_earned / userMetrics.blaster_earn_required) * 100;
       return {
         title: BlastersData[blaster.level - 1].name,
         rarity: BlastersData[blaster.level - 1].rarity,

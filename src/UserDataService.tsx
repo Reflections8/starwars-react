@@ -15,6 +15,7 @@ import ch1Img from "../src/assets/img/ch/1.png";
 import ch2Img from "../src/assets/img/ch/2.png";
 import ch3Img from "../src/assets/img/ch/3.png";
 import ch4Img from "../src/assets/img/ch/4.png";
+import ch0Img from "../src/assets/img/ch/0.png";
 import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
@@ -31,6 +32,7 @@ interface UserDataContextType {
   blasters: Blaster[];
   characters: Character[];
   activeBlaster: Blaster | null;
+  higherBlaster: Blaster | null;
   activeCharacter: Character | null;
   healingCharacter: Character | null;
   soundSetting: boolean;
@@ -62,6 +64,7 @@ const defaultValue: UserDataContextType = {
   },
   blasters: [],
   characters: [],
+  higherBlaster: null,
   activeBlaster: null,
   activeCharacter: null,
   healingCharacter: null,
@@ -119,6 +122,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     null
   );
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
+  const [higherBlaster, setHigherBlaster] = useState<Blaster | null>(null);
   const [activeCharacter, setActiveCharacter] = useState<Character | null>(
     null
   );
@@ -238,6 +242,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setCharacters(characters);
       setPrices(pricesResponse);
       setBlasters(blasters);
+      setHigherBlaster(calculateHighestLevelBlaster(blasters));
     } catch (error) {
       console.error("Failed to fetch user info:", error);
     }
@@ -429,6 +434,15 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     else setSoundSetting(false);
   }, []);
 
+  const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
+    return blasters.reduce((highest: Blaster, blaster: Blaster) => {
+      if (blaster.usage > 0 && blaster.level > (highest.level || 0)) {
+        return blaster;
+      }
+      return highest;
+    });
+  };
+
   return (
     <UserDataContext.Provider
       value={{
@@ -437,6 +451,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         tons,
         jwt,
         activeBlaster,
+        higherBlaster,
         exchangeRate,
         blasters,
         characters,
@@ -542,6 +557,16 @@ export const BlastersData = [
 export const CharactersData = [
   {
     type: 1,
+    name: "DEALER WATTO",
+    damage: 1,
+    charge_step: 0,
+    price: 0.5,
+    payload: "",
+    payload_heal: "",
+    image: ch0Img,
+  },
+  {
+    type: 2,
     name: "B1 BATTLE DROID",
     damage: 2,
     charge_step: 0,
@@ -551,7 +576,7 @@ export const CharactersData = [
     image: ch1Img,
   },
   {
-    type: 2,
+    type: 3,
     name: "REBEL PILOT",
     damage: 10,
     charge_step: 1,
@@ -561,7 +586,7 @@ export const CharactersData = [
     image: ch2Img,
   },
   {
-    type: 3,
+    type: 4,
     name: "TATOOINE JAWA",
     damage: 30,
     charge_step: 2,
@@ -571,7 +596,7 @@ export const CharactersData = [
     image: ch3Img,
   },
   {
-    type: 4,
+    type: 5,
     name: "STORMTROOPER",
     damage: 70,
     charge_step: 4,
