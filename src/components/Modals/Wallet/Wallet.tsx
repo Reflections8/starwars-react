@@ -23,7 +23,7 @@ import {
   useTonConnectUI,
   useTonWallet,
 } from "@tonconnect/ui-react";
-import { PROJECT_CONTRACT_ADDRESS } from "../../../main.tsx";
+import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../../main.tsx";
 import { formatWalletString } from "../../../utils/index.ts";
 import walletIcon from "../../../ui/Drawer/img/menu/wallet.svg";
 import { Balance } from "../../../ui/Balance/Balance.tsx";
@@ -185,7 +185,7 @@ export function Fill() {
 }
 
 export function Exchange() {
-  const { credits, exchangeRate, jwt, sendSocketMessage } = useUserData();
+  const { credits, exchangeRate, jwt, updateUserInfo } = useUserData();
   const { openDrawer } = useDrawer();
 
   const [creditsText, setCredits] = useState("");
@@ -234,18 +234,35 @@ export function Exchange() {
     setCredits(calculatedCredits.toString());
   };
 
-  const handleExchangeClick = () => {
+  const handleExchangeClick = async () => {
     if (jwt == null) return;
 
     const numericCredits = parseInt(creditsText, 10);
 
     if (numericCredits > 1 && numericCredits <= credits) {
-      const json = JSON.stringify({
-        credits: numericCredits,
-        jwt_token: jwt,
-      });
-
-      sendSocketMessage("exchange:" + json);
+      try {
+        const reqBody = { credits: numericCredits };
+        const response = await fetch(SERVER_URL + "/main/exchange", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: JSON.stringify(reqBody),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.code == 1) {
+            openDrawer!("resolved", "bottom", "Обмен выполнен успешно");
+            await updateUserInfo(jwt);
+            return;
+          }
+        }
+        openDrawer!("rejected", "bottom", "Произошла ошибка во время обмена");
+      } catch (error) {
+        console.log(error);
+        openDrawer!("rejected", "bottom", "Произошла ошибка во время обмена");
+      }
     } else {
       openDrawer!(
         "rejected",
@@ -369,7 +386,7 @@ export function Withdraw() {
 
   const [activeCurrency, setActiveCurrency] = useState(currencyOptions[0]);
   const { openDrawer } = useDrawer();
-  const { tokens, tons, jwt, sendSocketMessage } = useUserData();
+  const { tokens, tons, jwt, updateUserInfo } = useUserData();
   const [value, setValue] = useState("0.05");
 
   const handleChange = (e: any) => {
@@ -397,7 +414,7 @@ export function Withdraw() {
     handleBlur();
   }, [activeCurrency.label]);
 
-  const handleWithdrawClick = () => {
+  const handleWithdrawClick = async () => {
     if (jwt == null) return;
 
     const numericCredits = parseFloat(value);
@@ -405,13 +422,36 @@ export function Withdraw() {
     const balance = activeCurrency.label == "akron" ? tokens : tons;
 
     if (numericCredits >= 0.05 && numericCredits <= balance) {
-      const json = JSON.stringify({
-        credits: numericCredits,
-        currency: activeCurrency.label == "akron" ? "jetton" : "ton",
-        jwt_token: jwt,
-      });
-
-      sendSocketMessage("withdraw:" + json);
+      try {
+        const reqBody = {
+          amount: numericCredits,
+          currency: activeCurrency.label == "akron" ? "jetton" : "ton",
+        };
+        const response = await fetch(SERVER_URL + "/main/withdraw", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: JSON.stringify(reqBody),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.code == 1) {
+            openDrawer!(
+              "resolved",
+              "bottom",
+              "Вывод добавлен в обработку. Скорость подтверждения зависит от загруженности сети TON."
+            );
+            await updateUserInfo(jwt);
+            return;
+          }
+        }
+        openDrawer!("rejected", "bottom", "Произошла ошибка во время вывода");
+      } catch (error) {
+        console.log(error);
+        openDrawer!("rejected", "bottom", "Произошла ошибка во время вывода");
+      }
     } else {
       openDrawer!(
         "rejected",

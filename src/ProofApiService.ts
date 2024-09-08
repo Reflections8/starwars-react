@@ -12,110 +12,74 @@ class ProofService {
   public readonly refreshIntervalMs = 9 * 60 * 1000;
 
   async generatePayload(): Promise<ConnectAdditionalRequest | null> {
-    return new Promise<ConnectAdditionalRequest | null>((resolve, reject) => {
-      try {
-        const ws = new WebSocket(SERVER_URL);
-
-        const pingInterval = setInterval(() => {
-          if (ws.readyState === WebSocket.OPEN) {
-            ws.send("ping");
-            console.log("Sent ping");
-          }
-        }, 5000);
-
-        ws.onopen = () => {
-          ws.send("generate_payload");
-        };
-
-        ws.onmessage = (event) => {
-          const data = event.data.toString();
-          if (data.startsWith("payload:")) {
-            const payload = data.slice("payload:".length);
-            clearInterval(pingInterval);
-            ws.close();
-            resolve({ tonProof: payload as string });
-          }
-        };
-
-        ws.onerror = () => {
-          clearInterval(pingInterval);
-          ws.close();
-          reject(null);
-        };
-
-        ws.onclose = () => {
-          clearInterval(pingInterval);
-          if (ws.readyState !== WebSocket.CLOSED) {
-            reject(null);
-          }
-        };
-      } catch {
-        reject(null);
+    try {
+      const response = await fetch(SERVER_URL + "/auth/generatePayload", {
+        method: "GET",
+        headers: {
+          Accept: "text/plain",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    });
+      const jsonResponse = await response.json();
+      return { tonProof: jsonResponse.payload };
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+      return null;
+    }
   }
 
   async checkProof(
     proof: TonProofItemReplySuccess["proof"],
     account: Account
   ): Promise<string | null> {
-    return new Promise<string | null>((resolve, reject) => {
-      try {
-        const reqBody = {
-          address: account.address,
-          network: account.chain,
-          public_key: account.publicKey,
-          proof: {
-            ...proof,
-            state_init: account.walletStateInit,
+    try {
+      const reqBody = {
+        address: account.address,
+        network: account.chain,
+        public_key: account.publicKey,
+        proof: {
+          payload: proof.payload,
+          timestamp: proof.timestamp,
+          domain: {
+            value: proof.domain.value,
+            length_bytes: proof.domain.lengthBytes,
           },
-        };
+          signature: proof.signature,
+          state_init: account.walletStateInit,
+        },
+      };
 
-        const ws = new WebSocket(SERVER_URL);
-        const pingInterval = setInterval(() => {
-          if (ws.readyState === WebSocket.OPEN) {
-            ws.send("ping");
-          }
-        }, 5000);
+      const response = await fetch(SERVER_URL + "/auth/checkProof", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      });
 
-        ws.onopen = () => {
-          ws.send("check_proof:" + JSON.stringify(reqBody));
-        };
-
-        ws.onmessage = (event) => {
-          const data = event.data.toString();
-          if (data.startsWith("token:")) {
-            const token = data.slice("token:".length);
-            clearInterval(pingInterval);
-            ws.close();
-            localStorage.setItem(this.localStorageKey, token);
-            this.accessToken = token;
-            resolve(token);
-            this.authorized = true;
-          } else if (data.startsWith("error:")) {
-            clearInterval(pingInterval);
-            ws.close();
-            reject(null);
-            this.authorized = false;
-          }
-        };
-
-        ws.onerror = () => {
-          clearInterval(pingInterval);
-          ws.close();
-          reject(null);
-          this.authorized = false;
-        };
-
-        ws.onclose = () => {
-          clearInterval(pingInterval);
-        };
-      } catch (e) {
-        console.log("checkProof error:", e);
-        reject(null);
-        this.authorized = false;
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    });
+
+      const jsonResponse = await response.json();
+      if (jsonResponse.code === 1 && jsonResponse.jwt) {
+        localStorage.setItem(this.localStorageKey, jsonResponse.jwt);
+        this.accessToken = jsonResponse.jwt;
+        this.authorized = true;
+        return jsonResponse.jwt;
+      } else {
+        this.authorized = false;
+        throw new Error(
+          "Authorization failed with server error code: " + jsonResponse.code
+        );
+      }
+    } catch (error) {
+      console.error("Failed to check proof:", error);
+      this.authorized = false;
+      return null;
+    }
   }
 
   reset() {

@@ -143,7 +143,6 @@ export function Home() {
 
   async function openWalletDrawer() {
     closeDrawer!();
-
     openDrawer!("connectWallet");
   }
 

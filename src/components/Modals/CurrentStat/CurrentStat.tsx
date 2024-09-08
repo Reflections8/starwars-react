@@ -16,7 +16,7 @@ import {
 } from "../../../UserDataService.tsx";
 
 export function CurrentStat() {
-  const { activeCharacter, blasters } = useUserData();
+  const { activeCharacter, blasters, jwt } = useUserData();
   const [damage, setDamage] = useState(0);
   const [damageUpgrade, setDamageUpgrade] = useState(0);
 
@@ -74,7 +74,7 @@ export function CurrentStat() {
         <div className="currentStat__main-images">
           <img
             src={
-              activeCharacter
+              activeCharacter && jwt && jwt !== ""
                 ? CharactersData[activeCharacter.type - 1].image
                 : undefined
             }
@@ -83,7 +83,7 @@ export function CurrentStat() {
           />
           <img
             src={
-              blasters
+              blasters && jwt && jwt !== ""
                 ? BlastersData?.[
                     calculateHighestLevelBlaster(blasters).level - 1
                   ].image

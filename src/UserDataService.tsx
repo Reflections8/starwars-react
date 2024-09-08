@@ -9,7 +9,6 @@ import {
 import { SERVER_URL } from "./main.tsx";
 import { ProofApiService } from "./ProofApiService.ts";
 import { useDrawer } from "./context/DrawerContext.tsx";
-import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Drawer } from "./ui/Drawer/Drawer.tsx";
 
 import ch1Img from "../src/assets/img/ch/1.png";
@@ -19,6 +18,7 @@ import ch4Img from "../src/assets/img/ch/4.png";
 import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
+import { useTonConnectUI } from "@tonconnect/ui-react";
 
 interface UserDataContextType {
   credits: number;
@@ -44,6 +44,7 @@ interface UserDataContextType {
   setCheckGun: (value: boolean) => void;
   sendSocketMessage: (value: string) => void;
   setSoundSetting: (value: boolean) => void;
+  updateUserInfo: (value: string) => void;
 }
 
 const defaultValue: UserDataContextType = {
@@ -87,6 +88,7 @@ const defaultValue: UserDataContextType = {
   startCheckBalance: () => {},
   sendSocketMessage: () => {},
   setSoundSetting: () => {},
+  updateUserInfo: () => {},
 };
 
 const UserDataContext = createContext<UserDataContextType>(defaultValue);
@@ -97,6 +99,7 @@ interface UserDataProviderProps {
 
 export function UserDataProvider({ children }: UserDataProviderProps) {
   const { openDrawer, isOpen, drawerText } = useDrawer();
+  const [tonConnectUI] = useTonConnectUI();
 
   const [jwt, setJwt] = useState<string | null>("");
 
@@ -137,11 +140,11 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const [checkBalance, setCheckBalance] = useState(false);
   const [checkGun, setCheckGunChange] = useState(false);
-  const [shouldReconnectFlag, setShouldReconnectFlag] = useState(true);
+  //const [shouldReconnectFlag, setShouldReconnectFlag] = useState(true);
 
   const tonsRef = useRef<number>(tons);
 
-  const { sendMessage, lastMessage, readyState } = useWebSocket(SERVER_URL, {
+  /*const { sendMessage, lastMessage, readyState } = useWebSocket(SERVER_URL, {
     share: false,
     shouldReconnect: () => shouldReconnectFlag,
     onClose: (event) => {
@@ -149,7 +152,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         setShouldReconnectFlag(false);
       }
     },
-  });
+  });*/
 
   const updateCredits = (newCredits: number) => {
     setCredits(newCredits);
@@ -184,8 +187,60 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     setCheckGunChange(value);
   };
 
-  const sendSocketMessage = (value: string) => {
-    sendMessage(value);
+  const sendSocketMessage = (value: string) => {};
+
+  const auth = async (jwt: string) => {
+    try {
+      const response = await fetch(SERVER_URL + "/main/auth", {
+        method: "POST", // или 'POST', в зависимости от требований к API
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`, // Добавление токена в заголовок
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data);
+      return data.code === 1;
+    } catch (error) {
+      console.error("Failed to authenticate:", error);
+      return false;
+    }
+  };
+  const updateUserInfo = async (jwt: string) => {
+    try {
+      const response = await fetch(SERVER_URL + "/main/getUserInfo", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data);
+      setCredits(data.credits);
+      setTons(data.tons);
+      setTokens(data.tokens);
+      setExchangeRate(data.exchange_rate);
+      const userMetricsData: UserMetrics = data.metrics_response;
+      setUserMetrics(userMetricsData);
+      const activeCharacter: Character | null = data.active_character;
+      setActiveCharacter(activeCharacter);
+
+      const blasters: Blaster[] = data.blasters;
+      const pricesResponse: Prices = data.prices;
+      const characters: Character[] = data.characters;
+      setCharacters(characters);
+      setPrices(pricesResponse);
+      setBlasters(blasters);
+    } catch (error) {
+      console.error("Failed to fetch user info:", error);
+    }
   };
 
   useEffect(() => {
@@ -196,29 +251,36 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   }, [tons, checkBalance]);
 
   useEffect(() => {
-    if (readyState === ReadyState.OPEN) {
-      if (jwt != null && jwt !== "") {
-        sendMessage("handshake:" + jwt);
+    console.log(jwt);
+    if (jwt != null && jwt !== "") {
+      const authenticateUser = async () => {
+        const isLogged = await auth(jwt);
+        if (!isLogged) {
+          ProofApiService.reset();
+          if (tonConnectUI.connected) await tonConnectUI.disconnect();
+          return;
+        } else await updateUserInfo(jwt);
+      };
 
-        sendMessage("getFinanceData:" + jwt);
-        sendMessage("blasters:" + jwt);
-        sendMessage("characters:" + jwt);
-        const interval = setInterval(() => {
-          if (jwt != null && jwt !== "") {
-            sendMessage("getFinanceData:" + jwt);
-            sendMessage("blasters:" + jwt);
-            sendMessage("characters:" + jwt);
-          }
-        }, 10000);
+      authenticateUser();
 
-        return () => {
-          clearInterval(interval);
-        };
-      }
-    }
-  }, [readyState, jwt]);
+      const interval = setInterval(() => {
+        if (jwt != null && jwt !== "") {
+          const refreshUserInfo = async () => {
+            await updateUserInfo(jwt);
+          };
 
-  useEffect(() => {
+          refreshUserInfo();
+        }
+      }, 20000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    } else if (tonConnectUI.connected) tonConnectUI.disconnect();
+  }, [jwt]);
+
+  /*useEffect(() => {
     if (lastMessage == null) return;
 
     const response: string = lastMessage.data.toString();
@@ -357,7 +419,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         }
       }
     }
-  }, [lastMessage]);
+  }, [lastMessage]);*/
 
   useEffect(() => {
     setJwt(localStorage.getItem(ProofApiService.localStorageKey));
@@ -393,6 +455,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         setCheckGun,
         startCheckBalance,
         sendSocketMessage,
+        updateUserInfo,
       }}
     >
       {children}
