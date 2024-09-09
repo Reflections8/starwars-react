@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import "../styles/binksBackgroundVideo.css";
-import videoSrc2 from "../video/test.mp4";
-import videoSrc3 from "../video/3.mp4";
+import videoSrc1 from "../video/1.mp4";
+import videoSrc2 from "../video/2.mp4";
 
 type BinksBackgroundVideoProps = {
   readyState: any;
@@ -84,7 +84,7 @@ export function BinksBackgroundVideo({
         className={`binksBackgroundVideo ${
           activeVideo === "2" ? "active" : "hidden"
         }`}
-        src={videoSrc2}
+        src={videoSrc1}
         muted
         preload="auto"
         playsInline
@@ -95,7 +95,7 @@ export function BinksBackgroundVideo({
         className={`binksBackgroundVideo ${
           activeVideo === "3" ? "active" : "hidden"
         }`}
-        src={videoSrc3}
+        src={videoSrc2}
         muted
         preload="auto"
         loop
