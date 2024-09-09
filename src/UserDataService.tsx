@@ -256,7 +256,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   }, [tons, checkBalance]);
 
   useEffect(() => {
-    console.log(jwt);
     if (jwt != null && jwt !== "") {
       const authenticateUser = async () => {
         const isLogged = await auth(jwt);

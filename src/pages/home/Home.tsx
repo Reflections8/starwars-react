@@ -105,9 +105,6 @@ export function Home() {
             if (data.method === "LoadFinish") handleLoadingFinish();
             break;
           }
-          case "multiple": {
-            if (data.method === "SetCredits") handleSetCredits(data.value);
-          }
         }
       } catch (error) {
         console.error("Failed to parse message dats", error);

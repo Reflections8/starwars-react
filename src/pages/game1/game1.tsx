@@ -1,17 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import useWebSocket from "react-use-websocket";
 import { Footer } from "../../components/Footer/Footer";
-import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
 import { Header } from "../../components/Header/Header";
-import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
-import { useLoader } from "../../context/LoaderContext.tsx";
 import { HomeIcon } from "../../icons/Home";
 import { MenuIcon } from "../../icons/Menu";
-import { VADER_SOCKET } from "../../main.tsx";
-import { Blaster, Character, useUserData } from "../../UserDataService.tsx";
 import "./styles/game1.css";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
+import { useNavigate } from "react-router-dom";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
+import { useLoader } from "../../context/LoaderContext.tsx";
+import {
+  Blaster,
+  Character,
+  CharactersData,
+  useUserData,
+} from "../../UserDataService.tsx";
+import useWebSocket from "react-use-websocket";
+import { VADER_SOCKET } from "../../main.tsx";
 
 export function Game1() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -26,11 +31,9 @@ export function Game1() {
   const [blasterCharge, setBlasterCharge] = useState(0);
   const [blasterChargeExt, setBlasterChargeExt] = useState(0);
 
+  const [publicKey, setPublicKey] = useState("");
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
-  const { sendMessage, lastMessage } = useWebSocket(VADER_SOCKET, {
-    share: false,
-    shouldReconnect: () => true,
-  });
+  const { sendMessage, lastMessage } = useWebSocket(VADER_SOCKET, {});
 
   useEffect(() => {
     setIsLoading!(true);
@@ -42,29 +45,44 @@ export function Game1() {
         navigate("/");
         return;
       }
+
+      if (publicKey !== "") {
+        const request = {
+          type: "handshake",
+          message: JSON.stringify({
+            public_key: publicKey as string,
+          }),
+          jwt: jwt,
+        };
+        console.log(JSON.stringify(request));
+        sendMessage(JSON.stringify(request));
+      }
     }
-  }, [isUnityLoaded]);
+  }, [isUnityLoaded, publicKey]);
 
   useEffect(() => {
-    // @ts-ignore
-    const data = JSON.parse(lastMessage?.toString());
+    if (lastMessage == null) return;
+    const response: string = lastMessage.data.toString();
+    console.log("SOCKET MESSAGE: " + response);
+    const data = JSON.parse(response);
+    const message = JSON.parse(data.message);
     switch (data.type) {
       case "pong":
         break;
       case "handshake": {
-        sendMessageToUnity("ReceiveServerPublicKey", data.message.public_key);
+        sendMessageToUnity("ReceiveServerPublicKey", message.public_key);
 
-        const score = parseInt(data.message.info.score);
+        const score = parseInt(message.info.score);
         setScore(score);
 
-        updateGameInfo(data.message.info);
+        updateGameInfo(message.info);
         break;
       }
       case "shoot_response": {
-        const score = parseInt(data.message.score);
+        const score = parseInt(message.score);
         setScore(score);
 
-        updateGameInfo(data.message);
+        updateGameInfo(message);
         break;
       }
       case "spawn_drone": {
@@ -85,23 +103,31 @@ export function Game1() {
   const updateGameInfo = (data: any) => {
     const blaster: Blaster = data.blaster;
     const character: Character = data.character;
-    setBlasterCharge(blaster.charge);
 
     // here calculate damage
     const needHealing = character.earned >= character.earn_required;
     const totalDamage = Math.round(
-      ((blaster.damage || 0) + (blaster.damage || 0)) * (needHealing ? 0.1 : 1)
+      ((blaster.damage || 0) +
+        (CharactersData[character.type - 1].damage || 0)) *
+        (needHealing ? 0.1 : 1)
     );
     setDamage(totalDamage);
 
     const chargeFillField = calculateFilled(blaster.charge, blaster.max_charge);
-    setBlasterChargeExt(chargeFillField);
+    setBlasterChargeExt(blaster.charge);
+    setBlasterCharge(chargeFillField);
 
     const info = {
       character: character.type,
       blaster: blaster.level,
       charge: blaster.charge,
     };
+
+    console.log(blaster.damage);
+    console.log(chargeFillField);
+    console.log(blaster.charge);
+    console.log(info);
+
     sendMessageToUnity("SetCustomization", JSON.stringify(info));
   };
 
@@ -129,17 +155,7 @@ export function Game1() {
     (publicKey: ReactUnityEventParameter) => {
       setIsUnityLoaded(true);
       setIsLoading!(false);
-
-      if (jwt != null && jwt !== "") {
-        const request = {
-          type: "handshake",
-          message: {
-            public_key: publicKey as string,
-          },
-          jwt: jwt,
-        };
-        sendMessage(JSON.stringify(request));
-      }
+      setPublicKey(publicKey as string);
       iframeRef.current?.focus();
     },
     []
@@ -147,13 +163,14 @@ export function Game1() {
 
   const handleShoot = useCallback((value: ReactUnityEventParameter) => {
     const data = JSON.parse(value as string);
+    console.log(data);
     if (jwt != null && jwt !== "") {
       const request = {
         type: "shoot",
-        message: {
+        message: JSON.stringify({
           type: parseInt(data.type),
           seqno: data.seqno,
-        },
+        }),
         jwt: jwt,
       };
       sendMessage(JSON.stringify(request));
@@ -164,6 +181,7 @@ export function Game1() {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       try {
+        console.log(event.data);
         const data: any = JSON.parse(event.data);
         switch (data.type) {
           case "multiple": {
