@@ -5,6 +5,7 @@ import { PillType } from "../../../ui/SlidingPills/types";
 import "./styles/settings.css";
 import { SelectOptionType } from "./types";
 import { CharactersData, useUserData } from "../../../UserDataService.tsx";
+import {SERVER_URL} from "../../../main.tsx";
 
 const pills: PillType[] = [
   {
@@ -58,18 +59,28 @@ export function Settings() {
     setActivePill(pills[soundSetting ? 1 : 0])
   }, [soundSetting]);
 
-  const handleActiveCharacterChange = (characterId: string) => {
+  const handleActiveCharacterChange = async (characterId: string) => {
     if (jwt == null || jwt === "") return;
 
     const newActiveCharacter = characters.find(
       (character) => character.id.toString() === characterId
     );
     if (newActiveCharacter) {
-      const json = JSON.stringify({
-        type: newActiveCharacter.type,
-        jwt_token: jwt,
-      });
-      sendSocketMessage("selectCharacter:" + json);
+      try {
+        const reqBody = {
+          type: newActiveCharacter.type
+        };
+        await fetch(SERVER_URL + "/main/selectCharacter", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: JSON.stringify(reqBody),
+        });
+      } catch (e) {
+        // ignore
+      }
 
       //changeActiveCharacterOnBackend(Number(characterId));
       /*const active: SelectOptionType = {

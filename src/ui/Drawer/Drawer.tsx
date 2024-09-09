@@ -21,7 +21,7 @@ import youtubeIcon from "./img/menu/youtube.svg";
 import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import creditIcon from "./img/upgrade/credits.svg";
 import "./styles//drawer.css";
-import { PROJECT_CONTRACT_ADDRESS } from "../../main.tsx";
+import {PROJECT_CONTRACT_ADDRESS, SERVER_URL} from "../../main.tsx";
 import { useBattleships } from "../../context/BattleshipsContext.tsx";
 
 type DrawerProps = {
@@ -169,7 +169,7 @@ function Menu() {
 }
 
 function Upgrade() {
-  const { prices, activeBlaster, sendSocketMessage, credits, jwt } =
+  const { prices, activeBlaster, updateUserInfo, credits, jwt } =
     useUserData();
 
   const { openDrawer } = useDrawer();
@@ -214,7 +214,7 @@ function Upgrade() {
     return prices[key];
   }
 
-  const handleUpgradeClick = (value: number) => {
+  const handleUpgradeClick = async (value: number) => {
     if (!activeBlaster) return;
     if (value != 0 && value != 1 && value != 2) return;
     let nextOptionLevel;
@@ -234,14 +234,40 @@ function Upgrade() {
     }
 
     if (jwt != null && jwt !== "")
-      sendSocketMessage(
-        "upgradeBlaster:" +
-          JSON.stringify({
-            jwt_token: jwt,
-            item_level: activeBlaster.level,
-            config_id: value,
-          })
-      );
+    {
+      try
+      {
+        const reqBody = {
+          item_level: activeBlaster.level,
+          config_id: value,
+        };
+        const response = await fetch(SERVER_URL + "/main/upgradeBlaster", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: JSON.stringify(reqBody),
+        });
+
+        if(!response.ok)
+        {
+          openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
+        }
+        else
+        {
+          openDrawer!(
+              "resolved",
+              "bottom",
+              "Улучшение бластера выполнено успешно."
+          );
+          await updateUserInfo(jwt);
+        }
+      }
+      catch (e) {
+        openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
+      }
+    }
   };
 
   return (
@@ -392,10 +418,10 @@ function Upgrade() {
 
 function Repair() {
   const [activeCurrency, setActiveCurrency] = useState("credits");
-  const { prices, activeBlaster, sendSocketMessage, credits, jwt } =
+  const { prices, activeBlaster, updateUserInfo, credits, jwt } =
     useUserData();
   const { openDrawer } = useDrawer();
-  const handleRepairClick = () => {
+  const handleRepairClick = async () => {
     if (!activeBlaster || activeBlaster.level == 1) return;
 
     if (credits < getBlasterRepairPrice(activeBlaster.level)) {
@@ -407,11 +433,34 @@ function Repair() {
       return;
     }
 
-    if (jwt != null && jwt !== "")
-      sendSocketMessage(
-        "repairBlaster:" +
-          JSON.stringify({ jwt_token: jwt, item_level: activeBlaster.level })
-      );
+    if (jwt != null && jwt !== "") {
+      try {
+        const reqBody = {
+          item_level: activeBlaster.level
+        };
+        const response = await fetch(SERVER_URL + "/main/repairBlaster", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: JSON.stringify(reqBody),
+        });
+
+        if (!response.ok) {
+          openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
+        } else {
+          openDrawer!(
+              "resolved",
+              "bottom",
+              "Починка бластера выполнена успешно."
+          );
+          await updateUserInfo(jwt);
+        }
+      } catch (e) {
+        openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
+      }
+    }
   };
 
   const getBlasterRepairPrice = (level: number): number => {
