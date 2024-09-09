@@ -9,6 +9,7 @@ export const PROJECT_CONTRACT_ADDRESS =
   "0:5CE1280FFDD7B96B6A11CD7486355E30061A05B3DCCDEAC3F556FDA941C5592F";
 
 export const SERVER_URL = "https://socket.akronix.io";
+export const VADER_SOCKET = "wss://socket.akronix.io/vader";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
