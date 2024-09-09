@@ -191,7 +191,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     setCheckGunChange(value);
   };
 
-  const sendSocketMessage = (value: string) => {};
+  const sendSocketMessage = () => {};
 
   const auth = async (jwt: string) => {
     try {

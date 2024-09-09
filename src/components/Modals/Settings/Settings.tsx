@@ -5,7 +5,7 @@ import { PillType } from "../../../ui/SlidingPills/types";
 import "./styles/settings.css";
 import { SelectOptionType } from "./types";
 import { CharactersData, useUserData } from "../../../UserDataService.tsx";
-import {SERVER_URL} from "../../../main.tsx";
+import { SERVER_URL } from "../../../main.tsx";
 
 const pills: PillType[] = [
   {
@@ -26,7 +26,8 @@ const graphics: SelectOptionType[] = [
 ];
 
 export function Settings() {
-  const { characters, activeCharacter, sendSocketMessage, jwt, soundSetting, setSoundSetting} = useUserData();
+  const { characters, activeCharacter, jwt, soundSetting, setSoundSetting } =
+    useUserData();
   const [activePill, setActivePill] = useState(pills[0]);
   const [activeGraphics, setActiveGraphics] = useState(graphics[0]);
 
@@ -56,7 +57,7 @@ export function Settings() {
   }, [characters, activeCharacter]);
 
   useEffect(() => {
-    setActivePill(pills[soundSetting ? 1 : 0])
+    setActivePill(pills[soundSetting ? 1 : 0]);
   }, [soundSetting]);
 
   const handleActiveCharacterChange = async (characterId: string) => {
@@ -68,7 +69,7 @@ export function Settings() {
     if (newActiveCharacter) {
       try {
         const reqBody = {
-          type: newActiveCharacter.type
+          type: newActiveCharacter.type,
         };
         await fetch(SERVER_URL + "/main/selectCharacter", {
           method: "POST",
@@ -92,11 +93,10 @@ export function Settings() {
   };
 
   const handleSoundChange = (value: string) => {
-    if(value === "OFF"){
+    if (value === "OFF") {
       setSoundSetting(false);
       localStorage.setItem("sound_setting", "off");
-    }else
-    {
+    } else {
       setSoundSetting(true);
       localStorage.setItem("sound_setting", "on");
     }
@@ -124,9 +124,7 @@ export function Settings() {
           <SlidingPills
             pills={pills}
             activePill={activePill}
-            setActivePill={(option) =>
-              handleSoundChange(option.value)
-            }
+            setActivePill={(option) => handleSoundChange(option.value)}
           />
         </div>
       </div>
