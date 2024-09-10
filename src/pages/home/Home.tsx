@@ -2,7 +2,6 @@
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
 import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
@@ -30,11 +29,12 @@ export function Home() {
     credits,
     tokens,
     tons,
-    updateCredits,
     updateJwt,
+    jwt,
     activeCharacter,
     higherBlaster,
     soundSetting,
+    updateUserInfo,
   } = useUserData();
   const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
@@ -43,6 +43,10 @@ export function Home() {
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
+  const [customization, setCustomization] = useState<
+    [number | null, number | null]
+  >([null, null]);
+
   const { readyState, activeVideo, setActiveVideo } = useBackgroundVideo();
 
   // unity vars
@@ -61,6 +65,7 @@ export function Home() {
     if (isUnityLoaded) {
       setIsLoading!(false);
     }
+
     if (activeCharacter != null && higherBlaster != null) {
       const json = JSON.stringify({
         blaster: higherBlaster.level,
@@ -72,10 +77,11 @@ export function Home() {
   }, [isUnityLoaded, activeCharacter, higherBlaster]);
 
   useEffect(() => {
+    if (!isUnityLoaded) return;
     if (soundSetting) {
       sendMessageToUnity("EnableGameSounds", "s");
     } else sendMessageToUnity("DisableGameSounds", "s");
-  }, [soundSetting]);
+  }, [soundSetting, isUnityLoaded]);
 
   const handleAuthTokenChange = (token: string | null) => {
     if (token != null) {
@@ -85,15 +91,9 @@ export function Home() {
 
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
+    if (jwt !== null && jwt !== "") updateUserInfo(jwt);
     iframeRef.current?.focus();
   }, []);
-
-  const handleSetCredits = useCallback(
-    (value: ReactUnityEventParameter) => {
-      updateCredits(value as number);
-    },
-    [updateCredits]
-  );
 
   // Обработчик сообщений, полученных из iFrame
   useEffect(() => {
@@ -101,7 +101,7 @@ export function Home() {
       try {
         const data: any = JSON.parse(event.data);
         switch (data.type) {
-          case "single": {
+          case "multiple": {
             if (data.method === "LoadFinish") handleLoadingFinish();
             break;
           }

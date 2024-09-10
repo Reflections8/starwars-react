@@ -1,21 +1,26 @@
-import {Footer} from "../../components/Footer/Footer";
-import {Header} from "../../components/Header/Header";
-import {HomeIcon} from "../../icons/Home";
-import {MenuIcon} from "../../icons/Menu";
+import { Footer } from "../../components/Footer/Footer";
+import { Header } from "../../components/Header/Header";
+import { HomeIcon } from "../../icons/Home";
+import { MenuIcon } from "../../icons/Menu";
 import "./styles/game1.css";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {ReactUnityEventParameter} from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import {HeaderCenterCredits} from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
-import {useNavigate} from "react-router-dom";
-import {ProofManager} from "../../components/ProofManager/ProofManager.tsx";
-import {useLoader} from "../../context/LoaderContext.tsx";
-import {Blaster, Character, CharactersData, useUserData,} from "../../UserDataService.tsx";
-import useWebSocket, {ReadyState} from "react-use-websocket";
-import {VADER_SOCKET} from "../../main.tsx";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
+import { useNavigate } from "react-router-dom";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
+import { useLoader } from "../../context/LoaderContext.tsx";
+import {
+  Blaster,
+  Character,
+  CharactersData,
+  useUserData,
+} from "../../UserDataService.tsx";
+import useWebSocket from "react-use-websocket";
+import { VADER_SOCKET } from "../../main.tsx";
 
 export function Game1() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const { jwt } = useUserData();
+  const { jwt, soundSetting } = useUserData();
   const navigate = useNavigate();
   const { setIsLoading } = useLoader();
 
@@ -28,7 +33,7 @@ export function Game1() {
 
   const [publicKey, setPublicKey] = useState("");
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
-  const { sendMessage, lastMessage, readyState } = useWebSocket(VADER_SOCKET, {});
+  const { sendMessage, lastMessage } = useWebSocket(VADER_SOCKET, {});
 
   useEffect(() => {
     setIsLoading!(true);
@@ -106,6 +111,13 @@ export function Game1() {
       }
     }
   }, [lastMessage]);
+
+  useEffect(() => {
+    if (!isUnityLoaded) return;
+    if (soundSetting) {
+      sendMessageToUnity("EnableGameSounds", "s");
+    } else sendMessageToUnity("DisableGameSounds", "s");
+  }, [soundSetting, isUnityLoaded]);
 
   const updateGameInfo = (data: any) => {
     const blaster: Blaster = data.blaster;
