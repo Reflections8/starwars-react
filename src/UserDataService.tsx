@@ -20,6 +20,7 @@ import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import { useLocation } from "react-router-dom";
 
 interface UserDataContextType {
   credits: number;
@@ -37,6 +38,7 @@ interface UserDataContextType {
   healingCharacter: Character | null;
   soundSetting: boolean;
   prices: Prices;
+  refInfo: RefInfo | null;
   selectGun: (value: number) => void;
   selectHealingCharacter: (value: number) => void;
   updateCredits: (value: number) => void;
@@ -82,6 +84,7 @@ const defaultValue: UserDataContextType = {
     blaster_3_2: 0,
     blaster_3_3: 0,
   },
+  refInfo: null,
   selectGun: () => {},
   updateCredits: () => {},
   updateTokens: () => {},
@@ -121,6 +124,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [healingCharacter, setHealingCharacter] = useState<Character | null>(
     null
   );
+  const location = useLocation();
+
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
   const [higherBlaster, setHigherBlaster] = useState<Blaster | null>(null);
   const [activeCharacter, setActiveCharacter] = useState<Character | null>(
@@ -141,6 +146,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     blaster_3_2: 0,
     blaster_3_3: 0,
   });
+
+  const [refInfo, setRefInfo] = useState<RefInfo | null>(null);
 
   const [checkBalance, setCheckBalance] = useState(false);
   const [checkGun, setCheckGunChange] = useState(false);
@@ -195,12 +202,19 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const auth = async (jwt: string) => {
     try {
+      const searchParams = new URLSearchParams(location.search);
+      const idParam = searchParams.get("id");
+      const id = idParam !== null ? parseInt(idParam, 10) : -1;
+
       const response = await fetch(SERVER_URL + "/main/auth", {
         method: "POST", // или 'POST', в зависимости от требований к API
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`, // Добавление токена в заголовок
         },
+        body: JSON.stringify({
+          chat_id: id,
+        }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -238,9 +252,11 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
       const blasters: Blaster[] = data.blasters;
       const pricesResponse: Prices = data.prices;
+      const refInfo: RefInfo = data.ref_info;
       const characters: Character[] = data.characters;
       setCharacters(characters);
       setPrices(pricesResponse);
+      setRefInfo(refInfo);
       setBlasters(blasters);
       setHigherBlaster(calculateHighestLevelBlaster(blasters));
     } catch (error) {
@@ -264,23 +280,23 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
           if (tonConnectUI.connected) await tonConnectUI.disconnect();
           return;
         } else await updateUserInfo(jwt);
+
+        const interval = setInterval(() => {
+          if (jwt != null && jwt !== "") {
+            const refreshUserInfo = async () => {
+              await updateUserInfo(jwt);
+            };
+
+            refreshUserInfo();
+          }
+        }, 20000);
+
+        return () => {
+          clearInterval(interval);
+        };
       };
 
       authenticateUser();
-
-      const interval = setInterval(() => {
-        if (jwt != null && jwt !== "") {
-          const refreshUserInfo = async () => {
-            await updateUserInfo(jwt);
-          };
-
-          refreshUserInfo();
-        }
-      }, 20000);
-
-      return () => {
-        clearInterval(interval);
-      };
     } else if (tonConnectUI.connected) tonConnectUI.disconnect();
   }, [jwt]);
 
@@ -445,6 +461,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   return (
     <UserDataContext.Provider
       value={{
+        refInfo,
         credits,
         tokens,
         tons,
@@ -526,6 +543,20 @@ export interface Prices {
   blaster_3_3: number;
 }
 
+export interface RefInfo {
+  invited: 0;
+  invited_ranked: 0;
+  total_deposited: 0;
+  total_rewards: 0;
+  invite_link: string;
+  invited_users: InvitedUser[];
+}
+
+export interface InvitedUser {
+  username: string;
+  reward: 0;
+}
+
 export const BlastersData = [
   {
     level: 1,
@@ -561,7 +592,7 @@ export const CharactersData = [
     charge_step: 0,
     price: 0.5,
     payload: "",
-    payload_heal: "",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAHxC4aaE=",
     image: ch0Img,
   },
   {
@@ -570,8 +601,8 @@ export const CharactersData = [
     damage: 2,
     charge_step: 0,
     price: 2,
-    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFSiQi8o=",
-    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAHxC4aaE=",
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAIIXNmc8=",
     image: ch1Img,
   },
   {
@@ -580,8 +611,8 @@ export const CharactersData = [
     damage: 10,
     charge_step: 1,
     price: 10,
-    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
-    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAIIXNmc8=",
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAF9/gsCs=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAIYZO8j0=",
     image: ch2Img,
   },
   {
@@ -590,8 +621,8 @@ export const CharactersData = [
     damage: 30,
     charge_step: 2,
     price: 30,
-    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAF9/gsCs=",
-    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAIYZO8j0=",
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAGPvco3U=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAInK9oi4=",
     image: ch3Img,
   },
   {
@@ -600,8 +631,8 @@ export const CharactersData = [
     damage: 70,
     charge_step: 4,
     price: 70,
-    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAGPvco3U=",
-    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAInK9oi4=",
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAGfhfyIc=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAI3E+ydw=",
     image: ch4Img,
   },
 ];

@@ -6,7 +6,7 @@ import { router } from "./routes/index.tsx";
 import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
 
 export const PROJECT_CONTRACT_ADDRESS =
-  "0:5CE1280FFDD7B96B6A11CD7486355E30061A05B3DCCDEAC3F556FDA941C5592F";
+  "EQBR93a1DooUJ8yZLAd739SltEaJ6c0VxsPzEEEJj4T1MZFW";
 
 export const SERVER_URL = "https://socket.akronix.io";
 export const VADER_SOCKET = "wss://socket.akronix.io/vader";

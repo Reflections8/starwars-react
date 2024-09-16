@@ -43,9 +43,6 @@ export function Home() {
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
-  const [customization, setCustomization] = useState<
-    [number | null, number | null]
-  >([null, null]);
 
   const { readyState, activeVideo, setActiveVideo } = useBackgroundVideo();
 
@@ -123,9 +120,9 @@ export function Home() {
   //   }, []);
 
   // TODO: всплывшка с бинксом при заходе на страницу
-  useEffect(() => {
-    openModal!("binks");
-  }, []);
+  //useEffect(() => {
+  //  openModal!("binks");
+  //}, []);
 
   async function openWalletDrawer() {
     closeDrawer!();

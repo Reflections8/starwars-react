@@ -26,8 +26,14 @@ const graphics: SelectOptionType[] = [
 ];
 
 export function Settings() {
-  const { characters, activeCharacter, jwt, soundSetting, setSoundSetting } =
-    useUserData();
+  const {
+    characters,
+    activeCharacter,
+    jwt,
+    soundSetting,
+    setSoundSetting,
+    updateUserInfo,
+  } = useUserData();
   const [activePill, setActivePill] = useState(pills[0]);
   const [activeGraphics, setActiveGraphics] = useState(graphics[0]);
 
@@ -79,6 +85,8 @@ export function Settings() {
           },
           body: JSON.stringify(reqBody),
         });
+
+        await updateUserInfo(jwt);
       } catch (e) {
         // ignore
       }

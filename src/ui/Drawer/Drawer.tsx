@@ -578,9 +578,7 @@ function Heal() {
 }
 
 function InviteFriend() {
-  const [link] = useState(
-    "https://wikipedia.org/wiki/%Dahsjdkahsdjkahsdjkahsdklahsdjklasdasd"
-  );
+  const {refInfo} = useUserData();
   return (
     <div className="inviteFriend">
       <div className="inviteFriend__text">
@@ -590,7 +588,7 @@ function InviteFriend() {
       <div className="inviteFriend-inputBlock-inputWrapper">
         <input
           type="decimal"
-          value={link}
+          value={refInfo?.invite_link}
           disabled={true}
           className={`inviteFriend-inputBlock-input`}
         />
@@ -601,7 +599,8 @@ function InviteFriend() {
         size="small"
         callback={(e) => {
           e.stopPropagation();
-          navigator.clipboard.writeText(link);
+          if(refInfo != null)
+            navigator.clipboard.writeText(refInfo.invite_link);
         }}
       />
     </div>

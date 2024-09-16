@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ReactNode, createContext, useContext, useState } from "react";
+import { LoadingModal } from "../ui/Modal/LoadingModal.tsx";
 
 type LoaderProviderProps = {
   children: ReactNode;
@@ -18,7 +19,7 @@ export function LoaderProvider({ children }: LoaderProviderProps) {
   return (
     <LoaderContext.Provider value={{ isLoading, setIsLoading }}>
       {children}
-      {/* <LoadingModal isOpen={isLoading} /> */}
+      <LoadingModal isOpen={isLoading} />
     </LoaderContext.Provider>
   );
 }
