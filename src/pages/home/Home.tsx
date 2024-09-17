@@ -6,7 +6,7 @@ import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
 import { Info } from "../../components/Header/components/Info/Info.tsx";
-import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
+import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
 import { useDrawer } from "../../context/DrawerContext";
 import { useLoader } from "../../context/LoaderContext";
 import { useModal } from "../../context/ModalContext";
@@ -15,12 +15,11 @@ import { GamesIcon } from "../../icons/Games";
 import { MenuIcon } from "../../icons/Menu";
 import { OptionsIcon } from "../../icons/Options";
 import { BackgroundLayers } from "./components/BackgroundLayers";
+import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
-import "./styles/home.css";
-import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
-import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
 import bookImg from "./img/book.svg";
+import "./styles/home.css";
 
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -80,7 +79,9 @@ export function Home() {
     } else sendMessageToUnity("DisableGameSounds", "s");
   }, [soundSetting, isUnityLoaded]);
 
+  // @ts-ignore
   const handleAuthTokenChange = (token: string | null) => {
+    console.log({ token });
     if (token != null) {
       updateJwt(token);
     }
@@ -131,7 +132,7 @@ export function Home() {
 
   return (
     <>
-      <ProofManager onValueChange={handleAuthTokenChange} />
+      {/* <ProofManager onValueChange={handleAuthTokenChange} /> */}
       <BackgroundLayers />
 
       <Header
@@ -177,7 +178,7 @@ export function Home() {
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      <iframe
+      {/* <iframe
         ref={iframeRef}
         src="https://akronix.io/unity_main/"
         style={{
@@ -190,7 +191,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe>
+      ></iframe> */}
 
       <Header
         position={"bottom"}

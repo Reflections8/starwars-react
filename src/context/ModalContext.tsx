@@ -41,7 +41,10 @@ export function ModalProvider({ children }: ModalProviderProps) {
         // @ts-ignore
         event.target.classList.contains("shipsArrangement2") ||
         // @ts-ignore
-        event.target.classList.contains("arrangementRules");
+        event.target.classList.contains("rules") ||
+        // @ts-ignore
+        event.target.classList.contsins("seaBattle");
+
       if (isShipArrangementModal) return;
       if (
         modalElement &&
@@ -66,6 +69,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
   }, [isOpen, drawerIsOpen]);
 
   const openModal = (type: string, pillIndex: number = 0) => {
+    console.log({ type });
     setModalType(type);
     setActivePillProp(pillIndex);
     setIsOpen(true);

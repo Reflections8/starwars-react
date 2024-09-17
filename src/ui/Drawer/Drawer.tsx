@@ -11,6 +11,9 @@ import {
   useTonWallet,
 } from "@tonconnect/ui-react";
 import { useState } from "react";
+import { Timer } from "../../components/Modals/ShipsArrangement2/components/Timer.tsx";
+import { useBattleships } from "../../context/BattleshipsContext.tsx";
+import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../main.tsx";
 import { CharactersData, Prices, useUserData } from "../../UserDataService.tsx";
 import { formatWalletString } from "../../utils/index.ts";
 import { CryptoButtons } from "../CryptoButtons/CryptoButtons.tsx";
@@ -18,11 +21,10 @@ import telegramIcon from "./img/menu/tg.svg";
 import walletIcon from "./img/menu/wallet.svg";
 import xIcon from "./img/menu/x.svg";
 import youtubeIcon from "./img/menu/youtube.svg";
+import opponentFoundIcon from "./img/opponent-icon.svg";
 import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import creditIcon from "./img/upgrade/credits.svg";
 import "./styles//drawer.css";
-import {PROJECT_CONTRACT_ADDRESS, SERVER_URL} from "../../main.tsx";
-import { useBattleships } from "../../context/BattleshipsContext.tsx";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -42,6 +44,7 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
     heal: <Heal />,
     inviteFriend: <InviteFriend />,
     giveUp: <GiveUp />,
+    opponentFound: <OpponentFound />,
   };
 
   return (
@@ -169,8 +172,7 @@ function Menu() {
 }
 
 function Upgrade() {
-  const { prices, activeBlaster, updateUserInfo, credits, jwt } =
-    useUserData();
+  const { prices, activeBlaster, updateUserInfo, credits, jwt } = useUserData();
 
   const { openDrawer } = useDrawer();
 
@@ -233,10 +235,8 @@ function Upgrade() {
       return;
     }
 
-    if (jwt != null && jwt !== "")
-    {
-      try
-      {
+    if (jwt != null && jwt !== "") {
+      try {
         const reqBody = {
           item_level: activeBlaster.level,
           config_id: value,
@@ -250,22 +250,26 @@ function Upgrade() {
           body: JSON.stringify(reqBody),
         });
 
-        if(!response.ok)
-        {
-          openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
-        }
-        else
-        {
+        if (!response.ok) {
           openDrawer!(
-              "resolved",
-              "bottom",
-              "Улучшение бластера выполнено успешно."
+            "rejected",
+            "bottom",
+            "Произошла ошибка во время выполнения операции"
+          );
+        } else {
+          openDrawer!(
+            "resolved",
+            "bottom",
+            "Улучшение бластера выполнено успешно."
           );
           await updateUserInfo(jwt);
         }
-      }
-      catch (e) {
-        openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
+      } catch (e) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          "Произошла ошибка во время выполнения операции"
+        );
       }
     }
   };
@@ -418,8 +422,7 @@ function Upgrade() {
 
 function Repair() {
   const [activeCurrency, setActiveCurrency] = useState("credits");
-  const { prices, activeBlaster, updateUserInfo, credits, jwt } =
-    useUserData();
+  const { prices, activeBlaster, updateUserInfo, credits, jwt } = useUserData();
   const { openDrawer } = useDrawer();
   const handleRepairClick = async () => {
     if (!activeBlaster || activeBlaster.level == 1) return;
@@ -436,7 +439,7 @@ function Repair() {
     if (jwt != null && jwt !== "") {
       try {
         const reqBody = {
-          item_level: activeBlaster.level
+          item_level: activeBlaster.level,
         };
         const response = await fetch(SERVER_URL + "/main/repairBlaster", {
           method: "POST",
@@ -448,17 +451,25 @@ function Repair() {
         });
 
         if (!response.ok) {
-          openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
+          openDrawer!(
+            "rejected",
+            "bottom",
+            "Произошла ошибка во время выполнения операции"
+          );
         } else {
           openDrawer!(
-              "resolved",
-              "bottom",
-              "Починка бластера выполнена успешно."
+            "resolved",
+            "bottom",
+            "Починка бластера выполнена успешно."
           );
           await updateUserInfo(jwt);
         }
       } catch (e) {
-        openDrawer!("rejected", "bottom", "Произошла ошибка во время выполнения операции");
+        openDrawer!(
+          "rejected",
+          "bottom",
+          "Произошла ошибка во время выполнения операции"
+        );
       }
     }
   };
@@ -578,7 +589,7 @@ function Heal() {
 }
 
 function InviteFriend() {
-  const {refInfo} = useUserData();
+  const { refInfo } = useUserData();
   return (
     <div className="inviteFriend">
       <div className="inviteFriend__text">
@@ -599,7 +610,7 @@ function InviteFriend() {
         size="small"
         callback={(e) => {
           e.stopPropagation();
-          if(refInfo != null)
+          if (refInfo != null)
             navigator.clipboard.writeText(refInfo.invite_link);
         }}
       />
@@ -608,7 +619,7 @@ function InviteFriend() {
 }
 
 function GiveUp() {
-  const { setGameState } = useBattleships();
+  const { roomName, sendMessage, setGameState } = useBattleships();
   const { closeDrawer } = useDrawer();
   return (
     <div className="giveUp">
@@ -619,6 +630,12 @@ function GiveUp() {
         size="small"
         callback={(e) => {
           e.stopPropagation();
+          sendMessage({
+            type: "give_up",
+            message: {
+              room_name: roomName,
+            },
+          });
           closeDrawer!();
           // @ts-ignore
           setGameState((prevState) => ({
@@ -627,6 +644,51 @@ function GiveUp() {
           }));
         }}
       />
+    </div>
+  );
+}
+
+function OpponentFound() {
+  const { closeDrawer } = useDrawer();
+  return (
+    <div className="opponentFound">
+      <img src={opponentFoundIcon} alt="" className="opponentFound__icon" />
+      <div className="opponentFound__text">
+        Нашелся игрок для дуэли в вашей комнате
+      </div>
+
+      <div className="opponentFound__betBox">
+        <div className="opponentFound__betBox-main">
+          <div className="opponentFound__betBox-main-key">СТАВКА:</div>
+          <div className="opponentFound__betBox-main-value">1234.5678 ton</div>
+        </div>
+
+        <div className="opponentFound__betBox-timerWrapper">
+          {/* @ts-ignore */}
+          <Timer timerValue={60000} />
+        </div>
+      </div>
+
+      <div className="opponentFound__footer">
+        <CuttedButton
+          text="отклонить"
+          className="secondary"
+          size="small"
+          callback={(e) => {
+            e.stopPropagation();
+            closeDrawer!();
+          }}
+        />
+
+        <CuttedButton
+          text="принять"
+          size="small"
+          callback={(e) => {
+            e.stopPropagation();
+            closeDrawer!();
+          }}
+        />
+      </div>
     </div>
   );
 }

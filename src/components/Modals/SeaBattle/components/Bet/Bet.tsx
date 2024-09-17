@@ -2,10 +2,31 @@ import { useState } from "react";
 import { CryptoButtons } from "../../../../../ui/CryptoButtons/CryptoButtons";
 import "./styles/Bet.css";
 import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
+import { BetTypeEnum } from "../../types/enum";
+import { useDrawer } from "../../../../../context/DrawerContext";
+import { useBattleships } from "../../../../../context/BattleshipsContext";
 
 export function Bet() {
-  const [activeCurrency, setActiveCurrency] = useState("ton");
+  const { openDrawer } = useDrawer();
+  const { sendMessage } = useBattleships();
+
+  const [activeCurrency, setActiveCurrency] = useState("credits");
   const [bet, setBet] = useState(0);
+
+  async function createRoom() {
+    if (!bet) {
+      openDrawer!("rejected", "bottom", "Введите размер ставки");
+      return;
+    }
+
+    sendMessage({
+      type: "create_room",
+      message: {
+        bet_type: BetTypeEnum[activeCurrency as keyof typeof BetTypeEnum],
+        bet_amount: bet,
+      },
+    });
+  }
   return (
     <div className="bet">
       <CryptoButtons
@@ -37,7 +58,14 @@ export function Bet() {
         </div>
       </div>
 
-      <CuttedButton className="bet__cuttedButton" text="Создать дуэль" />
+      <CuttedButton
+        className="bet__cuttedButton"
+        text="Создать дуэль"
+        callback={(e) => {
+          e.stopPropagation();
+          createRoom();
+        }}
+      />
 
       <div className="bet__footerText">
         после создания дуэли вы становитесь в очередь и ждете пока вам кинут

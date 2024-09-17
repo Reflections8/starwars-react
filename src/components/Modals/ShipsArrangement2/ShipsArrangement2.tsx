@@ -46,13 +46,12 @@ export function ShipsArrangementChild() {
   const [selectedShipToSettle, setSelectedShipToSettle] =
     useState<ShipType | null>(null);
   const [gameboard, setGameboard] = useState(new Gameboard());
-  const { setUserShips } = useBattleships();
+  const { roomName, sendMessage, setUserShips } = useBattleships();
 
   useEffect(() => {
     const isSettledAll = Object.values(gameboard.getUnsettledShips()).every(
       (item) => item === 0
     );
-    console.log(isSettledAll);
     setAllShipsSettled(isSettledAll);
   }, [gameboard.getUnsettledShips()]);
 
@@ -102,8 +101,26 @@ export function ShipsArrangementChild() {
     updateGameboard();
   };
 
-  const handleTimerStart = () => {
+  const handleArrangementDone = () => {
+    const preparedShipsArray = gameboard.ships.map((item) => {
+      return {
+        length: item.ship.length,
+        vertical: item.ship.vertical,
+        head: {
+          row: item.pos.row,
+          column: item.pos.column,
+        },
+      };
+    });
+
     setUserShips!(gameboard.ships);
+    sendMessage({
+      type: "init_ships",
+      message: {
+        room_name: roomName,
+        ships: preparedShipsArray,
+      },
+    });
     closeModal!();
   };
 
@@ -190,7 +207,7 @@ export function ShipsArrangementChild() {
                 gameboard.placeShipsRandomly();
                 updateGameboard();
               }}
-              onStart={handleTimerStart}
+              onStart={handleArrangementDone}
             />
             {/* GRID WRAPPER */}
             <div className="shipsArr__main-field-gridWrapper">
@@ -234,7 +251,7 @@ export function ShipsArrangementChild() {
             <CuttedButton
               text="Играть"
               className={!allShipsSettled ? "halfTransparent" : ""}
-              callback={handleTimerStart}
+              callback={handleArrangementDone}
             />
           </div>
         </div>

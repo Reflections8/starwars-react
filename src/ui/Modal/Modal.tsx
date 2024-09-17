@@ -36,6 +36,7 @@ import modalBodyBg from "./img/modal-body.png";
 import modalHeaderIconBg from "./img/modal-header-icon-wrapper.png";
 import modalHeaderBg from "./img/modal-header.png";
 import "./styles/modal.css";
+import { useNavigate } from "react-router-dom";
 
 type ModalProps = {
   isOpen: boolean;
@@ -140,6 +141,7 @@ const fullscreenModals: ModalContentKeys[] = [
 const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement2"];
 
 export function Modal({ isOpen }: ModalProps) {
+  const navigate = useNavigate();
   const { closeModal, modalType } = useModal();
 
   const shortModalBody = shortModals.includes(modalType!);
@@ -228,14 +230,22 @@ export function Modal({ isOpen }: ModalProps) {
               <div className="modal__body-top">
                 <button
                   className="modal__body-top-closeBtn"
-                  onClick={closeModal}
+                  onClick={() => {
+                    if (modalType === "seaBattle") {
+                      navigate("/");
+                    } else {
+                      closeModal!();
+                    }
+                  }}
                 >
                   <img
                     src={modalBodyCloseIcon}
                     alt="closeIcon"
                     className="modal__body-top-closeBtn-bg"
                   />
-                  <span className="modal__body-top-closeBtn-text">Закрыть</span>
+                  <span className="modal__body-top-closeBtn-text">
+                    {modalType === "seaBattle" ? "На главную" : "Закрыть"}
+                  </span>
                 </button>
 
                 <div className="modal__body-top-title">

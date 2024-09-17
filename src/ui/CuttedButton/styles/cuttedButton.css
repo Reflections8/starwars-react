@@ -59,6 +59,10 @@
   opacity: 50%;
 }
 
+.cuttedButtonContainer.secondary .cuttedButton {
+  background: #4fb2fe3b;
+}
+
 .cuttedButton {
   outline: none;
   border: none;

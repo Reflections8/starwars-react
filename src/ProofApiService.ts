@@ -84,7 +84,7 @@ class ProofService {
 
   reset() {
     this.accessToken = null;
-    localStorage.removeItem(this.localStorageKey);
+    //  localStorage.removeItem(this.localStorageKey);
     this.generatePayload();
     this.authorized = false;
   }

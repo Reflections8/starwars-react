@@ -237,7 +237,6 @@ export function Game2() {
         updateEnemyBoard();
       }
       if (type === "recieveFire") {
-        console.log({ isDead });
         playBeamAnimation(attack, false).then(() => {
           userBoard.updateUserBoard(message);
           isHit
@@ -262,7 +261,7 @@ export function Game2() {
       newSocket.send(JSON.stringify({ type: "join" }));
     };
     newSocket.onclose = () => {
-      console.log("Disconnected from WebSocket server");
+      console.log("MOCK Disconnected from WebSocket server");
     };
     setSocket(newSocket);
 

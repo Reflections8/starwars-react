@@ -8,7 +8,7 @@
   flex-direction: column;
   justify-content: flex-end;
   background: linear-gradient(to top, #120d1f, #0f172f00);
-  z-index: 1000;
+  z-index: 10000;
   transition: all 0.2s ease-in-out;
   opacity: 1;
 }
@@ -470,4 +470,81 @@
   max-width: 300px;
   text-align: center;
   margin-bottom: 20px;
+}
+
+/* OPPONENT FOUND */
+.opponentFound {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.drawer.opponentFound {
+  max-height: 400px;
+}
+
+.opponentFound__icon {
+  max-width: 45px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.opponentFound__text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+
+  max-width: 300px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.opponentFound__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.opponentFound__footer .cuttedButtonContainer {
+  max-width: 150px;
+  width: 100%;
+}
+
+.opponentFound__betBox {
+  padding: 15px 15px 20px 15px;
+  border-radius: 4px;
+  border: 1px solid #19c2ef4b;
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.opponentFound__betBox-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.opponentFound__betBox-main-key {
+  font-size: 15px;
+  color: #0974f8;
+}
+
+.opponentFound__betBox-main-value {
+  font-size: 16px;
+  color: #c9e9fb;
+}
+
+.opponentFound__betBox-timerWrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -6px;
 }

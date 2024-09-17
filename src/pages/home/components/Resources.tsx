@@ -6,6 +6,10 @@ import creditsIcon from "../img/resources/credit.svg";
 import akronIcon from "../img/resources/akron.svg";
 import tonIcon from "../img/resources/ton.svg";
 import highlighCurrency from "../video/currency.svg";
+import searchBg from "../img/resources/search-bg.svg";
+import searchIcon from "../img/resources/search.svg";
+import searchCancelIcon from "../img/resources/search-cancel-bg.svg";
+import { useBattleships } from "../../../context/BattleshipsContext";
 
 type ResourcesProps = {
   credits: number;
@@ -14,6 +18,8 @@ type ResourcesProps = {
 };
 
 export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
+  const { setSearchingDuel, searchingDuel } = useBattleships();
+
   // {formatNumberWithCommas(credits)}
   return (
     <div className="resources">
@@ -104,6 +110,25 @@ export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
           <div className="resources__item-bottom-value">TON</div>
         </div>
       </div>
+
+      {searchingDuel ? (
+        <div className="resources__searchWrapper">
+          <div className={`resources__search`}>
+            <img src={searchBg} alt="" className="resources__search-bg" />
+
+            <img src={searchIcon} alt="" className="resources__search-icon" />
+            <div className="resources__search-key">Идет поиск</div>
+          </div>
+          <img
+            src={searchCancelIcon}
+            alt=""
+            className="resources__searchCancel"
+            onClick={() => {
+              setSearchingDuel(false);
+            }}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

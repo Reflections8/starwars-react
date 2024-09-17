@@ -9,6 +9,7 @@ import { Gameboard } from "./gameboard";
 import { FC } from "react";
 import { EnemyBoard } from "./EnemyBoard";
 import { TimerII } from "./TimerII";
+import { useBattleships } from "../../../../context/BattleshipsContext";
 
 export const GameFields: FC<{
   userBoard: Gameboard;
@@ -25,6 +26,7 @@ export const GameFields: FC<{
   myTurn,
   timerValue,
 }) => {
+  const { roomName, sendMessage } = useBattleships();
   const clickEnemyField = (row: number, column: number, zalupa: boolean) => {
     if (!zalupa) return;
     if (!myTurn) return;
@@ -34,6 +36,13 @@ export const GameFields: FC<{
 
   const confirmHit = () => {
     if (!enemyBoard.preHit) return;
+    sendMessage({
+      type: "fire",
+      message: {
+        room_name: roomName,
+        target: enemyBoard.preHit,
+      },
+    });
     sendHit(enemyBoard.preHit);
     enemyBoard.setPreHit(null);
     updateEnemyBoard();
