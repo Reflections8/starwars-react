@@ -23,12 +23,12 @@ type Cell = {
   column: number;
 };
 type EnemyShip = {
-  isDead: boolean;
+  IsDead: boolean;
   cells: Cell[];
 };
 type Ship = {
   vertical: boolean;
-  isDead: boolean;
+  IsDead: boolean;
   length: number;
   cells: Cell[];
   head: Cell;
@@ -54,12 +54,12 @@ export class Gameboard {
 
   preHit: null | Cell;
 
-  constructor() {
+  constructor(ships: ShipPosition[]) {
     this.preHit = null;
     this.hits = [];
     this.misses = [];
     this.initialize();
-    this.ships = [];
+    this.ships = ships || [];
     this.SIZE = 10;
   }
   initialize() {}
@@ -89,12 +89,13 @@ export class Gameboard {
     return this.preHit.row === row && this.preHit.column === column;
   }
   updateEnemyBoard(data: UpdateEnemyData) {
+    console.log({ enemyDataShips: data.ships });
     let newHits: any[] = [];
     let newShips: any[] = [];
     data.ships.forEach((ship) => {
-      const { cells, isDead } = ship;
+      const { cells, IsDead } = ship;
       newHits.push(...cells);
-      if (isDead) {
+      if (IsDead) {
         const vertical = cells.every((cell) => cell.column === cells[0].column);
         const length = cells.length;
         const head = [...cells].sort((a, b) =>
@@ -108,6 +109,7 @@ export class Gameboard {
     this.misses = data.misses;
   }
   updateUserBoard(data: UpdateData) {
+    console.log({ myDataShips: data.ships });
     let newHits: any[] = [];
     this.ships = data.ships.map((ship) => {
       const { head, vertical, length, cells } = ship;
@@ -198,7 +200,21 @@ export class Gameboard {
 
   getShipRC(r: number, c: number): null | ShipPosition {
     let res = null;
-    this.ships.forEach((shipPos) => {
+
+    const transformed = this.ships.map((ship) => {
+      return {
+        pos: {
+          row: ship.pos.row,
+          column: ship.pos.column,
+        },
+        ship: {
+          length: ship.length,
+          vertical: ship.vertical,
+        },
+      };
+    });
+
+    transformed.forEach((shipPos) => {
       const { pos, ship } = shipPos;
       const { row, column } = pos;
       const { length, vertical } = ship;

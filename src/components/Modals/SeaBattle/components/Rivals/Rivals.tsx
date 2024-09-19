@@ -176,6 +176,11 @@ export function Rivals() {
                     callback={(e) => {
                       e.stopPropagation();
                       joinRoom(item.room_name);
+                      const firstClient =
+                        document.location.href.includes("5173");
+                      if (firstClient) {
+                        openModal!("shipsArrangement2");
+                      }
                     }}
                     size="small"
                     className="rivals__list-item-end-btn"

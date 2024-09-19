@@ -25,14 +25,29 @@ enableDragDropTouch();
 const timerSeconds = 60;
 
 export function Game2() {
-  const [socket, setSocket] = useState<null | WebSocket>(null);
+  //   const [socket, setSocket] = useState<null | WebSocket>(null);
   const { openModal } = useModal();
   const { openDrawer, closeDrawer } = useDrawer();
   // @ts-ignore
-  const { gameState, userShips, setGameState, setUserShips } = useBattleships();
-  const [userBoard, setUserBoard] = useState(new Gameboard());
-  const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
-  const [myTurn, setMyTurn] = useState(true);
+  const {
+    socket,
+    sendMessage,
+    roomName,
+    gameState,
+    userShips,
+    setGameState,
+    setUserShips,
+    userBoard,
+    enemyBoard,
+    updateUserboard,
+    updateEnemyBoard,
+    restartBoards,
+    myTurn,
+    setMyTurn,
+  } = useBattleships();
+  //   const [userBoard, setUserBoard] = useState(new Gameboard(myShips));
+  //   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
+  //   const [myTurn, setMyTurn] = useState(true);
   const [player] = useState("player1");
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
@@ -61,27 +76,21 @@ export function Game2() {
     };
   }, []);
 
-  const updateUserboard = () => {
-    const newGameboard = new Gameboard();
-    newGameboard.ships = userBoard.ships;
-    newGameboard.hits = userBoard.hits;
-    newGameboard.misses = userBoard.misses;
-    setUserBoard(newGameboard);
-  };
-  const updateEnemyBoard = () => {
-    const newGameboard = new Gameboard();
-    newGameboard.ships = enemyBoard.ships;
-    newGameboard.hits = enemyBoard.hits;
-    newGameboard.misses = enemyBoard.misses;
-    newGameboard.preHit = enemyBoard.preHit;
-    setEnemyBoard(newGameboard);
-  };
-
-  const restartBoards = () => {
-    setUserBoard(new Gameboard());
-    setEnemyBoard(new Gameboard());
-  };
-
+  //   const updateUserboard = () => {
+  //     const newGameboard = new Gameboard(myShips);
+  //     newGameboard.ships = myShips;
+  //     newGameboard.hits = userBoard.hits;
+  //     newGameboard.misses = userBoard.misses;
+  //     setUserBoard(newGameboard);
+  //   };
+  //   const updateEnemyBoard = () => {
+  //     const newGameboard = new Gameboard();
+  //     newGameboard.ships = enemyBoard.ships;
+  //     newGameboard.hits = enemyBoard.hits;
+  //     newGameboard.misses = enemyBoard.misses;
+  //     newGameboard.preHit = enemyBoard.preHit;
+  //     setEnemyBoard(newGameboard);
+  //   };
   const playBeamAnimation = ({ row, column }: any, me: boolean) => {
     playBeamSound();
     const targetCell = document.getElementById(
@@ -238,6 +247,7 @@ export function Game2() {
       }
       if (type === "recieveFire") {
         playBeamAnimation(attack, false).then(() => {
+          console.log({ attack });
           userBoard.updateUserBoard(message);
           isHit
             ? isDead
@@ -254,46 +264,55 @@ export function Game2() {
     };
   }, [userBoard, enemyBoard, socket, player]);
 
-  useEffect(() => {
-    const mockServer = createMockServer();
-    const newSocket = new WebSocket("ws://localhost:8080");
-    newSocket.onopen = () => {
-      newSocket.send(JSON.stringify({ type: "join" }));
-    };
-    newSocket.onclose = () => {
-      console.log("MOCK Disconnected from WebSocket server");
-    };
-    setSocket(newSocket);
+  //   useEffect(() => {
+  //     const mockServer = createMockServer();
+  //     const newSocket = new WebSocket("ws://localhost:8080");
+  //     newSocket.onopen = () => {
+  //       newSocket.send(JSON.stringify({ type: "join" }));
+  //     };
+  //     newSocket.onclose = () => {
+  //       console.log("MOCK Disconnected from WebSocket server");
+  //     };
+  //     setSocket(newSocket);
 
-    return () => {
-      newSocket.close();
-      mockServer.stop();
-    };
-  }, [player]);
+  //     return () => {
+  //       newSocket.close();
+  //       mockServer.stop();
+  //     };
+  //   }, [player]);
 
   useEffect(() => {
     if (userShips && userShips.length > 0) {
       timer.start();
       setGameState!({ status: "IN_PROGRESS" });
-      socket &&
-        socket.send(
-          JSON.stringify({
-            type: "shipsInit",
-            message: userShips,
-            source: player,
-          })
-        );
+      // socket &&
+      //   socket.send(
+      //     JSON.stringify({
+      //       type: "shipsInit",
+      //       message: userShips,
+      //       source: player,
+      //     })
+      //   );
     }
   }, [JSON.stringify(userShips), socket]);
 
   const sendHit = (p: any) => {
     if (gameState?.status !== "IN_PROGRESS") return;
-    playBeamAnimation(p, true).then(() => {
-      socket &&
-        socket.send(
-          JSON.stringify({ type: "fire", message: p, source: player })
-        );
-    });
+    playBeamAnimation(p, true);
+    //  .then(() => {
+    //    socket &&
+    //      socket.send(
+    //        JSON.stringify({ type: "fire", message: p, source: player })
+    //      );
+
+    // sendMessage({
+    //   type: "fire",
+    //   message: {
+    //     room_name: roomName,
+    //     target: enemyBoard.preHit,
+    //   },
+    // });
+    //  });
   };
 
   const audioBgRef = useRef(null);

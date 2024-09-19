@@ -78,7 +78,6 @@ const createMockServer = () => {
           gameState.boards[getMe(source)].misses = [];
           gameState.boards[getMe(source)].ships = message.map(
             (shipPos: any) => {
-              console.log(shipPos);
               return {
                 length: shipPos.ship.length,
                 vertical: shipPos.ship.vertical,

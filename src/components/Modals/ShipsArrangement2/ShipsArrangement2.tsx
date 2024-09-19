@@ -46,7 +46,8 @@ export function ShipsArrangementChild() {
   const [selectedShipToSettle, setSelectedShipToSettle] =
     useState<ShipType | null>(null);
   const [gameboard, setGameboard] = useState(new Gameboard());
-  const { roomName, sendMessage, setUserShips } = useBattleships();
+  const { roomName, sendMessage, setUserShips, gameStarted, setGameStarted } =
+    useBattleships();
 
   useEffect(() => {
     const isSettledAll = Object.values(gameboard.getUnsettledShips()).every(
@@ -166,6 +167,14 @@ export function ShipsArrangementChild() {
     // @ts-ignore
     audioRef.current.play();
   }, []);
+
+  //   useEffect(() => {
+  //     console.log({ gameStarted });
+  //     if (gameStarted) {
+  //       closeModal!();
+  //       setGameStarted(false);
+  //     }
+  //   }, [gameStarted]);
 
   return (
     <>
