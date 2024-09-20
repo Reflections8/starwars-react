@@ -4,29 +4,17 @@ import timerIcon from "../img/timer-icon.svg";
 import { useTimer } from "react-use-precision-timer";
 
 const initialSeconds = 60;
-const startSeconds = 5;
-export const Timer: FC<{ onStart: () => void; onRandom: () => void }> = ({
-  onRandom,
-  onStart,
-}) => {
-  const [timerValue, setTimerValue] = useState(initialSeconds * 1000);
-  const [isInitial, setIsInitial] = useState(true);
 
+export const Timer: FC<{
+  startTimer: any;
+  onRandom: () => void;
+  isInitial: boolean;
+}> = ({ onRandom, startTimer, isInitial }) => {
+  const [timerValue, setTimerValue] = useState(initialSeconds * 1000);
   const timer = useTimer(
     { runOnce: true, startImmediately: false, delay: initialSeconds * 1000 },
-    () => {
-      setIsInitial(false);
-      startTimer.start();
-      onRandom();
-      //
-    }
+    onRandom
   );
-
-  const startTimer = useTimer(
-    { runOnce: true, startImmediately: false, delay: startSeconds * 1000 },
-    onStart
-  );
-
   useEffect(() => {
     let interval: any;
     if (isInitial) {

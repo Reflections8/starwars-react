@@ -8,10 +8,10 @@ import { LeaveIcon } from "../../icons/Leave";
 import { RulesIcon } from "../../icons/Rules";
 import { EnemyShips } from "./components/EnemyShips/EnemyShips";
 import { GameBet } from "./components/GameBet/GameBet";
-import { Gameboard } from "./components/GameFields/gameboard";
+
 import { GameFields } from "./components/GameFields/GameFields";
 import { GameHeader } from "./components/GameHeader/GameHeader";
-import createMockServer from "./mock-socket/mockServer";
+
 import "./styles/game2.css";
 //@ts-ignore
 import { enableDragDropTouch } from "../../mobileDrag";

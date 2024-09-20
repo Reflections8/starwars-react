@@ -10,6 +10,7 @@ type ShipsProps = {
   gameboard: Gameboard;
   onDragEnd: () => void;
   onDragStart: (ship: Ship) => void;
+  blockedState: boolean;
 };
 
 export function Ships({
@@ -17,6 +18,7 @@ export function Ships({
   gameboard,
   onDragEnd,
   onDragStart,
+  blockedState,
 }: ShipsProps) {
   const ships = [
     { ship: new Ship(1), image: ship1 },
@@ -33,11 +35,11 @@ export function Ships({
           className={`shipsArr__main-ships-item ${
             selectedShipToSettle?.length === s.ship.length ? "active" : ""
           } ${unsettledShips[`${s.ship.length}`] === 0 ? "disabled" : ""}`}
-          onDragEnd={onDragEnd}
-          onClick={() => onDragStart(s.ship)}
-          onTouchStart={() => onDragStart(s.ship)}
-          onTouchEnd={onDragEnd}
-          onDragStart={() => onDragStart(s.ship)}
+          onDragEnd={!blockedState ? onDragEnd : () => {}}
+          onClick={() => !blockedState && onDragStart(s.ship)}
+          onTouchStart={() => !blockedState && onDragStart(s.ship)}
+          onTouchEnd={blockedState ? onDragEnd : () => {}}
+          onDragStart={() => !blockedState && onDragStart(s.ship)}
         >
           <div className="shipsArr__main-ships-item-main">
             <img

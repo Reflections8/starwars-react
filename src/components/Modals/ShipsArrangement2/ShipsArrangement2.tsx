@@ -14,6 +14,7 @@ import { useBattleships } from "../../../context/BattleshipsContext";
 import { Rules } from "../SeaBattle/components/Rules/Rules";
 import backImg from "../SeaBattle/img/back-button.svg";
 import bgAudio from "./audio/arrangement.mp3";
+import { useTimer } from "react-use-precision-timer";
 
 // @ts-ignore
 function debounce(func: (...args: unknown[]) => void, wait: number) {
@@ -42,10 +43,14 @@ export function ShipsArrangement2() {
 }
 export function ShipsArrangementChild() {
   const { closeModal } = useModal();
+
+  const [isInitial, setIsInitial] = useState(true);
+  const [blockedState, setBlockedState] = useState(false);
   const [allShipsSettled, setAllShipsSettled] = useState(false);
   const [selectedShipToSettle, setSelectedShipToSettle] =
     useState<ShipType | null>(null);
   const [gameboard, setGameboard] = useState(new Gameboard());
+
   const { roomName, sendMessage, setUserShips, gameStarted, setGameStarted } =
     useBattleships();
 
@@ -113,8 +118,6 @@ export function ShipsArrangementChild() {
         },
       };
     });
-
-    setUserShips!(gameboard.ships);
     sendMessage({
       type: "init_ships",
       message: {
@@ -122,7 +125,14 @@ export function ShipsArrangementChild() {
         ships: preparedShipsArray,
       },
     });
+    setBlockedState(true);
+  };
+
+  const handleStartGame = () => {
+    setUserShips!(gameboard.ships);
     closeModal!();
+    setBlockedState(false);
+    setGameStarted(false);
   };
 
   const dragOnThisBalls = (i: any) => {
@@ -168,13 +178,16 @@ export function ShipsArrangementChild() {
     audioRef.current.play();
   }, []);
 
-  //   useEffect(() => {
-  //     console.log({ gameStarted });
-  //     if (gameStarted) {
-  //       closeModal!();
-  //       setGameStarted(false);
-  //     }
-  //   }, [gameStarted]);
+  const startTimer = useTimer(
+    { runOnce: true, startImmediately: false, delay: 5 * 1000 },
+    handleStartGame
+  );
+
+  useEffect(() => {
+    if (!gameStarted) return;
+    startTimer.start();
+    setIsInitial(false);
+  }, [gameStarted]);
 
   return (
     <>
@@ -212,14 +225,26 @@ export function ShipsArrangementChild() {
           {/* FIELD */}
           <div className="shipsArr__main-field">
             <Timer
+              {...{ isInitial, setIsInitial, startTimer }}
               onRandom={() => {
                 gameboard.placeShipsRandomly();
                 updateGameboard();
+                handleArrangementDone();
               }}
-              onStart={handleArrangementDone}
             />
             {/* GRID WRAPPER */}
             <div className="shipsArr__main-field-gridWrapper">
+              {blockedState && (
+                <div
+                  style={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0,0,0,0.1)",
+                    zIndex: 100,
+                  }}
+                />
+              )}
               <div className="shipsArr__main-field-gridWrapper-bgWrapper">
                 <img
                   src={gridBg}
@@ -243,6 +268,7 @@ export function ShipsArrangementChild() {
             </div>
           </div>
           <Ships
+            blockedState={blockedState}
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
             selectedShipToSettle={selectedShipToSettle}
@@ -251,6 +277,7 @@ export function ShipsArrangementChild() {
           {/* ACTION BUTTONS */}
           <div className="shipsArr__buttons">
             <CuttedButton
+              className={blockedState ? "halfTransparent" : ""}
               callback={() => {
                 gameboard.placeShipsRandomly();
                 updateGameboard();
@@ -259,7 +286,9 @@ export function ShipsArrangementChild() {
             />
             <CuttedButton
               text="Играть"
-              className={!allShipsSettled ? "halfTransparent" : ""}
+              className={
+                !allShipsSettled || blockedState ? "halfTransparent" : ""
+              }
               callback={handleArrangementDone}
             />
           </div>
