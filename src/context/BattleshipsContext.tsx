@@ -122,7 +122,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   useEffect(() => {
     const newGameboard = new Gameboard();
 
-    //newGameboard.ships = enemyBoard.ships;
+    newGameboard.ships = enemyBoard.ships;
     newGameboard.hits = myHits;
     newGameboard.misses = myMisses;
     newGameboard.preHit = enemyBoard.preHit;
@@ -240,7 +240,11 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           console.log(parsedMessage);
           setMyShips(fireResultParsedShips);
           setMyMisses(parsedMessage?.field_view?.opponent_board?.misses);
-          setMyHits(parsedMessage?.field_view?.opponent_board?.ships);
+          setMyHits(
+            parsedMessage?.field_view?.opponent_board?.ships
+              .map((ship) => ship.cells)
+              .flat()
+          );
           setMyTurn(parsedMessage.can_fire);
           setIsHit(parsedMessage.is_hit);
           enemyBoard.updateEnemyBoard(parsedMessage.field_view.opponent_board);
@@ -277,6 +281,41 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       socket.removeEventListener("message", handleMessage);
     };
   }, [socket, userBoard, enemyBoard]);
+
+  const handleRestart = () => {
+    const secondJWT =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
+    const messageWithToken = {
+      type: "give_up",
+      message: JSON.stringify({
+        room_name: "TEST",
+      }),
+      //  jwt: secondJWT
+    };
+    if (!(socketRef.current && socketRef.current.readyState === WebSocket.OPEN))
+      return;
+    socketRef.current.send(JSON.stringify({ ...messageWithToken, jwt }));
+    socketRef.current.send(
+      JSON.stringify({ ...messageWithToken, jwt: secondJWT })
+    );
+    setTimeout(() => {
+      if (
+        !(socketRef.current && socketRef.current.readyState === WebSocket.OPEN)
+      )
+        return;
+      socketRef.current.send(
+        JSON.stringify({
+          type: "create_room",
+          message: JSON.stringify({
+            room_name: "TEST",
+            bet_type: 0,
+            bet_amount: 1,
+          }),
+          jwt: secondJWT,
+        })
+      );
+    }, 500);
+  };
 
   const sendMessage = (obj: { type: string; message: object }) => {
     const firstClient = document.location.href.includes("5173");
@@ -333,7 +372,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         userBoard,
         enemyBoard,
         restartBoards,
-
+        handleRestart,
         myTurn,
         setMyTurn,
       }}

@@ -1,3 +1,5 @@
+import { combinations } from "../../../../components/Modals/ShipsArrangement2/combinations";
+
 type ShipType = {
   length: number;
   vertical: boolean;
@@ -43,7 +45,12 @@ type UpdateData = {
 type UpdateEnemyData = {
   isMe: boolean;
   misses: Cell[];
-  ships: EnemyShip[];
+  ships: {
+    cells: Cell[];
+    is_dead: boolean;
+    length?: number;
+    vertical?: boolean;
+  }[];
 };
 
 export class Gameboard {
@@ -88,14 +95,13 @@ export class Gameboard {
     return this.preHit.row === row && this.preHit.column === column;
   }
   updateEnemyBoard(data: UpdateEnemyData) {
+    console.log({ data });
     let newHits: any[] = [];
     let newShips: any[] = [];
     data.ships.forEach((ship) => {
-      const { cells, IsDead } = ship;
+      const { cells, is_dead, vertical, length } = ship;
       newHits.push(...cells);
-      if (IsDead) {
-        const vertical = cells.every((cell) => cell.column === cells[0].column);
-        const length = cells.length;
+      if (is_dead) {
         const head = [...cells].sort((a, b) =>
           vertical ? a.row - b.row : a.column - b.column
         )[0];

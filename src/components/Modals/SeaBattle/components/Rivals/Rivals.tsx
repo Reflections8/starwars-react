@@ -34,6 +34,7 @@ export function Rivals() {
     setJoinedRoom,
     sendMessage,
     setRoomName,
+    handleRestart,
   } = useBattleships();
 
   async function createRoom() {
@@ -135,6 +136,12 @@ export function Rivals() {
               />
             </div>
           </div>
+          <CuttedButton
+            className="rivals__list-item-end-btn"
+            iconSrc={arrowIcon}
+            text={"RESTART"}
+            callback={handleRestart}
+          />
           {rooms?.map((item, index) => {
             return (
               <div className="rivals__list-item" key={index}>
