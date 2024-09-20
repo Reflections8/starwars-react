@@ -256,7 +256,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
           break;
         case "enemy_fire_result":
-          playBeamAnimation(parsedMessage, false);
+          playBeamAnimation(parsedMessage.fire_target, false);
           // @ts-ignore
           const enemyFireResultParsedShips =
             parsedMessage?.field_view?.player_board?.ships?.map((ship) => {
