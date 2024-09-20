@@ -74,20 +74,15 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     }
 
     const ws = new WebSocket("wss://socket.akronix.io/shipBattle");
-    console.log({ ws });
+
     socketRef.current = ws;
     setSocket(ws);
 
-    ws.onopen = () => {
-      console.log("WebSocket подключен");
-    };
+    ws.onopen = () => {};
 
-    ws.onerror = (error) => {
-      console.error("Ошибка WebSocket:", error);
-    };
+    ws.onerror = (error) => {};
 
     ws.onclose = (event) => {
-      console.log("WebSocket соединение закрыто", event);
       if (event.code !== 1000) {
         console.error(
           "Код закрытия WebSocket:",
@@ -116,30 +111,28 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [enemyMisses, setEnemyMisses] = useState([]);
   const [isHit, setIsHit] = useState(false);
 
-  const updateUserboard = () => {
+  useEffect(() => {
     const newGameboard = new Gameboard(myShips);
     newGameboard.ships = myShips;
     newGameboard.hits = userBoard.hits;
     newGameboard.misses = enemyMisses;
     setUserBoard(newGameboard);
-  };
-  const updateEnemyBoard = () => {
+  }, [shipsPlaced, JSON.stringify([myShips, userBoard.hits, enemyMisses])]);
+
+  useEffect(() => {
     const newGameboard = new Gameboard();
-    newGameboard.ships = enemyBoard.ships;
+
+    //newGameboard.ships = enemyBoard.ships;
     newGameboard.hits = myHits;
     newGameboard.misses = myMisses;
     newGameboard.preHit = enemyBoard.preHit;
     setEnemyBoard(newGameboard);
-  };
+  }, [JSON.stringify([enemyBoard.ships, myHits, myMisses, enemyBoard.preHit])]);
 
   const restartBoards = () => {
     setUserBoard(new Gameboard());
     setEnemyBoard(new Gameboard());
   };
-
-  useEffect(() => {
-    updateUserboard();
-  }, [shipsPlaced]);
 
   const playBeamAnimation = ({ row, column }: any, me: boolean) => {
     //  playBeamSound();
@@ -236,7 +229,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
         case "fire_result":
           // @ts-ignore
-
           const fireResultParsedShips =
             parsedMessage?.field_view?.player_board?.ships?.map((ship) => {
               return {
@@ -245,15 +237,13 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
                 pos: ship.head,
               };
             }) || [];
-
+          console.log(parsedMessage);
           setMyShips(fireResultParsedShips);
           setMyMisses(parsedMessage?.field_view?.opponent_board?.misses);
           setMyHits(parsedMessage?.field_view?.opponent_board?.ships);
           setMyTurn(parsedMessage.can_fire);
           setIsHit(parsedMessage.is_hit);
           enemyBoard.updateEnemyBoard(parsedMessage.field_view.opponent_board);
-          updateEnemyBoard();
-
           break;
         case "enemy_fire_result":
           playBeamAnimation(parsedMessage.fire_target, false);
@@ -272,11 +262,9 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           setMyTurn(parsedMessage.can_fire);
           setIsHit(parsedMessage.is_hit);
           userBoard.updateUserBoard(parsedMessage.field_view.player_board);
-          updateUserboard();
           break;
         case "game_over":
           setGameState({ status: parsedMessage.my_win ? "WON" : "LOST" });
-
           break;
         default:
           console.log("Неизвестный тип сообщения");
@@ -340,14 +328,10 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         myShips,
         shipsPlaced,
         setShipsPlaced,
-
         gameStarted,
         setGameStarted,
-
         userBoard,
-        updateUserboard,
         enemyBoard,
-        updateEnemyBoard,
         restartBoards,
 
         myTurn,

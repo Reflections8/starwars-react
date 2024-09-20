@@ -307,7 +307,6 @@ export function Board({
             onDragEnd={onDragEnd}
             onDragStart={onDragStart}
             hoverCell={() => {
-              console.log("HOVERCELL");
               hoverCell({ row, column });
             }}
             confirmed={confirmed}

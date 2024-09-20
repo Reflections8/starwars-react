@@ -54,7 +54,6 @@ export function Grid({
   const columns = 10;
   const columnLabels = "abcdefghij".split("");
 
-  console.log({ setSelectedShipToSettle, setUnsettledShips, unsettledShips });
   // Состояние для хранения классов ячеек
   const [cellClasses, setCellClasses] = useState<Record<string, string[]>>({});
 
@@ -133,11 +132,7 @@ export function Grid({
   ) {
     if (direction === "horizontal") {
       const startIndex = gridColumnsOrder.indexOf(clickedColumn);
-      console.log("Order:", gridColumnsOrder);
-      console.log("Lgth:", selectedShipLength);
-      console.log("Row:", clickedRow);
-      console.log("Col:", clickedColumn);
-      console.log("Dir:", direction);
+
       const correctPlacement =
         !!gridColumnsOrder[startIndex + (selectedShipLength - 1)];
       return correctPlacement;
@@ -179,7 +174,7 @@ export function Grid({
     const clickedCellClass = (e.target as HTMLDivElement).className.split(
       " "
     )[1];
-    console.log(clickedCellClass);
+
     // If cell in not empty == ship__3
 
     if (selectedShipToSettle) {

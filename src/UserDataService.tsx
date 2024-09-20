@@ -220,7 +220,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       return data.code === 1;
     } catch (error) {
       console.error("Failed to authenticate:", error);
@@ -240,7 +239,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       setCredits(data.credits);
       setTons(data.tons);
       setTokens(data.tokens);

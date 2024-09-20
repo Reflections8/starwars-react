@@ -195,7 +195,6 @@ export function Player() {
           "Транзакция успешно отправлена.\n Ожидайте подтвержения"
         );
       } catch (e) {
-        console.log(e);
         openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
       }
     }
@@ -284,7 +283,6 @@ export function Weapon() {
           "Транзакция успешно отправлена.\n Ожидайте подтвержения"
         );
       } catch (e) {
-        console.log(e);
         openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
       }
     }

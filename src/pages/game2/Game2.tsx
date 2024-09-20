@@ -247,7 +247,6 @@ export function Game2() {
       }
       if (type === "recieveFire") {
         playBeamAnimation(attack, false).then(() => {
-          console.log({ attack });
           userBoard.updateUserBoard(message);
           isHit
             ? isDead

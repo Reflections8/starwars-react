@@ -75,7 +75,7 @@ export function Game1() {
   useEffect(() => {
     if (lastMessage == null) return;
     const response: string = lastMessage.data.toString();
-    console.log("SOCKET MESSAGE: " + response);
+
     const data = JSON.parse(response);
     const message = JSON.parse(data.message);
     switch (data.type) {

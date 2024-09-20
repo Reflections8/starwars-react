@@ -81,7 +81,6 @@ export function Home() {
 
   // @ts-ignore
   const handleAuthTokenChange = (token: string | null) => {
-    console.log({ token });
     if (token != null) {
       updateJwt(token);
     }

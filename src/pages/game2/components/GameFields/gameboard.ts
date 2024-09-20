@@ -54,7 +54,7 @@ export class Gameboard {
 
   preHit: null | Cell;
 
-  constructor(ships: ShipPosition[]) {
+  constructor(ships?: ShipPosition[]) {
     this.preHit = null;
     this.hits = [];
     this.misses = [];
@@ -82,14 +82,12 @@ export class Gameboard {
 
   setPreHit(pos: Cell | null) {
     this.preHit = pos;
-    console.log("preHit", pos);
   }
   getIfPreHit(row: number, column: number) {
     if (!this.preHit) return false;
     return this.preHit.row === row && this.preHit.column === column;
   }
   updateEnemyBoard(data: UpdateEnemyData) {
-    console.log({ enemyDataShips: data.ships });
     let newHits: any[] = [];
     let newShips: any[] = [];
     data.ships.forEach((ship) => {
@@ -109,7 +107,6 @@ export class Gameboard {
     this.misses = data.misses;
   }
   updateUserBoard(data: UpdateData) {
-    console.log({ myDataShips: data.ships });
     let newHits: any[] = [];
     this.ships = data.ships.map((ship) => {
       const { head, vertical, length, cells } = ship;
