@@ -70,7 +70,6 @@ export function ModalProvider({ children }: ModalProviderProps) {
   }, [isOpen, drawerIsOpen]);
 
   const openModal = (type: string, pillIndex: number = 0) => {
-    console.log({ type });
     setModalType(type);
     setActivePillProp(pillIndex);
     setIsOpen(true);

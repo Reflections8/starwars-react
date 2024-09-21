@@ -177,7 +177,6 @@ export function Rivals() {
                       e.stopPropagation();
                       joinRoom(item.room_name);
                       setRoomName(item.room_name);
-                      openModal!("shipsArrangement2");
                     }}
                     size="small"
                     className="rivals__list-item-end-btn"

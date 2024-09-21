@@ -20,14 +20,27 @@ import audioKilledShot from "./audio/shot-killed.mp3";
 import audioMissedShot from "./audio/shot-missed.mp3";
 import audioSuccessShot from "./audio/shot-success.mp3";
 import audioShot from "./audio/shot.mp3";
+import { useNavigate } from "react-router-dom";
 enableDragDropTouch();
 
 const timerSeconds = 60;
 
 export function Game2() {
+  const navigate = useNavigate();
+  const [jwt] = useState<string>(localStorage.getItem("auth_jwt") || "");
+
   //   const [socket, setSocket] = useState<null | WebSocket>(null);
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { openDrawer } = useDrawer();
+
+  useEffect(() => {
+    if (!jwt) {
+      closeModal!();
+      navigate("/");
+      closeModal!();
+      return;
+    }
+  }, [jwt]);
   // @ts-ignore
   const {
     isAudioStart,
@@ -138,6 +151,7 @@ export function Game2() {
   }, [myTurn, userBoard]);
 
   useEffect(() => {
+    if (!jwt) return;
     if (gameState?.status === "LOST") {
       stopBackgroundAudio();
       setUserShips!([]);
@@ -159,7 +173,7 @@ export function Game2() {
       socket && socket.send(JSON.stringify({ type: "giveUp", source: player }));
       stopBackgroundAudio();
     }
-  }, [gameState?.status]);
+  }, [gameState?.status, jwt]);
 
   useEffect(() => {
     if (userShips && userShips.length > 0) {

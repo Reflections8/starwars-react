@@ -232,9 +232,9 @@ export function Modal({ isOpen }: ModalProps) {
                   className="modal__body-top-closeBtn"
                   onClick={() => {
                     if (modalType === "seaBattle") {
+                      closeModal!();
                       navigate("/");
                     } else {
-                      console.log("ЭТО ДРУГОЕ");
                       closeModal!();
                     }
                   }}
@@ -244,9 +244,7 @@ export function Modal({ isOpen }: ModalProps) {
                     alt="closeIcon"
                     className="modal__body-top-closeBtn-bg"
                   />
-                  <span className="modal__body-top-closeBtn-text">
-                    {modalType === "seaBattle" ? "На главную" : "Закрыть"}
-                  </span>
+                  <span className="modal__body-top-closeBtn-text">Закрыть</span>
                 </button>
 
                 <div className="modal__body-top-title">
