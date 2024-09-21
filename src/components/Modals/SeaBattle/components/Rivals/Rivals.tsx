@@ -94,11 +94,11 @@ export function Rivals() {
   }, [createdRoom.name]);
 
   useEffect(() => {
-    if (joinedRoom.name) {
+    if (joinedRoom) {
       openModal!("shipsArrangement2");
-      setJoinedRoom({ name: "" });
+      setJoinedRoom("");
     }
-  }, [joinedRoom.name]);
+  }, [joinedRoom]);
 
   return (
     <div className="rivals">
@@ -186,6 +186,7 @@ export function Rivals() {
                       const firstClient =
                         document.location.href.includes("5173");
                       if (firstClient) {
+                        setRoomName(item.room_name);
                         openModal!("shipsArrangement2");
                       }
                     }}

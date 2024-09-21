@@ -51,6 +51,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
         !modalElement.contains(event.target as Node) &&
         !clickOnDrawer
       ) {
+        console.log("HANDLE CLICK OUTSIDE");
         closeModal();
       }
     };
@@ -69,6 +70,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
   }, [isOpen, drawerIsOpen]);
 
   const openModal = (type: string, pillIndex: number = 0) => {
+    console.log({ type });
     setModalType(type);
     setActivePillProp(pillIndex);
     setIsOpen(true);
@@ -77,6 +79,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
   const closeModal = () => {
     setIsOpen(false);
     setActivePillProp(0);
+    setModalType("");
   };
 
   return (

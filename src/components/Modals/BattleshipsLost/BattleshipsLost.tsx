@@ -6,7 +6,7 @@ import { useModal } from "../../../context/ModalContext";
 import { useBattleships } from "../../../context/BattleshipsContext";
 
 export function BattleshipsLost() {
-  const { closeModal } = useModal();
+  const { openModal } = useModal();
   const { setGameState } = useBattleships();
   return (
     <div className="battleshipsLost">
@@ -17,13 +17,16 @@ export function BattleshipsLost() {
         className="battleshipsLost__okBtn"
         size="small"
         text="OK"
-        callback={() => {
-          closeModal!();
+        callback={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
           // @ts-ignore
           setGameState((prevState) => ({
             ...prevState,
             status: "NOT_STARTED",
           }));
+
+          openModal!("seaBattle");
         }}
       />
     </div>

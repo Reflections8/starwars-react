@@ -234,6 +234,7 @@ export function Modal({ isOpen }: ModalProps) {
                     if (modalType === "seaBattle") {
                       navigate("/");
                     } else {
+                      console.log("ЭТО ДРУГОЕ");
                       closeModal!();
                     }
                   }}

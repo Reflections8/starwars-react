@@ -44,7 +44,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [messages, setMessages] = useState([]);
 
   const [createdRoom, setCreatedRoom] = useState({ name: "" });
-  const [joinedRoom, setJoinedRoom] = useState({ name: "" });
+  const [joinedRoom, setJoinedRoom] = useState("");
   const [myShips, setMyShips] = useState([]);
   const [myHits, setMyHits] = useState([]);
   const [shipsPlaced, setShipsPlaced] = useState(false);
@@ -114,6 +114,17 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const shotSuccessAudioRef = useRef(null);
   const shotMissAudioRef = useRef(null);
   const shotKilledAudioRef = useRef(null);
+  const shotAudioRef = useRef(null);
+
+  const playBeamSound = () => {
+    if (!shotAudioRef.current) return;
+    // @ts-ignore
+    shotAudioRef.current.pause();
+    // @ts-ignore
+    shotAudioRef.current.currentTime = 0;
+    // @ts-ignore
+    shotAudioRef.current.play().catch();
+  };
 
   const playSuccessShotAudio = () => {
     if (!shotSuccessAudioRef.current) return;
@@ -172,9 +183,12 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     me: boolean,
     isHit: string
   ) => {
-    if (isHit === "success") playSuccessShotAudio();
-    else if (isHit === "fail") playMissedShotAudio();
-    else if (isHit === "dead") playKilledShopAudio();
+    playBeamSound();
+    setTimeout(() => {
+      if (isHit === "success") playSuccessShotAudio();
+      else if (isHit === "fail") playMissedShotAudio();
+      else if (isHit === "dead") playKilledShopAudio();
+    }, 200);
 
     const targetCell = document.getElementById(
       `${me ? "enemy" : "user"}Cell${row}-${column}`
@@ -236,7 +250,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
         case "start_placement_phase":
           setOpponentName(response.message.opponent_name);
-          setJoinedRoom({ name: parsedMessage?.room_name });
+
+          setJoinedRoom(parsedMessage?.room_name);
           setRoomName(parsedMessage?.room_name);
           break;
         case "ships_placed":
@@ -340,6 +355,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           userBoard.updateUserBoard(parsedMessage.field_view.player_board);
           break;
         case "game_over":
+          setJoinedRoom("");
           setGameState({ status: parsedMessage.my_win ? "WON" : "LOST" });
           break;
         default:
@@ -451,6 +467,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         shotSuccessAudioRef,
         shotMissAudioRef,
         shotKilledAudioRef,
+        shotAudioRef,
       }}
     >
       {children}

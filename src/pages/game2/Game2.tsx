@@ -27,7 +27,7 @@ const timerSeconds = 60;
 export function Game2() {
   //   const [socket, setSocket] = useState<null | WebSocket>(null);
   const { openModal } = useModal();
-  const { openDrawer, closeDrawer } = useDrawer();
+  const { openDrawer } = useDrawer();
   // @ts-ignore
   const {
     socket,
@@ -44,6 +44,7 @@ export function Game2() {
     shotSuccessAudioRef,
     shotMissAudioRef,
     shotKilledAudioRef,
+    shotAudioRef,
   } = useBattleships();
   //   const [userBoard, setUserBoard] = useState(new Gameboard(myShips));
   //   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
@@ -123,13 +124,14 @@ export function Game2() {
   useEffect(() => {
     if (gameState?.status === "LOST") {
       stopBackgroundAudio();
+      setUserShips!([]);
       openModal!("battleshipsLost");
       restartBoards();
     }
     if (gameState?.status === "WON") {
       stopBackgroundAudio();
+      setUserShips!([]);
       openModal!("battleshipsWon");
-      closeDrawer!();
       restartBoards();
     }
     if (gameState?.status === "NOT_STARTED") {
@@ -151,22 +153,15 @@ export function Game2() {
   }, [JSON.stringify(userShips), socket]);
 
   const audioBgRef = useRef(null);
-  const shotAudioRef = useRef(null);
-
-  useEffect(() => {
-    stopBackgroundAudio();
-  });
 
   return (
     <div className="game2">
       {/* AUDIO */}
-
       <audio
         ref={audioBgRef}
         src={audioBg}
         style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
       />
-
       <audio
         ref={shotAudioRef}
         src={audioShot}
