@@ -49,6 +49,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [myHits, setMyHits] = useState([]);
   const [shipsPlaced, setShipsPlaced] = useState(false);
   const [searchingDuel, setSearchingDuel] = useState(true);
+  const [isAudioStart, setIsAudioStart] = useState(false);
 
   const gameStateLocal = {
     turn: "",
@@ -258,6 +259,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
         case "round_start":
           setGameStarted(true);
+          setIsAudioStart(true);
           // @ts-ignore
           const parsedShips =
             parsedMessage?.ships?.map((ship) => {
@@ -355,6 +357,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           userBoard.updateUserBoard(parsedMessage.field_view.player_board);
           break;
         case "game_over":
+          setIsAudioStart(false);
           setJoinedRoom("");
           setGameState({ status: parsedMessage.my_win ? "WON" : "LOST" });
           break;
@@ -375,7 +378,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     const messageWithToken = {
       type: obj?.type,
       message: JSON.stringify(obj.message),
-      jwt: secondJWT,
+      jwt: jwt,
     };
 
     if (!(socketRef.current && socketRef.current.readyState === WebSocket.OPEN))
@@ -419,6 +422,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         shotMissAudioRef,
         shotKilledAudioRef,
         shotAudioRef,
+        isAudioStart,
+        setIsAudioStart,
       }}
     >
       {children}

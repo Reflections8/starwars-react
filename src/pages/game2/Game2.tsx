@@ -30,6 +30,8 @@ export function Game2() {
   const { openDrawer } = useDrawer();
   // @ts-ignore
   const {
+    isAudioStart,
+    setIsAudioStart,
     socket,
     gameState,
     userShips,
@@ -62,6 +64,14 @@ export function Game2() {
   );
 
   useEffect(() => {
+    if (isAudioStart) {
+      setTimeout(() => {
+        startBackgroundAudio();
+      }, 5000);
+    }
+  }, [isAudioStart]);
+
+  useEffect(() => {
     timer.stop();
     if (gameState?.status !== "IN_PROGRESS") return;
     timer.start();
@@ -92,6 +102,13 @@ export function Game2() {
   //     newGameboard.preHit = enemyBoard.preHit;
   //     setEnemyBoard(newGameboard);
   //   };
+
+  const startBackgroundAudio = () => {
+    if (audioBgRef.current) {
+      // @ts-ignore
+      audioBgRef.current.play();
+    }
+  };
 
   const stopBackgroundAudio = () => {
     if (audioBgRef.current) {
