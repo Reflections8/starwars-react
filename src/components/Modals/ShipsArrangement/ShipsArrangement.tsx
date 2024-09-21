@@ -25,7 +25,7 @@ export function ShipsArrangement() {
   /* Оставшиеся корабли */
   const [unsettledShips, setUnsettledShips] = useState(initialUnsettledShips);
 
-  const chooseAction = (ship: string) => {
+  const chooseAction = () => {
     // Here i should place sprite on cursor or smth. Or set the ship
   };
   useEffect(() => {

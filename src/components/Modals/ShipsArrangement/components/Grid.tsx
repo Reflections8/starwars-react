@@ -44,12 +44,7 @@ const shipImagesEnum = {
 const gridColumnsOrder = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 const gridRowsOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-export function Grid({
-  selectedShipToSettle,
-  setSelectedShipToSettle,
-  setUnsettledShips,
-  unsettledShips,
-}: GridProps) {
+export function Grid({ selectedShipToSettle }: GridProps) {
   const rows = 10;
   const columns = 10;
   const columnLabels = "abcdefghij".split("");

@@ -1,5 +1,3 @@
-import { combinations } from "../../../../components/Modals/ShipsArrangement2/combinations";
-
 type ShipType = {
   length: number;
   vertical: boolean;
@@ -24,10 +22,7 @@ type Cell = {
   row: number;
   column: number;
 };
-type EnemyShip = {
-  IsDead: boolean;
-  cells: Cell[];
-};
+
 type Ship = {
   vertical: boolean;
   IsDead: boolean;
@@ -211,7 +206,9 @@ export class Gameboard {
           column: ship.pos.column,
         },
         ship: {
+          // @ts-ignore
           length: ship.length,
+          // @ts-ignore
           vertical: ship.vertical,
         },
       };

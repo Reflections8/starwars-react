@@ -35,9 +35,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [userShips, setUserShips] = useState<any[]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
-  const [jwt, setJwt] = useState<string>(
-    localStorage.getItem("auth_jwt") || ""
-  );
+  const [jwt] = useState<string>(localStorage.getItem("auth_jwt") || "");
 
   const [roomName, setRoomName] = useState("");
   const [opponentName, setOpponentName] = useState("");
@@ -60,12 +58,13 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     },
   };
 
-  const clearFunction = (ws: WebSocket) => {
-    console.error("Отсутствует токен авторизации");
-    setJwt("");
-    ws.close();
-    navigate("/");
-  };
+  // TODO: если нужна будет
+  //   const clearFunction = (ws: WebSocket) => {
+  //     console.error("Отсутствует токен авторизации");
+  //     setJwt("");
+  //     ws.close();
+  //     navigate("/");
+  //   };
 
   // Инициализация WebSocket
   useEffect(() => {
@@ -81,7 +80,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
     ws.onopen = () => {};
 
-    ws.onerror = (error) => {};
+    ws.onerror = () => {};
 
     ws.onclose = (event) => {
       if (event.code !== 1000) {
@@ -262,7 +261,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           setIsAudioStart(true);
           // @ts-ignore
           const parsedShips =
-            parsedMessage?.ships?.map((ship) => {
+            parsedMessage?.ships?.map((ship: any) => {
               return {
                 length: ship.length,
                 vertical: ship.vertical,
@@ -305,7 +304,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           playBeamAnimation(parsedMessage.fire_target, true, isHit);
           // @ts-ignore
           const fireResultParsedShips =
-            parsedMessage?.field_view?.player_board?.ships?.map((ship) => {
+            parsedMessage?.field_view?.player_board?.ships?.map((ship: any) => {
               return {
                 length: ship.length,
                 vertical: ship.vertical,
@@ -317,7 +316,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           setMyMisses(parsedMessage?.field_view?.opponent_board?.misses);
           setMyHits(
             parsedMessage?.field_view?.opponent_board?.ships
-              .map((ship) => ship.cells)
+              .map((ship: any) => ship.cells)
               .flat()
           );
           setMyTurn(parsedMessage.can_fire);
@@ -343,7 +342,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           playBeamAnimation(parsedMessage.fire_target, false, isEHit);
           // @ts-ignore
           const enemyFireResultParsedShips =
-            parsedMessage?.field_view?.player_board?.ships?.map((ship) => {
+            parsedMessage?.field_view?.player_board?.ships?.map((ship: any) => {
               return {
                 length: ship.length,
                 vertical: ship.vertical,
@@ -372,8 +371,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   }, [socket, userBoard, enemyBoard]);
 
   const sendMessage = (obj: { type: string; message: object }) => {
-    const secondJWT =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
+    //  const secondJWT =
+    //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
 
     const messageWithToken = {
       type: obj?.type,

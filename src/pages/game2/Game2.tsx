@@ -31,7 +31,6 @@ export function Game2() {
   // @ts-ignore
   const {
     isAudioStart,
-    setIsAudioStart,
     socket,
     gameState,
     userShips,

@@ -20,8 +20,8 @@ type DrawerContextProps = {
 const DrawerContext = createContext<Partial<DrawerContextProps>>({});
 
 export function DrawerProvider({ children }: DrawerProviderProps) {
-  const [isOpen, setIsOpen] = useState(true);
-  const [drawerType, setDrawerType] = useState("opponentFound");
+  const [isOpen, setIsOpen] = useState(false);
+  const [drawerType, setDrawerType] = useState("");
   const [drawerPosition, setDrawerPosition] = useState("bottom");
   const [drawerText, setDrawerText] = useState("");
 

@@ -1,9 +1,8 @@
-import React from "react";
+import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import { router } from "./routes/index.tsx";
-import { THEME, TonConnectUIProvider } from "@tonconnect/ui-react";
 
 export const PROJECT_CONTRACT_ADDRESS =
   "EQBR93a1DooUJ8yZLAd739SltEaJ6c0VxsPzEEEJj4T1MZFW";

@@ -20,6 +20,7 @@ import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 
 export function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -129,12 +130,14 @@ export function Home() {
     openDrawer!("connectWallet");
   }
 
+  const [canQuit] = useState(false);
   return (
     <>
-      {/* <ProofManager onValueChange={handleAuthTokenChange} /> */}
+      <ProofManager onValueChange={handleAuthTokenChange} />
       <BackgroundLayers />
 
       <Header
+        onlyRight={!canQuit}
         leftIcon={<ExitIcon />}
         leftText={"Выход"}
         leftAction={() => {
@@ -177,7 +180,7 @@ export function Home() {
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      {/* <iframe
+      <iframe
         ref={iframeRef}
         src="https://akronix.io/unity_main/"
         style={{
@@ -190,7 +193,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe> */}
+      ></iframe>
 
       <Header
         position={"bottom"}
