@@ -34,7 +34,6 @@ export function Rivals() {
     setJoinedRoom,
     sendMessage,
     setRoomName,
-    handleRestart,
   } = useBattleships();
 
   async function createRoom() {
@@ -136,12 +135,6 @@ export function Rivals() {
               />
             </div>
           </div>
-          <CuttedButton
-            className="rivals__list-item-end-btn"
-            iconSrc={arrowIcon}
-            text={"RESTART"}
-            callback={handleRestart}
-          />
           {rooms?.map((item, index) => {
             return (
               <div className="rivals__list-item" key={index}>
@@ -183,12 +176,8 @@ export function Rivals() {
                     callback={(e) => {
                       e.stopPropagation();
                       joinRoom(item.room_name);
-                      const firstClient =
-                        document.location.href.includes("5173");
-                      if (firstClient) {
-                        setRoomName(item.room_name);
-                        openModal!("shipsArrangement2");
-                      }
+                      setRoomName(item.room_name);
+                      openModal!("shipsArrangement2");
                     }}
                     size="small"
                     className="rivals__list-item-end-btn"

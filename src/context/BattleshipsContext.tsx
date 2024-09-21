@@ -365,71 +365,23 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
     socket.addEventListener("message", handleMessage);
 
-    return () => {
-      socket.removeEventListener("message", handleMessage);
-    };
+    return () => socket.removeEventListener("message", handleMessage);
   }, [socket, userBoard, enemyBoard]);
 
-  const handleRestart = () => {
-    const secondJWT =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
-    const messageWithToken = {
-      type: "give_up",
-      message: JSON.stringify({
-        room_name: "TEST",
-      }),
-      //  jwt: secondJWT
-    };
-
-    if (!(socketRef.current && socketRef.current.readyState === WebSocket.OPEN))
-      return;
-    socketRef.current.send(JSON.stringify({ ...messageWithToken, jwt }));
-    socketRef.current.send(
-      JSON.stringify({ ...messageWithToken, jwt: secondJWT })
-    );
-    setTimeout(() => {
-      if (
-        !(socketRef.current && socketRef.current.readyState === WebSocket.OPEN)
-      )
-        return;
-      socketRef.current.send(
-        JSON.stringify({
-          type: "create_room",
-          message: JSON.stringify({
-            room_name: "TEST",
-            bet_type: 0,
-            bet_amount: 1,
-          }),
-          jwt: secondJWT,
-        })
-      );
-    }, 500);
-  };
-
   const sendMessage = (obj: { type: string; message: object }) => {
-    const firstClient = document.location.href.includes("5173");
-    const secondClient = document.location.href.includes("5174");
     const secondJWT =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
 
     const messageWithToken = {
       type: obj?.type,
       message: JSON.stringify(obj.message),
-      jwt: secondClient ? secondJWT : jwt,
+      jwt: secondJWT,
     };
 
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      socketRef.current.send(JSON.stringify(messageWithToken));
+    if (!(socketRef.current && socketRef.current.readyState === WebSocket.OPEN))
+      return;
 
-      if (obj.type === "join_room") {
-        const messageWithAnotherToken = {
-          type: obj?.type,
-          message: JSON.stringify(obj.message),
-          jwt: !secondClient ? secondJWT : jwt,
-        };
-        //   socketRef.current.send(JSON.stringify(messageWithAnotherToken));
-      }
-    }
+    socketRef.current.send(JSON.stringify(messageWithToken));
   };
 
   return (
@@ -461,7 +413,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         userBoard,
         enemyBoard,
         restartBoards,
-        handleRestart,
         myTurn,
         setMyTurn,
         shotSuccessAudioRef,
