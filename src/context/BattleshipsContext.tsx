@@ -109,7 +109,39 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
   const [myMisses, setMyMisses] = useState([]);
   const [enemyMisses, setEnemyMisses] = useState([]);
-  const [isHit, setIsHit] = useState(false);
+  const userDeadShips = useRef([]);
+  const enemyDeadShips = useRef([]);
+  const shotSuccessAudioRef = useRef(null);
+  const shotMissAudioRef = useRef(null);
+  const shotKilledAudioRef = useRef(null);
+
+  const playSuccessShotAudio = () => {
+    if (!shotSuccessAudioRef.current) return;
+    // @ts-ignore
+    shotSuccessAudioRef.current.pause();
+    // @ts-ignore
+    shotSuccessAudioRef.current.currentTime = 0;
+    // @ts-ignore
+    shotSuccessAudioRef.current.play().catch();
+  };
+  const playMissedShotAudio = () => {
+    if (!shotMissAudioRef.current) return;
+    // @ts-ignore
+    shotMissAudioRef.current.pause();
+    // @ts-ignore
+    shotMissAudioRef.current.currentTime = 0;
+    // @ts-ignore
+    shotMissAudioRef.current.play().catch();
+  };
+  const playKilledShopAudio = () => {
+    if (!shotKilledAudioRef.current) return;
+    // @ts-ignore
+    shotKilledAudioRef.current.pause();
+    // @ts-ignore
+    shotKilledAudioRef.current.currentTime = 0;
+    // @ts-ignore
+    shotKilledAudioRef.current.play().catch();
+  };
 
   useEffect(() => {
     const newGameboard = new Gameboard(myShips);
@@ -121,7 +153,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
   useEffect(() => {
     const newGameboard = new Gameboard();
-
     newGameboard.ships = enemyBoard.ships;
     newGameboard.hits = myHits;
     newGameboard.misses = myMisses;
@@ -130,12 +161,21 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   }, [JSON.stringify([enemyBoard.ships, myHits, myMisses, enemyBoard.preHit])]);
 
   const restartBoards = () => {
+    userDeadShips.current = [];
+    enemyDeadShips.current = [];
     setUserBoard(new Gameboard());
     setEnemyBoard(new Gameboard());
   };
 
-  const playBeamAnimation = ({ row, column }: any, me: boolean) => {
-    //  playBeamSound();
+  const playBeamAnimation = (
+    { row, column }: any,
+    me: boolean,
+    isHit: string
+  ) => {
+    if (isHit === "success") playSuccessShotAudio();
+    else if (isHit === "fail") playMissedShotAudio();
+    else if (isHit === "dead") playKilledShopAudio();
+
     const targetCell = document.getElementById(
       `${me ? "enemy" : "user"}Cell${row}-${column}`
     ) as HTMLElement;
@@ -228,6 +268,24 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           setMyTurn(parsedMessage.can_fire);
           break;
         case "fire_result":
+          const prevDeadEList = enemyDeadShips.current.filter(
+            //@ts-ignore
+            (ship) => ship.is_dead
+          );
+          const newDeadEList =
+            parsedMessage.field_view.opponent_board.ships.filter(
+              //@ts-ignore
+              (ship) => ship.is_dead
+            );
+
+          let isHit = "fail";
+          if (parsedMessage.is_hit) {
+            if (prevDeadEList.length < newDeadEList.length) isHit = "dead";
+            else isHit = "success";
+          }
+          enemyDeadShips.current =
+            parsedMessage.field_view.opponent_board.ships;
+          playBeamAnimation(parsedMessage.fire_target, true, isHit);
           // @ts-ignore
           const fireResultParsedShips =
             parsedMessage?.field_view?.player_board?.ships?.map((ship) => {
@@ -237,7 +295,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
                 pos: ship.head,
               };
             }) || [];
-          console.log(parsedMessage);
+
           setMyShips(fireResultParsedShips);
           setMyMisses(parsedMessage?.field_view?.opponent_board?.misses);
           setMyHits(
@@ -246,11 +304,26 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
               .flat()
           );
           setMyTurn(parsedMessage.can_fire);
-          setIsHit(parsedMessage.is_hit);
           enemyBoard.updateEnemyBoard(parsedMessage.field_view.opponent_board);
           break;
         case "enemy_fire_result":
-          playBeamAnimation(parsedMessage.fire_target, false);
+          const prevDeadList = userDeadShips.current.filter(
+            //@ts-ignore
+            (ship) => ship.is_dead
+          );
+          const newDeadList =
+            parsedMessage.field_view.player_board.ships.filter(
+              //@ts-ignore
+              (ship) => ship.is_dead
+            );
+
+          let isEHit = "fail";
+          if (parsedMessage.is_hit) {
+            if (prevDeadList.length < newDeadList.length) isEHit = "dead";
+            else isEHit = "success";
+          }
+          userDeadShips.current = parsedMessage.field_view.player_board.ships;
+          playBeamAnimation(parsedMessage.fire_target, false, isEHit);
           // @ts-ignore
           const enemyFireResultParsedShips =
             parsedMessage?.field_view?.player_board?.ships?.map((ship) => {
@@ -264,7 +337,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           setMyShips(enemyFireResultParsedShips);
           setEnemyMisses(parsedMessage?.field_view?.player_board?.misses);
           setMyTurn(parsedMessage.can_fire);
-          setIsHit(parsedMessage.is_hit);
           userBoard.updateUserBoard(parsedMessage.field_view.player_board);
           break;
         case "game_over":
@@ -292,6 +364,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       }),
       //  jwt: secondJWT
     };
+
     if (!(socketRef.current && socketRef.current.readyState === WebSocket.OPEN))
       return;
     socketRef.current.send(JSON.stringify({ ...messageWithToken, jwt }));
@@ -375,6 +448,9 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         handleRestart,
         myTurn,
         setMyTurn,
+        shotSuccessAudioRef,
+        shotMissAudioRef,
+        shotKilledAudioRef,
       }}
     >
       {children}

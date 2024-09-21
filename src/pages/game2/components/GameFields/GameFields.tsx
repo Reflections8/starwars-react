@@ -15,14 +15,14 @@ export const GameFields: FC<{
   userBoard: Gameboard;
   enemyBoard: Gameboard;
   updateEnemyBoard: () => void;
-  sendHit: (p: { row: number; column: number }) => void;
+  //sendHit: (p: { row: number; column: number }) => void;
   myTurn: boolean;
   timerValue: number;
 }> = ({
   userBoard,
   enemyBoard,
   updateEnemyBoard,
-  sendHit,
+  //sendHit,
   myTurn,
   timerValue,
 }) => {
@@ -43,7 +43,7 @@ export const GameFields: FC<{
         target: enemyBoard.preHit,
       },
     });
-    sendHit(enemyBoard.preHit);
+    //sendHit(enemyBoard.preHit);
     enemyBoard.setPreHit(null);
     updateEnemyBoard();
   };

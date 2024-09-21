@@ -31,8 +31,6 @@ export function Game2() {
   // @ts-ignore
   const {
     socket,
-    sendMessage,
-    roomName,
     gameState,
     userShips,
     setGameState,
@@ -43,7 +41,9 @@ export function Game2() {
     updateEnemyBoard,
     restartBoards,
     myTurn,
-    setMyTurn,
+    shotSuccessAudioRef,
+    shotMissAudioRef,
+    shotKilledAudioRef,
   } = useBattleships();
   //   const [userBoard, setUserBoard] = useState(new Gameboard(myShips));
   //   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
@@ -91,86 +91,6 @@ export function Game2() {
   //     newGameboard.preHit = enemyBoard.preHit;
   //     setEnemyBoard(newGameboard);
   //   };
-  const playBeamAnimation = ({ row, column }: any, me: boolean) => {
-    playBeamSound();
-    const targetCell = document.getElementById(
-      `${me ? "enemy" : "user"}Cell${row}-${column}`
-    ) as HTMLElement;
-    return new Promise<void>((resolve) => {
-      const beam = document.createElement("div");
-      beam.className = "beam-animation-" + (me ? "green" : "red");
-      document.body.appendChild(beam);
-
-      // Calculate the position of the target cell
-      const targetRect = targetCell.getBoundingClientRect();
-      const beamRect = beam.getBoundingClientRect();
-      const startX = beamRect.left;
-      const startY = beamRect.top;
-
-      let targetX = targetRect.left + targetRect.width / 2;
-      let targetY = targetRect.top + targetRect.height / 2;
-      if (me) {
-        targetX += 1;
-        targetY += 7;
-      } else {
-        targetX -= 1;
-        targetY -= 7;
-      }
-
-      const deltaX = targetX - startX;
-      const deltaY = targetY - startY;
-      const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-      beam.style.transform = `rotate(${angle}deg)`;
-
-      setTimeout(() => {
-        beam.style.left = `${targetX}px`;
-        beam.style.top = `${targetY}px`;
-        beam.style.width = "10px";
-      }, 10);
-
-      // Remove the beam after the animation completes
-      beam.addEventListener("transitionend", () => {
-        document.body.removeChild(beam);
-        resolve();
-      });
-    });
-  };
-
-  const playBeamSound = () => {
-    // @ts-ignore
-    shotAudioRef.current.pause();
-    // @ts-ignore
-    shotAudioRef.current.currentTime = 0;
-    // @ts-ignore
-    shotAudioRef.current.play().catch();
-  };
-
-  const playSuccessShotAudio = () => {
-    // @ts-ignore
-    shotSuccessAudioRef.current.pause();
-    // @ts-ignore
-    shotSuccessAudioRef.current.currentTime = 0;
-    // @ts-ignore
-    shotSuccessAudioRef.current.play().catch();
-  };
-
-  const playKilledShopAudio = () => {
-    // @ts-ignore
-    shotKilledAudioRef.current.pause();
-    // @ts-ignore
-    shotKilledAudioRef.current.currentTime = 0;
-    // @ts-ignore
-    shotKilledAudioRef.current.play().catch();
-  };
-
-  const playMissedShotAudio = () => {
-    // @ts-ignore
-    shotMissAudioRef.current.pause();
-    // @ts-ignore
-    shotMissAudioRef.current.currentTime = 0;
-    // @ts-ignore
-    shotMissAudioRef.current.play().catch();
-  };
 
   const stopBackgroundAudio = () => {
     if (audioBgRef.current) {
@@ -215,8 +135,6 @@ export function Game2() {
     if (gameState?.status === "NOT_STARTED") {
       restartBoards();
       setUserShips!([]);
-      openModal!("shipsArrangement2");
-
       openModal!("seaBattle");
     }
     if (gameState?.status === "GIVE_UP") {
@@ -226,115 +144,29 @@ export function Game2() {
   }, [gameState?.status]);
 
   useEffect(() => {
-    if (socket === null) return;
-    socket.onmessage = (event) => {
-      const { message, type, attack, isHit, isDead } = JSON.parse(event.data);
-      if (type === "turn") {
-        setMyTurn(message.player === player);
-      }
-      if (type === "updateBoard") {
-        userBoard.updateUserBoard(message);
-        updateUserboard();
-      }
-      if (type === "fireResult") {
-        isHit
-          ? isDead
-            ? playKilledShopAudio()
-            : playSuccessShotAudio()
-          : playMissedShotAudio();
-        enemyBoard.updateEnemyBoard(message);
-        updateEnemyBoard();
-      }
-      if (type === "recieveFire") {
-        playBeamAnimation(attack, false).then(() => {
-          userBoard.updateUserBoard(message);
-          isHit
-            ? isDead
-              ? playKilledShopAudio()
-              : playSuccessShotAudio()
-            : playMissedShotAudio();
-          updateUserboard();
-        });
-      }
-      if (type === "gameOver") {
-        setGameState!({ status: message.victory ? "WON" : "LOST" });
-        restartBoards();
-      }
-    };
-  }, [userBoard, enemyBoard, socket, player]);
-
-  //   useEffect(() => {
-  //     const mockServer = createMockServer();
-  //     const newSocket = new WebSocket("ws://localhost:8080");
-  //     newSocket.onopen = () => {
-  //       newSocket.send(JSON.stringify({ type: "join" }));
-  //     };
-  //     newSocket.onclose = () => {
-  //       console.log("MOCK Disconnected from WebSocket server");
-  //     };
-  //     setSocket(newSocket);
-
-  //     return () => {
-  //       newSocket.close();
-  //       mockServer.stop();
-  //     };
-  //   }, [player]);
-
-  useEffect(() => {
     if (userShips && userShips.length > 0) {
       timer.start();
       setGameState!({ status: "IN_PROGRESS" });
-      // socket &&
-      //   socket.send(
-      //     JSON.stringify({
-      //       type: "shipsInit",
-      //       message: userShips,
-      //       source: player,
-      //     })
-      //   );
     }
   }, [JSON.stringify(userShips), socket]);
 
-  const sendHit = (p: any) => {
-    if (gameState?.status !== "IN_PROGRESS") return;
-    playBeamAnimation(p, true);
-    //  .then(() => {
-    //    socket &&
-    //      socket.send(
-    //        JSON.stringify({ type: "fire", message: p, source: player })
-    //      );
-
-    // sendMessage({
-    //   type: "fire",
-    //   message: {
-    //     room_name: roomName,
-    //     target: enemyBoard.preHit,
-    //   },
-    // });
-    //  });
-  };
-
   const audioBgRef = useRef(null);
   const shotAudioRef = useRef(null);
-  const shotSuccessAudioRef = useRef(null);
-  const shotMissAudioRef = useRef(null);
-  const shotKilledAudioRef = useRef(null);
 
   useEffect(() => {
-    if (gameState?.status === "IN_PROGRESS") {
-      // @ts-ignore
-      audioBgRef.current.play().catch();
-    }
-  }, [gameState?.status]);
+    stopBackgroundAudio();
+  });
 
   return (
     <div className="game2">
       {/* AUDIO */}
+
       <audio
         ref={audioBgRef}
         src={audioBg}
         style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
       />
+
       <audio
         ref={shotAudioRef}
         src={audioShot}
@@ -366,7 +198,6 @@ export function Game2() {
           userBoard,
           updateEnemyBoard,
           updateUserboard,
-          sendHit,
           myTurn,
         }}
       />
