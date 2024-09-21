@@ -27,27 +27,29 @@ import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../../main.tsx";
 import { formatWalletString } from "../../../utils/index.ts";
 import walletIcon from "../../../ui/Drawer/img/menu/wallet.svg";
 import { Balance } from "../../../ui/Balance/Balance.tsx";
-
-const pills: PillType[] = [
-  {
-    label: "Пополнить",
-    value: "FILL",
-    component: <Fill />,
-  },
-  {
-    label: "Обмен",
-    value: "EXCHANGE",
-    component: <Exchange />,
-  },
-  {
-    label: "Вывод",
-    value: "WITHDRAW",
-    component: <Withdraw />,
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export function Wallet() {
+  const { t } = useTranslation();
   const { credits, tokens, tons } = useUserData();
+
+  const pills: PillType[] = [
+    {
+      label: t("walletModal.depositTab.title"),
+      value: "FILL",
+      component: <Fill />,
+    },
+    {
+      label: t("walletModal.swapTab.title"),
+      value: "EXCHANGE",
+      component: <Exchange />,
+    },
+    {
+      label: t("walletModal.withdrawalTab.title"),
+      value: "WITHDRAW",
+      component: <Withdraw />,
+    },
+  ];
 
   const wallet = useTonWallet();
   const [activePill, setActivePill] = useState(pills[0]);
@@ -96,6 +98,7 @@ export function Wallet() {
 }
 
 export function Fill() {
+  const { t } = useTranslation();
   const { openDrawer } = useDrawer();
   const { startCheckBalance } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
@@ -120,12 +123,18 @@ export function Fill() {
 
   return (
     <div className="fill">
-      <div className="fill__title">пополнение баланса ton</div>
+      <div className="fill__title">
+        {t("walletModal.depositTab.depositTon")}
+      </div>
 
       <div className="fill__inputBlock">
         <div className="fill__inputBlock-sup">
-          <label className="fill__inputBlock-sup-label">Сумма:</label>
-          <div className="fill__inputBlock-sup-minValue">мин. 0.05</div>
+          <label className="fill__inputBlock-sup-label">
+            {t("walletModal.depositTab.amount")}:
+          </label>
+          <div className="fill__inputBlock-sup-minValue">
+            {t("walletModal.depositTab.minimum")}. 0.05
+          </div>
         </div>
 
         <div className="fill__inputBlock-inputWrapper">
@@ -144,7 +153,7 @@ export function Fill() {
 
       <div className="fill__cuttedButtonWrapper">
         <CuttedButton
-          text="пополнить"
+          text={t("walletModal.depositTab.title")}
           callback={async () => {
             if (!tonConnectUI.connected) {
               openDrawer!("connectWallet");
@@ -185,6 +194,7 @@ export function Fill() {
 }
 
 export function Exchange() {
+  const { t } = useTranslation();
   const { credits, exchangeRate, jwt, updateUserInfo } = useUserData();
   const { openDrawer } = useDrawer();
 
@@ -317,9 +327,11 @@ export function Exchange() {
 
       <div className="exchange__inputBlock">
         <div className="exchange__inputBlock-sup">
-          <label className="exchange__inputBlock-sup-label">Отдаете:</label>
+          <label className="exchange__inputBlock-sup-label">
+            {t("walletModal.swapTab.give")}:
+          </label>
           <div className="exchange__inputBlock-sup-minValue">
-            макс. {credits}
+            {t("walletModal.swapTab.maximum")}. {credits}
           </div>
         </div>
 
@@ -344,7 +356,9 @@ export function Exchange() {
 
       <div className="exchange__inputBlock">
         <div className="exchange__inputBlock-sup">
-          <label className="exchange__inputBlock-sup-label">Получаете:</label>
+          <label className="exchange__inputBlock-sup-label">
+            {t("walletModal.swapTab.take")}:
+          </label>
         </div>
 
         <div className="exchange__inputBlock-inputWrapper">
@@ -367,12 +381,16 @@ export function Exchange() {
       </div>
 
       <div className="exchange__cuttedButtonWrapper">
-        <CuttedButton text="обменять" callback={handleExchangeClick} />
+        <CuttedButton
+          text={t("walletModal.swapTab.swap")}
+          callback={handleExchangeClick}
+        />
       </div>
     </div>
   );
 }
 export function Withdraw() {
+  const { t } = useTranslation();
   const currencyOptions: SelectOptionType[] = [
     {
       label: "akron",
@@ -482,9 +500,12 @@ export function Withdraw() {
     <div className="withdraw">
       <div className="withdraw__inputBlock">
         <div className="withdraw__inputBlock-sup">
-          <label className="withdraw__inputBlock-sup-label">Отдаете:</label>
+          <label className="withdraw__inputBlock-sup-label">
+            {t("walletModal.withdrawalTab.give")}:
+          </label>
           <div className="withdraw__inputBlock-sup-minValue">
-            макс. {activeCurrency.label == "akron" ? tokens : tons}
+            {t("walletModal.withdrawalTab.maximum")}.
+            {activeCurrency.label == "akron" ? tokens : tons}
           </div>
         </div>
 
@@ -506,11 +527,14 @@ export function Withdraw() {
         </div>
 
         <div className="withdraw__cuttedButtonWrapper">
-          <CuttedButton text="вывод" callback={handleWithdrawClick} />
+          <CuttedButton
+            text={t("walletModal.withdrawalTab.withdrawal")}
+            callback={handleWithdrawClick}
+          />
         </div>
 
         <div className="withdraw__bottomText">
-          скорость вывода средств зависит от загруженности сети ton
+          {t("walletModal.withdrawalTab.comment")}
         </div>
       </div>
     </div>

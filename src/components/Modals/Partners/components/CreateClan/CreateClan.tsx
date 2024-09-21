@@ -3,8 +3,10 @@ import checkedImg from "./img/checked.svg";
 import uncheckedImg from "./img/unchecked.svg";
 import "./styles/CreateClan.css";
 import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
+import { useTranslation } from "react-i18next";
 
 export function CreateClan() {
+  const { t } = useTranslation();
   const [clanName, setClanName] = useState("");
   const [checked, setChecked] = useState(false);
   return (
@@ -14,7 +16,7 @@ export function CreateClan() {
           htmlFor="newClanName"
           className="createClan__inputBlock-inputWrapper-label"
         >
-          Название клана:
+          {t("partnersModal.clansTab.clanName")}:
         </label>
 
         <input
@@ -46,13 +48,13 @@ export function CreateClan() {
             setChecked(!checked);
           }}
         >
-          Отправить приглашение в клан всем своим партнёрам
+          {t("partnersModal.clansTab.sendInviteToPartners")}
         </div>
       </div>
 
       <CuttedButton
         className={`createClan__createBtn ${clanName ? "" : "halfTransparent"}`}
-        text="создать клан"
+        text={t("partnersModal.clansTab.createClan")}
         size="small"
         callback={(e) => {
           e.stopPropagation();

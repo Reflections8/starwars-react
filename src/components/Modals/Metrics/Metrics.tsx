@@ -11,16 +11,18 @@ import {
   CharactersData,
   useUserData,
 } from "../../../UserDataService.tsx";
+import { useTranslation } from "react-i18next";
 
 export function Metrics() {
+  const { t } = useTranslation();
   const pills: PillType[] = [
     {
-      label: "Финансы",
+      label: t("metricsModal.financesTab.title"),
       value: "FINANCES",
       component: <Finances />,
     },
     {
-      label: "Персонажи",
+      label: t("metricsModal.modelsTab.title"),
       value: "MODELS",
       component: <Models />,
     },
@@ -44,6 +46,8 @@ export function Metrics() {
 }
 
 export function Finances() {
+  const { t } = useTranslation();
+
   const { userMetrics, characters } = useUserData();
   const [totalEarned, setTotalEarned] = useState(0);
 
@@ -62,7 +66,9 @@ export function Finances() {
     <div className="finances">
       <div className="finances__item">
         <div className="finances__item-info">
-          <div className="finances__item-info-key">депозитов:</div>
+          <div className="finances__item-info-key">
+            {t("metricsModal.financesTab.deposits")}:
+          </div>
           <div className="finances__item-info-value">
             {userMetrics.total_deposited} ton
           </div>
@@ -72,7 +78,9 @@ export function Finances() {
 
       <div className="finances__item">
         <div className="finances__item-info">
-          <div className="finances__item-info-key">заработано:</div>
+          <div className="finances__item-info-key">
+            {t("metricsModal.financesTab.earn")}:
+          </div>
           <div className="finances__item-info-value">{totalEarned} akron</div>
         </div>
         <img src={financesIcon2} alt="icon" className="finances__item-icon" />
@@ -81,14 +89,18 @@ export function Finances() {
       <div className="finances__item finances__item--Complex">
         <div className="finances__item-top">
           <div className="finances__item-info">
-            <div className="finances__item-info-key">Выиграно::</div>
+            <div className="finances__item-info-key">
+              {t("metricsModal.financesTab.win")}:
+            </div>
           </div>
           <img src={financesIcon3} alt="icon" className="finances__item-icon" />
         </div>
 
         <div className="finances__item-bottom">
           <div className="finances__item-bottom-row">
-            <div className="finances__item-bottom-row-key">Кредитов</div>
+            <div className="finances__item-bottom-row-key">
+              {t("metricsModal.financesTab.credits")}
+            </div>
             <div className="finances__item-bottom-row-value">0</div>
           </div>
           <div className="finances__item-bottom-row">
@@ -116,6 +128,8 @@ type MockModelsType = {
 };
 
 export function Models() {
+  const { t } = useTranslation();
+
   const [models, setModels] = useState<MockModelsType[]>([]);
 
   const { characters } = useUserData();
@@ -154,7 +168,7 @@ export function Models() {
                 <div className="models__item-body-list-item">
                   <div className="models__item-body-list-item-info">
                     <div className="models__item-body-list-item-info-key">
-                      депозитов:
+                      {t("metricsModal.modelsTab.deposits")}:
                     </div>
                     <div className="models__item-body-list-item-info-value">
                       {item.deposits} TON
@@ -170,7 +184,7 @@ export function Models() {
                 <div className="models__item-body-list-item">
                   <div className="models__item-body-list-item-info">
                     <div className="models__item-body-list-item-info-key">
-                      заработано:
+                      {t("metricsModal.modelsTab.earn")}:
                     </div>
                     <div className="models__item-body-list-item-info-value">
                       {item.earned} AKRON
@@ -186,7 +200,7 @@ export function Models() {
                 <div className="models__item-body-list-item">
                   <div className="models__item-body-list-item-info">
                     <div className="models__item-body-list-item-info-key">
-                      здоровье:
+                      {t("metricsModal.modelsTab.health")}:
                     </div>
                     <div className="models__item-body-list-item-info-value">
                       <span className="red">{item.healthCurrent}</span>

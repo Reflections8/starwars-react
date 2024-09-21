@@ -21,11 +21,13 @@ import audioMissedShot from "./audio/shot-missed.mp3";
 import audioSuccessShot from "./audio/shot-success.mp3";
 import audioShot from "./audio/shot.mp3";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 enableDragDropTouch();
 
 const timerSeconds = 60;
 
 export function Game2() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [jwt] = useState<string>(localStorage.getItem("auth_jwt") || "");
 
@@ -231,12 +233,12 @@ export function Game2() {
       <Header
         position={"bottom"}
         leftIcon={<RulesIcon />}
-        leftText={"Правила"}
+        leftText={t("battleships.rules")}
         leftAction={() => {
           openModal!("rules");
         }}
         rightIcon={<LeaveIcon />}
-        rightText={"Сдаться"}
+        rightText={t("battleships.giveUp")}
         rightAction={() => {
           openDrawer!("giveUp");
         }}

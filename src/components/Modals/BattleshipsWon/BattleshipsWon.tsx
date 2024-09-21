@@ -4,8 +4,10 @@ import textImg from "./img/text.svg";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import { useModal } from "../../../context/ModalContext";
 import { useBattleships } from "../../../context/BattleshipsContext";
+import { useTranslation } from "react-i18next";
 
 export function BattleshipsWon() {
+  const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const { setGameState } = useBattleships();
   return (
@@ -14,7 +16,9 @@ export function BattleshipsWon() {
       <img src={textImg} alt="" className="battleshipsWon__textImg" />
 
       <div className="battleshipsWon__text">
-        <div className="battleshipsWon__text-key">Ваш выигрыш:</div>
+        <div className="battleshipsWon__text-key">
+          {t("battleships.yourWinnings")}:
+        </div>
         <div className="battleshipsWon__text-value">1,235,954</div>
       </div>
       <CuttedButton

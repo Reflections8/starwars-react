@@ -46,7 +46,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [myShips, setMyShips] = useState([]);
   const [myHits, setMyHits] = useState([]);
   const [shipsPlaced, setShipsPlaced] = useState(false);
-  const [searchingDuel, setSearchingDuel] = useState(true);
+  const [searchingDuel, setSearchingDuel] = useState(false);
   const [isAudioStart, setIsAudioStart] = useState(false);
 
   const gameStateLocal = {

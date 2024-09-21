@@ -18,6 +18,9 @@
   font-size: 14px;
   color: #c9e9fb;
   text-shadow: 2px -1px #076de933;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .dropdown {
@@ -45,6 +48,9 @@
   border-bottom: 1px solid #19c1ef44;
   font-size: 14px;
   color: #19c2ef;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .dropdown__option--Selected {

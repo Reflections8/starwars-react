@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
@@ -23,6 +24,7 @@ import "./styles/home.css";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 
 export function Home() {
+  const { t } = useTranslation();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const {
@@ -139,12 +141,12 @@ export function Home() {
       <Header
         onlyRight={!canQuit}
         leftIcon={<ExitIcon />}
-        leftText={"Выход"}
+        leftText={t("homePage.exit")}
         leftAction={() => {
           navigate("/auth");
         }}
         rightIcon={<MenuIcon />}
-        rightText={"Меню"}
+        rightText={t("homePage.menu")}
         rightAction={async () => {
           openDrawer!("menu", "top");
         }}
@@ -198,7 +200,7 @@ export function Home() {
       <Header
         position={"bottom"}
         leftIcon={<GamesIcon className={`highlighterParent games`} />}
-        leftText={"Игры"}
+        leftText={t("homePage.games")}
         leftClassName={"games"}
         leftAction={() => {
           if (!tonConnectUI.connected) {
@@ -208,7 +210,7 @@ export function Home() {
           openModal!("chooseGame");
         }}
         rightIcon={<OptionsIcon />}
-        rightText={"Опции"}
+        rightText={t("homePage.options")}
         rightAction={() => {
           openModal!("settings");
         }}

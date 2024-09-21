@@ -11,8 +11,10 @@ import "./styles/Rivals.css";
 import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
 import { Room } from "../../types/types";
 import { useModal } from "../../../../../context/ModalContext";
+import { useTranslation } from "react-i18next";
 
 export function Rivals() {
+  const { t } = useTranslation();
   const { openModal } = useModal();
   const { openDrawer } = useDrawer();
   const [isCreatingDuel, setIsCreatingDuel] = useState(false);
@@ -38,12 +40,20 @@ export function Rivals() {
 
   async function createRoom() {
     if (!friendsLogin) {
-      openDrawer!("rejected", "bottom", "Введите логин");
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("battleshipsModal.rivalsTab.enterLogin")
+      );
       return;
     }
 
     if (!bet) {
-      openDrawer!("rejected", "bottom", "Введите размер ставки");
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("battleshipsModal.rivalsTab.enterBetAmount")
+      );
       return;
     }
 
@@ -120,10 +130,10 @@ export function Rivals() {
               />
               <div className="rivals__list-item-start-info">
                 <div className="rivals__list-item-start-info-key">
-                  игра с другом
+                  {t("battleshipsModal.rivalsTab.gameWithFriend")}
                 </div>
                 <div className="rivals__list-item-start-info-value">
-                  создайте общую дуэль
+                  {t("battleshipsModal.rivalsTab.createGeneralDuel")}
                 </div>
               </div>
             </div>
@@ -146,7 +156,7 @@ export function Rivals() {
                   />
                   <div className="rivals__list-item-start-login">
                     <div className="rivals__list-item-start-login-key">
-                      Логин:
+                      {t("battleshipsModal.rivalsTab.login")}:
                     </div>
                     <a
                       href={item.player}
@@ -157,7 +167,7 @@ export function Rivals() {
                   </div>
                   <div className="rivals__list-item-start-bet">
                     <div className="rivals__list-item-start-bet-key">
-                      Ставка:
+                      {t("battleshipsModal.rivalsTab.bet")}:
                     </div>
                     <div className="rivals__list-item-start-bet-value">
                       <img
@@ -180,7 +190,7 @@ export function Rivals() {
                     }}
                     size="small"
                     className="rivals__list-item-end-btn"
-                    text="Дуэль"
+                    text={t("battleshipsModal.rivalsTab.duel")}
                   />
                 </div>
               </div>
@@ -192,13 +202,13 @@ export function Rivals() {
       {isCreatingDuel ? (
         <div className="rivals__newDuel">
           <div className="rivals__newDuel__title">
-            создайте свою дуэль с другом!
+            {t("battleshipsModal.rivalsTab.createDuelWithFriend")}!
           </div>
 
           <div className="rivals__newDuel__inputBlock">
             <div className="rivals__newDuel__inputBlock-sup">
               <label className="rivals__newDuel__inputBlock-sup-label">
-                1.логин друга:
+                1.{t("battleshipsModal.rivalsTab.friendsLogin")}:
               </label>
             </div>
 
@@ -217,7 +227,7 @@ export function Rivals() {
           <div className="rivals__newDuel__inputBlock">
             <div className="rivals__newDuel__inputBlock-sup">
               <label className="rivals__newDuel__inputBlock-sup-label">
-                2.ваша ставка:
+                2.{t("battleshipsModal.rivalsTab.yourBet")}:
               </label>
             </div>
 
@@ -239,7 +249,7 @@ export function Rivals() {
           <CuttedButton
             callback={createRoom}
             className="rivals__newDuel__cuttedButton"
-            text="Создать дуэль"
+            text={t("battleshipsModal.rivalsTab.createDuel")}
           />
 
           {/* TODO: КНОПКУ УБРАТЬ*/}

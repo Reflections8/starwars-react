@@ -6,10 +6,12 @@ import shipImg3 from "./img/3.png";
 import shipImg4 from "./img/4.png";
 import xImg from "./img/X.svg";
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 
 export const EnemyShips: FC<{ ships: { [key: string]: number } }> = ({
   ships,
 }) => {
+  const { t } = useTranslation();
   function checkShipsLeft(length: string) {
     // @ts-ignore
     if (!ships[length]) {
@@ -24,7 +26,9 @@ export const EnemyShips: FC<{ ships: { [key: string]: number } }> = ({
       <img src={bg} alt="" className="enemyShips__bg" />
 
       <div className="enemyShips__main">
-        <div className="enemyShips__main-title">Флот противника</div>
+        <div className="enemyShips__main-title">
+          {t("battleships.rivalsFleet")}
+        </div>
         <div className="enemyShips__main-content">
           {/* ITEM */}
           <div className="enemyShips__main-content-itemWrap">

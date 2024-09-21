@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CryptoButtons } from "../../../../ui/CryptoButtons/CryptoButtons";
 import { CuttedButton } from "../../../../ui/CuttedButton/CuttedButton";
 import { WeaponType } from "../../../../ui/SlidingPills/types";
+import { useTranslation } from "react-i18next";
 
 type WeaponCardProps = WeaponType;
 
@@ -19,6 +20,7 @@ export function WeaponCard({
   rarity,
   callback,
 }: WeaponCardProps) {
+  const { t } = useTranslation();
   const [activeCurrency, setActiveCurrency] = useState("ton");
 
   return (
@@ -30,7 +32,7 @@ export function WeaponCard({
       <div className="weapon-card-main">
         <div className="weapon-card-main-modelBlockWrapper">
           <div className="weapon-card-main-modelBlockWrapper-badge">
-            Уровень {level}
+            {t("shopModal.weaponTab.level")} {level}
           </div>
           <img
             src={imgSrc}
@@ -44,7 +46,7 @@ export function WeaponCard({
             {/* ITEM */}
             <div className="weapon-card-main-info-list-item">
               <div className="weapon-card-main-info-list-item-key">
-                доп.доход:
+                {t("shopModal.weaponTab.additionalIncome")}:
               </div>
               <div className="weapon-card-main-info-list-item-value">
                 {additionalIncome} TON
@@ -53,47 +55,52 @@ export function WeaponCard({
 
             {/* ITEM */}
             <div className="weapon-card-main-info-list-item">
-              <div className="weapon-card-main-info-list-item-key">заряд:</div>
-              <div className="weapon-card-main-info-list-item-value">
-                {charge} ед.
+              <div className="weapon-card-main-info-list-item-key">
+                {" "}
+                {t("shopModal.weaponTab.charge")}:
               </div>
-            </div>
-
-            {/* ITEM */}
-            <div className="weapon-card-main-info-list-item">
-              <div className="weapon-card-main-info-list-item-key">урон:</div>
               <div className="weapon-card-main-info-list-item-value">
-                {damage} ед.
+                {charge} {t("global.point")}
               </div>
             </div>
 
             {/* ITEM */}
             <div className="weapon-card-main-info-list-item">
               <div className="weapon-card-main-info-list-item-key">
-                перезарядка:
+                {t("shopModal.weaponTab.damage")}:
               </div>
               <div className="weapon-card-main-info-list-item-value">
-                {chargeSpeed}\мин.
+                {damage} {t("global.point")}
               </div>
             </div>
 
             {/* ITEM */}
             <div className="weapon-card-main-info-list-item">
               <div className="weapon-card-main-info-list-item-key">
-                скр. стрельбы:
+                {t("shopModal.weaponTab.reload")}:
               </div>
               <div className="weapon-card-main-info-list-item-value">
-                {rateOfFire}\сек.
+                {chargeSpeed}\{t("global.minute")}
               </div>
             </div>
 
             {/* ITEM */}
             <div className="weapon-card-main-info-list-item">
               <div className="weapon-card-main-info-list-item-key">
-                прочность:
+                {t("shopModal.weaponTab.fireRate")}:
               </div>
               <div className="weapon-card-main-info-list-item-value">
-                {durability} ед.
+                {rateOfFire}\{t("global.second")}
+              </div>
+            </div>
+
+            {/* ITEM */}
+            <div className="weapon-card-main-info-list-item">
+              <div className="weapon-card-main-info-list-item-key">
+                {t("shopModal.weaponTab.strength")}:
+              </div>
+              <div className="weapon-card-main-info-list-item-value">
+                {durability} {t("global.point")}
               </div>
             </div>
           </div>
@@ -102,14 +109,19 @@ export function WeaponCard({
       <div className="weapon-card-footer">
         <div className="weapon-card-footer-priceBlock">
           <div className="weapon-card-footer-priceBlock-price">
-            <div className="weapon-card-footer-priceBlock-price-key">цена:</div>
+            <div className="weapon-card-footer-priceBlock-price-key">
+              {t("shopModal.weaponTab.price")}:
+            </div>
             <div className="weapon-card-footer-priceBlock-price-value">
               {worth}
             </div>
           </div>
 
           <div className="weapon-card-main-info-btnWrapper">
-            <CuttedButton text={"Купить"} callback={callback} />
+            <CuttedButton
+              text={t("shopModal.weaponTab.buy")}
+              callback={callback}
+            />
           </div>
         </div>
 

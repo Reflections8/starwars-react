@@ -37,6 +37,7 @@ import modalHeaderIconBg from "./img/modal-header-icon-wrapper.png";
 import modalHeaderBg from "./img/modal-header.png";
 import "./styles/modal.css";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type ModalProps = {
   isOpen: boolean;
@@ -50,97 +51,98 @@ type ModalContentType = {
   };
 };
 
-const modalContentType: ModalContentType = {
-  chooseGame: {
-    title: "Выбор игры:",
-    icon: <GamepadIcon />,
-    component: <ChooseGame />,
-  },
-  shop: {
-    title: "Магазин",
-    icon: <StoreIcon />,
-    component: <Shop />,
-  },
-  tournament: {
-    title: "Турнир",
-    icon: <CupIcon />,
-    component: <Tournament />,
-  },
-  tasks: {
-    title: "Задания",
-    icon: <TasksIcon />,
-    component: <Tasks />,
-  },
-  metrics: {
-    title: "Метрика",
-    icon: <ChartIcon />,
-    component: <Metrics />,
-  },
-  partners: {
-    title: "Партнеры",
-    icon: <TeamIcon />,
-    component: <Partners />,
-  },
-  settings: {
-    title: "Опции",
-    icon: <GearIcon />,
-    component: <Settings />,
-  },
-  wallet: {
-    title: "Кошелек",
-    icon: <WalletIcon />,
-    component: <Wallet />,
-  },
-  player: {
-    title: "Игрок",
-    icon: <HelmetIcon />,
-    component: <Player />,
-  },
-  seaBattle: {
-    title: "Морской бой",
-    icon: <SeaBattleIcon />,
-    component: <SeaBattle />,
-  },
-  shipsArrangement2: {
-    title: "Расставить флот",
-    icon: <SeaBattleIcon />,
-    component: <ShipsArrangement2 />,
-  },
-  welcome: {
-    component: <Welcome />,
-  },
-  currentStat: {
-    component: <CurrentStat />,
-  },
-  battleshipsWon: {
-    component: <BattleshipsWon />,
-  },
-  battleshipsLost: {
-    component: <BattleshipsLost />,
-  },
-  binks: {
-    title: "Обучение",
-    icon: <GearIcon />,
-    component: <Binks />,
-  },
-  rules: {
-    title: "Правила",
-    icon: <SeaBattleIcon />,
-    component: <SeaBattleRules />,
-  },
-};
-
-type ModalContentKeys = keyof typeof modalContentType;
-
-const fullscreenModals: ModalContentKeys[] = [
-  "welcome",
-  "currentStat",
-  "battleshipsWon",
-  "battleshipsLost",
-];
-const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement2"];
-
 export function Modal({ isOpen }: ModalProps) {
+  const { t } = useTranslation();
+  const modalContentType: ModalContentType = {
+    chooseGame: {
+      title: t("chooseGameModal.title"),
+      icon: <GamepadIcon />,
+      component: <ChooseGame />,
+    },
+    shop: {
+      title: t("shopModal.title"),
+      icon: <StoreIcon />,
+      component: <Shop />,
+    },
+    tournament: {
+      title: t("tournamentsModal.title"),
+      icon: <CupIcon />,
+      component: <Tournament />,
+    },
+    tasks: {
+      title: t("questsModal.title"),
+      icon: <TasksIcon />,
+      component: <Tasks />,
+    },
+    metrics: {
+      title: t("metricsModal.title"),
+      icon: <ChartIcon />,
+      component: <Metrics />,
+    },
+    partners: {
+      title: t("partnersModal.title"),
+      icon: <TeamIcon />,
+      component: <Partners />,
+    },
+    settings: {
+      title: t("settingsModal.title"),
+      icon: <GearIcon />,
+      component: <Settings />,
+    },
+    wallet: {
+      title: t("walletModal.title"),
+      icon: <WalletIcon />,
+      component: <Wallet />,
+    },
+    player: {
+      title: t("playerModal.title"),
+      icon: <HelmetIcon />,
+      component: <Player />,
+    },
+    seaBattle: {
+      title: t("battleshipsModal.title"),
+      icon: <SeaBattleIcon />,
+      component: <SeaBattle />,
+    },
+    shipsArrangement2: {
+      title: t("shipsArrangementModal.title"),
+      icon: <SeaBattleIcon />,
+      component: <ShipsArrangement2 />,
+    },
+    welcome: {
+      component: <Welcome />,
+    },
+    currentStat: {
+      component: <CurrentStat />,
+    },
+    battleshipsWon: {
+      component: <BattleshipsWon />,
+    },
+    battleshipsLost: {
+      component: <BattleshipsLost />,
+    },
+    binks: {
+      title: t("binksModal.title"),
+      icon: <GearIcon />,
+      component: <Binks />,
+    },
+    rules: {
+      title: t("rulesModal.title"),
+      icon: <SeaBattleIcon />,
+      component: <SeaBattleRules />,
+    },
+  };
+
+  type ModalContentKeys = keyof typeof modalContentType;
+
+  const fullscreenModals: ModalContentKeys[] = [
+    "welcome",
+    "currentStat",
+    "battleshipsWon",
+    "battleshipsLost",
+  ];
+  const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement2"];
+
   const navigate = useNavigate();
   const { closeModal, modalType } = useModal();
 
@@ -244,7 +246,9 @@ export function Modal({ isOpen }: ModalProps) {
                     alt="closeIcon"
                     className="modal__body-top-closeBtn-bg"
                   />
-                  <span className="modal__body-top-closeBtn-text">Закрыть</span>
+                  <span className="modal__body-top-closeBtn-text">
+                    {t("global.close")}
+                  </span>
                 </button>
 
                 <div className="modal__body-top-title">

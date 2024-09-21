@@ -18,22 +18,24 @@ import akr from "./img/akr.svg";
 import tonPlus from "./img/ton__plus.svg";
 import tonMinus from "./img/ton__minus.svg";
 import ton from "./img/ton.svg";
+import { useTranslation } from "react-i18next";
 
 type CurrencyStatType = {
-	[key: string]: {
-		title: string
-		plusIcon: string
-		minusIcon: string
-		totalIcon: string
-	}
-}
+  [key: string]: {
+    title: string;
+    plusIcon: string;
+    minusIcon: string;
+    totalIcon: string;
+  };
+};
 
 export function Statistic() {
+  const { t } = useTranslation();
   const [activeCurrency, setActiveCurrency] = useState("ton");
 
   const currencyStatEnum: CurrencyStatType = {
     credits: {
-      title: "кредитов",
+      title: t("battleshipsModal.statisticTab.credits"),
       plusIcon: creditPlus,
       minusIcon: creditMinus,
       totalIcon: credit,
@@ -76,7 +78,9 @@ export function Statistic() {
         {/* ITEM */}
         <div className="statistic__grid-item">
           <div className="statistic__grid-item-info">
-            <div className="statistic__grid-item-info-key">дуэлей:</div>
+            <div className="statistic__grid-item-info-key">
+              {t("battleshipsModal.statisticTab.duels")}:
+            </div>
             <div className="statistic__grid-item-info-value">1234</div>
           </div>
           <img src={icon1} alt="icon" className="statistic__grid-item-img" />
@@ -85,7 +89,9 @@ export function Statistic() {
         {/* ITEM */}
         <div className="statistic__grid-item">
           <div className="statistic__grid-item-info">
-            <div className="statistic__grid-item-info-key">% побед:</div>
+            <div className="statistic__grid-item-info-key">
+              % {t("battleshipsModal.statisticTab.victories")}:
+            </div>
             <div className="statistic__grid-item-info-value">87%</div>
           </div>
           <img src={icon2} alt="icon" className="statistic__grid-item-img" />
@@ -94,7 +100,9 @@ export function Statistic() {
         {/* ITEM */}
         <div className="statistic__grid-item">
           <div className="statistic__grid-item-info">
-            <div className="statistic__grid-item-info-key">выиграно:</div>
+            <div className="statistic__grid-item-info-key">
+              {t("battleshipsModal.statisticTab.won")}:
+            </div>
             <div className="statistic__grid-item-info-value">12345</div>
           </div>
           <img src={icon3} alt="icon" className="statistic__grid-item-img" />
@@ -103,7 +111,9 @@ export function Statistic() {
         {/* ITEM */}
         <div className="statistic__grid-item">
           <div className="statistic__grid-item-info">
-            <div className="statistic__grid-item-info-key">проиграно:</div>
+            <div className="statistic__grid-item-info-key">
+              {t("battleshipsModal.statisticTab.lost")}:
+            </div>
             <div className="statistic__grid-item-info-value">12345</div>
           </div>
           <img src={icon4} alt="icon" className="statistic__grid-item-img" />
@@ -114,7 +124,8 @@ export function Statistic() {
         <div className="statistic__grid-item">
           <div className="statistic__grid-item-info">
             <div className="statistic__grid-item-info-key">
-              выиграно {currencyStatEnum[activeCurrency]?.title}:
+              {t("battleshipsModal.statisticTab.won")}{" "}
+              {currencyStatEnum[activeCurrency]?.title}:
             </div>
             <div className="statistic__grid-item-info-value">12345</div>
           </div>
@@ -129,7 +140,8 @@ export function Statistic() {
         <div className="statistic__grid-item">
           <div className="statistic__grid-item-info">
             <div className="statistic__grid-item-info-key">
-              проиграно {currencyStatEnum[activeCurrency]?.title}:
+              {t("battleshipsModal.statisticTab.lost")}{" "}
+              {currencyStatEnum[activeCurrency]?.title}:
             </div>
             <div className="statistic__grid-item-info-value">12345</div>
           </div>
@@ -144,7 +156,7 @@ export function Statistic() {
         <div className="statistic__grid-item">
           <div className="statistic__grid-item-info">
             <div className="statistic__grid-item-info-key">
-              итоговый результат:
+              {t("battleshipsModal.statisticTab.result")}:
             </div>
             <div className="statistic__grid-item-info-value">12345</div>
           </div>

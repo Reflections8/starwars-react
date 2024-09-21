@@ -14,8 +14,10 @@ import {
   CharactersData,
   useUserData,
 } from "../../../UserDataService.tsx";
+import { useTranslation } from "react-i18next";
 
 export function CurrentStat() {
+  const { t } = useTranslation();
   const { activeCharacter, blasters, jwt } = useUserData();
   const [damage, setDamage] = useState(0);
   const [damageUpgrade, setDamageUpgrade] = useState(0);
@@ -69,7 +71,9 @@ export function CurrentStat() {
 
   return (
     <div className="currentStat">
-      <div className="currentStat__title">Ваши текущие характеристики</div>
+      <div className="currentStat__title">
+        {t("infoDrawer.currentCharacterisitcs")}
+      </div>
       <div className="currentStat__main">
         <div className="currentStat__main-images">
           <img
@@ -96,7 +100,7 @@ export function CurrentStat() {
 
         <div className="currentStat__main-box">
           <div className="currentStat__main-box-title">
-            характеристики комплекта:
+            {t("infoDrawer.kitCharacteristics")}
           </div>
           <div className="currentStat__main-box-list">
             {/* ROW */}
@@ -108,7 +112,7 @@ export function CurrentStat() {
                   className="currentStat__main-box-list-row-key-img"
                 />
                 <div className="currentStat__main-box-list-row-key-text">
-                  Урон:
+                  {t("infoDrawer.damage")}:
                 </div>
               </div>
               <div className="currentStat__main-box-list-row-value">
@@ -116,7 +120,7 @@ export function CurrentStat() {
                 {damageUpgrade != 0 ? (
                   <span className="green">(+{damageUpgrade}) </span>
                 ) : null}
-                Ед.
+                {t("global.point")}
               </div>
             </div>
 
@@ -129,7 +133,7 @@ export function CurrentStat() {
                   className="currentStat__main-box-list-row-key-img"
                 />
                 <div className="currentStat__main-box-list-row-key-text">
-                  Заряд:
+                  {t("infoDrawer.charge")}:
                 </div>
               </div>
               <div className="currentStat__main-box-list-row-value">
@@ -149,7 +153,7 @@ export function CurrentStat() {
                   className="currentStat__main-box-list-row-key-img"
                 />
                 <div className="currentStat__main-box-list-row-key-text">
-                  Перезарядка:
+                  {t("infoDrawer.reload")}:
                 </div>
               </div>
               <div className="currentStat__main-box-list-row-value">
@@ -157,7 +161,7 @@ export function CurrentStat() {
                 {reloadUpgrade != 0 ? (
                   <span className="green">(+{reloadUpgrade})%</span>
                 ) : null}
-                /мин
+                /{t("global.minute")}
               </div>
             </div>
           </div>

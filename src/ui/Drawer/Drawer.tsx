@@ -25,6 +25,7 @@ import opponentFoundIcon from "./img/opponent-icon.svg";
 import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import creditIcon from "./img/upgrade/credits.svg";
 import "./styles//drawer.css";
+import { useTranslation } from "react-i18next";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -69,6 +70,7 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
 }
 
 function ConnectWallet() {
+  const { t } = useTranslation();
   const { closeDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
   async function connectWallet() {
@@ -82,27 +84,30 @@ function ConnectWallet() {
 
   return (
     <div className="connectWallet">
-      <div className="connectWallet__text">Подключите свой кошелек</div>
+      <div className="connectWallet__text">
+        {t("connectWalletDrawer.title")}
+      </div>
 
       <CuttedButton
         className="connectWallet__mainBtn"
-        text={"Подключить"}
+        text={t("connectWalletDrawer.connect")}
         callback={connectWallet}
       />
 
       <button className="connectWallet__laterBtn" onClick={closeDrawer}>
-        Позже
+        {t("connectWalletDrawer.later")}
       </button>
     </div>
   );
 }
 
 function Resolved({ drawerText }: { drawerText?: string }) {
+  const { t } = useTranslation();
   return (
     <div className="responseStatus">
       <img src={resolvedIcon} alt="resolved" className="responseStatus__icon" />
 
-      <div className="responseStatus__title">Успешно!</div>
+      <div className="responseStatus__title">{t("resolvedDrawer.title")}!</div>
 
       <div className="responseStatus__text">{drawerText}</div>
     </div>
@@ -110,11 +115,12 @@ function Resolved({ drawerText }: { drawerText?: string }) {
 }
 
 function Rejected({ drawerText }: { drawerText?: string }) {
+  const { t } = useTranslation();
   return (
     <div className="responseStatus">
       <img src={rejectedIcon} alt="resolved" className="responseStatus__icon" />
 
-      <div className="responseStatus__title">Ошибка!</div>
+      <div className="responseStatus__title">{t("rejectedDrawer.title")}!</div>
 
       <div className="responseStatus__text">{drawerText}</div>
     </div>
@@ -122,6 +128,7 @@ function Rejected({ drawerText }: { drawerText?: string }) {
 }
 
 function Menu() {
+  const { t } = useTranslation();
   const wallet = useTonWallet();
   const { closeDrawer, openDrawer } = useDrawer();
 
@@ -135,22 +142,22 @@ function Menu() {
 
   return (
     <div className="menu">
-      <div className="menu__text">Быстрое меню</div>
+      <div className="menu__text">{t("quickMenu.title")}</div>
 
       <div className="menu__list">
         <a href="#" className="menu__list-item">
           <img src={telegramIcon} alt="icon" className="menu__list-item-icon" />
-          <div className="menu__list-item-text">телеграм канал</div>
+          <div className="menu__list-item-text">{t("quickMenu.telegram")}</div>
         </a>
 
         <a href="#" className="menu__list-item">
           <img src={xIcon} alt="icon" className="menu__list-item-icon" />
-          <div className="menu__list-item-text">x.com (twitter)</div>
+          <div className="menu__list-item-text">{t("quickMenu.xTwitter")}</div>
         </a>
 
         <a href="#" className="menu__list-item">
           <img src={youtubeIcon} alt="icon" className="menu__list-item-icon" />
-          <div className="menu__list-item-text">youtube канал</div>
+          <div className="menu__list-item-text">{t("quickMenu.youtube")}</div>
         </a>
 
         {wallet ? (
@@ -163,7 +170,9 @@ function Menu() {
         ) : (
           <div className="menu__list-item" onClick={openWalletDrawer}>
             <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
-            <div className="menu__list-item-text">подключить кошелек</div>
+            <div className="menu__list-item-text">
+              {t("quickMenu.connectWallet")}
+            </div>
           </div>
         )}
       </div>
@@ -172,6 +181,7 @@ function Menu() {
 }
 
 function Upgrade() {
+  const { t } = useTranslation();
   const { prices, activeBlaster, updateUserInfo, credits, jwt } = useUserData();
 
   const { openDrawer } = useDrawer();
@@ -276,12 +286,14 @@ function Upgrade() {
 
   return (
     <div className="upgradeBody">
-      <div className="upgrade__text">Улучшение</div>
+      <div className="upgrade__text">{t("upgradeDrawer.upgrade")}</div>
 
       <div className="upgrade__block">
         <div className="upgrade__block-item">
           <div className="upgrade__block-item-main">
-            <div className="upgrade__block-item-main-title">Урон:</div>
+            <div className="upgrade__block-item-main-title">
+              {t("upgradeDrawer.damage")}:
+            </div>
             <div className="upgrade__block-item-main-value">
               <div className="upgrade__block-item-main-value-current">
                 {activeBlaster
@@ -324,7 +336,9 @@ function Upgrade() {
 
         <div className="upgrade__block-item">
           <div className="upgrade__block-item-main">
-            <div className="upgrade__block-item-main-title">Заряд:</div>
+            <div className="upgrade__block-item-main-title">
+              {t("upgradeDrawer.charge")}:
+            </div>
             <div className="upgrade__block-item-main-value">
               <div className="upgrade__block-item-main-value-current">
                 {activeBlaster
@@ -370,14 +384,14 @@ function Upgrade() {
         <div className="upgrade__block-item">
           <div className="upgrade__block-item-main">
             <div className="upgrade__block-item-main-title">
-              скр. восполнения заряда::
+              {t("upgradeDrawer.chargeReplenishementSpeed")}:
             </div>
             <div className="upgrade__block-item-main-value">
               <div className="upgrade__block-item-main-value-current">
                 {activeBlaster
                   ? getChargePercentByLevel(activeBlaster.charge_level)
                   : 0}
-                %\мин
+                %\{t("global.minute")}
               </div>
               {activeBlaster && activeBlaster.charge_level < 3 ? (
                 <>
@@ -390,7 +404,7 @@ function Upgrade() {
                     {activeBlaster
                       ? getChargePercentByLevel(activeBlaster.charge_level + 1)
                       : 0}
-                    %\мин
+                    %\{t("global.minute")}
                   </div>
                 </>
               ) : null}
@@ -421,6 +435,7 @@ function Upgrade() {
 }
 
 function Repair() {
+  const { t } = useTranslation();
   const [activeCurrency, setActiveCurrency] = useState("credits");
   const { prices, activeBlaster, updateUserInfo, credits, jwt } = useUserData();
   const { openDrawer } = useDrawer();
@@ -488,11 +503,13 @@ function Repair() {
 
   return (
     <div className="repair">
-      <div className="repair__text">Починить на 100%</div>
+      <div className="repair__text">{t("repairDrawer.repair100")}</div>
 
       <div className="repair__block">
         <div className="repair__block-row">
-          <div className="repair__block-row-key">цена:</div>
+          <div className="repair__block-row-key">
+            {t("repairDrawer.price")}:
+          </div>
           <div className="repair__block-row-value">
             {activeBlaster ? getBlasterRepairPrice(activeBlaster.level) : null}
           </div>
@@ -515,13 +532,14 @@ function Repair() {
             ? "repair__mainBtn"
             : "repair__mainBtn halfTransparent"
         }
-        text={"Подтвердить"}
+        text={t("repairDrawer.repair")}
       />
     </div>
   );
 }
 
 function Heal() {
+  const { t } = useTranslation();
   const { healingCharacter, jwt } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
   const { openDrawer } = useDrawer();
@@ -560,11 +578,11 @@ function Heal() {
 
   return (
     <div className="heal">
-      <div className="heal__text">Исцелить на 100%</div>
+      <div className="heal__text">{t("healDrawer.heal100")}</div>
 
       <div className="heal__block">
         <div className="heal__block-row">
-          <div className="heal__block-row-key">цена:</div>
+          <div className="heal__block-row-key">{t("healDrawer.price")}:</div>
           <div className="heal__block-row-value">
             {healingCharacter
               ? CharactersData[healingCharacter.type - 1].price
@@ -582,18 +600,19 @@ function Heal() {
             ? "heal__mainBtn"
             : "heal__mainBtn halfTransparent"
         }
-        text={"Подтвердить"}
+        text={t("healDrawer.heal")}
       />
     </div>
   );
 }
 
 function InviteFriend() {
+  const { t } = useTranslation();
   const { refInfo } = useUserData();
   return (
     <div className="inviteFriend">
       <div className="inviteFriend__text">
-        Пригластите друга вступить в бой против Тьмы
+        {t("inviteFriendDrawer.inviteText")}
       </div>
 
       <div className="inviteFriend-inputBlock-inputWrapper">
@@ -606,7 +625,7 @@ function InviteFriend() {
       </div>
 
       <CuttedButton
-        text="скопировать"
+        text={t("inviteFriendDrawer.copy")}
         size="small"
         callback={(e) => {
           e.stopPropagation();
@@ -619,14 +638,15 @@ function InviteFriend() {
 }
 
 function GiveUp() {
+  const { t } = useTranslation();
   const { roomName, sendMessage, setGameState } = useBattleships();
   const { closeDrawer } = useDrawer();
   return (
     <div className="giveUp">
-      <div className="giveUp__text">Вы точно хотите сдаться?</div>
+      <div className="giveUp__text">{t("giveUpDrawer.text")}</div>
 
       <CuttedButton
-        text="Подтвердить"
+        text={t("giveUpDrawer.giveUp")}
         size="small"
         callback={(e) => {
           e.stopPropagation();
@@ -649,17 +669,20 @@ function GiveUp() {
 }
 
 function OpponentFound() {
+  const { t } = useTranslation();
   const { closeDrawer } = useDrawer();
   return (
     <div className="opponentFound">
       <img src={opponentFoundIcon} alt="" className="opponentFound__icon" />
       <div className="opponentFound__text">
-        Нашелся игрок для дуэли в вашей комнате
+        {t("opponentFoundDrawer.title")}
       </div>
 
       <div className="opponentFound__betBox">
         <div className="opponentFound__betBox-main">
-          <div className="opponentFound__betBox-main-key">СТАВКА:</div>
+          <div className="opponentFound__betBox-main-key">
+            {t("opponentFoundDrawer.bid")}:
+          </div>
           <div className="opponentFound__betBox-main-value">1234.5678 ton</div>
         </div>
 
@@ -671,7 +694,7 @@ function OpponentFound() {
 
       <div className="opponentFound__footer">
         <CuttedButton
-          text="отклонить"
+          text={t("opponentFoundDrawer.dismiss")}
           className="secondary"
           size="small"
           callback={(e) => {
@@ -681,7 +704,7 @@ function OpponentFound() {
         />
 
         <CuttedButton
-          text="принять"
+          text={t("opponentFoundDrawer.accept")}
           size="small"
           callback={(e) => {
             e.stopPropagation();

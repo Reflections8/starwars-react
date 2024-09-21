@@ -15,6 +15,7 @@ import { Rules } from "../SeaBattle/components/Rules/Rules";
 import backImg from "../SeaBattle/img/back-button.svg";
 import bgAudio from "./audio/arrangement.mp3";
 import { useTimer } from "react-use-precision-timer";
+import { useTranslation } from "react-i18next";
 
 // @ts-ignore
 function debounce(func: (...args: unknown[]) => void, wait: number) {
@@ -42,6 +43,8 @@ export function ShipsArrangement2() {
   return <ShipsArrangementChild />;
 }
 export function ShipsArrangementChild() {
+  const { t } = useTranslation();
+
   const { closeModal } = useModal();
 
   const [isInitial, setIsInitial] = useState(true);
@@ -282,10 +285,10 @@ export function ShipsArrangementChild() {
                 gameboard.placeShipsRandomly();
                 updateGameboard();
               }}
-              text="Авто"
+              text={t("shipsArrangementModal.auto")}
             />
             <CuttedButton
-              text="Играть"
+              text={t("shipsArrangementModal.play")}
               className={
                 !allShipsSettled || blockedState ? "halfTransparent" : ""
               }

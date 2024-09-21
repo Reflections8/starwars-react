@@ -8,12 +8,14 @@ type SelectProps = {
   options: SelectOptionType[];
   activeOption: SelectOptionType;
   setActiveOption: (option: SelectOptionType) => void;
+  withIcon?: boolean;
 };
 
 export function Select({
   options,
   activeOption,
   setActiveOption,
+  withIcon,
 }: SelectProps) {
   const [isOpened, setIsOpened] = useState(false);
 
@@ -44,7 +46,10 @@ export function Select({
           setIsOpened(!isOpened);
         }}
       >
-        <div className="select__value">{activeOption.label}</div>
+        <div className="select__value">
+          {withIcon ? <img src={activeOption.icon} alt="icon" /> : null}
+          {activeOption.label}
+        </div>
         <img src={arrowSvg} alt="" className="select__arrow" />
       </div>
 
@@ -60,6 +65,7 @@ export function Select({
                 selectOption(option);
               }}
             >
+              {withIcon ? <img src={option.icon} alt="icon" /> : null}
               {option.label}
             </div>
           );

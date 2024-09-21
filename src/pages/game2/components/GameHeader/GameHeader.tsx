@@ -4,8 +4,10 @@ import rightBg from "./img/turn-bg.svg";
 import avatarBg from "./img/avatar-bg.png";
 import avatar from "./img/avatar.png";
 import { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
+  const { t } = useTranslation();
   const [rivalName] = useState("@pashadurovoffasdjaksd");
 
   const [myTurnDebounced, setMyTurnDebounced] = useState(myTurn);
@@ -44,7 +46,9 @@ export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
 
         {/* INFO BLOCK */}
         <div className="gameHeader__infoBlock">
-          <div className="gameHeader__infoBlock-key">Ваш противник:</div>
+          <div className="gameHeader__infoBlock-key">
+            {t("battleships.yourRival")}:
+          </div>
           <div className="gameHeader__infoBlock-value">{rivalName}</div>
         </div>
       </div>
@@ -53,9 +57,9 @@ export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
       <div className={`gameHeader__right ${animate ? "animate" : ""}`}>
         <img src={rightBg} alt="" className="gameHeader__right-bg" />
 
-        <div className="gameHeader__right-key">Ходит:</div>
+        <div className="gameHeader__right-key">{t("battleships.turn")}:</div>
         <div className="gameHeader__right-value">
-          {myTurnDebounced ? "Вы" : "Соперник"}
+          {myTurnDebounced ? t("battleships.yours") : t("battleships.rivals")}
         </div>
       </div>
     </div>

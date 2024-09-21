@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   BlastersData,
   CharactersData,
@@ -21,25 +22,27 @@ import { StoreCardWeapon } from "./components/StoreCard";
 import { WeaponCard } from "./components/WeaponCard";
 import "./styles/shop.css";
 
-const pills: PillType[] = [
-  {
-    label: "Игрок",
-    value: "PLAYER",
-    component: <Player />,
-  },
-  {
-    label: "Оружие",
-    value: "WEAPON",
-    component: <Weapon />,
-  },
-  {
-    label: "Склад",
-    value: "STORE",
-    component: <Store />,
-  },
-];
-
 export function Shop() {
+  const { t } = useTranslation();
+
+  const pills: PillType[] = [
+    {
+      label: t("shopModal.playerTab.title"),
+      value: "PLAYER",
+      component: <Player />,
+    },
+    {
+      label: t("shopModal.weaponTab.title"),
+      value: "WEAPON",
+      component: <Weapon />,
+    },
+    {
+      label: t("shopModal.storeTab.title"),
+      value: "STORE",
+      component: <Store />,
+    },
+  ];
+
   const { activePillProp } = useModal();
 
   const [activePill, setActivePill] = useState(pills[activePillProp!]);

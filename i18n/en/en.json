@@ -1,0 +1,292 @@
+{
+  "global": {
+    "loading": "Loading",
+    "close": "Close",
+    "point": "Pt.",
+    "minute": "min",
+    "second": "sec"
+  },
+  "homePage": {
+    "exit": "Exit",
+    "menu": "Menu",
+    "shop": "Shop",
+    "wallet": "Wallet",
+    "player": "Player",
+    "metrics": "Metrics",
+    "quests": "Quests",
+    "partners": "Partners",
+    "tournament": "Tournament",
+    "info": "Info",
+    "games": "Games",
+    "options": "Options"
+  },
+  "infoDrawer": {
+    "currentCharacterisitcs": "Your characteristics",
+    "kitCharacteristics": "Kit characteristics",
+    "combatIndicators": "Combat indicators",
+    "damage": "Damage",
+    "reload": "Reload",
+    "charge": "Charge"
+  },
+  "welcomeModal": {
+    "title": "Welcome back to base!",
+    "yourBalances": "Your balances",
+    "combatIndicators": "Combat indicators",
+    "powerDamage": "Power(Damage)",
+    "reload": "Reload",
+    "charge": "Charge",
+    "health": "Health"
+  },
+  "settingsModal": {
+    "title": "Options",
+    "model": "Model",
+    "sound": "Sounds",
+    "graphic": "Graphic",
+    "language": "Language",
+    "optionActive": "ON",
+    "optionInactive": "OFF",
+    "optionAuto": "AUTO"
+  },
+  "shopModal": {
+    "title": "Shop",
+
+    "playerTab": {
+      "title": "Player",
+      "powerDamage": "Power (Damage)",
+      "reloadAcceleration": "Reload acceleration",
+      "health": "Health",
+      "price": "Price",
+      "buy": "Buy"
+    },
+    "weaponTab": {
+      "title": "Weapon",
+      "level": "Level",
+      "additionalIncome": "Additional income",
+      "damage": "Damage",
+      "reload": "Reload",
+      "charge": "Charge",
+      "fireRate": "Fire rate",
+      "strength": "Strength",
+      "price": "Price",
+      "buy": "Buy"
+    },
+    "storeTab": {
+      "title": "Store",
+      "level": "Level",
+      "additionalIncome": "Additional income",
+      "damage": "Damage",
+      "reload": "Reload",
+      "charge": "Charge",
+      "fireRate": "Fire rate",
+      "strength": "Strength",
+      "fixUp": "Fix up",
+      "upgrade": "Upgrade"
+    }
+  },
+  "quickMenu": {
+    "title": "Quick menu",
+    "telegram": "Telegram",
+    "xTwitter": "X.com (Twitter)",
+    "youtube": "Youtube channel",
+    "connectWallet": "Connect wallet"
+  },
+  "walletModal": {
+    "title": "Wallet",
+
+    "depositTab": {
+      "title": "Deposit",
+      "depositTon": "Deposit Ton",
+      "amount": "Amount",
+      "minimum": "min",
+      "deposit": "Deposit"
+    },
+
+    "swapTab": {
+      "title": "Swap",
+      "give": "Give",
+      "take": "Take",
+      "maximum": "max",
+      "swap": "Swap"
+    },
+
+    "withdrawalTab": {
+      "title": "Withdrawal",
+      "give": "Give",
+      "maximum": "max",
+      "comment": "Withdrawals depend on the Ton network load",
+      "withdrawal": "Withdrawal"
+    }
+  },
+  "metricsModal": {
+    "title": "Metrics",
+
+    "financesTab": {
+      "title": "Finances",
+      "deposits": "Deposits",
+      "earn": "Earn",
+      "win": "Win",
+      "credits": "Credits"
+    },
+    "modelsTab": {
+      "title": "Models",
+      "deposits": "Deposits",
+      "earn": "Earn",
+      "win": "Win",
+      "credits": "Credits",
+      "health": "Health"
+    }
+  },
+  "questsModal": {
+    "title": "Quests",
+    "comingSoonText": "Tasks will be available soon, follow the news in our TG channel"
+  },
+  "partnersModal": {
+    "title": "Partners",
+
+    "infoTab": {
+      "title": "Info",
+      "partners": "Partners",
+      "buys": "Buys",
+      "characters": "Characters",
+      "awards": "Awards",
+      "inviteFriends": "Invite Friends",
+      "friendsList": "Friends List"
+    },
+
+    "clansTab": {
+      "title": "Clans",
+      "comingSoonText": "follow the news about clans in our TG channel",
+      "friendsList": "Friends list",
+      "joinClan": "Join clan",
+      "clanRequests": "Clan requests",
+      "clanMembers": "Clan members",
+      "createClan": "Create clan",
+      "youAreClanMember": "You are clan member",
+      "clanBalance": "Clan balance",
+      "players": "Players",
+      "victories": "Wins",
+      "awards": "Rewards",
+      "clansList": "Clans list",
+      "youAreNotInAClan": "You are not in a clan",
+      "createClanConditionText": "Players with a partnership volume of 1000 TON and 100 active warriors can create clans",
+      "login": "Login",
+      "warrior": "Character",
+      "clanName": "Clan name",
+      "sendInviteToPartners": "Send an invitation to the clan to all your partners"
+    }
+  },
+  "chooseGameModal": {
+    "title": "game selection",
+    "vader": "Vader",
+    "battleships": "Battleships",
+    "play": "Play"
+  },
+  "inviteFriendDrawer": {
+    "inviteText": "Invite a friend to join the fight against the darkness",
+    "copy": "Copy"
+  },
+  "repairDrawer": {
+    "repair100": "Repair 100%",
+    "price": "Price",
+    "repair": "Repair"
+  },
+  "healDrawer": {
+    "heal100": "Heal 100%",
+    "price": "Price",
+    "heal": "Heal"
+  },
+  "resolvedDrawer": {
+    "title": "Done"
+  },
+  "rejectedDrawer": {
+    "title": "Error"
+  },
+  "connectWalletDrawer": {
+    "title": "Your wallet is not connected",
+    "connect": "Connect",
+    "later": "Later"
+  },
+  "opponentFoundDrawer": {
+    "title": "Player has been found for your duel",
+    "bid": "Bid",
+    "accept": "Accept",
+    "dismiss": "Dismiss"
+  },
+  "playerModal": {
+    "title": "Player"
+  },
+  "tournamentsModal": {
+    "title": "Tournaments",
+    "comingSoonText": "follow news about the opening of tournaments in our TG channel"
+  },
+  "battleshipsModal": {
+    "title": "Battleships",
+
+    "rivalsTab": {
+      "title": "Rivals",
+      "enterLogin": "Enter login",
+      "enterBetAmount": "Enter bet amount",
+      "gameWithFriend": "Game with friend",
+      "createGeneralDuel": "Create a general duel",
+      "login": "Login",
+      "bet": "Bet",
+      "duel": "Duel",
+      "createDuelWithFriend": "Create duel with a friend",
+      "friendsLogin": "Friends login",
+      "yourBet": "Your bet",
+      "createDuel": "Create duel"
+    },
+    "betTab": {
+      "title": "Bet",
+      "enterBetAmount": "Enter bet amount",
+      "createYourOwnDuel": "Create your own duel",
+      "yourBet": "Your bet",
+      "createDuel": "Create duel",
+      "infoText": "After creating a duel, you stand in line and wait for someone to challenge you. You will have 2 minutes to accept the challenge or refuse"
+    },
+    "statisticTab": {
+      "title": "Statistic",
+      "credits": "Credits",
+      "duels": "Duels",
+      "victories": "victories",
+      "won": "won",
+      "lost": "lost",
+      "result": "result"
+    }
+  },
+  "shipsArrangementModal": {
+    "title": "Arragne the fleet",
+    "auto": "auto",
+    "play": "play"
+  },
+  "binksModal": {
+    "title": "Tutorial"
+  },
+  "rulesModal": {
+    "title": "Правила",
+    "p1": "an armed duel regulated by written rules or customs, the purpose of which is to satisfy the desire of one of the duelists",
+    "p2": "(challenging a duel) to respond to the insult inflicted on his honor in compliance with pre-agreed and equal conditions of the battle. As a rule, duels occur only within certain social strata and are often associated with the aristocracy, although in fact they are not tied to any of them.",
+    "p3": "Currently prohibited by the legislation of the vast majority of countries in the world. The exception is Paraguay."
+  },
+  "battleships": {
+    "yourRival": "Your rival",
+    "turn": "Turn",
+    "yours": "Yours",
+    "rivals": "Rivals",
+    "rivalsFleet": "Rivals fleet",
+    "bet": "Bet",
+    "rules": "Rules",
+    "giveUp": "Give up",
+    "yourWinnings": "Your winnings"
+  },
+  "giveUpDrawer": {
+    "text": "Are you sure you want to give up?",
+    "giveUp": "Give up"
+  },
+  "upgradeDrawer": {
+    "upgrade": "Upgrade",
+    "damage": "Damage",
+    "charge": "Charge",
+    "chargeReplenishementSpeed": "Charge replenishment speed"
+  }
+}

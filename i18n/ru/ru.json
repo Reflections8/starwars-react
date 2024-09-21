@@ -1,0 +1,292 @@
+{
+  "global": {
+    "loading": "Загрузка",
+    "close": "Закрыть",
+    "point": "Ед.",
+    "minute": "мин",
+    "second": "сек"
+  },
+  "homePage": {
+    "exit": "Выход",
+    "menu": "Меню",
+    "shop": "Магазин",
+    "wallet": "Кошелек",
+    "player": "Игрок",
+    "metrics": "Метрика",
+    "quests": "Задания",
+    "partners": "Партнеры",
+    "tournament": "Турнир",
+    "info": "Инфо",
+    "games": "Игры",
+    "options": "Опции"
+  },
+  "infoDrawer": {
+    "currentCharacterisitcs": "Ваши текущие характеристики",
+    "kitCharacteristics": "характеристики комплекта",
+    "combatIndicators": "Боевые показатели",
+    "damage": "Урон",
+    "reload": "Перезарядка",
+    "charge": "Заряд"
+  },
+  "welcomeModal": {
+    "title": "С возвращением на базу!",
+    "yourBalances": "Ваши балансы",
+    "combatIndicators": "Боевые показатели",
+    "powerDamage": "Сила (Урон)",
+    "reload": "Перезарядка",
+    "charge": "Заряд",
+    "health": "Здоровье"
+  },
+  "settingsModal": {
+    "title": "Опции",
+    "model": "Модель",
+    "sound": "Музыка",
+    "graphic": "Графика",
+    "language": "Язык",
+    "optionActive": "ВКЛ",
+    "optionInactive": "ВЫКЛ",
+    "optionAuto": "АВТО"
+  },
+  "shopModal": {
+    "title": "Магазин",
+
+    "playerTab": {
+      "title": "Игрок",
+      "powerDamage": "Сила (Урон)",
+      "reloadAcceleration": "Ускорение перезарядки",
+      "health": "Здоровье",
+      "price": "Цена",
+      "buy": "Купить"
+    },
+    "weaponTab": {
+      "title": "Оружие",
+      "level": "Уровень",
+      "additionalIncome": "Доп.доход",
+      "damage": "Урон",
+      "reload": "Перезарядка",
+      "charge": "Заряд",
+      "fireRate": "Скр. стрельбы",
+      "strength": "Прочность",
+      "price": "Цена",
+      "buy": "Купить"
+    },
+    "storeTab": {
+      "title": "Склад",
+      "level": "Уровень",
+      "additionalIncome": "Доп.доход",
+      "damage": "Урон",
+      "reload": "Перезарядка",
+      "charge": "Заряд",
+      "fireRate": "Скр. стрельбы",
+      "strength": "Прочность",
+      "fixUp": "Починить",
+      "upgrade": "Улучшить"
+    }
+  },
+  "quickMenu": {
+    "title": "Быстрое меню",
+    "telegram": "Telegram",
+    "xTwitter": "X.com (Twitter)",
+    "youtube": "Youtube канал",
+    "connectWallet": "Подключить кошелек"
+  },
+  "walletModal": {
+    "title": "Кошелек",
+
+    "depositTab": {
+      "title": "Пополнить",
+      "depositTon": "Пополнение баланса Ton",
+      "amount": "Сумма",
+      "minimum": "мин",
+      "deposit": "Пополнить"
+    },
+
+    "swapTab": {
+      "title": "Обмен",
+      "give": "Отдаете",
+      "take": "Получаете",
+      "maximum": "макс",
+      "swap": "Обменять"
+    },
+
+    "withdrawalTab": {
+      "title": "Вывод",
+      "give": "Отдаете",
+      "maximum": "макс",
+      "comment": "Вывод стредств зависит от загруженности сети Ton",
+      "withdrawal": "Вывод"
+    }
+  },
+  "metricsModal": {
+    "title": "Метрика",
+
+    "financesTab": {
+      "title": "Финансы",
+      "deposits": "Депозитов",
+      "earn": "Заработано",
+      "win": "Выиграно",
+      "credits": "Кредитов"
+    },
+    "modelsTab": {
+      "title": "Персонажи",
+      "deposits": "Депозитов",
+      "earn": "Заработано",
+      "win": "Выиграно",
+      "credits": "Кредитов",
+      "health": "Здоровье"
+    }
+  },
+  "questsModal": {
+    "title": "Задания",
+    "comingSoonText": "Задания скоро будут доступны, следите за новостями в нашем ТГ канале"
+  },
+  "partnersModal": {
+    "title": "Партнеры",
+
+    "infoTab": {
+      "title": "Инфо",
+      "partners": "Партнеров",
+      "buys": "Средства",
+      "characters": "Воинов",
+      "awards": "Наград",
+      "inviteFriends": "Пригласить друга",
+      "friendsList": "Список друзей"
+    },
+
+    "clansTab": {
+      "title": "Кланы",
+      "comingSoonText": "следите за новостями о кланах в нашем ТГ канале",
+      "friendsList": "Список друзей",
+      "joinClan": "Вступить в клан",
+      "clanRequests": "Заявки в клан",
+      "clanMembers": "Состав клана",
+      "createClan": "Создать клан",
+      "youAreClanMember": "Вы участник клана",
+      "clanBalance": "Баланс клана",
+      "players": "Игроков",
+      "victories": "Побед",
+      "awards": "Наград",
+      "clansList": "Список кланов",
+      "youAreNotInAClan": "Вы не находитесь в клане",
+      "createClanConditionText": "создавать кланы смогут юзеры только с структурой например 1000 тон или 100 активных участников",
+      "login": "Логин",
+      "warrior": "Воин",
+      "clanName": "Название клана",
+      "sendInviteToPartners": "Отправить приглашение в клан всем своим партнёрам"
+    }
+  },
+  "chooseGameModal": {
+    "title": "Выбор игры",
+    "vader": "Вейдер",
+    "battleships": "Морской бой",
+    "play": "Играть"
+  },
+  "inviteFriendDrawer": {
+    "inviteText": "Пригласите друга вступить в бой против тьмы",
+    "copy": "Скопировать"
+  },
+  "repairDrawer": {
+    "repair100": "Починить на 100%",
+    "price": "Цена",
+    "repair": "Подтвердить"
+  },
+  "healDrawer": {
+    "heal100": "Исцелить на 100%",
+    "price": "Цена",
+    "heal": "Подтвердить"
+  },
+  "resolvedDrawer": {
+    "title": "Успешно"
+  },
+  "rejectedDrawer": {
+    "title": "Ошибка"
+  },
+  "connectWalletDrawer": {
+    "title": "Ваш кошелек не подключен",
+    "connect": "Подключить",
+    "later": "Позже"
+  },
+  "opponentFoundDrawer": {
+    "title": "Нашелся игрок для дуэли в вашей комнате",
+    "bid": "Ставка",
+    "accept": "Принять",
+    "dismiss": "Отклонить"
+  },
+  "playerModal": {
+    "title": "Игрок"
+  },
+  "tournamentsModal": {
+    "title": "Турниры",
+    "comingSoonText": "следите за новостями о открытии турниров в нашем ТГ канале"
+  },
+  "battleshipsModal": {
+    "title": "Морской бой",
+
+    "rivalsTab": {
+      "title": "Соперники",
+      "enterLogin": "Введите логин",
+      "enterBetAmount": "Введите размер ставки",
+      "gameWithFriend": "Игра с другом",
+      "createGeneralDuel": "Создайте общую дуэль",
+      "login": "Логин",
+      "bet": "Ставка",
+      "duel": "Дуэль",
+      "createDuelWithFriend": "создайте свою дуэль с другом",
+      "friendsLogin": "Логин друга",
+      "yourBet": "Ваша ставка",
+      "createDuel": "создать дуэль"
+    },
+    "betTab": {
+      "title": "Ставка",
+      "enterBetAmount": "Введите размер ставки",
+      "createYourOwnDuel": "создайте свою собственную дуэль",
+      "yourBet": "Ваша ставка",
+      "createDuel": "создать дуэль",
+      "infoText": "после создания дуэли вы становитесь в очередь и ждете пока вам кинут вызов. У вас будет 2 минуты что бы принять вызов или отказаться"
+    },
+    "statisticTab": {
+      "title": "Статистика",
+      "credits": "Кредитов",
+      "duels": "Дуэлей",
+      "victories": "побед",
+      "won": "выиграно",
+      "lost": "проиграно",
+      "result": "итоговый результат"
+    }
+  },
+  "shipsArrangementModal": {
+    "title": "Расставить флот",
+    "auto": "авто",
+    "play": "играть"
+  },
+  "binksModal": {
+    "title": "Обучение"
+  },
+  "rulesModal": {
+    "title": "Правила",
+    "p1": "регламентированный писаными правилами или обычаями вооружённый поединок, цель которого — удовлетворить желание одного из дуэлянтов",
+    "p2": "(вызывающего на дуэль) ответить на нанесённое его чести оскорбление с соблюдением заранее условленных и равных условий боя. Как правило, дуэли происходят только внутри отдельных общественных слоёв и зачастую ассоциируются с аристократией, хотя на самом деле не привязаны ни к одному из них.",
+    "p3": "В настоящее время запрещена законодательством подавляющего большинства государств мира. Исключением является Парагвай."
+  },
+  "battleships": {
+    "yourRival": "Ваш противник",
+    "turn": "Ходит",
+    "yours": "Вы",
+    "rivals": "Соперник",
+    "rivalsFleet": "Флот противника",
+    "bet": "Ставка",
+    "rules": "Правила",
+    "giveUp": "Сдаться",
+    "yourWinnings": "Выш выигрыш"
+  },
+  "giveUpDrawer": {
+    "text": "Вы точно хотите сдаться?",
+    "giveUp": "Подтвердить"
+  },
+  "upgradeDrawer": {
+    "upgrade": "Улучшение",
+    "damage": "Урон",
+    "charge": "Заряд",
+    "chargeReplenishementSpeed": "Скр. восполнения заряда"
+  }
+}

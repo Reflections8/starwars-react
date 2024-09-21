@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useDrawer } from "../../../../context/DrawerContext";
 import { CuttedButton } from "../../../../ui/CuttedButton/CuttedButton";
 import {
@@ -124,6 +125,7 @@ export function StoreCardWeapon({
   imgSrc,
   blasterLevel,
 }: StoreWeaponType) {
+  const { t } = useTranslation();
   const { selectGun } = useUserData();
   const { openDrawer } = useDrawer();
 
@@ -140,7 +142,7 @@ export function StoreCardWeapon({
       <div className="store-card-main">
         <div className="store-card-main-modelBlockWrapper">
           <div className="store-card-main-modelBlockWrapper-badge">
-            Уровень {level}
+            {t("shopModal.storeTab.level")} {level}
           </div>
           <img
             src={imgSrc}
@@ -154,7 +156,7 @@ export function StoreCardWeapon({
             {/* ITEM */}
             <div className="store-card-main-info-list-item">
               <div className="store-card-main-info-list-item-key">
-                доп.доход:
+                {t("shopModal.storeTab.additionalIncome")}:
               </div>
               <div className="store-card-main-info-list-item-value">
                 {additionalIncomeCurrent}/{additionalIncomeMax}
@@ -162,43 +164,47 @@ export function StoreCardWeapon({
             </div>
             {/* ITEM */}
             <div className="store-card-main-info-list-item">
-              <div className="store-card-main-info-list-item-key">урон:</div>
-              <div className="store-card-main-info-list-item-value">
-                {damage} ед.
+              <div className="store-card-main-info-list-item-key">
+                {t("shopModal.storeTab.damage")}:
               </div>
-            </div>
-
-            {/* ITEM */}
-            <div className="store-card-main-info-list-item">
-              <div className="store-card-main-info-list-item-key">заряд:</div>
               <div className="store-card-main-info-list-item-value">
-                {charge} ед.
+                {damage} {t("global.point")}
               </div>
             </div>
 
             {/* ITEM */}
             <div className="store-card-main-info-list-item">
               <div className="store-card-main-info-list-item-key">
-                перезарядка:
+                {t("shopModal.storeTab.charge")}:
               </div>
               <div className="store-card-main-info-list-item-value">
-                {reload}%/мин
+                {charge} {t("global.point")}
               </div>
             </div>
 
             {/* ITEM */}
             <div className="store-card-main-info-list-item">
               <div className="store-card-main-info-list-item-key">
-                скр.стрельбы:
+                {t("shopModal.storeTab.reload")}:
               </div>
               <div className="store-card-main-info-list-item-value">
-                {rateOfFire}/сек
+                {reload}%/{t("global.minute")}
+              </div>
+            </div>
+
+            {/* ITEM */}
+            <div className="store-card-main-info-list-item">
+              <div className="store-card-main-info-list-item-key">
+                {t("shopModal.storeTab.fireRate")}:
+              </div>
+              <div className="store-card-main-info-list-item-value">
+                {rateOfFire}/{t("global.second")}
               </div>
             </div>
             {/* ITEM */}
             <div className="store-card-main-info-list-item">
               <div className="store-card-main-info-list-item-key">
-                прочность:
+                {t("shopModal.storeTab.strength")}:
               </div>
               {blasterLevel == 1 ? (
                 <div className="store-card-main-info-list-item-value">
@@ -223,7 +229,7 @@ export function StoreCardWeapon({
                 ? "halfTransparent"
                 : ""
             }
-            text={"Починить"}
+            text={t("shopModal.storeTab.fixUp")}
             callback={() => {
               selectGun(blasterLevel);
               openDrawer!("repair");
@@ -234,7 +240,7 @@ export function StoreCardWeapon({
         <div className="store-card__body-main-block-cuttedBtnWrapper">
           <CuttedButton
             size="small"
-            text={"Улучшить"}
+            text={t("shopModal.storeTab.upgrade")}
             callback={() => {
               selectGun(blasterLevel);
               openDrawer!("upgrade");

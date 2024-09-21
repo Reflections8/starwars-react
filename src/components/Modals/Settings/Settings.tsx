@@ -6,24 +6,9 @@ import "./styles/settings.css";
 import { SelectOptionType } from "./types";
 import { CharactersData, useUserData } from "../../../UserDataService.tsx";
 import { SERVER_URL } from "../../../main.tsx";
-
-const pills: PillType[] = [
-  {
-    label: "OFF",
-    value: "OFF",
-  },
-  {
-    label: "ON",
-    value: "ON",
-  },
-];
-
-const graphics: SelectOptionType[] = [
-  {
-    label: "AUTO",
-    value: "AUTO",
-  },
-];
+import { useTranslation } from "react-i18next";
+import engFlag from "./img/eng.svg";
+import rusFlag from "./img/rus.svg";
 
 export function Settings() {
   const {
@@ -34,6 +19,39 @@ export function Settings() {
     setSoundSetting,
     updateUserInfo,
   } = useUserData();
+  const { t, i18n } = useTranslation();
+
+  const pills: PillType[] = [
+    {
+      label: t("settingsModal.optionInactive"),
+      value: "OFF",
+    },
+    {
+      label: t("settingsModal.optionActive"),
+      value: "ON",
+    },
+  ];
+
+  const graphics: SelectOptionType[] = [
+    {
+      label: t("settingsModal.optionAuto"),
+      value: "AUTO",
+    },
+  ];
+
+  const language: SelectOptionType[] = [
+    {
+      label: "RUS",
+      value: "RUS",
+      icon: rusFlag,
+    },
+    {
+      label: "ENG",
+      value: "ENG",
+      icon: engFlag,
+    },
+  ];
+
   const [activePill, setActivePill] = useState(pills[0]);
   const [activeGraphics, setActiveGraphics] = useState(graphics[0]);
 
@@ -43,6 +61,19 @@ export function Settings() {
   const [activeOption, setActiveOption] = useState<SelectOptionType | null>(
     null
   );
+
+  const [activeLanguage, setActiveLanguage] = useState<SelectOptionType>(
+    localStorage.getItem("language") === "ru" ? language[0] : language[1]
+  );
+
+  useEffect(() => {
+    setActiveGraphics(graphics[0]);
+  }, [i18n.language]);
+
+  useEffect(() => {
+    const currentLanguageCode = activeLanguage.value === "ENG" ? "en" : "ru";
+    i18n.changeLanguage(currentLanguageCode);
+  }, [activeLanguage]);
 
   useEffect(() => {
     if (characters) {
@@ -113,7 +144,7 @@ export function Settings() {
   return (
     <div className="settings">
       <div className="settings__row">
-        <div className="settings__row-name">Model:</div>
+        <div className="settings__row-name">{t("settingsModal.model")}:</div>
         <div className="settings__row-action settings__row-selectContainer">
           {activeOption && (
             <Select
@@ -126,8 +157,9 @@ export function Settings() {
           )}
         </div>
       </div>
+
       <div className="settings__row">
-        <div className="settings__row-name">Sound:</div>
+        <div className="settings__row-name">{t("settingsModal.sound")}:</div>
         <div className="settings__row-action settings__row-pillsContainer">
           <SlidingPills
             pills={pills}
@@ -136,13 +168,26 @@ export function Settings() {
           />
         </div>
       </div>
+
       <div className="settings__row">
-        <div className="settings__row-name">Graphic:</div>
+        <div className="settings__row-name">{t("settingsModal.graphic")}:</div>
         <div className="settings__row-action settings__row-selectContainer">
           <Select
             options={graphics}
             activeOption={activeGraphics}
             setActiveOption={setActiveGraphics}
+          />
+        </div>
+      </div>
+
+      <div className="settings__row">
+        <div className="settings__row-name">{t("settingsModal.language")}:</div>
+        <div className="settings__row-action settings__row-selectContainer">
+          <Select
+            options={language}
+            withIcon={true}
+            activeOption={activeLanguage}
+            setActiveOption={setActiveLanguage}
           />
         </div>
       </div>

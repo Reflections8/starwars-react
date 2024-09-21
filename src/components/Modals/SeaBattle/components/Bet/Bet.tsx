@@ -5,8 +5,10 @@ import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
 import { BetTypeEnum } from "../../types/enum";
 import { useDrawer } from "../../../../../context/DrawerContext";
 import { useBattleships } from "../../../../../context/BattleshipsContext";
+import { useTranslation } from "react-i18next";
 
 export function Bet() {
+  const { t } = useTranslation();
   const { openDrawer } = useDrawer();
   const { sendMessage } = useBattleships();
 
@@ -15,7 +17,11 @@ export function Bet() {
 
   async function createRoom() {
     if (!bet) {
-      openDrawer!("rejected", "bottom", "Введите размер ставки");
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("battleshipsModal.betTab.enterBetAmount")
+      );
       return;
     }
 
@@ -36,11 +42,15 @@ export function Bet() {
         setActiveCurrency={setActiveCurrency}
       />
 
-      <div className="bet__title">создайте свою собственную дуэль!</div>
+      <div className="bet__title">
+        {t("battleshipsModal.betTab.createYourOwnDuel")}!
+      </div>
 
       <div className="bet__inputBlock">
         <div className="bet__inputBlock-sup">
-          <label className="bet__inputBlock-sup-label">1.ваша ставка:</label>
+          <label className="bet__inputBlock-sup-label">
+            1.{t("battleshipsModal.betTab.yourBet")}:
+          </label>
         </div>
 
         <div className="bet__inputBlock-inputWrapper">
@@ -60,7 +70,7 @@ export function Bet() {
 
       <CuttedButton
         className="bet__cuttedButton"
-        text="Создать дуэль"
+        text={t("battleshipsModal.betTab.createDuel")}
         callback={(e) => {
           e.stopPropagation();
           createRoom();
@@ -68,8 +78,7 @@ export function Bet() {
       />
 
       <div className="bet__footerText">
-        после создания дуэли вы становитесь в очередь и ждете пока вам кинут
-        вызов. У вас будет 2 минуты что бы принять вызов или отказаться
+        {t("battleshipsModal.betTab.infoText")}
       </div>
     </div>
   );

@@ -2,8 +2,10 @@ import "./styles/FriendsList.css";
 import userIcon from "./img/User.svg";
 import { useEffect, useState } from "react";
 import { InvitedUser, useUserData } from "../../../../../UserDataService.tsx";
+import { useTranslation } from "react-i18next";
 
 export function FriendsList() {
+  const { t } = useTranslation();
   const [friends, setFriends] = useState<Array<{
     link: string;
     name: string;
@@ -26,7 +28,7 @@ export function FriendsList() {
   }, [refInfo]);
 
   if (friends === null) {
-    return <div>Загрузка...</div>;
+    return <div>{t("global.loading")}...</div>;
   }
 
   return (

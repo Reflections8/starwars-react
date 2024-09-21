@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import "./styles/slidingPills.css";
 import { PillType } from "./types";
+import { useTranslation } from "react-i18next";
 
 type SlidingPillProps = {
   pills: PillType[];
@@ -14,6 +15,7 @@ export function SlidingPills({
   activePill,
   setActivePill,
 }: SlidingPillProps) {
+  const { i18n } = useTranslation();
   const pillsContainerRef = useRef<HTMLDivElement>(null);
   const gliderRef = useRef<HTMLSpanElement>(null);
 
@@ -55,7 +57,7 @@ export function SlidingPills({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [activePill]);
+  }, [activePill, i18n.language]);
 
   return (
     <div

@@ -9,16 +9,19 @@ import { JoinClan } from "./components/JoinClan/JoinClan";
 import { ClanRequests } from "./components/ClanRequests/ClanRequests";
 import { ClanMembers } from "./components/ClanMembers/ClanMembers";
 import { CreateClan } from "./components/CreateClan/CreateClan";
+import { useTranslation } from "react-i18next";
 
 export function Partners() {
+  const { t } = useTranslation();
+
   const pills: PillType[] = [
     {
-      label: "Инфо",
+      label: t("partnersModal.infoTab.title"),
       value: "INFO",
       component: <Info handleOuterPills={handleOuterPills} />,
     },
     {
-      label: "Кланы",
+      label: t("partnersModal.clansTab.title"),
       value: "CLANS",
       component: <Clans handleOuterPills={handleOuterPills} />,
     },
@@ -27,27 +30,27 @@ export function Partners() {
 
   const outerPills: PillType[] = [
     {
-      label: "Список друзей",
+      label: t("partnersModal.clansTab.friendsList"),
       value: "FRIENDS_LIST",
       component: <FriendsList />,
     },
     {
-      label: "Вступить в клан",
+      label: t("partnersModal.clansTab.joinClan"),
       value: "JOIN_CLAN",
       component: <JoinClan />,
     },
     {
-      label: "Заявки в клан",
+      label: t("partnersModal.clansTab.clanRequests"),
       value: "CLAN_REQUESTS",
       component: <ClanRequests />,
     },
     {
-      label: "Состав клана",
+      label: t("partnersModal.clansTab.clanMembers"),
       value: "CLAN_MEMBERS",
       component: <ClanMembers />,
     },
     {
-      label: "Создат клан",
+      label: t("partnersModal.clansTab.createClan"),
       value: "CREATE_CLAN",
       component: <CreateClan />,
     },

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import shopBg from "../../img/ShopBg.png";
 import hightlightShop from "../../../../pages/home/video/shop.svg";
+import { useTranslation } from "react-i18next";
 
 type HeaderCenterShopProps = {
   onClick: () => void;
 };
 
 export function HeaderCenterShop({ onClick }: HeaderCenterShopProps) {
+  const { t } = useTranslation();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -29,7 +31,9 @@ export function HeaderCenterShop({ onClick }: HeaderCenterShopProps) {
           alt="shop-bg"
           className="header__bottom-main-bg header__bottom-main-bg--Shop"
         />
-        <div className="header__bottom-main-text--Shop">Магазин</div>
+        <div className="header__bottom-main-text--Shop">
+          {t("homePage.shop")}
+        </div>
       </div>
     </div>
   );

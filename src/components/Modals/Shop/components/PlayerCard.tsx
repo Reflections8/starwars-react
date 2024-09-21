@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CuttedButton } from "../../../../ui/CuttedButton/CuttedButton";
 import { ModelTypeNew } from "../../../../ui/SlidingPills/types";
 import { CryptoButtons } from "../../../../ui/CryptoButtons/CryptoButtons";
+import { useTranslation } from "react-i18next";
 
 type PlayerCardProps = ModelTypeNew;
 
@@ -14,6 +15,7 @@ export function PlayerCard({
   imgSrc,
   callback,
 }: PlayerCardProps) {
+  const { t } = useTranslation();
   const [activeCurrency, setActiveCurrency] = useState("ton");
 
   return (
@@ -35,17 +37,17 @@ export function PlayerCard({
             {/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
-                сила(урон):
+                {t("shopModal.playerTab.powerDamage")}:
               </div>
               <div className="player-card-main-info-list-item-value">
-                {strength} ед.
+                {strength} {t("global.point")}
               </div>
             </div>
 
             {/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
-                ускорение перезарядки:
+                {t("shopModal.playerTab.reloadAcceleration")}:
               </div>
               <div className="player-card-main-info-list-item-value">
                 {reloadSpeed}%
@@ -55,10 +57,10 @@ export function PlayerCard({
             {/* ITEM */}
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
-                здоровье:
+                {t("shopModal.playerTab.health")}:
               </div>
               <div className="player-card-main-info-list-item-value">
-                {health} ед.
+                {health} {t("global.point")}
               </div>
             </div>
           </div>
@@ -67,14 +69,19 @@ export function PlayerCard({
       <div className="player-card-footer">
         <div className="player-card-footer-priceBlock">
           <div className="player-card-footer-priceBlock-price">
-            <div className="player-card-footer-priceBlock-price-key">цена:</div>
+            <div className="player-card-footer-priceBlock-price-key">
+              {t("shopModal.playerTab.price")}:
+            </div>
             <div className="player-card-footer-priceBlock-price-value">
               {price} {activeCurrency.toString().toUpperCase()}
             </div>
           </div>
 
           <div className="player-card-main-info-btnWrapper">
-            <CuttedButton text={"Купить"} callback={callback} />
+            <CuttedButton
+              text={t("shopModal.playerTab.buy")}
+              callback={callback}
+            />
           </div>
         </div>
 

@@ -14,8 +14,10 @@ import teamIcon from "../img/mainLinkIcons/team.svg";
 import walletIcon from "../img/mainLinkIcons/wallet.svg";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
+import { useTranslation } from "react-i18next";
 
 export function MainLinks() {
+  const { t } = useTranslation();
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
@@ -54,7 +56,7 @@ export function MainLinks() {
             className="mainLinks__col-item-icon mainLinks__col-item-icon--Left"
           />
           <div className="mainLinks__col-item-text mainLinks__col-item-text--Left">
-            Кошелек
+            {t("homePage.wallet")}
           </div>
         </div>
 
@@ -81,7 +83,7 @@ export function MainLinks() {
             className="mainLinks__col-item-icon mainLinks__col-item-icon--Left"
           />
           <div className="mainLinks__col-item-text mainLinks__col-item-text--Left">
-            Игрок
+            {t("homePage.player")}
           </div>
         </div>
 
@@ -108,7 +110,7 @@ export function MainLinks() {
             className="mainLinks__col-item-icon mainLinks__col-item-icon--Left"
           />
           <div className="mainLinks__col-item-text mainLinks__col-item-text--Left">
-            Метрика
+            {t("homePage.metrics")}
           </div>
         </div>
       </div>
@@ -138,7 +140,7 @@ export function MainLinks() {
             className="mainLinks__col-item-icon mainLinks__col-item-icon--Right"
           />
           <div className="mainLinks__col-item-text mainLinks__col-item-text--Right">
-            Задания
+            {t("homePage.quests")}
           </div>
         </div>
 
@@ -165,7 +167,7 @@ export function MainLinks() {
             className="mainLinks__col-item-icon mainLinks__col-item-icon--Right"
           />
           <div className="mainLinks__col-item-text mainLinks__col-item-text--Right">
-            Партнеры
+            {t("homePage.partners")}
           </div>
         </div>
 
@@ -192,7 +194,7 @@ export function MainLinks() {
             className="mainLinks__col-item-icon mainLinks__col-item-icon--Right"
           />
           <div className="mainLinks__col-item-text mainLinks__col-item-text--Right">
-            Турнир
+            {t("homePage.tournament")}
           </div>
         </div>
       </div>

@@ -3,8 +3,10 @@ import "./styles/JoinClan.css";
 import rectImg from "./img/rect.svg";
 import playersImg from "./img/players.svg";
 import cupImg from "./img/cup.svg";
+import { useTranslation } from "react-i18next";
 
 export function JoinClan() {
+  const { t } = useTranslation();
   return (
     <div className="joinClan">
       <div className="joinClan__item">
@@ -31,7 +33,9 @@ export function JoinClan() {
               className="joinClan__item-main-block-img"
             />
             <div className="joinClan__item-main-block-info">
-              <div className="joinClan__item-main-block-info-key">игроков:</div>
+              <div className="joinClan__item-main-block-info-key">
+                {t("parternsModal.clansTab.players")}:
+              </div>
               <div className="joinClan__item-main-block-info-value">12345</div>
             </div>
           </div>
@@ -44,7 +48,9 @@ export function JoinClan() {
               className="joinClan__item-main-block-img"
             />
             <div className="joinClan__item-main-block-info">
-              <div className="joinClan__item-main-block-info-key">побед::</div>
+              <div className="joinClan__item-main-block-info-key">
+                {t("parternsModal.clansTab.victories")}:
+              </div>
               <div className="joinClan__item-main-block-info-value">123</div>
             </div>
           </div>
@@ -83,7 +89,9 @@ export function JoinClan() {
               className="joinClan__item-main-block-img"
             />
             <div className="joinClan__item-main-block-info">
-              <div className="joinClan__item-main-block-info-key">игроков:</div>
+              <div className="joinClan__item-main-block-info-key">
+                {t("parternsModal.clansTab.players")}:
+              </div>
               <div className="joinClan__item-main-block-info-value">12345</div>
             </div>
           </div>
@@ -96,7 +104,9 @@ export function JoinClan() {
               className="joinClan__item-main-block-img"
             />
             <div className="joinClan__item-main-block-info">
-              <div className="joinClan__item-main-block-info-key">побед::</div>
+              <div className="joinClan__item-main-block-info-key">
+                {t("parternsModal.clansTab.victories")}:
+              </div>
               <div className="joinClan__item-main-block-info-value">123</div>
             </div>
           </div>
@@ -135,7 +145,9 @@ export function JoinClan() {
               className="joinClan__item-main-block-img"
             />
             <div className="joinClan__item-main-block-info">
-              <div className="joinClan__item-main-block-info-key">игроков:</div>
+              <div className="joinClan__item-main-block-info-key">
+                {t("parternsModal.clansTab.players")}:
+              </div>
               <div className="joinClan__item-main-block-info-value">12345</div>
             </div>
           </div>
@@ -148,7 +160,9 @@ export function JoinClan() {
               className="joinClan__item-main-block-img"
             />
             <div className="joinClan__item-main-block-info">
-              <div className="joinClan__item-main-block-info-key">побед::</div>
+              <div className="joinClan__item-main-block-info-key">
+                {t("parternsModal.clansTab.victories")}:
+              </div>
               <div className="joinClan__item-main-block-info-value">123</div>
             </div>
           </div>

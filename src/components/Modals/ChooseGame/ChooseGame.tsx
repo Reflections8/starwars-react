@@ -7,8 +7,10 @@ import game2Icon from "./img/game2.svg";
 import game2Bg from "./img/game2-bg.png";
 import "./styles/chooseGame.css";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export function ChooseGame() {
+  const { t } = useTranslation();
   const { closeModal } = useModal();
   const navigate = useNavigate();
   function openGame(linkToGame: string) {
@@ -31,10 +33,12 @@ export function ChooseGame() {
             alt="game-1"
             className="chooseGame__game-main-icon"
           />
-          <div className="chooseGame__game-main-text">Вейдер</div>
+          <div className="chooseGame__game-main-text">
+            {t("chooseGameModal.vader")}
+          </div>
         </div>
         <CuttedButton
-          text="Играть"
+          text={t("chooseGameModal.play")}
           size="small"
           callback={() => {
             openGame("/game1");
@@ -54,10 +58,12 @@ export function ChooseGame() {
             alt="game-2"
             className="chooseGame__game-main-icon"
           />
-          <div className="chooseGame__game-main-text">Морской бой</div>
+          <div className="chooseGame__game-main-text">
+            {t("chooseGameModal.battleships")}
+          </div>
         </div>
         <CuttedButton
-          text="Играть"
+          text={t("chooseGameModal.play")}
           size="small"
           callback={() => {
             openGame("/game2");

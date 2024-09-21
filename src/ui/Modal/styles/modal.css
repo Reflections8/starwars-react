@@ -246,7 +246,7 @@
   justify-content: flex-start;
   backdrop-filter: blur(3px);
   box-shadow: inset 0 0 50px #19c2ef;
-  z-index: 1000;
+  z-index: 1001;
   transition: all 0.2s ease-in-out;
   opacity: 1;
   max-width: 576px;

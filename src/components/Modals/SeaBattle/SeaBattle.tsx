@@ -9,28 +9,30 @@ import { Statistic } from "./components/Statistic/Statistic";
 import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
 import "./styles/SeaBattle.css";
+import { useTranslation } from "react-i18next";
 
 export function SeaBattle() {
+  const { t } = useTranslation();
   const pills: PillType[] = [
     {
-      label: "Соперники",
+      label: t("battleshipsModal.rivalsTab.title"),
       value: "RIVALS",
       component: <Rivals />,
     },
     {
-      label: "Ставка",
+      label: t("battleshipsModal.betTab.title"),
       value: "BET",
       component: <Bet />,
     },
     {
-      label: "Статистика",
+      label: t("battleshipsModal.statisticTab.title"),
       value: "STATISTIC",
       component: <Statistic />,
     },
   ];
 
   const outerPill: PillType = {
-    label: "Правила",
+    label: t("rulesModal.title"),
     value: "RULES",
     component: <Rules />,
   };

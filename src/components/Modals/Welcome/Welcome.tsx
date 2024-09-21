@@ -12,8 +12,11 @@ import { StoreCardModel } from "../Shop/components/StoreCard";
 import model1Img from "./img/model1.png";
 import footerBtnBg from "./img/footerButtonBg.svg";
 import { useModal } from "../../../context/ModalContext";
+import { useTranslation } from "react-i18next";
 
 export function Welcome() {
+  const { t } = useTranslation();
+
   const [credit] = useState(0);
   const [akron] = useState(0);
   const [ton] = useState(0);
@@ -36,9 +39,10 @@ export function Welcome() {
     type: 1,
   };
 
+  console.log({ t });
   return (
     <div className="welcome">
-      <div className="welcome__title">С возвращением на станцию!</div>
+      <div className="welcome__title">{t("welcomeModal.title")}</div>
       <div className="welcome__main">
         <div className="welcome__main-balance">
           <Balance
