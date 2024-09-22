@@ -361,6 +361,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
             setJoinedRoom("");
             setIsAudioStart(false);
             setGameState({ status: parsedMessage.my_win ? "WON" : "LOST" });
+            restartBoards();
           }, 1500);
           break;
         default:
