@@ -356,9 +356,12 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           userBoard.updateUserBoard(parsedMessage.field_view.player_board);
           break;
         case "game_over":
-          setIsAudioStart(false);
-          setJoinedRoom("");
-          setGameState({ status: parsedMessage.my_win ? "WON" : "LOST" });
+          // TODO: завершать игру и показывать модалки только когда анимация последнего выстрела закончится и поле закрасится
+          setTimeout(() => {
+            setJoinedRoom("");
+            setIsAudioStart(false);
+            setGameState({ status: parsedMessage.my_win ? "WON" : "LOST" });
+          }, 1500);
           break;
         default:
           console.log("Неизвестный тип сообщения");
@@ -370,14 +373,31 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     return () => socket.removeEventListener("message", handleMessage);
   }, [socket, userBoard, enemyBoard]);
 
-  const sendMessage = (obj: { type: string; message: object }) => {
-    //  const secondJWT =
-    //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
+  useEffect(() => {
+    if (!socket) return;
 
+    const interval = setInterval(() => {
+      sendMessage({
+        type: "ping",
+        message: {},
+      });
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [socket]);
+
+  const sendMessage = (obj: { type: string; message: object }) => {
+    const secondClient = document.location.href.includes("5174");
+    const secondJWT =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
+
+    console.log({ secondClient });
     const messageWithToken = {
       type: obj?.type,
       message: JSON.stringify(obj.message),
-      jwt: jwt,
+      jwt: secondClient ? secondJWT : jwt,
     };
 
     if (!(socketRef.current && socketRef.current.readyState === WebSocket.OPEN))
