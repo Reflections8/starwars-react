@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTimer } from "react-use-precision-timer";
 import { Header } from "../../components/Header/Header";
 import { useBattleships } from "../../context/BattleshipsContext";
@@ -22,14 +22,20 @@ import audioSuccessShot from "./audio/shot-success.mp3";
 import audioShot from "./audio/shot.mp3";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useSound } from "../../context/SeaContexts";
 enableDragDropTouch();
 
 const timerSeconds = 60;
+let jwtFromStorage = localStorage.getItem("auth_jwt") ?? "";
+if (document.location.href.includes("5174")) {
+  jwtFromStorage =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
+}
 
 export function Game2() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [jwt] = useState<string>(localStorage.getItem("auth_jwt") || "");
+  const [jwt] = useState<string>(jwtFromStorage);
 
   //   const [socket, setSocket] = useState<null | WebSocket>(null);
   const { openModal, closeModal } = useModal();
@@ -43,9 +49,18 @@ export function Game2() {
       return;
     }
   }, [jwt]);
+
+  const {
+    audioBgRef,
+    shotAudioRef,
+    shotSuccessAudioRef,
+    shotMissAudioRef,
+    shotKilledAudioRef,
+    stopBackgroundAudio,
+  } = useSound();
+
   // @ts-ignore
   const {
-    isAudioStart,
     socket,
     gameState,
     userShips,
@@ -57,10 +72,6 @@ export function Game2() {
     updateEnemyBoard,
     restartBoards,
     myTurn,
-    shotSuccessAudioRef,
-    shotMissAudioRef,
-    shotKilledAudioRef,
-    shotAudioRef,
   } = useBattleships();
   //   const [userBoard, setUserBoard] = useState(new Gameboard(myShips));
   //   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
@@ -76,14 +87,6 @@ export function Game2() {
         socket.send(JSON.stringify({ type: "timeOut", source: player }));
     }
   );
-
-  useEffect(() => {
-    if (isAudioStart) {
-      setTimeout(() => {
-        startBackgroundAudio();
-      }, 5000);
-    }
-  }, [isAudioStart]);
 
   useEffect(() => {
     timer.stop();
@@ -116,22 +119,6 @@ export function Game2() {
   //     newGameboard.preHit = enemyBoard.preHit;
   //     setEnemyBoard(newGameboard);
   //   };
-
-  const startBackgroundAudio = () => {
-    if (audioBgRef.current) {
-      // @ts-ignore
-      audioBgRef.current.play();
-    }
-  };
-
-  const stopBackgroundAudio = () => {
-    if (audioBgRef.current) {
-      // @ts-ignore
-      audioBgRef.current.pause();
-      // @ts-ignore
-      audioBgRef.current.currentTime = 0;
-    }
-  };
 
   useEffect(() => {
     let timer;
@@ -183,8 +170,6 @@ export function Game2() {
       setGameState!({ status: "IN_PROGRESS" });
     }
   }, [JSON.stringify(userShips), socket]);
-
-  const audioBgRef = useRef(null);
 
   return (
     <div className="game2">

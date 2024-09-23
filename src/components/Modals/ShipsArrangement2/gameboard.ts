@@ -57,7 +57,41 @@ export class Gameboard {
     });
     return res;
   }
+  getFieldsNearShips() {
+    const shipPositions: [number, number][] = [];
+    this.ships.forEach(({ pos, ship }) => {
+      for (let i = 0; i < ship.length; i++) {
+        if (ship.vertical) {
+          shipPositions.push([pos.row + i, pos.column]);
+        } else {
+          shipPositions.push([pos.row, pos.column + i]);
+        }
+      }
+    });
+    const nearFields: Set<string> = new Set();
+    const shipFields: Set<string> = new Set();
 
+    const addField = (x: number, y: number, set: Set<string>) =>
+      set.add(`${x},${y}`);
+
+    for (const [x, y] of shipPositions) addField(x, y, shipFields);
+    for (const [x, y] of shipPositions) {
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          const nx = x + dx;
+          const ny = y + dy;
+          const fieldKey = `${nx},${ny}`;
+          if (!shipFields.has(fieldKey)) nearFields.add(fieldKey);
+        }
+      }
+    }
+
+    return Array.from(nearFields).map((field) => {
+      const [x, y] = field.split(",").map(Number);
+      return { x, y, err: shipFields.has(`${x},${y}`) };
+    });
+  }
+  /*
   //SHIP ARRANGEMENT
   getFieldsNearShips() {
     let res: { x: number; y: number; err: boolean }[] = [];
@@ -115,7 +149,7 @@ export class Gameboard {
     });
 
     return res;
-  }
+  }*/
 
   unconfirmShipAtRC(row: number, column: number) {
     const shipPos = this.getShipRC(row, column);

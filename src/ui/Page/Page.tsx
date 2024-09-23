@@ -6,6 +6,7 @@ import { LoaderProvider } from "../../context/LoaderContext";
 import { UserDataProvider } from "../../UserDataService.tsx";
 import { BattleshipsProvider } from "../../context/BattleshipsContext.tsx";
 import { BackgroundVideoProvider } from "../../context/BackgroundVideoContext.tsx";
+import { SoundProvider } from "../../context/SeaContexts/SoundContext.tsx";
 
 type PageProps = {
   dataPage: string;
@@ -24,24 +25,40 @@ export function Page({ dataPage, children }: PageProps) {
   useEffect(() => {
     setDraggableFalse();
   }, [dataPage]);
+
+  useEffect(() => {
+    //const handleUnload = (event: BeforeUnloadEvent) => {
+    //  // Send a request to the server
+    //  navigator.sendBeacon(
+    //    "https://socket.akronix.io/shipBattle/ensureEmptyDisabled"
+    //  );
+    //};
+    //window.addEventListener("beforeunload", handleUnload);
+    //return () => {
+    //  window.removeEventListener("beforeunload", handleUnload);
+    //};
+  }, []);
+
   return (
     <LoaderProvider>
       <BackgroundVideoProvider>
-        <BattleshipsProvider>
-          <DrawerProvider>
-            <UserDataProvider>
-              <ModalProvider>
-                <div className="page" data-page={dataPage}>
-                  <div className="page__container">
-                    <div className="page__container-gradient page__container-gradient--Left"></div>
-                    <div className="page__container-gradient page__container-gradient--Right"></div>
-                    {children}
+        <SoundProvider>
+          <BattleshipsProvider>
+            <DrawerProvider>
+              <UserDataProvider>
+                <ModalProvider>
+                  <div className="page" data-page={dataPage}>
+                    <div className="page__container">
+                      <div className="page__container-gradient page__container-gradient--Left"></div>
+                      <div className="page__container-gradient page__container-gradient--Right"></div>
+                      {children}
+                    </div>
                   </div>
-                </div>
-              </ModalProvider>
-            </UserDataProvider>
-          </DrawerProvider>
-        </BattleshipsProvider>
+                </ModalProvider>
+              </UserDataProvider>
+            </DrawerProvider>
+          </BattleshipsProvider>
+        </SoundProvider>
       </BackgroundVideoProvider>
     </LoaderProvider>
   );
