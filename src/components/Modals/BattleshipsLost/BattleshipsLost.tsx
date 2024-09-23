@@ -20,12 +20,7 @@ export function BattleshipsLost() {
         callback={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          // @ts-ignore
-          setGameState((prevState) => ({
-            ...prevState,
-            status: "NOT_STARTED",
-          }));
-
+          setGameState("NOT_STARTED");
           openModal!("seaBattle");
         }}
       />

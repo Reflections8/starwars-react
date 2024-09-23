@@ -257,6 +257,12 @@ export function Rivals() {
             onClick={(e) => {
               e.stopPropagation();
               sendMessage({
+                type: "deny_battle",
+                message: {
+                  room_name: friendsLogin,
+                },
+              });
+              sendMessage({
                 type: "give_up",
                 message: {
                   room_name: friendsLogin,

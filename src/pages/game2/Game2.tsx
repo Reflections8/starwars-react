@@ -39,7 +39,7 @@ export function Game2() {
 
   //   const [socket, setSocket] = useState<null | WebSocket>(null);
   const { openModal, closeModal } = useModal();
-  const { openDrawer } = useDrawer();
+  const { openDrawer, closeDrawer } = useDrawer();
 
   useEffect(() => {
     if (!jwt) {
@@ -72,10 +72,8 @@ export function Game2() {
     updateEnemyBoard,
     restartBoards,
     myTurn,
+    approveGame,
   } = useBattleships();
-  //   const [userBoard, setUserBoard] = useState(new Gameboard(myShips));
-  //   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
-  //   const [myTurn, setMyTurn] = useState(true);
   const [player] = useState("player1");
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
@@ -89,10 +87,18 @@ export function Game2() {
   );
 
   useEffect(() => {
+    if (!approveGame) {
+      closeDrawer!();
+    } else {
+      openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
+    }
+  }, [JSON.stringify(approveGame)]);
+
+  useEffect(() => {
     timer.stop();
-    if (gameState?.status !== "IN_PROGRESS") return;
+    if (gameState !== "IN_PROGRESS") return;
     timer.start();
-  }, [myTurn, gameState?.status]);
+  }, [myTurn, gameState]);
 
   useEffect(() => {
     let interval: any;
@@ -103,22 +109,6 @@ export function Game2() {
       clearInterval(interval);
     };
   }, []);
-
-  //   const updateUserboard = () => {
-  //     const newGameboard = new Gameboard(myShips);
-  //     newGameboard.ships = myShips;
-  //     newGameboard.hits = userBoard.hits;
-  //     newGameboard.misses = userBoard.misses;
-  //     setUserBoard(newGameboard);
-  //   };
-  //   const updateEnemyBoard = () => {
-  //     const newGameboard = new Gameboard();
-  //     newGameboard.ships = enemyBoard.ships;
-  //     newGameboard.hits = enemyBoard.hits;
-  //     newGameboard.misses = enemyBoard.misses;
-  //     newGameboard.preHit = enemyBoard.preHit;
-  //     setEnemyBoard(newGameboard);
-  //   };
 
   useEffect(() => {
     let timer;
@@ -141,33 +131,33 @@ export function Game2() {
 
   useEffect(() => {
     if (!jwt) return;
-    if (gameState?.status === "LOST") {
+    if (gameState === "LOST") {
       stopBackgroundAudio();
       setUserShips!([]);
       openModal!("battleshipsLost");
       restartBoards();
     }
-    if (gameState?.status === "WON") {
+    if (gameState === "WON") {
       stopBackgroundAudio();
       setUserShips!([]);
       openModal!("battleshipsWon");
       restartBoards();
     }
-    if (gameState?.status === "NOT_STARTED") {
+    if (gameState === "NOT_STARTED") {
       restartBoards();
       setUserShips!([]);
       openModal!("seaBattle");
     }
-    if (gameState?.status === "GIVE_UP") {
+    if (gameState === "GIVE_UP") {
       socket && socket.send(JSON.stringify({ type: "giveUp", source: player }));
       stopBackgroundAudio();
     }
-  }, [gameState?.status, jwt]);
+  }, [gameState, jwt]);
 
   useEffect(() => {
     if (userShips && userShips.length > 0) {
       timer.start();
-      setGameState!({ status: "IN_PROGRESS" });
+      setGameState!("IN_PROGRESS");
     }
   }, [JSON.stringify(userShips), socket]);
 

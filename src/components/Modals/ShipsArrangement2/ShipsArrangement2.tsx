@@ -39,7 +39,7 @@ const initialUnsettledShips = {
 
 export function ShipsArrangement2() {
   const { gameState } = useBattleships();
-  if (gameState?.status !== "NOT_STARTED") return null;
+  if (gameState !== "NOT_STARTED") return null;
   return <ShipsArrangementChild />;
 }
 export function ShipsArrangementChild() {

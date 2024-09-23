@@ -28,11 +28,7 @@ export function BattleshipsWon() {
         callback={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          // @ts-ignore
-          setGameState((prevState) => ({
-            ...prevState,
-            status: "NOT_STARTED",
-          }));
+          setGameState("NOT_STARTED");
           closeModal!();
           openModal!("seaBattle");
         }}

@@ -657,11 +657,7 @@ function GiveUp() {
             },
           });
           closeDrawer!();
-          // @ts-ignore
-          setGameState((prevState) => ({
-            ...prevState,
-            status: "GIVE_UP",
-          }));
+          setGameState("GIVE_UP");
         }}
       />
     </div>
@@ -671,6 +667,8 @@ function GiveUp() {
 function OpponentFound() {
   const { t } = useTranslation();
   const { closeDrawer } = useDrawer();
+  const { handleApproveGame, handleDeclineGame } = useBattleships();
+
   return (
     <div className="opponentFound">
       <img src={opponentFoundIcon} alt="" className="opponentFound__icon" />
@@ -698,6 +696,7 @@ function OpponentFound() {
           className="secondary"
           size="small"
           callback={(e) => {
+            handleDeclineGame();
             e.stopPropagation();
             closeDrawer!();
           }}
@@ -707,6 +706,7 @@ function OpponentFound() {
           text={t("opponentFoundDrawer.accept")}
           size="small"
           callback={(e) => {
+            handleApproveGame();
             e.stopPropagation();
             closeDrawer!();
           }}

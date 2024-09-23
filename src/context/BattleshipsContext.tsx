@@ -10,6 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
 import { playBeamAnimation, useSound } from "./SeaContexts";
+import { useDrawer } from "./DrawerContext";
 
 type BattleshipsProviderProps = {
   children: ReactNode;
@@ -24,12 +25,9 @@ type BattleshipsContextProps = {
   sendMessage: (obj: { type: string; message: object }) => void;
 } & any;
 
-type GameState = {
-  status: "WON" | "LOST" | "IN_PROGRESS" | "NOT_STARTED" | string;
-};
+type GameState = "WON" | "LOST" | "IN_PROGRESS" | "NOT_STARTED" | string;
 
 let jwtToUse = localStorage.getItem("auth_jwt") || "";
-
 if (document.location.href.includes("5174"))
   jwtToUse =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
@@ -40,9 +38,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
   const { blastIt, setIsAudioStart } = useSound();
 
-  const [approveDrawer, setApproveDrawer] = useState<any>(null);
-
-  const [gameState, setGameState] = useState({ status: "NOT_STARTED" });
+  const [approveGame, setApproveGame] = useState<any>(null);
+  const [gameState, setGameState] = useState("NOT_STARTED");
   const [userShips, setUserShips] = useState<any[]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
@@ -86,7 +83,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   }, [jwt]);
 
   const [gameStarted, setGameStarted] = useState(false);
-
   const [userBoard, setUserBoard] = useState(new Gameboard(myShips));
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
   const [myTurn, setMyTurn] = useState(true);
@@ -132,7 +128,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
       switch (response.type) {
         case "start_approve_phase": {
-          setApproveDrawer(parsedMessage);
+          setApproveGame(parsedMessage);
           break;
         }
         case "create_room":
@@ -241,7 +237,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           setTimeout(() => {
             setJoinedRoom("");
             setIsAudioStart(false);
-            setGameState({ status: parsedMessage.my_win ? "WON" : "LOST" });
+            setGameState(parsedMessage.my_win ? "WON" : "LOST");
             restartBoards();
           }, 1500);
           break;
@@ -265,9 +261,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       });
     }, 5000);
 
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [socket]);
 
   const sendMessage = (obj: { type: string; message: object }) => {
@@ -276,11 +270,26 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       message: JSON.stringify(obj.message),
       jwt,
     };
-
     if (!(socketRef.current && socketRef.current.readyState === WebSocket.OPEN))
       return;
-
     socketRef.current.send(JSON.stringify(messageWithToken));
+  };
+
+  const handleApproveGame = () => {
+    if (!approveGame) return;
+    sendMessage({
+      type: "accept_battle",
+      message: { room_name: approveGame.room_name },
+    });
+    setApproveGame(null);
+  };
+  const handleDeclineGame = () => {
+    if (!approveGame) return;
+    sendMessage({
+      type: "decline_battle",
+      message: { room_name: approveGame.room_name },
+    });
+    setApproveGame(null);
   };
 
   return (
@@ -314,8 +323,9 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         restartBoards,
         myTurn,
         setMyTurn,
-        setApproveDrawer,
-        approveDrawer,
+        approveGame,
+        handleApproveGame,
+        handleDeclineGame,
       }}
     >
       {children}
