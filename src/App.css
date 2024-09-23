@@ -1,78 +1,127 @@
 .container {
-	max-width: 576px;
-	padding: 0 12px;
-	margin: 0 auto;
-	width: 100%;
+  max-width: 576px;
+  padding: 0 12px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .mainWrapper {
-	flex-grow: 1;
+  flex-grow: 1;
 }
 
 .footerWrapper {
-	position: fixed;
-	width: 100%;
-	z-index: 1000;
-	bottom: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  bottom: 0;
 }
 
 img,
 svg,
 iframe {
-	-webkit-user-drag: none;
-	user-drag: none;
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 .highlighter {
-	transition: all 0.2s ease-in-out;
-	opacity: 0;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.highlighter.reverse-x {
+  transform: translate(-50%, -50%) scaleX(-1);
 }
 
 .highlighter.undefined {
-	opacity: 0;
-	pointer-events: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .highlighter.active {
-	transition: all 0.2s ease-in-out;
-	opacity: 1;
+  transition: all 0.2s ease-in-out;
+  opacity: 1;
 }
 
 .highlighter.games {
-	left: 170%;
-	top: 6px;
-	z-index: -1;
+  left: 170%;
+  top: 6px;
+  z-index: -1;
+}
+
+.highlighter.options {
+  left: -70%;
+  top: 6px;
+  z-index: -1;
 }
 
 .highlighter.credits {
-	z-index: -1;
+  z-index: -1;
 }
 
 .highlighter.akron {
-	z-index: -1;
+  z-index: -1;
+}
+
+.highlighter.shop {
+  transform: translate(-50%, -50%);
+}
+
+.highlighter.book {
+  max-width: 80px;
 }
 
 .highlighterParent.pulsation {
-	animation: highlighterParentPulse 1.25s ease-in-out 2;
+  animation: highlighterParentPulse 1.25s ease-in-out infinite;
+}
+
+.highlighterParent.book.pulsation {
+  animation: highlighterParentPulseTranslate 1.25s ease-in-out infinite;
+}
+
+.highlighter.tournaments,
+.highlighter.options,
+.highlighter.walletBinks,
+.highlighter.playerBinks,
+.highlighter.clansBinks,
+.highlighter.metricsBinks {
+  top: 12%;
 }
 
 @keyframes highlighterParentPulse {
-	0% {
-		transform: scale(1);
-		opacity: 1;
-	}
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
 
-	50% {
-		transform: scale(1.1);
-		opacity: 0.6;
-	}
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
 
-	100% {
-		transform: scale(1);
-		opacity: 1;
-	}
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes highlighterParentPulseTranslate {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
