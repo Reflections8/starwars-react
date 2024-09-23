@@ -176,7 +176,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 116) {
           highlightElement("clansBinks");
         }
-        if (fixedTime == 116) {
+        if (fixedTime == 143) {
           highlightElement("metricsBinks");
         }
         if (fixedTime == 155) {
@@ -222,7 +222,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 116) {
           highlightElement("clansBinks");
         }
-        if (fixedTime == 116) {
+        if (fixedTime == 143) {
           highlightElement("metricsBinks");
         }
         if (fixedTime == 155) {
@@ -238,17 +238,17 @@ export function BinksBackgroundVideo({
   function highlightElement(className: string) {
     const animationTime = {
       book: 5,
-      shop: 18,
-      tournaments: 8,
+      shop: i18n.language === "ru" ? 18 : 16,
+      tournaments: i18n.language === "ru" ? 8 : 10,
       options: 9,
       credits: 9,
       akron: 9,
       ton: 9,
       walletBinks: 7,
-      playerBinks: 8,
-      clansBinks: 23,
+      playerBinks: i18n.language === "ru" ? 8 : 10,
+      clansBinks: i18n.language === "ru" ? 23 : 21,
       metricsBinks: 7,
-      games: 36,
+      games: i18n.language === "ru" ? 36 : 38,
     };
 
     const element = document.querySelector(`.highlighter.${className}`);
