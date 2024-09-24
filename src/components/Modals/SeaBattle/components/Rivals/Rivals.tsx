@@ -92,6 +92,12 @@ export function Rivals() {
 
   useEffect(() => {
     loadRooms();
+    let timer = setInterval(() => {
+      loadRooms();
+    }, 2000);
+    return () => {
+      timer && clearInterval(timer);
+    };
   }, [activeCurrency]);
 
   useEffect(() => {

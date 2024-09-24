@@ -31,6 +31,18 @@ const unsettledMax = {
   "4": 1,
 };
 
+const directions = [
+  { x: -1, y: -1 },
+  { x: -1, y: 0 },
+  { x: -1, y: 1 },
+  { x: 0, y: -1 },
+  { x: 0, y: 1 },
+  { x: 1, y: -1 },
+  { x: 1, y: 0 },
+  { x: 1, y: 1 },
+  { x: 0, y: 0 },
+];
+
 export class Gameboard {
   ships: ShipPosition[];
   hitCells: HitCell[];
@@ -61,11 +73,8 @@ export class Gameboard {
     const shipPositions: [number, number][] = [];
     this.ships.forEach(({ pos, ship }) => {
       for (let i = 0; i < ship.length; i++) {
-        if (ship.vertical) {
-          shipPositions.push([pos.row + i, pos.column]);
-        } else {
-          shipPositions.push([pos.row, pos.column + i]);
-        }
+        if (ship.vertical) shipPositions.push([pos.row + i, pos.column]);
+        else shipPositions.push([pos.row, pos.column + i]);
       }
     });
     const nearFields: Set<string> = new Set();
@@ -75,20 +84,31 @@ export class Gameboard {
       set.add(`${x},${y}`);
 
     for (const [x, y] of shipPositions) addField(x, y, shipFields);
-    for (const [x, y] of shipPositions) {
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          const nx = x + dx;
-          const ny = y + dy;
-          const fieldKey = `${nx},${ny}`;
-          if (!shipFields.has(fieldKey)) nearFields.add(fieldKey);
-        }
-      }
-    }
+    this.ships.forEach(({ ship, pos }) => {
+      const { row, column } = pos;
+      const thisShipCells = new Set<string>();
+      const { length, vertical } = ship;
 
+      for (let i = 0; i < ship.length; i++) {
+        if (ship.vertical) thisShipCells.add(`${row + i},${column}`);
+        else thisShipCells.add(`${row},${column + i}`);
+      }
+
+      for (let i = 0; i < length; i++) {
+        const shipPosX = vertical ? row + i : row;
+        const shipPosY = vertical ? column : column + i;
+        directions.forEach(({ x, y }) => {
+          const newX = shipPosX + x;
+          const newY = shipPosY + y;
+          if (newX >= 0 && newX < this.SIZE && newY >= 0 && newY < this.SIZE)
+            !thisShipCells.has(`${newX},${newY}`) &&
+              addField(newX, newY, nearFields);
+        });
+      }
+    });
     return Array.from(nearFields).map((field) => {
       const [x, y] = field.split(",").map(Number);
-      return { x, y, err: shipFields.has(`${x},${y}`) };
+      return { x, y, err: shipFields.has(field) };
     });
   }
   /*

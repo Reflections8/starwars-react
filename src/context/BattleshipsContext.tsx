@@ -65,7 +65,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     socketRef.current = ws;
     setSocket(ws);
     ws.onopen = () =>
-      ws.send(JSON.stringify({ type: "handshake", message: {}, jwt }));
+      ws.send(JSON.stringify({ type: "handshake", message: "zdarova", jwt }));
     ws.onclose = (event) => {
       if (event.code !== 1000) {
         console.error(
@@ -257,14 +257,14 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     const interval = setInterval(() => {
       sendMessage({
         type: "ping",
-        message: {},
+        message: "braat",
       });
     }, 5000);
 
     return () => clearInterval(interval);
   }, [socket]);
 
-  const sendMessage = (obj: { type: string; message: object }) => {
+  const sendMessage = (obj: { type: string; message: any }) => {
     const messageWithToken = {
       type: obj?.type,
       message: JSON.stringify(obj.message),
@@ -286,7 +286,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const handleDeclineGame = () => {
     if (!approveGame) return;
     sendMessage({
-      type: "decline_battle",
+      type: "deny_battle",
       message: { room_name: approveGame.room_name },
     });
     setApproveGame(null);

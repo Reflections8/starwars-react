@@ -279,7 +279,7 @@ export function Board({
     if (nearFields.some(({ err }) => err)) {
       setBadPlacement(true);
     }
-  }, [gameboard]);
+  }, [gameboard, nearFields]);
 
   const renderFields = () => {
     const fields = [];
