@@ -11,6 +11,12 @@ import { useNavigate } from "react-router-dom";
 import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
 import { playBeamAnimation, useSound } from "./SeaContexts";
 import { useDrawer } from "./DrawerContext";
+import { Room } from "../components/Modals/SeaBattle/types/types";
+import {
+  fetchRooms,
+  getMe,
+} from "../components/Modals/SeaBattle/service/sea-battle.service";
+import { BetTypeEnum } from "../components/Modals/SeaBattle/types/enum";
 
 type BattleshipsProviderProps = {
   children: ReactNode;
@@ -34,6 +40,22 @@ if (document.location.href.includes("5174"))
 
 const BattleshipsContext = createContext<Partial<BattleshipsContextProps>>({});
 
+const parseJwt = (token: string) => {
+  var base64Url = token.split(".")[1];
+  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split("")
+      .map(function (c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join("")
+  );
+
+  return JSON.parse(jsonPayload);
+};
+
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
   const { blastIt, setIsAudioStart } = useSound();
@@ -48,13 +70,22 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [roomName, setRoomName] = useState("");
   const [opponentName, setOpponentName] = useState("");
   const [messages, setMessages] = useState([]);
-
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [activeCurrency, setActiveCurrency] = useState("credits");
+  const [me, setMe] = useState(null);
   const [createdRoom, setCreatedRoom] = useState({ name: "" });
   const [joinedRoom, setJoinedRoom] = useState("");
   const [myShips, setMyShips] = useState([]);
   const [myHits, setMyHits] = useState([]);
   const [shipsPlaced, setShipsPlaced] = useState(false);
   const [searchingDuel, setSearchingDuel] = useState(false);
+
+  useEffect(() => {
+    if (!jwt) return;
+    getMe().then((res) => {
+      setMe(res.username);
+    });
+  }, [jwt]);
 
   useEffect(() => {
     if (!jwt) {
@@ -292,9 +323,33 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     setApproveGame(null);
   };
 
+  async function loadRooms() {
+    const res = await fetchRooms();
+    if (res) {
+      const filtered = res?.rooms?.filter((room: Room) => {
+        return (
+          room.bet_type ===
+          BetTypeEnum[activeCurrency as keyof typeof BetTypeEnum]
+        );
+      });
+      setRooms(filtered || []);
+    }
+  }
+
+  useEffect(() => {
+    loadRooms();
+    let timer = setInterval(() => {
+      loadRooms();
+    }, 2000);
+    return () => {
+      timer && clearInterval(timer);
+    };
+  }, [activeCurrency]);
+
   return (
     <BattleshipsContext.Provider
       value={{
+        me,
         gameState,
         setGameState,
         userShips,
@@ -326,6 +381,11 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         approveGame,
         handleApproveGame,
         handleDeclineGame,
+        rooms,
+        setRooms,
+        loadRooms,
+        activeCurrency,
+        setActiveCurrency,
       }}
     >
       {children}

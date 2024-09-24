@@ -6,10 +6,8 @@ import fightIcon from "./img/fight.svg";
 import { useBattleships } from "../../../../../context/BattleshipsContext";
 import { useDrawer } from "../../../../../context/DrawerContext";
 import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
-import { fetchRooms } from "../../service/sea-battle.service";
 import "./styles/Rivals.css";
 import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
-import { Room } from "../../types/types";
 import { useModal } from "../../../../../context/ModalContext";
 import { useTranslation } from "react-i18next";
 
@@ -21,21 +19,23 @@ export function Rivals() {
   const [friendsLogin, setFriendsLogin] = useState("");
   const [bet, setBet] = useState(0);
 
-  const [activeCurrency, setActiveCurrency] = useState("credits");
-  const [rooms, setRooms] = useState<Room[]>([]);
-
   function handleDuelCreating(e: Event) {
     e.stopPropagation();
     setIsCreatingDuel(true);
   }
 
   const {
+    activeCurrency,
+    setActiveCurrency,
+    rooms,
+    loadRooms,
     createdRoom,
     setCreatedRoom,
     joinedRoom,
     setJoinedRoom,
     sendMessage,
     setRoomName,
+    me,
   } = useBattleships();
 
   async function createRoom() {
@@ -76,29 +76,6 @@ export function Rivals() {
       },
     });
   }
-
-  async function loadRooms() {
-    const res = await fetchRooms();
-    if (res) {
-      const filtered = res?.rooms?.filter((room: Room) => {
-        return (
-          room.bet_type ===
-          BetTypeEnum[activeCurrency as keyof typeof BetTypeEnum]
-        );
-      });
-      setRooms(filtered || []);
-    }
-  }
-
-  useEffect(() => {
-    loadRooms();
-    let timer = setInterval(() => {
-      loadRooms();
-    }, 2000);
-    return () => {
-      timer && clearInterval(timer);
-    };
-  }, [activeCurrency]);
 
   useEffect(() => {
     if (createdRoom.name) {
@@ -151,7 +128,7 @@ export function Rivals() {
               />
             </div>
           </div>
-          {rooms?.map((item, index) => {
+          {rooms?.map((item: any, index: number) => {
             return (
               <div className="rivals__list-item" key={index}>
                 <div className="rivals__list-item-start">
@@ -195,7 +172,9 @@ export function Rivals() {
                       setRoomName(item.room_name);
                     }}
                     size="small"
-                    className="rivals__list-item-end-btn"
+                    className={`rivals__list-item-end-btn ${
+                      item.creator.username === me ? "halfTransparent" : ""
+                    }`}
                     text={t("battleshipsModal.rivalsTab.duel")}
                   />
                 </div>
