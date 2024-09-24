@@ -71,7 +71,9 @@ export class Gameboard {
   }
   getFieldsNearShips() {
     const shipPositions: [number, number][] = [];
-    this.ships.forEach(({ pos, ship }) => {
+    let shipsToSearch = [...this.ships];
+    if (this.dragndrop) shipsToSearch.push(this.dragndrop);
+    shipsToSearch.forEach(({ pos, ship }) => {
       for (let i = 0; i < ship.length; i++) {
         if (ship.vertical) shipPositions.push([pos.row + i, pos.column]);
         else shipPositions.push([pos.row, pos.column + i]);
