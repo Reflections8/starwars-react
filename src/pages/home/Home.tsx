@@ -23,6 +23,7 @@ import bookImg from "./img/book.svg";
 import "./styles/home.css";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import highlightBook from "../home/video/currency.svg";
+import { useBattleships } from "../../context/BattleshipsContext.tsx";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -138,6 +139,18 @@ export function Home() {
     closeDrawer!();
     openDrawer!("connectWallet");
   }
+
+  const { approveGame, gameState } = useBattleships();
+  useEffect(() => {
+    console.log(gameState);
+  }, [gameState]);
+  useEffect(() => {
+    if (!approveGame) {
+      closeDrawer!();
+    } else {
+      openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
+    }
+  }, [JSON.stringify(approveGame)]);
 
   const [canQuit] = useState(false);
   return (
