@@ -18,7 +18,7 @@ type ResourcesProps = {
 };
 
 export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
-  const { setSearchingDuel, searchingDuel } = useBattleships();
+  const { handleDeclineMyRooms, searchingDuel } = useBattleships();
 
   // {formatNumberWithCommas(credits)}
   return (
@@ -128,9 +128,7 @@ export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
             src={searchCancelIcon}
             alt=""
             className="resources__searchCancel"
-            onClick={() => {
-              setSearchingDuel(false);
-            }}
+            onClick={handleDeclineMyRooms}
           />
         </div>
       ) : null}

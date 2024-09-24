@@ -81,6 +81,14 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [searchingDuel, setSearchingDuel] = useState(false);
 
   useEffect(() => {
+    if (rooms.length === 0) return;
+    if (!me) return;
+    //@ts-ignore
+    const myRooms = rooms.filter((room) => room.creator.username === me);
+    setSearchingDuel(myRooms.length > 0);
+  }, [JSON.stringify(rooms), me]);
+
+  useEffect(() => {
     if (!jwt) return;
     getMe().then((res) => {
       setMe(res.username);
@@ -323,6 +331,19 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     setApproveGame(null);
   };
 
+  const handleDeclineMyRooms = () => {
+    if (rooms.length === 0) return;
+    if (!me) return;
+    //@ts-ignore
+    const myRooms = rooms.filter((room) => room.creator.username === me);
+    myRooms.forEach((room) => {
+      sendMessage({
+        type: "deny_battle",
+        message: { room_name: room.room_name },
+      });
+    });
+  };
+
   async function loadRooms() {
     const res = await fetchRooms();
     if (res) {
@@ -350,6 +371,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     <BattleshipsContext.Provider
       value={{
         me,
+        handleDeclineMyRooms,
         gameState,
         setGameState,
         userShips,
