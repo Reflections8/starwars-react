@@ -10,7 +10,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
 import { playBeamAnimation, useSound } from "./SeaContexts";
-import { useDrawer } from "./DrawerContext";
+
 import { Room } from "../components/Modals/SeaBattle/types/types";
 import {
   fetchRooms,
@@ -39,22 +39,6 @@ if (document.location.href.includes("5174"))
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
 
 const BattleshipsContext = createContext<Partial<BattleshipsContextProps>>({});
-
-const parseJwt = (token: string) => {
-  var base64Url = token.split(".")[1];
-  var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  var jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
-
-  return JSON.parse(jsonPayload);
-};
 
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
