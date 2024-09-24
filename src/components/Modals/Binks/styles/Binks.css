@@ -57,3 +57,13 @@
 .binks__btnReady {
   margin-bottom: 32px;
 }
+
+.binksDone__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.binksDone__footer-finish {
+  margin-bottom: 3rem;
+}

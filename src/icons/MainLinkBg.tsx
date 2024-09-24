@@ -1,8 +1,9 @@
 type MainLinkBgIconProps = {
   color: string;
+  className?: string;
 };
 
-export function MainLinkBgIcon({ color }: MainLinkBgIconProps) {
+export function MainLinkBgIcon({ color, className }: MainLinkBgIconProps) {
   const colorsEnum = {
     red: {
       gradient: "#gradientRed",
@@ -37,6 +38,7 @@ export function MainLinkBgIcon({ color }: MainLinkBgIconProps) {
       viewBox="0 0 146 83"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g opacity="0.25" filter="url(#filter0_f_125_2340)">
         <g clip-path="url(#clip0_125_2340)">

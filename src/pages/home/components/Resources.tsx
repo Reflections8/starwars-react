@@ -97,7 +97,12 @@ export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
         </div>
 
         <div className="resources__item-main">
-          <img src={mainBg} alt="main-bg" className="resources__item-main-bg" />
+          <img src={highlighCurrency} alt="" className="highlighter ton" />
+          <img
+            src={mainBg}
+            alt="main-bg"
+            className="highlighterParent ton resources__item-main-bg"
+          />
           <div className="resources__item-main-value">{ton}</div>
         </div>
 

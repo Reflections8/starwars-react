@@ -38,6 +38,7 @@ import modalHeaderBg from "./img/modal-header.png";
 import "./styles/modal.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { BinksDone } from "../../components/Modals/Binks/BinksDone";
 
 type ModalProps = {
   isOpen: boolean;
@@ -125,6 +126,11 @@ export function Modal({ isOpen }: ModalProps) {
       title: t("binksModal.title"),
       icon: <GearIcon />,
       component: <Binks />,
+    },
+    binksDone: {
+      title: t("binksModal.title"),
+      icon: <GearIcon />,
+      component: <BinksDone />,
     },
     rules: {
       title: t("rulesModal.title"),

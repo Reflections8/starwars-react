@@ -10,6 +10,8 @@ type BackgroundVideoContextProps = {
   setReadyState: (state: boolean) => void;
   activeVideo: "1" | "2" | "3" | null;
   setActiveVideo: (state: any) => void;
+  repeatCount: number;
+  setRepeatCount: (state: number) => void;
 };
 
 const BackgroundVideoContext = createContext<
@@ -21,10 +23,18 @@ export function BackgroundVideoProvider({
 }: BackgroundVideoProviderProps) {
   const [readyState, setReadyState] = useState(false);
   const [activeVideo, setActiveVideo] = useState(null);
+  const [repeatCount, setRepeatCount] = useState(0);
 
   return (
     <BackgroundVideoContext.Provider
-      value={{ readyState, setReadyState, activeVideo, setActiveVideo }}
+      value={{
+        readyState,
+        setReadyState,
+        activeVideo,
+        setActiveVideo,
+        repeatCount,
+        setRepeatCount,
+      }}
     >
       {children}
     </BackgroundVideoContext.Provider>

@@ -22,9 +22,10 @@ import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
+import highlightBook from "../home/video/currency.svg";
 
 export function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const {
@@ -46,7 +47,13 @@ export function Home() {
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
 
-  const { readyState, activeVideo, setActiveVideo } = useBackgroundVideo();
+  const {
+    readyState,
+    setReadyState,
+    activeVideo,
+    setActiveVideo,
+    repeatCount,
+  } = useBackgroundVideo();
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
@@ -123,9 +130,9 @@ export function Home() {
   //   }, []);
 
   // TODO: всплывшка с бинксом при заходе на страницу
-  //useEffect(() => {
-  //  openModal!("binks");
-  //}, []);
+  useEffect(() => {
+    openModal!("binks");
+  }, [i18n.language]);
 
   async function openWalletDrawer() {
     closeDrawer!();
@@ -159,8 +166,8 @@ export function Home() {
         }
       />
 
-      {activeVideo === "2" ? (
-        <img
+      {activeVideo === "1" ? (
+        <div
           style={{
             position: "absolute",
             zIndex: "1000",
@@ -169,15 +176,26 @@ export function Home() {
             transform: "translateX(-50%)",
             fontSize: "10px",
           }}
-          onClick={() => {
-            setActiveVideo!("3");
-          }}
-          src={bookImg}
-          alt="book"
-        />
+        >
+          <img src={highlightBook} className={`highlighter book`} />
+          <img
+            className="highlighterParent book"
+            onClick={() => {
+              setActiveVideo!("2");
+            }}
+            src={bookImg}
+            alt="book"
+          />
+        </div>
       ) : null}
 
-      <BinksBackgroundVideo readyState={readyState} activeVideo={activeVideo} />
+      <BinksBackgroundVideo
+        readyState={readyState}
+        setReadyState={setReadyState}
+        activeVideo={activeVideo}
+        setActiveVideo={setActiveVideo}
+        repeatCount={repeatCount}
+      />
 
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
@@ -209,8 +227,9 @@ export function Home() {
           }
           openModal!("chooseGame");
         }}
-        rightIcon={<OptionsIcon />}
+        rightIcon={<OptionsIcon className={`highlighterParent options`} />}
         rightText={t("homePage.options")}
+        rightClassName={"options"}
         rightAction={() => {
           openModal!("settings");
         }}

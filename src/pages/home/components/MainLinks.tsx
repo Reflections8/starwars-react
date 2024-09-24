@@ -15,6 +15,7 @@ import walletIcon from "../img/mainLinkIcons/wallet.svg";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
 import { useTranslation } from "react-i18next";
+import mainLinkHighlighter from "../video/mainLink.svg";
 
 export function MainLinks() {
   const { t } = useTranslation();
@@ -44,7 +45,15 @@ export function MainLinks() {
             openModal("wallet");
           }}
         >
-          <MainLinkBgIcon color="red" />
+          <img
+            src={mainLinkHighlighter}
+            alt="highlighter"
+            className={`highlighter walletBinks`}
+          />
+          <MainLinkBgIcon
+            color="red"
+            className="highlighterParent walletBinks"
+          />
           <img
             src={iconBgLeft}
             alt="iconBg"
@@ -71,7 +80,15 @@ export function MainLinks() {
             openModal!("player");
           }}
         >
-          <MainLinkBgIcon color="green" />
+          <img
+            src={mainLinkHighlighter}
+            alt="highlighter"
+            className={`highlighter playerBinks`}
+          />
+          <MainLinkBgIcon
+            color="green"
+            className={"highlighterParent playerBinks"}
+          />
           <img
             src={iconBgLeft}
             alt="iconBg"
@@ -98,7 +115,15 @@ export function MainLinks() {
             openModal("metrics");
           }}
         >
-          <MainLinkBgIcon color="purple" />
+          <img
+            src={mainLinkHighlighter}
+            alt="highlighter"
+            className={`highlighter metricsBinks`}
+          />
+          <MainLinkBgIcon
+            color="purple"
+            className="highlighterParent metricsBinks"
+          />
           <img
             src={iconBgLeft}
             alt="iconBg"
@@ -155,7 +180,15 @@ export function MainLinks() {
             openModal("partners");
           }}
         >
-          <MainLinkBgIcon color="blue" />
+          <img
+            src={mainLinkHighlighter}
+            alt="highlighter"
+            className={`highlighter clansBinks`}
+          />
+          <MainLinkBgIcon
+            color="blue"
+            className="highlighterParent clansBinks"
+          />
           <img
             src={iconBgRight}
             alt="iconBg"
@@ -172,7 +205,7 @@ export function MainLinks() {
         </div>
 
         <div
-          className="mainLinks__col-item mainLinks__col-item--slideInRight3"
+          className="mainLinks__col-item mainLinks__col-item--slideInRight3 "
           onClick={() => {
             if (!tonConnectUI.connected) {
               openWalletDrawer();
@@ -182,7 +215,15 @@ export function MainLinks() {
             openModal("tournament");
           }}
         >
-          <MainLinkBgIcon color="pink" />
+          <img
+            src={mainLinkHighlighter}
+            alt="highlighter"
+            className={`highlighter tournaments`}
+          />
+          <MainLinkBgIcon
+            color="pink"
+            className="highlighterParent tournaments"
+          />
           <img
             src={iconBgRight}
             alt="iconBg"

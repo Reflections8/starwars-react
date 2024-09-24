@@ -15,6 +15,7 @@ type HeaderProps = {
   leftLink: string;
   leftText: string;
   leftClassName?: string;
+  rightClassName?: string;
   leftAction: () => void;
   rightIcon: ReactNode;
   rightText: string;
@@ -30,6 +31,7 @@ export function Header({
   leftLink,
   leftText,
   leftClassName,
+  rightClassName,
   leftAction,
   rightIcon,
   rightText,
@@ -128,11 +130,15 @@ export function Header({
             <img src={bgImgBlur} alt="" className="header__top-right-bgBlur" />
 
             {!onlyLeft && (
-              <div className="header__top-right-content">
+              <div className={`header__top-right-content ${rightClassName}`}>
                 <span className="header__top-right-content-text">
                   {rightText}
                 </span>
                 <div className="header__top-right-content-iconWrapper">
+                  <img
+                    src={highlightHeader}
+                    className={`${rightClassName} highlighter reverse-x`}
+                  />
                   {rightIcon}
                   <div className="header__top-right-content-iconWrapper-blur">
                     {rightIcon}

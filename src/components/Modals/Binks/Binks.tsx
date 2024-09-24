@@ -1,27 +1,25 @@
+import { useTranslation } from "react-i18next";
 import { useBackgroundVideo } from "../../../context/BackgroundVideoContext";
 import { useModal } from "../../../context/ModalContext";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import "./styles/Binks.css";
 
 export function Binks() {
+  const { t } = useTranslation();
   const { closeModal } = useModal();
   const { setReadyState, setActiveVideo } = useBackgroundVideo();
   return (
     <div className="binks">
-      <div className="binks__text">
-        Приветствую тебя в Акроникс, на вашем кошельке не обнаружено НФТ
-        персонажей, возможно вы новобранец, поэтому Бингс проведет для вас
-        обучение. Включите звук и слушайте внимательно
-      </div>
+      <div className="binks__text">{t("binksModal.greetingsText")}</div>
 
       <CuttedButton
-        text={"Я готов"}
+        text={t("binksModal.readyBtn")}
         size="small"
         className="binks__btnReady"
         callback={(e) => {
           e.stopPropagation();
           setReadyState!(true);
-          setActiveVideo!("2");
+          setActiveVideo!("1");
           closeModal!();
         }}
       />
