@@ -230,7 +230,7 @@ export function ShipsArrangementChild() {
             <Timer
               {...{ isInitial, setIsInitial, startTimer }}
               onRandom={() => {
-                gameboard.placeShipsRandomly();
+                gameboard.randomizeShips();
                 updateGameboard();
                 handleArrangementDone();
               }}

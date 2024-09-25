@@ -1,5 +1,3 @@
-import { combinations } from "./combinations";
-
 export type ShipType = {
   length: number;
   vertical: boolean;
@@ -186,9 +184,6 @@ export class Gameboard {
       confirmed: true,
     };
 
-    let x = row;
-    let y = column;
-    console.log("Ship length = ", l, "placed at" + x, y);
     let removed = [];
     for (let i = 0; i < l; i++) {
       let x = row;
@@ -204,7 +199,6 @@ export class Gameboard {
         if (rN) removed.push(`${x + dx},${y + dy}`);
       });
     }
-    console.log("Removed ", removed, "cells");
     return placed;
   }
 
@@ -224,9 +218,6 @@ export class Gameboard {
     }
 
     if (this.ships.length === shipsToPlace.length) {
-      console.log(
-        "______________________PLACEMENT OVER ______________________"
-      );
       return;
     } else this.randomizeShips();
   }
