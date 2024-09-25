@@ -186,29 +186,25 @@ export class Gameboard {
       confirmed: true,
     };
 
-    const directions = [
-      { x: -1, y: -1 },
-      { x: -1, y: 0 },
-      { x: -1, y: 1 },
-      { x: 0, y: -1 },
-      { x: 0, y: 1 },
-      { x: 1, y: -1 },
-      { x: 1, y: 0 },
-      { x: 1, y: 1 },
-    ];
     let x = row;
     let y = column;
+    console.log("Ship length = ", l, "placed at" + x, y);
+    let removed = [];
     for (let i = 0; i < l; i++) {
-      if (v) x++;
-      else y++;
-      freeCells.delete(`${x},${y}`);
+      let x = row;
+      let y = column;
+
+      if (v) x += i;
+      else y += i;
+
+      const rS = freeCells.delete(`${x},${y}`);
+      if (rS) removed.push(`${x},${y}`);
       directions.forEach(({ x: dx, y: dy }) => {
-        const newX = x + dx;
-        const newY = y + dy;
-        freeCells.delete(`${newX},${newY}`);
+        const rN = freeCells.delete(`${x + dx},${y + dy}`);
+        if (rN) removed.push(`${x + dx},${y + dy}`);
       });
     }
-
+    console.log("Removed ", removed, "cells");
     return placed;
   }
 
@@ -227,8 +223,12 @@ export class Gameboard {
       else break;
     }
 
-    if (this.ships.length === shipsToPlace.length) return;
-    else this.randomizeShips();
+    if (this.ships.length === shipsToPlace.length) {
+      console.log(
+        "______________________PLACEMENT OVER ______________________"
+      );
+      return;
+    } else this.randomizeShips();
   }
 
   unconfirmShipAtRC(row: number, column: number) {
