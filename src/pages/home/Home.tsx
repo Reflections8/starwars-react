@@ -23,7 +23,6 @@ import bookImg from "./img/book.svg";
 import "./styles/home.css";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import highlightBook from "../home/video/currency.svg";
-import { useBattleships } from "../../context/BattleshipsContext.tsx";
 
 export function Home() {
   const { t, i18n } = useTranslation();
