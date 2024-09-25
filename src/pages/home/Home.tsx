@@ -140,18 +140,6 @@ export function Home() {
     openDrawer!("connectWallet");
   }
 
-  const { approveGame, gameState } = useBattleships();
-  useEffect(() => {
-    console.log(gameState);
-  }, [gameState]);
-  useEffect(() => {
-    if (!approveGame) {
-      closeDrawer!();
-    } else {
-      openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
-    }
-  }, [JSON.stringify(approveGame)]);
-
   const [canQuit] = useState(false);
   return (
     <>

@@ -26,20 +26,34 @@ import { useSound } from "../../context/SeaContexts";
 enableDragDropTouch();
 
 const timerSeconds = 60;
-let jwtFromStorage = localStorage.getItem("auth_jwt") ?? "";
-if (document.location.href.includes("5174")) {
-  jwtFromStorage =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
-}
 
 export function Game2() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [jwt] = useState<string>(jwtFromStorage);
-
-  //   const [socket, setSocket] = useState<null | WebSocket>(null);
   const { openModal, closeModal } = useModal();
-  const { openDrawer, closeDrawer } = useDrawer();
+  const { openDrawer } = useDrawer();
+
+  const {
+    audioBgRef,
+    shotAudioRef,
+    shotSuccessAudioRef,
+    shotMissAudioRef,
+    shotKilledAudioRef,
+  } = useSound();
+
+  // @ts-ignore
+  const {
+    socket,
+    gameState,
+    userShips,
+    setGameState,
+    userBoard,
+    enemyBoard,
+    updateUserboard,
+    updateEnemyBoard,
+    myTurn,
+    jwt,
+  } = useBattleships();
 
   useEffect(() => {
     if (!jwt) {
@@ -50,49 +64,11 @@ export function Game2() {
     }
   }, [jwt]);
 
-  const {
-    audioBgRef,
-    shotAudioRef,
-    shotSuccessAudioRef,
-    shotMissAudioRef,
-    shotKilledAudioRef,
-    stopBackgroundAudio,
-  } = useSound();
-
-  // @ts-ignore
-  const {
-    socket,
-    gameState,
-    userShips,
-    setGameState,
-    setUserShips,
-    userBoard,
-    enemyBoard,
-    updateUserboard,
-    updateEnemyBoard,
-    restartBoards,
-    myTurn,
-    approveGame,
-  } = useBattleships();
-  const [player] = useState("player1");
-
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
   const timer = useTimer(
     { runOnce: true, startImmediately: false, delay: timerSeconds * 1000 },
-    () => {
-      myTurn &&
-        socket &&
-        socket.send(JSON.stringify({ type: "timeOut", source: player }));
-    }
+    () => {}
   );
-
-  useEffect(() => {
-    if (!approveGame) {
-      closeDrawer!();
-    } else {
-      openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
-    }
-  }, [JSON.stringify(approveGame)]);
 
   useEffect(() => {
     timer.stop();
@@ -128,31 +104,6 @@ export function Game2() {
       clearTimeout(timer);
     };
   }, [myTurn, userBoard]);
-
-  useEffect(() => {
-    if (!jwt) return;
-    if (gameState === "LOST") {
-      stopBackgroundAudio();
-      setUserShips!([]);
-      openModal!("battleshipsLost");
-      restartBoards();
-    }
-    if (gameState === "WON") {
-      stopBackgroundAudio();
-      setUserShips!([]);
-      openModal!("battleshipsWon");
-      restartBoards();
-    }
-    if (gameState === "NOT_STARTED") {
-      restartBoards();
-      setUserShips!([]);
-      openModal!("seaBattle");
-    }
-    if (gameState === "GIVE_UP") {
-      socket && socket.send(JSON.stringify({ type: "giveUp", source: player }));
-      stopBackgroundAudio();
-    }
-  }, [gameState, jwt]);
 
   useEffect(() => {
     if (userShips && userShips.length > 0) {

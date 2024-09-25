@@ -65,7 +65,10 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [searchingDuel, setSearchingDuel] = useState(false);
 
   useEffect(() => {
-    if (rooms.length === 0) return;
+    if (rooms.length === 0) {
+      setSearchingDuel(false);
+      return;
+    }
     if (!me) return;
     //@ts-ignore
     const myRooms = rooms.filter((room) => room.creator.username === me);
@@ -322,7 +325,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     const myRooms = rooms.filter((room) => room.creator.username === me);
     myRooms.forEach((room) => {
       sendMessage({
-        type: "deny_battle",
+        type: "give_up",
         message: { room_name: room.room_name },
       });
     });
@@ -392,6 +395,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         loadRooms,
         activeCurrency,
         setActiveCurrency,
+        jwt,
       }}
     >
       {children}

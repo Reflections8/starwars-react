@@ -7,6 +7,7 @@ import { UserDataProvider } from "../../UserDataService.tsx";
 import { BattleshipsProvider } from "../../context/BattleshipsContext.tsx";
 import { BackgroundVideoProvider } from "../../context/BackgroundVideoContext.tsx";
 import { SoundProvider } from "../../context/SeaContexts/SoundContext.tsx";
+import { SomethingProvider } from "../../context/SeaContexts/SomethingContext.tsx";
 
 type PageProps = {
   dataPage: string;
@@ -47,13 +48,15 @@ export function Page({ dataPage, children }: PageProps) {
             <DrawerProvider>
               <UserDataProvider>
                 <ModalProvider>
-                  <div className="page" data-page={dataPage}>
-                    <div className="page__container">
-                      <div className="page__container-gradient page__container-gradient--Left"></div>
-                      <div className="page__container-gradient page__container-gradient--Right"></div>
-                      {children}
+                  <SomethingProvider>
+                    <div className="page" data-page={dataPage}>
+                      <div className="page__container">
+                        <div className="page__container-gradient page__container-gradient--Left"></div>
+                        <div className="page__container-gradient page__container-gradient--Right"></div>
+                        {children}
+                      </div>
                     </div>
-                  </div>
+                  </SomethingProvider>
                 </ModalProvider>
               </UserDataProvider>
             </DrawerProvider>

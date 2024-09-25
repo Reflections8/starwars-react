@@ -8,12 +8,10 @@ import { useDrawer } from "../../../../../context/DrawerContext";
 import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
 import "./styles/Rivals.css";
 import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
-import { useModal } from "../../../../../context/ModalContext";
 import { useTranslation } from "react-i18next";
 
 export function Rivals() {
   const { t } = useTranslation();
-  const { openModal } = useModal();
   const { openDrawer } = useDrawer();
   const [isCreatingDuel, setIsCreatingDuel] = useState(false);
   const [friendsLogin, setFriendsLogin] = useState("");
@@ -31,8 +29,6 @@ export function Rivals() {
     loadRooms,
     createdRoom,
     setCreatedRoom,
-    joinedRoom,
-    setJoinedRoom,
     sendMessage,
     setRoomName,
     me,
@@ -84,13 +80,6 @@ export function Rivals() {
       setCreatedRoom({ name: "" });
     }
   }, [createdRoom.name]);
-
-  useEffect(() => {
-    if (joinedRoom) {
-      openModal!("shipsArrangement2");
-      setJoinedRoom("");
-    }
-  }, [joinedRoom]);
 
   return (
     <div className="rivals">
@@ -241,12 +230,6 @@ export function Rivals() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              sendMessage({
-                type: "deny_battle",
-                message: {
-                  room_name: friendsLogin,
-                },
-              });
               sendMessage({
                 type: "give_up",
                 message: {
