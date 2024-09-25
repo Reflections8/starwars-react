@@ -2,7 +2,7 @@ import { ReactNode, createContext, useContext, useEffect } from "react";
 import { useBattleships } from "../BattleshipsContext";
 import { useDrawer } from "../DrawerContext";
 import { useModal } from "../ModalContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSound } from "./SoundContext";
 
 type SomethingProviderProps = {
@@ -27,6 +27,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   const { openDrawer, closeDrawer } = useDrawer();
   const { openModal } = useModal();
   const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     if (!approveGame) {
       closeDrawer!();
@@ -37,7 +38,11 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
 
   useEffect(() => {
     if (joinedRoom) {
-      console.log({ LOCATION: location.pathname });
+      if (location.pathname !== "/game2") {
+        console.log("NAVIGATE ZALUPA");
+        navigate("/game2");
+      }
+
       openModal!("shipsArrangement2");
       setJoinedRoom("");
     }

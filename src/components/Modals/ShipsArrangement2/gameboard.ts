@@ -31,6 +31,54 @@ const unsettledMax = {
   "4": 1,
 };
 
+function shuffleArray(array: any[]): any[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function getRandomCell(
+  freeCells: Set<string>,
+  length: number,
+  isVertical: boolean
+): string | null {
+  const cellsArray = Array.from(freeCells);
+  while (cellsArray.length > 0) {
+    const randomIndex = Math.floor(Math.random() * cellsArray.length);
+    const [row, column] = cellsArray[randomIndex].split(",").map(Number);
+
+    let valid = true;
+    let x = row;
+    let y = column;
+
+    for (let i = 0; i < length; i++) {
+      if (isVertical) y++;
+      else x++;
+      if (!freeCells.has(`${x},${y}`)) {
+        valid = false;
+        break;
+      }
+    }
+    if (valid) return cellsArray[randomIndex];
+  }
+  return null;
+}
+
+const shipsToPlaceRandom = [
+  { length: 4, vertical: true },
+  { length: 3, vertical: true },
+  { length: 3, vertical: true },
+  { length: 2, vertical: true },
+  { length: 2, vertical: true },
+  { length: 2, vertical: true },
+  { length: 1, vertical: true },
+  { length: 1, vertical: true },
+  { length: 1, vertical: true },
+  { length: 1, vertical: true },
+];
+
 const directions = [
   { x: -1, y: -1 },
   { x: -1, y: 0 },
@@ -113,65 +161,63 @@ export class Gameboard {
       return { x, y, err: shipFields.has(field) };
     });
   }
-  /*
-  //SHIP ARRANGEMENT
-  getFieldsNearShips() {
-    let res: { x: number; y: number; err: boolean }[] = [];
-    const directions = [
-      { x: -1, y: -1 },
-      { x: -1, y: 0 },
-      { x: -1, y: 1 },
-      { x: 0, y: -1 },
-      { x: 0, y: 1 },
-      { x: 1, y: -1 },
-      { x: 1, y: 0 },
-      { x: 1, y: 1 },
-      { x: 0, y: 0 },
-    ];
 
-    let fieldCount = new Map();
-    let shipsToSearch = [...this.ships];
+  placeShipRandomly(freeCells: Set<string>, length: number) {
+    let placed: null | ShipPosition = null;
 
-    if (this.dragndrop) {
-      shipsToSearch.push(this.dragndrop);
+    const l = length;
+    let v = Math.random() < 0.5;
+    let cell = getRandomCell(freeCells, l, v);
+    if (!cell) {
+      v = !v;
+      cell = getRandomCell(freeCells, l, v);
+      if (!cell) return placed;
     }
 
-    shipsToSearch.forEach(({ ship, pos }, idx) => {
-      const { row, column } = pos;
-      const { length, vertical } = ship;
-      for (let i = 0; i < length; i++) {
-        const shipPosX = vertical ? row + i : row;
-        const shipPosY = vertical ? column : column + i;
-        directions.forEach(({ x, y }) => {
-          const newX = shipPosX + x;
-          const newY = shipPosY + y;
-          if (newX >= 0 && newX < this.SIZE && newY >= 0 && newY < this.SIZE) {
-            const fieldKey = `${newX},${newY}`;
-            if (!fieldCount.has(fieldKey)) {
-              fieldCount.set(fieldKey, new Set());
-            }
-            fieldCount.get(fieldKey).add(idx);
-          }
-        });
-      }
-    });
+    const [row, column] = cell.split(",").map(Number);
 
-    fieldCount.forEach((shipIndices, fieldKey) => {
-      //@ts-ignore
-      const [x, y] = fieldKey.split(",").map(Number);
-      const hasError = shipIndices.size > 1;
-      const isNearUnconfirmedShip = Array.from(shipIndices).some(
-        //@ts-ignore
-        (idx) => !shipsToSearch[idx].confirmed
-      );
+    placed = {
+      ship: { length: l, vertical: v },
+      pos: { row, column },
+      confirmed: true,
+    };
 
-      if (hasError || !isNearUnconfirmedShip) {
-        res.push({ x, y, err: hasError });
-      }
-    });
+    for (let i = 0; i < l; i++) {
+      const x = v ? row + i : row;
+      const y = v ? column : column + i;
+      freeCells.delete(`${x},${y}`);
+    }
+    for (let i = 0; i < l; i++) {
+      const X = v ? row + i : row;
+      const Y = v ? column : column + i;
+      directions.forEach(({ x, y }) => {
+        const newX = x + X;
+        const newY = y + Y;
+        freeCells.delete(`${newX},${newY}`);
+      });
+    }
 
-    return res;
-  }*/
+    return placed;
+  }
+
+  randomizeShips() {
+    let placedShips: any = [];
+    let freeCells = new Set<string>();
+
+    for (let i = 0; i < this.SIZE; i++)
+      for (let j = 0; j < this.SIZE; j++) freeCells.add(`${i},${j}`);
+
+    const shipsToPlace = shuffleArray(shipsToPlaceRandom);
+
+    for (let i = 0; i < shipsToPlace.length; i++) {
+      const ship = this.placeShipRandomly(freeCells, shipsToPlace[i].length);
+      if (ship) placedShips.push(ship);
+      else break;
+    }
+
+    if (placedShips.length === shipsToPlace.length) this.ships = placedShips;
+    else this.randomizeShips();
+  }
 
   unconfirmShipAtRC(row: number, column: number) {
     const shipPos = this.getShipRC(row, column);
