@@ -282,7 +282,7 @@ export function ShipsArrangementChild() {
             <CuttedButton
               className={blockedState ? "halfTransparent" : ""}
               callback={() => {
-                gameboard.placeShipsRandomly();
+                gameboard.randomizeShips();
                 updateGameboard();
               }}
               text={t("shipsArrangementModal.auto")}

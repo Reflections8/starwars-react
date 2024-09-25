@@ -50,18 +50,22 @@ function getRandomCell(
     const [row, column] = cellsArray[randomIndex].split(",").map(Number);
 
     let valid = true;
+
     let x = row;
     let y = column;
 
     for (let i = 0; i < length; i++) {
-      if (isVertical) y++;
-      else x++;
+      if (isVertical) x++;
+      else y++;
+
       if (!freeCells.has(`${x},${y}`)) {
         valid = false;
         break;
       }
     }
+
     if (valid) return cellsArray[randomIndex];
+    else cellsArray.splice(randomIndex, 1);
   }
   return null;
 }
@@ -182,17 +186,25 @@ export class Gameboard {
       confirmed: true,
     };
 
+    const directions = [
+      { x: -1, y: -1 },
+      { x: -1, y: 0 },
+      { x: -1, y: 1 },
+      { x: 0, y: -1 },
+      { x: 0, y: 1 },
+      { x: 1, y: -1 },
+      { x: 1, y: 0 },
+      { x: 1, y: 1 },
+    ];
+    let x = row;
+    let y = column;
     for (let i = 0; i < l; i++) {
-      const x = v ? row + i : row;
-      const y = v ? column : column + i;
+      if (v) x++;
+      else y++;
       freeCells.delete(`${x},${y}`);
-    }
-    for (let i = 0; i < l; i++) {
-      const X = v ? row + i : row;
-      const Y = v ? column : column + i;
-      directions.forEach(({ x, y }) => {
-        const newX = x + X;
-        const newY = y + Y;
+      directions.forEach(({ x: dx, y: dy }) => {
+        const newX = x + dx;
+        const newY = y + dy;
         freeCells.delete(`${newX},${newY}`);
       });
     }
@@ -201,7 +213,7 @@ export class Gameboard {
   }
 
   randomizeShips() {
-    let placedShips: any = [];
+    this.ships = [];
     let freeCells = new Set<string>();
 
     for (let i = 0; i < this.SIZE; i++)
@@ -211,11 +223,11 @@ export class Gameboard {
 
     for (let i = 0; i < shipsToPlace.length; i++) {
       const ship = this.placeShipRandomly(freeCells, shipsToPlace[i].length);
-      if (ship) placedShips.push(ship);
+      if (ship) this.ships.push(ship);
       else break;
     }
 
-    if (placedShips.length === shipsToPlace.length) this.ships = placedShips;
+    if (this.ships.length === shipsToPlace.length) return;
     else this.randomizeShips();
   }
 
@@ -275,20 +287,6 @@ export class Gameboard {
       { ship: deepCopy(ship), pos: { row, column }, confirmed },
     ];
     return true;
-  }
-
-  placeShipsRandomly() {
-    const idx = Math.floor(Math.random() * 10);
-    const game = combinations[idx];
-    this.ships = [];
-    this.dragndrop = null;
-
-    for (let i = 0; i < game.length; i++) {
-      const ship = { length: game[i].length, vertical: game[i].vertical };
-      const row = game[i].coords.x;
-      const column = game[i].coords.y;
-      this.placeShip(ship, row, column, true);
-    }
   }
 
   isPlacementPossible(
