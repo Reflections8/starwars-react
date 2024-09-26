@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useModal } from "../../../context/ModalContext";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import { Board } from "./components/Board";
 import { Ships } from "./components/Ships";
@@ -14,7 +13,6 @@ import { useBattleships } from "../../../context/BattleshipsContext";
 import { Rules } from "../SeaBattle/components/Rules/Rules";
 import backImg from "../SeaBattle/img/back-button.svg";
 import bgAudio from "./audio/arrangement.mp3";
-import { useTimer } from "react-use-precision-timer";
 import { useTranslation } from "react-i18next";
 
 // @ts-ignore
