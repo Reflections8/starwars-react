@@ -80,11 +80,7 @@ export function SoundProvider({ children }: SoundProviderProps) {
   };
 
   useEffect(() => {
-    if (isAudioStart) {
-      setTimeout(() => {
-        startBackgroundAudio();
-      }, 5000);
-    }
+    if (isAudioStart) startBackgroundAudio();
   }, [isAudioStart]);
 
   const blastIt = (isHit: string) => {

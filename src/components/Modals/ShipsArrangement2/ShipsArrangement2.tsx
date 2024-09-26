@@ -48,14 +48,22 @@ export function ShipsArrangementChild() {
   const { closeModal } = useModal();
 
   const [isInitial, setIsInitial] = useState(true);
-  const [blockedState, setBlockedState] = useState(false);
+
   const [allShipsSettled, setAllShipsSettled] = useState(false);
   const [selectedShipToSettle, setSelectedShipToSettle] =
     useState<ShipType | null>(null);
-  const [gameboard, setGameboard] = useState(new Gameboard());
 
-  const { roomName, sendMessage, setUserShips, gameStarted, setGameStarted } =
-    useBattleships();
+  const {
+    blockedState,
+    setBlockedState,
+    roomName,
+    sendMessage,
+    setMyBoardState,
+    gameStarted,
+    setGameStarted,
+    gameboard,
+    setGameboard,
+  } = useBattleships();
 
   useEffect(() => {
     const isSettledAll = Object.values(gameboard.getUnsettledShips()).every(
@@ -111,7 +119,7 @@ export function ShipsArrangementChild() {
   };
 
   const handleArrangementDone = () => {
-    const preparedShipsArray = gameboard.ships.map((item) => {
+    const preparedShipsArray = gameboard.ships.map((item: any) => {
       return {
         length: item.ship.length,
         vertical: item.ship.vertical,
@@ -132,7 +140,17 @@ export function ShipsArrangementChild() {
   };
 
   const handleStartGame = () => {
-    setUserShips!(gameboard.ships);
+    setMyBoardState!((prev: any) => ({
+      ...prev,
+      //@ts-ignore
+      ships: gameboard.ships.map((s) => {
+        return {
+          length: s.ship.length,
+          vertical: s.ship.vertical,
+          pos: s.pos,
+        };
+      }),
+    }));
     closeModal!();
     setBlockedState(false);
     setGameStarted(false);

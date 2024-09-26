@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
+import { Gameboard as ArrangementBoard } from "../components/Modals/ShipsArrangement2/gameboard";
 import { playBeamAnimation, useSound } from "./SeaContexts";
 
 import { Room } from "../components/Modals/SeaBattle/types/types";
@@ -22,16 +23,7 @@ type BattleshipsProviderProps = {
   children: ReactNode;
 };
 
-type BattleshipsContextProps = {
-  gameState: GameState;
-  setGameState: (gameState: GameState) => void;
-  userShips: any[];
-  setUserShips: (ships: any[]) => void;
-  socket: WebSocket | null; // Добавлено для доступа к сокету
-  sendMessage: (obj: { type: string; message: object }) => void;
-} & any;
-
-type GameState = "WON" | "LOST" | "IN_PROGRESS" | "NOT_STARTED" | string;
+type BattleshipsContextProps = any;
 
 let jwtToUse = localStorage.getItem("auth_jwt") || "";
 if (document.location.href.includes("5174"))
@@ -46,7 +38,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
   const [approveGame, setApproveGame] = useState<any>(null);
   const [gameState, setGameState] = useState("NOT_STARTED");
-  const [userShips, setUserShips] = useState<any[]>([]);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
   const [jwt] = useState<string>(jwtToUse);
@@ -59,10 +50,11 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [me, setMe] = useState(null);
   const [createdRoom, setCreatedRoom] = useState({ name: "" });
   const [joinedRoom, setJoinedRoom] = useState("");
-  const [myShips, setMyShips] = useState([]);
-  const [myHits, setMyHits] = useState([]);
+
   const [shipsPlaced, setShipsPlaced] = useState(false);
   const [searchingDuel, setSearchingDuel] = useState(false);
+
+  const [gameboard, setGameboard] = useState(new ArrangementBoard());
 
   useEffect(() => {
     if (rooms.length === 0) {
@@ -109,37 +101,77 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   }, [jwt]);
 
   const [gameStarted, setGameStarted] = useState(false);
-  const [userBoard, setUserBoard] = useState(new Gameboard(myShips));
+  const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
   const [myTurn, setMyTurn] = useState(true);
 
-  const [myMisses, setMyMisses] = useState([]);
-  const [enemyMisses, setEnemyMisses] = useState([]);
   const userDeadShips = useRef([]);
   const enemyDeadShips = useRef([]);
+  const [blockedState, setBlockedState] = useState(false);
 
-  useEffect(() => {
-    const newGameboard = new Gameboard(myShips);
-    newGameboard.ships = myShips;
-    newGameboard.hits = userBoard.hits;
-    newGameboard.misses = enemyMisses;
-    setUserBoard(newGameboard);
-  }, [shipsPlaced, JSON.stringify([myShips, userBoard.hits, enemyMisses])]);
+  const [myBoardState, setMyBoardState] = useState({
+    hits: [],
+    misses: [],
+    ships: [],
+  });
+  const [enemyBoardState, setEnemyBoardState] = useState({
+    hits: [],
+    misses: [],
+    ships: [],
+    preHit: null,
+  });
 
   useEffect(() => {
     const newGameboard = new Gameboard();
-    newGameboard.ships = enemyBoard.ships;
-    newGameboard.hits = myHits;
-    newGameboard.misses = myMisses;
-    newGameboard.preHit = enemyBoard.preHit;
+    const { ships, hits, misses } = myBoardState;
+    newGameboard.ships = ships;
+    newGameboard.hits = hits;
+    newGameboard.misses = misses;
+    setUserBoard(newGameboard);
+  }, [JSON.stringify(myBoardState)]);
+
+  useEffect(() => {
+    const newGameboard = new Gameboard();
+    const { ships, hits, misses, preHit } = enemyBoardState;
+    newGameboard.ships = ships;
+    newGameboard.hits = hits;
+    newGameboard.misses = misses;
+    newGameboard.preHit = preHit;
     setEnemyBoard(newGameboard);
-  }, [JSON.stringify([enemyBoard.ships, myHits, myMisses, enemyBoard.preHit])]);
+  }, [JSON.stringify(enemyBoardState)]);
 
   const restartBoards = () => {
     userDeadShips.current = [];
     enemyDeadShips.current = [];
     setUserBoard(new Gameboard());
     setEnemyBoard(new Gameboard());
+    setMyBoardState({
+      hits: [],
+      misses: [],
+      ships: [],
+    });
+    setEnemyBoardState({
+      hits: [],
+      misses: [],
+      ships: [],
+      preHit: null,
+    });
+  };
+
+  const updateBoardState = (field_view: any) => {
+    const hits = field_view?.opponent_board?.ships
+      .map((ship: any) => ship.cells)
+      .flat();
+    const misses = field_view.misses;
+    const ships =
+      field_view.ships?.map((ship: any) => {
+        return {
+          length: ship.length,
+          vertical: ship.vertical,
+          pos: ship.head,
+        };
+      }) || [];
+    return { hits, misses, ships };
   };
 
   // Обработка сообщений WebSocket
@@ -163,7 +195,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
         case "start_placement_phase":
           setOpponentName(response.message.opponent_name);
-
           setJoinedRoom(parsedMessage?.room_name);
           setRoomName(parsedMessage?.room_name);
           break;
@@ -171,21 +202,26 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
         case "round_start":
           setGameStarted(true);
-          setIsAudioStart(true);
-          // @ts-ignore
-          const parsedShips =
-            parsedMessage?.ships?.map((ship: any) => {
-              return {
-                length: ship.length,
-                vertical: ship.vertical,
-                pos: ship.head,
-              };
-            }) || [];
+          setTimeout(() => {
+            setIsAudioStart(true);
+          }, 5000);
 
-          setMyShips(parsedShips);
+          setMyBoardState({
+            misses: [],
+            hits: [],
+            ships:
+              parsedMessage?.ships?.map((ship: any) => {
+                return {
+                  length: ship.length,
+                  vertical: ship.vertical,
+                  pos: ship.head,
+                };
+              }) || [],
+          });
           setShipsPlaced(true);
           setMyTurn(parsedMessage.can_fire);
           break;
+
         case "fire_result":
           const prevDeadEList = enemyDeadShips.current.filter(
             //@ts-ignore
@@ -202,28 +238,20 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
             if (prevDeadEList.length < newDeadEList.length) isHit = "dead";
             else isHit = "success";
           }
+
           enemyDeadShips.current =
             parsedMessage.field_view.opponent_board.ships;
           playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
-          // @ts-ignore
-          const fireResultParsedShips =
-            parsedMessage?.field_view?.player_board?.ships?.map((ship: any) => {
-              return {
-                length: ship.length,
-                vertical: ship.vertical,
-                pos: ship.head,
-              };
-            }) || [];
 
-          setMyShips(fireResultParsedShips);
-          setMyMisses(parsedMessage?.field_view?.opponent_board?.misses);
-          setMyHits(
-            parsedMessage?.field_view?.opponent_board?.ships
-              .map((ship: any) => ship.cells)
-              .flat()
+          setEnemyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.opponent_board)
+          );
+          setMyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.player_board)
           );
           setMyTurn(parsedMessage.can_fire);
-          enemyBoard.updateEnemyBoard(parsedMessage.field_view.opponent_board);
           break;
         case "enemy_fire_result":
           const prevDeadList = userDeadShips.current.filter(
@@ -243,20 +271,16 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           }
           userDeadShips.current = parsedMessage.field_view.player_board.ships;
           playBeamAnimation(parsedMessage.fire_target, false, isEHit, blastIt);
-          // @ts-ignore
-          const enemyFireResultParsedShips =
-            parsedMessage?.field_view?.player_board?.ships?.map((ship: any) => {
-              return {
-                length: ship.length,
-                vertical: ship.vertical,
-                pos: ship.head,
-              };
-            }) || [];
-
-          setMyShips(enemyFireResultParsedShips);
-          setEnemyMisses(parsedMessage?.field_view?.player_board?.misses);
+          setEnemyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.opponent_board)
+          );
+          setMyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.player_board)
+          );
           setMyTurn(parsedMessage.can_fire);
-          userBoard.updateUserBoard(parsedMessage.field_view.player_board);
+
           break;
         case "game_over":
           // TODO: завершать игру и показывать модалки только когда анимация последнего выстрела закончится и поле закрасится
@@ -275,7 +299,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     socket.addEventListener("message", handleMessage);
 
     return () => socket.removeEventListener("message", handleMessage);
-  }, [socket, userBoard, enemyBoard]);
+  }, [socket]);
 
   useEffect(() => {
     if (!socket) return;
@@ -358,11 +382,12 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     <BattleshipsContext.Provider
       value={{
         me,
+        blockedState,
+        setBlockedState,
         handleDeclineMyRooms,
         gameState,
         setGameState,
-        userShips,
-        setUserShips,
+        myBoardState,
         socket,
         sendMessage,
         messages,
@@ -377,7 +402,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setCreatedRoom,
         joinedRoom,
         setJoinedRoom,
-        myShips,
         shipsPlaced,
         setShipsPlaced,
         gameStarted,
@@ -396,6 +420,11 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         activeCurrency,
         setActiveCurrency,
         jwt,
+        gameboard,
+        setGameboard,
+        updateBoardState,
+        setMyBoardState,
+        setEnemyBoardState,
       }}
     >
       {children}

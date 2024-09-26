@@ -45,12 +45,10 @@ export function Game2() {
   const {
     socket,
     gameState,
-    userShips,
+    myBoardState,
     setGameState,
     userBoard,
     enemyBoard,
-    updateUserboard,
-    updateEnemyBoard,
     myTurn,
     jwt,
   } = useBattleships();
@@ -87,30 +85,11 @@ export function Game2() {
   }, []);
 
   useEffect(() => {
-    let timer;
-    if (myTurn) return;
-    timer = setTimeout(() => {
-      const hit = userBoard.getRandomHitPlace();
-      socket &&
-        socket.send(
-          JSON.stringify({
-            type: "fire",
-            message: hit,
-            source: "mock",
-          })
-        );
-    }, 2500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [myTurn, userBoard]);
-
-  useEffect(() => {
-    if (userShips && userShips.length > 0) {
+    if (myBoardState.ships && myBoardState.ships.length > 0) {
       timer.start();
       setGameState!("IN_PROGRESS");
     }
-  }, [JSON.stringify(userShips), socket]);
+  }, [JSON.stringify(myBoardState)]);
 
   return (
     <div className="game2">
@@ -149,8 +128,6 @@ export function Game2() {
           timerValue,
           enemyBoard,
           userBoard,
-          updateEnemyBoard,
-          updateUserboard,
           myTurn,
         }}
       />

@@ -23,31 +23,6 @@ type Cell = {
   column: number;
 };
 
-type Ship = {
-  vertical: boolean;
-  IsDead: boolean;
-  length: number;
-  cells: Cell[];
-  head: Cell;
-};
-
-type UpdateData = {
-  isMe: boolean;
-  misses: Cell[];
-  ships: Ship[];
-};
-
-type UpdateEnemyData = {
-  isMe: boolean;
-  misses: Cell[];
-  ships: {
-    cells: Cell[];
-    is_dead: boolean;
-    length?: number;
-    vertical?: boolean;
-  }[];
-};
-
 export class Gameboard {
   ships: ShipPosition[];
   SIZE: number;
@@ -66,61 +41,12 @@ export class Gameboard {
   }
   initialize() {}
 
-  getRandomHitPlace() {
-    let row: number;
-    let column: number;
-    let isUnique: boolean;
-    do {
-      row = Math.floor(Math.random() * this.SIZE);
-      column = Math.floor(Math.random() * this.SIZE);
-
-      isUnique =
-        !this.hits.some((hit) => hit.row === row && hit.column === column) &&
-        !this.misses.some((miss) => miss.row === row && miss.column === column);
-    } while (!isUnique);
-
-    return { row, column };
-  }
-
   setPreHit(pos: Cell | null) {
     this.preHit = pos;
   }
   getIfPreHit(row: number, column: number) {
     if (!this.preHit) return false;
     return this.preHit.row === row && this.preHit.column === column;
-  }
-  updateEnemyBoard(data: UpdateEnemyData) {
-    console.log({ data });
-    let newHits: any[] = [];
-    let newShips: any[] = [];
-    data.ships.forEach((ship) => {
-      const { cells, is_dead, vertical, length } = ship;
-      newHits.push(...cells);
-      if (is_dead) {
-        const head = [...cells].sort((a, b) =>
-          vertical ? a.row - b.row : a.column - b.column
-        )[0];
-        newShips.push({ ship: { vertical, length }, pos: head });
-      }
-    });
-    this.ships = newShips;
-    this.hits = newHits;
-    this.misses = data.misses;
-  }
-  updateUserBoard(data: UpdateData) {
-    let newHits: any[] = [];
-    this.ships = data.ships.map((ship) => {
-      const { head, vertical, length, cells } = ship;
-      newHits.push(...cells);
-      return {
-        ship: { vertical, length },
-        pos: { row: head.row, column: head.column },
-        confirmed: true,
-      };
-    });
-
-    this.hits = newHits;
-    this.misses = data.misses;
   }
 
   //SHIP ARRANGEMENT
@@ -175,12 +101,7 @@ export class Gameboard {
       (miss) => miss.row === row && miss.column === column
     );
   }
-  /*{
-    "1": 4,
-    "2": 3,
-    "3": 2,
-    "4": 1,
-  }; */
+
   getShipsRemain() {
     let res: { [key: string]: number } = {
       "1": 4,

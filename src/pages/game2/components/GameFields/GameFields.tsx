@@ -14,24 +14,14 @@ import { useBattleships } from "../../../../context/BattleshipsContext";
 export const GameFields: FC<{
   userBoard: Gameboard;
   enemyBoard: Gameboard;
-  updateEnemyBoard: () => void;
-  //sendHit: (p: { row: number; column: number }) => void;
   myTurn: boolean;
   timerValue: number;
-}> = ({
-  userBoard,
-  enemyBoard,
-  updateEnemyBoard,
-  //sendHit,
-  myTurn,
-  timerValue,
-}) => {
+}> = ({ userBoard, enemyBoard, myTurn, timerValue }) => {
   const { roomName, sendMessage } = useBattleships();
   const clickEnemyField = (row: number, column: number, zalupa: boolean) => {
     if (!zalupa) return;
     if (!myTurn) return;
     enemyBoard.setPreHit({ row, column });
-    updateEnemyBoard();
   };
 
   const confirmHit = () => {
@@ -43,9 +33,7 @@ export const GameFields: FC<{
         target: enemyBoard.preHit,
       },
     });
-    //sendHit(enemyBoard.preHit);
     enemyBoard.setPreHit(null);
-    updateEnemyBoard();
   };
 
   return (

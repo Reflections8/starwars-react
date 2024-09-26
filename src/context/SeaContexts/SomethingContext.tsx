@@ -5,6 +5,8 @@ import { useModal } from "../ModalContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSound } from "./SoundContext";
 
+import { Gameboard as ArrangementBoard } from "../../components/Modals/ShipsArrangement2/gameboard";
+
 type SomethingProviderProps = {
   children: ReactNode;
 };
@@ -18,16 +20,31 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     approveGame,
     jwt,
     gameState,
-    setUserShips,
-    restartBoards,
     joinedRoom,
     setJoinedRoom,
+    setApproveGame,
+    setOpponentName,
+    setRoomName,
+    setGameboard,
+    setBlockedState,
+    setShipsPlaced,
+    setGameStarted,
+    setMyTurn,
+    socket,
+    restartBoards,
+    updateBoardState,
+    setMyBoardState,
+    setEnemyBoardState,
   } = useBattleships();
-  const { stopBackgroundAudio } = useSound();
+
+  const { stopBackgroundAudio, setIsAudioStart } = useSound();
+
   const { openDrawer, closeDrawer } = useDrawer();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
+
   const location = useLocation();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!approveGame) {
       closeDrawer!();
@@ -38,11 +55,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
 
   useEffect(() => {
     if (joinedRoom) {
-      if (location.pathname !== "/game2") {
-        console.log("NAVIGATE ZALUPA");
-        navigate("/game2");
-      }
-
+      if (location.pathname !== "/game2") navigate("/game2");
       openModal!("shipsArrangement2");
       setJoinedRoom("");
     }
@@ -52,23 +65,71 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     if (!jwt) return;
     if (gameState === "LOST") {
       stopBackgroundAudio();
-      setUserShips!([]);
       openModal!("battleshipsLost");
       restartBoards();
     }
     if (gameState === "WON") {
       stopBackgroundAudio();
-      setUserShips!([]);
       openModal!("battleshipsWon");
       restartBoards();
     }
     if (gameState === "NOT_STARTED") {
       restartBoards();
-      setUserShips!([]);
       openModal!("seaBattle");
     }
     if (gameState === "GIVE_UP") stopBackgroundAudio();
   }, [gameState, jwt]);
+
+  const handleHandshake = (parsedMessage: string) => {
+    //@ts-ignore
+    const { state, data, remain_time } = parsedMessage;
+    if (state === 1 || state === 2) setApproveGame(data);
+    if (state > 2) {
+      setOpponentName(data.opponent_name);
+      setJoinedRoom(data.room_name);
+      setRoomName(data.room_name);
+    }
+    if (state === 4) {
+      const ships = data.ships.map((ship: any) => {
+        return {
+          ship: { length: ship.length, vertical: ship.vertical },
+          pos: ship.head,
+          confirmed: true,
+        };
+      });
+      const newGameboard = new ArrangementBoard();
+      newGameboard.ships = ships;
+      newGameboard.dragndrop = null;
+      setGameboard(newGameboard);
+      setBlockedState(true);
+    }
+    if (state > 4) {
+      setMyBoardState(updateBoardState(data.field_view.player_board));
+      setEnemyBoardState(updateBoardState(data.field_view.enemy_board));
+      setTimeout(() => {
+        setGameStarted(false);
+        closeModal!();
+      }, 10);
+      setShipsPlaced(true);
+      setIsAudioStart(true);
+      setBlockedState(false);
+      setGameStarted(true);
+    }
+    if (state === 5) setMyTurn(true);
+    if (state === 6) setMyTurn(false);
+  };
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleMessage = (event: MessageEvent) => {
+      const response = JSON.parse(event.data);
+      const parsedMessage = JSON.parse(response?.message);
+      if (response.type !== "handshake_success") return;
+      handleHandshake(parsedMessage);
+    };
+    socket.addEventListener("message", handleMessage);
+    return () => socket.removeEventListener("message", handleMessage);
+  }, [socket, closeModal]);
 
   return (
     <SomethingContext.Provider value={{}}>{children}</SomethingContext.Provider>
