@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSound } from "./SoundContext";
 
 import { Gameboard as ArrangementBoard } from "../../components/Modals/ShipsArrangement2/gameboard";
-import { useTimer } from "react-use-precision-timer";
 
 type SomethingProviderProps = {
   children: ReactNode;
@@ -28,7 +27,6 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     setRoomName,
     setGameboard,
     setBlockedState,
-    setShipsPlaced,
     setMyTurn,
     socket,
     restartBoards,
@@ -102,9 +100,8 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
       setBlockedState(true);
     }
     if (state > 4) {
-      setMyBoardState(updateBoardState(data.field_view.player_board));
-      setEnemyBoardState(updateBoardState(data.field_view.enemy_board));
-      setShipsPlaced(true);
+      setMyBoardState(updateBoardState(data.field_view.player_board, true));
+      setEnemyBoardState(updateBoardState(data.field_view.enemy_board, false));
       setIsAudioStart(true);
       setBlockedState(false);
       setTimeout(() => {

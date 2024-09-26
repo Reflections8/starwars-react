@@ -34,14 +34,17 @@ const BattleshipsContext = createContext<Partial<BattleshipsContextProps>>({});
 
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
+
   const { blastIt, setIsAudioStart } = useSound();
+
+  const socketRef = useRef<WebSocket | null>(null);
+  const userDeadShips = useRef([]);
+  const enemyDeadShips = useRef([]);
 
   const [approveGame, setApproveGame] = useState<any>(null);
   const [gameState, setGameState] = useState("NOT_STARTED");
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const socketRef = useRef<WebSocket | null>(null);
   const [jwt] = useState<string>(jwtToUse);
-
   const [isInitial, setIsInitial] = useState(true);
   const [roomName, setRoomName] = useState("");
   const [opponentName, setOpponentName] = useState("");
@@ -51,64 +54,12 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [me, setMe] = useState(null);
   const [createdRoom, setCreatedRoom] = useState({ name: "" });
   const [joinedRoom, setJoinedRoom] = useState("");
-
-  const [shipsPlaced, setShipsPlaced] = useState(false);
   const [searchingDuel, setSearchingDuel] = useState(false);
-
   const [gameboard, setGameboard] = useState(new ArrangementBoard());
-
-  useEffect(() => {
-    if (rooms.length === 0) {
-      setSearchingDuel(false);
-      return;
-    }
-    if (!me) return;
-    //@ts-ignore
-    const myRooms = rooms.filter((room) => room.creator.username === me);
-    setSearchingDuel(myRooms.length > 0);
-  }, [JSON.stringify(rooms), me]);
-
-  useEffect(() => {
-    if (!jwt) return;
-    getMe().then((res) => {
-      setMe(res.username);
-    });
-  }, [jwt]);
-
-  useEffect(() => {
-    if (!jwt) {
-      navigate("/");
-      return;
-    }
-    const ws = new WebSocket("wss://socket.akronix.io/shipBattle");
-    socketRef.current = ws;
-    setSocket(ws);
-    ws.onopen = () =>
-      ws.send(JSON.stringify({ type: "handshake", message: "zdarova", jwt }));
-    ws.onclose = (event) => {
-      if (event.code !== 1000) {
-        console.error(
-          "Код закрытия WebSocket:",
-          event.code,
-          "Причина:",
-          event.reason || "Неизвестная причина"
-        );
-      }
-    };
-    return () => {
-      if (ws.readyState === WebSocket.OPEN) ws.close();
-      socketRef.current = null; // Обнуляем ссылку на сокет
-    };
-  }, [jwt]);
-
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
   const [myTurn, setMyTurn] = useState(true);
-
-  const userDeadShips = useRef([]);
-  const enemyDeadShips = useRef([]);
   const [blockedState, setBlockedState] = useState(false);
-
   const [myBoardState, setMyBoardState] = useState({
     hits: [],
     misses: [],
@@ -120,25 +71,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     ships: [],
     preHit: null,
   });
-
-  useEffect(() => {
-    const newGameboard = new Gameboard();
-    const { ships, hits, misses } = myBoardState;
-    newGameboard.ships = ships;
-    newGameboard.hits = hits;
-    newGameboard.misses = misses;
-    setUserBoard(newGameboard);
-  }, [JSON.stringify(myBoardState)]);
-
-  useEffect(() => {
-    const newGameboard = new Gameboard();
-    const { ships, hits, misses, preHit } = enemyBoardState;
-    newGameboard.ships = ships;
-    newGameboard.hits = hits;
-    newGameboard.misses = misses;
-    newGameboard.preHit = preHit;
-    setEnemyBoard(newGameboard);
-  }, [JSON.stringify(enemyBoardState)]);
 
   const restartBoards = () => {
     userDeadShips.current = [];
@@ -158,159 +90,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     });
   };
 
-  const updateBoardState = (field_view: any) => {
-    if (!field_view) return { hits: [], misses: [], ships: [] };
-    const hits = field_view?.opponent_board?.ships
-      .map((ship: any) => ship.cells)
-      .flat();
-    const misses = field_view.misses;
-    const ships =
-      field_view.ships?.map((ship: any) => {
-        return {
-          length: ship.length,
-          vertical: ship.vertical,
-          pos: ship.head,
-        };
-      }) || [];
-    return { hits, misses, ships };
-  };
-
-  // Обработка сообщений WebSocket
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleMessage = (event: MessageEvent) => {
-      const response = JSON.parse(event.data);
-      const parsedMessage = JSON.parse(response?.message);
-
-      console.log("Сообщение от сервера:", response.type, parsedMessage);
-
-      switch (response.type) {
-        case "start_approve_phase": {
-          setApproveGame(parsedMessage);
-          break;
-        }
-        case "create_room":
-          setRoomName(response.message.room_name);
-          setCreatedRoom({ name: parsedMessage?.room_name });
-          break;
-        case "start_placement_phase":
-          setOpponentName(response.message.opponent_name);
-          setJoinedRoom(parsedMessage?.room_name);
-          setRoomName(parsedMessage?.room_name);
-          break;
-        case "ships_placed":
-          break;
-        case "round_start":
-          setIsInitial(false);
-          //setMyBoardState({
-          //  misses: [],
-          //  hits: [],
-          //  ships:
-          //    parsedMessage?.ships?.map((ship: any) => {
-          //      return {
-          //        length: ship.length,
-          //        vertical: ship.vertical,
-          //        pos: ship.head,
-          //      };
-          //    }) || [],
-          //});
-          //setShipsPlaced(true);
-          //setMyTurn(parsedMessage.can_fire);
-          break;
-
-        case "fire_result":
-          const prevDeadEList = enemyDeadShips.current.filter(
-            //@ts-ignore
-            (ship) => ship.is_dead
-          );
-          const newDeadEList =
-            parsedMessage.field_view.opponent_board.ships.filter(
-              //@ts-ignore
-              (ship) => ship.is_dead
-            );
-
-          let isHit = "fail";
-          if (parsedMessage.is_hit) {
-            if (prevDeadEList.length < newDeadEList.length) isHit = "dead";
-            else isHit = "success";
-          }
-
-          enemyDeadShips.current =
-            parsedMessage.field_view.opponent_board.ships;
-          playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
-
-          setEnemyBoardState(
-            //@ts-ignore
-            updateBoardState(parsedMessage.field_view.opponent_board)
-          );
-          setMyBoardState(
-            //@ts-ignore
-            updateBoardState(parsedMessage.field_view.player_board)
-          );
-          setMyTurn(parsedMessage.can_fire);
-          break;
-        case "enemy_fire_result":
-          const prevDeadList = userDeadShips.current.filter(
-            //@ts-ignore
-            (ship) => ship.is_dead
-          );
-          const newDeadList =
-            parsedMessage.field_view.player_board.ships.filter(
-              //@ts-ignore
-              (ship) => ship.is_dead
-            );
-
-          let isEHit = "fail";
-          if (parsedMessage.is_hit) {
-            if (prevDeadList.length < newDeadList.length) isEHit = "dead";
-            else isEHit = "success";
-          }
-          userDeadShips.current = parsedMessage.field_view.player_board.ships;
-          playBeamAnimation(parsedMessage.fire_target, false, isEHit, blastIt);
-          setEnemyBoardState(
-            //@ts-ignore
-            updateBoardState(parsedMessage.field_view.opponent_board)
-          );
-          setMyBoardState(
-            //@ts-ignore
-            updateBoardState(parsedMessage.field_view.player_board)
-          );
-          setMyTurn(parsedMessage.can_fire);
-
-          break;
-        case "game_over":
-          // TODO: завершать игру и показывать модалки только когда анимация последнего выстрела закончится и поле закрасится
-          setTimeout(() => {
-            setJoinedRoom("");
-            setIsAudioStart(false);
-            setGameState(parsedMessage.my_win ? "WON" : "LOST");
-            restartBoards();
-          }, 1500);
-          break;
-        default:
-          console.log("Неизвестный тип сообщения");
-      }
-    };
-
-    socket.addEventListener("message", handleMessage);
-
-    return () => socket.removeEventListener("message", handleMessage);
-  }, [socket]);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const interval = setInterval(() => {
-      sendMessage({
-        type: "ping",
-        message: "braat",
-      });
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [socket]);
-
   const sendMessage = (obj: { type: string; message: any }) => {
     const messageWithToken = {
       type: obj?.type,
@@ -322,6 +101,32 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     socketRef.current.send(JSON.stringify(messageWithToken));
   };
 
+  const getHeadFromCells = (cells: { row: number; column: number }[]) =>
+    cells.reduce(({ row: tlr, column: tlc }, { row, column }) => {
+      if (row < tlr || (row === tlr && column < tlc)) return { row, column };
+      return { row: tlr, column: tlc };
+    }, cells[0]);
+
+  const updateBoardState = (board: any, isMe: boolean) => {
+    if (!board) return { hits: [], misses: [], ships: [] };
+
+    const hits = board.ships.map((ship: any) => ship.cells).flat();
+    const misses = board.misses;
+    const shipsToAdd = board.ships.filter((s: any) => {
+      if (isMe) return true;
+      else return s.is_dead;
+    });
+
+    const ships =
+      shipsToAdd.map((ship: any) => {
+        return {
+          ship: { length: ship.length, vertical: ship.vertical },
+          pos: ship.head ?? getHeadFromCells(ship.cells),
+        };
+      }) || [];
+    return { hits, misses, ships };
+  };
+
   const handleApproveGame = () => {
     if (!approveGame) return;
     sendMessage({
@@ -330,6 +135,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     });
     setApproveGame(null);
   };
+
   const handleDeclineGame = () => {
     if (!approveGame) return;
     sendMessage({
@@ -366,6 +172,185 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   }
 
   useEffect(() => {
+    if (!socket) return;
+
+    const interval = setInterval(() => {
+      sendMessage({
+        type: "ping",
+        message: "braat",
+      });
+    }, 5000);
+
+    const handleMessage = (event: MessageEvent) => {
+      const response = JSON.parse(event.data);
+      const parsedMessage = JSON.parse(response?.message);
+
+      console.log("Сообщение от сервера:", response.type, parsedMessage);
+
+      switch (response.type) {
+        case "start_approve_phase":
+          setApproveGame(parsedMessage);
+          break;
+
+        case "create_room":
+          setRoomName(response.message.room_name);
+          setCreatedRoom({ name: parsedMessage?.room_name });
+          break;
+
+        case "start_placement_phase":
+          setOpponentName(response.message.opponent_name);
+          setJoinedRoom(parsedMessage?.room_name);
+          setRoomName(parsedMessage?.room_name);
+          break;
+
+        case "ships_placed":
+          break;
+
+        case "round_start":
+          setIsInitial(false);
+          setMyTurn(parsedMessage.can_fire);
+          break;
+
+        case "fire_result":
+          const prevDeadEList = enemyDeadShips.current.filter(
+            //@ts-ignore
+            (ship) => ship.is_dead
+          );
+          const newDeadEList =
+            parsedMessage.field_view.opponent_board.ships.filter(
+              //@ts-ignore
+              (ship) => ship.is_dead
+            );
+          let isHit = "fail";
+          if (parsedMessage.is_hit) {
+            if (prevDeadEList.length < newDeadEList.length) isHit = "dead";
+            else isHit = "success";
+          }
+          enemyDeadShips.current =
+            parsedMessage.field_view.opponent_board.ships;
+          playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
+          setEnemyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.opponent_board, false)
+          );
+          setMyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.player_board, true)
+          );
+          setMyTurn(parsedMessage.can_fire);
+          break;
+
+        case "enemy_fire_result":
+          const prevDeadList = userDeadShips.current.filter(
+            //@ts-ignore
+            (ship) => ship.is_dead
+          );
+          const newDeadList =
+            parsedMessage.field_view.player_board.ships.filter(
+              //@ts-ignore
+              (ship) => ship.is_dead
+            );
+          let isEHit = "fail";
+          if (parsedMessage.is_hit) {
+            if (prevDeadList.length < newDeadList.length) isEHit = "dead";
+            else isEHit = "success";
+          }
+          userDeadShips.current = parsedMessage.field_view.player_board.ships;
+          playBeamAnimation(parsedMessage.fire_target, false, isEHit, blastIt);
+          setEnemyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.opponent_board, false)
+          );
+          setMyBoardState(
+            //@ts-ignore
+            updateBoardState(parsedMessage.field_view.player_board, true)
+          );
+          setMyTurn(parsedMessage.can_fire);
+          break;
+
+        case "game_over":
+          // TODO: завершать игру и показывать модалки только когда анимация последнего выстрела закончится и поле закрасится
+          setTimeout(() => {
+            setJoinedRoom("");
+            setIsAudioStart(false);
+            setGameState(parsedMessage.my_win ? "WON" : "LOST");
+            restartBoards();
+          }, 1500);
+          break;
+
+        default:
+          console.log("Неизвестный тип сообщения");
+      }
+    };
+
+    socket.addEventListener("message", handleMessage);
+
+    return () => {
+      socket.removeEventListener("message", handleMessage);
+      clearInterval(interval);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (rooms.length === 0) {
+      setSearchingDuel(false);
+      return;
+    }
+    if (!me) return;
+    //@ts-ignore
+    const myRooms = rooms.filter((room) => room.creator.username === me);
+    setSearchingDuel(myRooms.length > 0);
+  }, [JSON.stringify(rooms), me]);
+
+  useEffect(() => {
+    if (!jwt) {
+      navigate("/");
+      return;
+    }
+    getMe().then((res) => {
+      setMe(res.username);
+    });
+    const ws = new WebSocket("wss://socket.akronix.io/shipBattle");
+    socketRef.current = ws;
+    setSocket(ws);
+    ws.onopen = () =>
+      ws.send(JSON.stringify({ type: "handshake", message: "zdarova", jwt }));
+    ws.onclose = (event) => {
+      if (event.code !== 1000) {
+        console.error(
+          "Код закрытия WebSocket:",
+          event.code,
+          "Причина:",
+          event.reason || "Неизвестная причина"
+        );
+      }
+    };
+    return () => {
+      if (ws.readyState === WebSocket.OPEN) ws.close();
+      socketRef.current = null; // Обнуляем ссылку на сокет
+    };
+  }, [jwt]);
+
+  useEffect(() => {
+    const newGameboard = new Gameboard();
+    const { ships, hits, misses } = myBoardState;
+    newGameboard.ships = ships;
+    newGameboard.hits = hits;
+    newGameboard.misses = misses;
+    setUserBoard(newGameboard);
+  }, [JSON.stringify(myBoardState)]);
+
+  useEffect(() => {
+    const newGameboard = new Gameboard();
+    const { ships, hits, misses, preHit } = enemyBoardState;
+    newGameboard.ships = ships;
+    newGameboard.hits = hits;
+    newGameboard.misses = misses;
+    newGameboard.preHit = preHit;
+    setEnemyBoard(newGameboard);
+  }, [JSON.stringify(enemyBoardState)]);
+
+  useEffect(() => {
     loadRooms();
     let timer = setInterval(() => {
       loadRooms();
@@ -399,8 +384,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setCreatedRoom,
         joinedRoom,
         setJoinedRoom,
-        shipsPlaced,
-        setShipsPlaced,
         userBoard,
         enemyBoard,
         restartBoards,

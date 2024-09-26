@@ -75,7 +75,6 @@ export function ModalProvider({ children }: ModalProviderProps) {
   };
 
   const closeModal = () => {
-    console.log("CLOSE MODAL CALLED");
     setIsOpen(() => false);
     setActivePillProp(() => 0);
     setModalType(() => "");

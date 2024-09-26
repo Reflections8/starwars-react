@@ -22,8 +22,7 @@ export const Timer: FC<{
       ...prev,
       ships: gameboard.ships.map((s: any) => {
         return {
-          length: s.ship.length,
-          vertical: s.ship.vertical,
+          ship: s.ship,
           pos: s.pos,
         };
       }),

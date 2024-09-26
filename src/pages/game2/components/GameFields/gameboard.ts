@@ -109,33 +109,13 @@ export class Gameboard {
       "3": 2,
       "4": 1,
     };
-    this.ships.forEach((shipPos) => {
-      const { ship } = shipPos;
-      const { length } = ship;
-      res[length] -= 1;
-    });
+    this.ships.forEach((shipPos) => (res[shipPos.ship.length] -= 1));
     return res;
   }
 
   getShipRC(r: number, c: number): null | ShipPosition {
     let res = null;
-
-    const transformed = this.ships.map((ship) => {
-      return {
-        pos: {
-          row: ship.pos.row,
-          column: ship.pos.column,
-        },
-        ship: {
-          // @ts-ignore
-          length: ship.length,
-          // @ts-ignore
-          vertical: ship.vertical,
-        },
-      };
-    });
-
-    transformed.forEach((shipPos) => {
+    this.ships.forEach((shipPos) => {
       const { pos, ship } = shipPos;
       const { row, column } = pos;
       const { length, vertical } = ship;
