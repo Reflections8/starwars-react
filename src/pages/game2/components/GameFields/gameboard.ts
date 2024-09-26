@@ -28,15 +28,14 @@ export class Gameboard {
   SIZE: number;
   hits: Cell[];
   misses: Cell[];
-
   preHit: null | Cell;
 
-  constructor(ships?: ShipPosition[]) {
+  constructor() {
     this.preHit = null;
     this.hits = [];
     this.misses = [];
     this.initialize();
-    this.ships = ships || [];
+    this.ships = [];
     this.SIZE = 10;
   }
   initialize() {}
@@ -94,6 +93,7 @@ export class Gameboard {
   }
 
   getIfHit(row: number, column: number): boolean {
+    if (!this.hits) return false;
     return this.hits.some((hit) => hit.row === row && hit.column === column);
   }
   getIfMiss(row: number, column: number): boolean {

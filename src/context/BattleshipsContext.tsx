@@ -42,6 +42,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const socketRef = useRef<WebSocket | null>(null);
   const [jwt] = useState<string>(jwtToUse);
 
+  const [isInitial, setIsInitial] = useState(true);
   const [roomName, setRoomName] = useState("");
   const [opponentName, setOpponentName] = useState("");
   const [messages, setMessages] = useState([]);
@@ -100,7 +101,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     };
   }, [jwt]);
 
-  const [gameStarted, setGameStarted] = useState(false);
   const [userBoard, setUserBoard] = useState(new Gameboard());
   const [enemyBoard, setEnemyBoard] = useState(new Gameboard());
   const [myTurn, setMyTurn] = useState(true);
@@ -159,6 +159,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   };
 
   const updateBoardState = (field_view: any) => {
+    if (!field_view) return { hits: [], misses: [], ships: [] };
     const hits = field_view?.opponent_board?.ships
       .map((ship: any) => ship.cells)
       .flat();
@@ -201,25 +202,21 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         case "ships_placed":
           break;
         case "round_start":
-          setGameStarted(true);
-          setTimeout(() => {
-            setIsAudioStart(true);
-          }, 5000);
-
-          setMyBoardState({
-            misses: [],
-            hits: [],
-            ships:
-              parsedMessage?.ships?.map((ship: any) => {
-                return {
-                  length: ship.length,
-                  vertical: ship.vertical,
-                  pos: ship.head,
-                };
-              }) || [],
-          });
-          setShipsPlaced(true);
-          setMyTurn(parsedMessage.can_fire);
+          setIsInitial(false);
+          //setMyBoardState({
+          //  misses: [],
+          //  hits: [],
+          //  ships:
+          //    parsedMessage?.ships?.map((ship: any) => {
+          //      return {
+          //        length: ship.length,
+          //        vertical: ship.vertical,
+          //        pos: ship.head,
+          //      };
+          //    }) || [],
+          //});
+          //setShipsPlaced(true);
+          //setMyTurn(parsedMessage.can_fire);
           break;
 
         case "fire_result":
@@ -404,8 +401,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setJoinedRoom,
         shipsPlaced,
         setShipsPlaced,
-        gameStarted,
-        setGameStarted,
         userBoard,
         enemyBoard,
         restartBoards,
@@ -425,6 +420,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         updateBoardState,
         setMyBoardState,
         setEnemyBoardState,
+        isInitial,
+        setIsInitial,
       }}
     >
       {children}

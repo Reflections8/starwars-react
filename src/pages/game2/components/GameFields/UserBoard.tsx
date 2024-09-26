@@ -18,7 +18,7 @@ interface Props {
 }
 
 interface FieldProps {
-  type?: string; //"empty" | "ship" | "nearShip" | "error";
+  type?: string;
   shipPos?: ShipPosition | null;
   isHead?: boolean;
   isHit?: boolean;

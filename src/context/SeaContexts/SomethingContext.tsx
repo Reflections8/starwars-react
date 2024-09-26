@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSound } from "./SoundContext";
 
 import { Gameboard as ArrangementBoard } from "../../components/Modals/ShipsArrangement2/gameboard";
+import { useTimer } from "react-use-precision-timer";
 
 type SomethingProviderProps = {
   children: ReactNode;
@@ -28,7 +29,6 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     setGameboard,
     setBlockedState,
     setShipsPlaced,
-    setGameStarted,
     setMyTurn,
     socket,
     restartBoards,
@@ -46,11 +46,8 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!approveGame) {
-      closeDrawer!();
-    } else {
-      openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
-    }
+    if (!approveGame) closeDrawer!();
+    else openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
   }, [JSON.stringify(approveGame)]);
 
   useEffect(() => {
@@ -81,6 +78,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   }, [gameState, jwt]);
 
   const handleHandshake = (parsedMessage: string) => {
+    return;
     //@ts-ignore
     const { state, data, remain_time } = parsedMessage;
     if (state === 1 || state === 2) setApproveGame(data);
@@ -106,14 +104,12 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     if (state > 4) {
       setMyBoardState(updateBoardState(data.field_view.player_board));
       setEnemyBoardState(updateBoardState(data.field_view.enemy_board));
-      setTimeout(() => {
-        setGameStarted(false);
-        closeModal!();
-      }, 10);
       setShipsPlaced(true);
       setIsAudioStart(true);
       setBlockedState(false);
-      setGameStarted(true);
+      setTimeout(() => {
+        closeModal!();
+      }, 100);
     }
     if (state === 5) setMyTurn(true);
     if (state === 6) setMyTurn(false);
@@ -123,9 +119,8 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     if (!socket) return;
     const handleMessage = (event: MessageEvent) => {
       const response = JSON.parse(event.data);
-      const parsedMessage = JSON.parse(response?.message);
       if (response.type !== "handshake_success") return;
-      handleHandshake(parsedMessage);
+      handleHandshake(JSON.parse(response?.message));
     };
     socket.addEventListener("message", handleMessage);
     return () => socket.removeEventListener("message", handleMessage);

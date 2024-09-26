@@ -43,7 +43,6 @@ export function Game2() {
 
   // @ts-ignore
   const {
-    socket,
     gameState,
     myBoardState,
     setGameState,

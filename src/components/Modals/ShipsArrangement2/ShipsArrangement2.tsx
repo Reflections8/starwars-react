@@ -45,10 +45,6 @@ export function ShipsArrangement2() {
 export function ShipsArrangementChild() {
   const { t } = useTranslation();
 
-  const { closeModal } = useModal();
-
-  const [isInitial, setIsInitial] = useState(true);
-
   const [allShipsSettled, setAllShipsSettled] = useState(false);
   const [selectedShipToSettle, setSelectedShipToSettle] =
     useState<ShipType | null>(null);
@@ -58,9 +54,6 @@ export function ShipsArrangementChild() {
     setBlockedState,
     roomName,
     sendMessage,
-    setMyBoardState,
-    gameStarted,
-    setGameStarted,
     gameboard,
     setGameboard,
   } = useBattleships();
@@ -139,23 +132,6 @@ export function ShipsArrangementChild() {
     setBlockedState(true);
   };
 
-  const handleStartGame = () => {
-    setMyBoardState!((prev: any) => ({
-      ...prev,
-      //@ts-ignore
-      ships: gameboard.ships.map((s) => {
-        return {
-          length: s.ship.length,
-          vertical: s.ship.vertical,
-          pos: s.pos,
-        };
-      }),
-    }));
-    closeModal!();
-    setBlockedState(false);
-    setGameStarted(false);
-  };
-
   const dragOnThisBalls = (i: any) => {
     if (!selectedShipToSettle) {
       gameboard.dragndrop = null;
@@ -199,17 +175,6 @@ export function ShipsArrangementChild() {
     audioRef.current.play();
   }, []);
 
-  const startTimer = useTimer(
-    { runOnce: true, startImmediately: false, delay: 5 * 1000 },
-    handleStartGame
-  );
-
-  useEffect(() => {
-    if (!gameStarted) return;
-    startTimer.start();
-    setIsInitial(false);
-  }, [gameStarted]);
-
   return (
     <>
       <audio
@@ -246,7 +211,6 @@ export function ShipsArrangementChild() {
           {/* FIELD */}
           <div className="shipsArr__main-field">
             <Timer
-              {...{ isInitial, setIsInitial, startTimer }}
               onRandom={() => {
                 gameboard.randomizeShips();
                 updateGameboard();

@@ -32,7 +32,6 @@ export function ModalProvider({ children }: ModalProviderProps) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const modalElement = document.querySelector(".modal");
-
       // @ts-ignore
       const clickOnDrawer = !!event.target.closest(".drawerBg");
 
@@ -77,9 +76,9 @@ export function ModalProvider({ children }: ModalProviderProps) {
 
   const closeModal = () => {
     console.log("CLOSE MODAL CALLED");
-    setIsOpen(false);
-    setActivePillProp(0);
-    setModalType("");
+    setIsOpen(() => false);
+    setActivePillProp(() => 0);
+    setModalType(() => "");
   };
 
   return (

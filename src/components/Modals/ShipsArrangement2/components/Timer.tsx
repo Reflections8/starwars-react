@@ -2,15 +2,42 @@ import { FC, useEffect, useState } from "react";
 import timerBg from "../img/timer-bg.svg";
 import timerIcon from "../img/timer-icon.svg";
 import { useTimer } from "react-use-precision-timer";
+import { useSound } from "../../../../context/SeaContexts";
+import { useBattleships } from "../../../../context/BattleshipsContext";
+import { useModal } from "../../../../context/ModalContext";
 
 const initialSeconds = 60;
 
 export const Timer: FC<{
-  startTimer: any;
   onRandom: () => void;
-  isInitial: boolean;
-}> = ({ onRandom, startTimer, isInitial }) => {
+}> = ({ onRandom }) => {
   const [timerValue, setTimerValue] = useState(initialSeconds * 1000);
+  const { isInitial, setMyBoardState, setBlockedState, gameboard } =
+    useBattleships();
+  const { closeModal } = useModal();
+  const { setIsAudioStart } = useSound();
+
+  const handleStartGame = () => {
+    setMyBoardState((prev: any) => ({
+      ...prev,
+      ships: gameboard.ships.map((s: any) => {
+        return {
+          length: s.ship.length,
+          vertical: s.ship.vertical,
+          pos: s.pos,
+        };
+      }),
+    }));
+    setIsAudioStart(true);
+    closeModal!();
+    setBlockedState(false);
+  };
+
+  const startTimer = useTimer(
+    { runOnce: true, startImmediately: false, delay: 5 * 1000 },
+    handleStartGame
+  );
+
   const timer = useTimer(
     { runOnce: true, startImmediately: false, delay: initialSeconds * 1000 },
     onRandom
@@ -23,8 +50,10 @@ export const Timer: FC<{
         setTimerValue(timer.getRemainingTime());
       }, 1);
     } else {
+      timer.stop();
+      startTimer.start();
       interval = setInterval(() => {
-        setTimerValue(startTimer.getRemainingTime());
+        startTimer && setTimerValue(startTimer.getRemainingTime());
       }, 1);
     }
     return () => {
