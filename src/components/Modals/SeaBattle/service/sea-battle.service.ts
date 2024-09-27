@@ -11,9 +11,21 @@ export async function fetchRooms() {
 }
 
 export async function fetchUserPhoto(username: string) {
+  const url = `https://t.me/i/userpic/160/${username}.jpg`;
+
   try {
-    const res = await fetch(`https://t.me/i/userpic/160/${username}.jpg`);
-    return await res.json();
+    const res = await fetch(url, { redirect: "manual" });
+
+    if (res.status === 302) {
+      const location = res.headers.get("Location");
+      if (location) {
+        return location;
+      }
+    } else if (res.ok) {
+      return url;
+    }
+
+    return null;
   } catch (e) {
     return null;
   }
