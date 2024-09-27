@@ -214,7 +214,7 @@
     "dismiss": "Dismiss",
     "waiting": "Waiting for opponents answer",
     "youCanceledGame": "You abandoned the game",
-    "creatorCanceledGame": "The creator of the room abandoned the game",
+    "creatorCanceledGame": "Game canceled",
     "opponentCanceledGame": "The opponent abandoned the game"
   },
   "playerModal": {

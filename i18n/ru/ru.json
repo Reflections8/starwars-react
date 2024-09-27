@@ -214,7 +214,7 @@
     "dismiss": "Отклонить",
     "waiting": "Ожидание ответа противника",
     "youCanceledGame": "Вы отказались от игры",
-    "creatorCanceledGame": "Создатель комнаты отказался от игры",
+    "creatorCanceledGame": "Игра отменена",
     "opponentCanceledGame": "Соперник отказался от игры"
   },
   "playerModal": {
