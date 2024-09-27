@@ -1,206 +1,224 @@
 .rivals__list {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-	margin-top: 10px;
-	padding-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding-bottom: 50px;
 }
 
 .rivals__list-item {
-	background: linear-gradient(90deg,
-			#19c2ef55,
-			rgba(25, 194, 239, 0) 30%,
-			rgba(25, 194, 239, 0) 70%,
-			#19c2ef55),
-		#19c1ef18;
-	border-radius: 2px;
-	padding: 5px 10px;
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	justify-content: space-between;
+  background: linear-gradient(
+      90deg,
+      #19c2ef55,
+      rgba(25, 194, 239, 0) 30%,
+      rgba(25, 194, 239, 0) 70%,
+      #19c2ef55
+    ),
+    #19c1ef18;
+  border-radius: 2px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
 }
 
 .rivals__list-item-start {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .rivals__list-item-end {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .rivals__list-item--New {
-	padding: 8px 10px;
-	justify-content: space-between;
+  padding: 8px 10px;
+  justify-content: space-between;
 }
 
 .rivals__list-item-end .cuttedButton {
-	padding: 7px;
-	font-size: 12px;
+  padding: 7px;
+  font-size: 12px;
 }
 
 .rivals__list-item-end .cuttedButton__text {
-	letter-spacing: 0;
+  letter-spacing: 0;
 }
 
 .rivals__list-item--New .rivals__list-item-start {
-	gap: 10px;
+  gap: 10px;
 }
 
 .rivals__list-item--New .rivals__list-item-start-info {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .rivals__list-item--New .rivals__list-item-end-btn .cuttedButton {
-	justify-content: center;
-	padding: 8px 12px;
+  justify-content: center;
+  padding: 8px 12px;
 }
 
 .rivals__list-item--New .rivals__list-item-start-info-key {
-	background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	font-size: 12px;
-	letter-spacing: 1px;
-	text-shadow: 2px 2px 0 #0974f820;
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 0 #0974f820;
 }
 
 .rivals__list-item--New .rivals__list-item-start-info-value {
-	font-size: 10px;
+  font-size: 10px;
 }
 
 .rivals__list-item-start-ava {
-	max-width: 36px;
+  width: 36px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.rivals__list-item-start-avaDefault {
+  height: 36px;
+  width: 36px;
+
+  border-radius: 50%;
+  overflow: hidden;
+  background: #c9e2ff;
+  color: #076ce9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .rivals__list-item-start {
-	gap: 10px;
+  gap: 10px;
 }
 
 .rivals__list-item-start-login {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
-	font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 10px;
 }
 
 .rivals__list-item-start-login-key {
-	color: #076ce9;
+  color: #076ce9;
 }
 
 .rivals__list-item-start-login-value {
-	color: #19c2ef;
-	max-width: 62px;
-	text-overflow: ellipsis;
-	overflow: hidden;
+  color: #19c2ef;
+  max-width: 62px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .rivals__list-item-start-bet {
-	display: flex;
-	flex-direction: column;
-	gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .rivals__list-item-start-bet-key {
-	font-size: 10px;
-	color: #076ce9;
+  font-size: 10px;
+  color: #076ce9;
 }
 
 .rivals__list-item-start-bet-value {
-	display: flex;
-	align-items: center;
-	gap: 4px;
-	border-radius: 4px;
-	border: 1px solid #26f21f71;
-	padding: 3px;
-	background: linear-gradient(to bottom, #0f9e51, #18cb13);
-	font-size: 10px;
-	color: white;
-	max-width: 75px;
-	word-break: break-word;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 4px;
+  border: 1px solid #26f21f71;
+  padding: 3px;
+  background: linear-gradient(to bottom, #0f9e51, #18cb13);
+  font-size: 10px;
+  color: white;
+  max-width: 75px;
+  word-break: break-word;
 }
 
 .rivals__newDuel {
-	padding-bottom: 50px;
+  padding-bottom: 50px;
 }
 
 .rivals__newDuel__title {
-	margin-top: 16px;
-	margin-bottom: 20px;
-	text-align: center;
-	font-size: 10px;
-	color: #076ce9;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 10px;
+  color: #076ce9;
 }
 
 .rivals__newDuel__inputBlock {
-	margin-bottom: 20px;
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .rivals__newDuel__inputBlock-sup {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .rivals__newDuel__inputBlock-sup-label {
-	color: #e1f0ff;
-	font-size: 12px;
-	text-shadow: 2px 2px 0 #0975f83d;
+  color: #e1f0ff;
+  font-size: 12px;
+  text-shadow: 2px 2px 0 #0975f83d;
 }
 
 .rivals__newDuel__inputBlock-sup-minValue {
-	font-size: 8px;
-	color: #076ce9;
-	text-shadow: 2px -1px 0 #076ce944;
+  font-size: 8px;
+  color: #076ce9;
+  text-shadow: 2px -1px 0 #076ce944;
 }
 
 .rivals__newDuel__inputBlock-inputWrapper {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .rivals__newDuel__inputBlock-input {
-	outline: none;
-	border: none;
-	border-bottom: 1px solid #0974f8;
-	padding: 10px 15px 10px 15px;
-	font-size: 20px;
-	color: #19c2ef;
-	width: 100%;
-	background: linear-gradient(to top, #0975f848, #0975f800);
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #0974f8;
+  padding: 10px 15px 10px 15px;
+  font-size: 20px;
+  color: #19c2ef;
+  width: 100%;
+  background: linear-gradient(to top, #0975f848, #0975f800);
 }
 
 .rivals__newDuel__inputBlock-input.ton {
-	padding-right: 60px;
+  padding-right: 60px;
 }
 
 .rivals__newDuel__inputBlock-input.akronix {
-	padding-right: 110px;
+  padding-right: 110px;
 }
 
 .rivals__newDuel__inputBlock-input.credits {
-	padding-right: 110px;
+  padding-right: 110px;
 }
 
 .rivals__newDuel__inputBlock-postfix {
-	position: absolute;
-	top: 50%;
-	right: 14px;
-	font-size: 18px;
-	transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  font-size: 18px;
+  transform: translateY(-50%);
 }
 
 .rivals__newDuel__cuttedButton {
-	max-width: 210px;
-	margin: 0 auto;
-	margin-bottom: 24px;
+  max-width: 210px;
+  margin: 0 auto;
+  margin-bottom: 24px;
 }

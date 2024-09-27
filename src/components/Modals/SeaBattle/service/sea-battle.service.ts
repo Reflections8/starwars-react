@@ -10,6 +10,15 @@ export async function fetchRooms() {
   }
 }
 
+export async function fetchUserPhoto(username: string) {
+  try {
+    const res = await fetch(`https://t.me/i/userpic/160/${username}.jpg`);
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+}
+
 export async function getMe() {
   const token = localStorage.getItem("auth_jwt");
   try {

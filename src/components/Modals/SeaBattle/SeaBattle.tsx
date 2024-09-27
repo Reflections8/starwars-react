@@ -10,6 +10,7 @@ import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
 import "./styles/SeaBattle.css";
 import { useTranslation } from "react-i18next";
+import { useBattleships } from "../../../context/BattleshipsContext";
 
 export function SeaBattle() {
   const { t } = useTranslation();
@@ -50,6 +51,17 @@ export function SeaBattle() {
   }, [activePillProp]);
 
   useEffect(() => {}, [activePill]);
+
+  const { createdRoom, setCreatedRoom, loadRooms } = useBattleships();
+
+  useEffect(() => {
+    if (createdRoom.name) {
+      loadRooms();
+      setActivePill(pills[0]);
+      setCreatedRoom({ name: "" });
+    }
+  }, [createdRoom.name]);
+
   return (
     <div className="seaBattle">
       <div className="seaBattle__rulesButtonWrapper">

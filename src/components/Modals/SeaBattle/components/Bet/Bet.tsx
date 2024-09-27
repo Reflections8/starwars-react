@@ -10,10 +10,11 @@ import { useTranslation } from "react-i18next";
 export function Bet() {
   const { t } = useTranslation();
   const { openDrawer } = useDrawer();
-  const { sendMessage } = useBattleships();
 
-  const [activeCurrency, setActiveCurrency] = useState("credits");
+  //   const [activeCurrency, setActiveCurrency] = useState("credits");
   const [bet, setBet] = useState(0);
+
+  const { activeCurrency, setActiveCurrency, sendMessage } = useBattleships();
 
   async function createRoom() {
     if (!bet) {
@@ -58,7 +59,15 @@ export function Bet() {
             type="decimal"
             value={bet}
             onChange={(e) => {
-              setBet(Number(e.target.value));
+              const value = e.target.value;
+              if (value === "") {
+                setBet(0);
+                return;
+              }
+              const numericValue = Number(value);
+              if (!isNaN(numericValue)) {
+                setBet(numericValue);
+              }
             }}
             className={`bet__inputBlock-input ${activeCurrency}`}
           />

@@ -9,6 +9,7 @@ import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
 import "./styles/Rivals.css";
 import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
 import { useTranslation } from "react-i18next";
+import { fetchUserPhoto } from "../../service/sea-battle.service";
 
 export function Rivals() {
   const { t } = useTranslation();
@@ -53,6 +54,8 @@ export function Rivals() {
       return;
     }
 
+    // TODO: функционал дуэли с другом
+    return;
     sendMessage({
       type: "create_room",
       message: {
@@ -80,6 +83,27 @@ export function Rivals() {
       setCreatedRoom({ name: "" });
     }
   }, [createdRoom.name]);
+
+  const [userPhotos, setUserPhotos] = useState({});
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      const photos = {};
+      for (const item of rooms) {
+        if (item.creator.username in userPhotos) return;
+
+        const res = await fetchUserPhoto(item?.creator?.username);
+
+        // @ts-ignore
+        photos[item.creator.username] = res;
+      }
+      setUserPhotos(photos);
+    };
+
+    if (rooms?.length) {
+      fetchPhotos();
+    }
+  }, [rooms]);
 
   return (
     <div className="rivals">
@@ -117,15 +141,28 @@ export function Rivals() {
               />
             </div>
           </div>
-          {rooms?.map((item: any, index: number) => {
+          {rooms?.map((item: any) => {
             return (
-              <div className="rivals__list-item" key={index}>
+              <div className="rivals__list-item" key={item?.room_name}>
                 <div className="rivals__list-item-start">
-                  <img
-                    src={"#"}
-                    alt="avatar"
-                    className="rivals__list-item-start-ava"
-                  />
+                  {userPhotos[
+                    item.creator.username as keyof typeof userPhotos
+                  ] ? (
+                    <img
+                      src={
+                        userPhotos[
+                          item.creator.username as keyof typeof userPhotos
+                        ]
+                      }
+                      alt="avatar"
+                      className="rivals__list-item-start-ava"
+                    />
+                  ) : (
+                    <div className="rivals__list-item-start-avaDefault">
+                      {item.creator.username[0]}
+                    </div>
+                  )}
+
                   <div className="rivals__list-item-start-login">
                     <div className="rivals__list-item-start-login-key">
                       {t("battleshipsModal.rivalsTab.login")}:
@@ -210,7 +247,15 @@ export function Rivals() {
                 type="decimal"
                 value={bet}
                 onChange={(e) => {
-                  setBet(Number(e.target.value));
+                  const value = e.target.value;
+                  if (value === "") {
+                    setBet(0);
+                    return;
+                  }
+                  const numericValue = Number(value);
+                  if (!isNaN(numericValue)) {
+                    setBet(numericValue);
+                  }
                 }}
                 className={`rivals__newDuel__inputBlock-input ${activeCurrency}`}
               />
@@ -225,21 +270,6 @@ export function Rivals() {
             className="rivals__newDuel__cuttedButton"
             text={t("battleshipsModal.rivalsTab.createDuel")}
           />
-
-          {/* TODO: КНОПКУ УБРАТЬ*/}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              sendMessage({
-                type: "give_up",
-                message: {
-                  room_name: friendsLogin,
-                },
-              });
-            }}
-          >
-            СДАТЬСЯ TEST
-          </button>
         </div>
       ) : null}
     </div>

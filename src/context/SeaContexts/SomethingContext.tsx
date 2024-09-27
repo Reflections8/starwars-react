@@ -116,6 +116,9 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
         );
         return;
       }
+      if (response.type === "start_approve_phase") {
+        setHandshakeTimer({ time: 60, state: 1 });
+      }
       if (response.type !== "handshake_success") return;
       setTimeout(() => {
         handleHandshake(JSON.parse(response?.message));
