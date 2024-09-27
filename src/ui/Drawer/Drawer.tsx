@@ -677,11 +677,11 @@ function OpponentFound() {
     approveGame,
     handleApproveGame,
     handleDeclineGame,
-    remainTime,
     setGameState,
     gameState,
+    handshakeTimer,
   } = useBattleships();
-
+  const [remainTime, setRemainTime] = useState(60 * 1000);
   const [betType] = useState(approveGame?.bet_type);
   const [betAmount] = useState(approveGame?.bet_amount);
 
@@ -692,20 +692,11 @@ function OpponentFound() {
   );
 
   useEffect(() => {
-    // PLACEMENT: 2,
-    // ACCEPT_RECIEVED: 10,
-    // DENY_RECIEVED: 11,
-    // GAME_CANCELED: 12,
-    // PLAYER_LEFT: 13,
+    if (handshakeTimer.state === 1 || handshakeTimer.state === 2)
+      setRemainTime(handshakeTimer.time * 1000);
+  }, [handshakeTimer]);
 
-    // 	 {
-    // 		"room_name": "TEST",
-    // 		"opponent_name": "matthew_parker",
-    // 		"is_creator": false,
-    // 		"bet_type": 0,
-    // 		"bet_amount": 1
-    //   }
-
+  useEffect(() => {
     if (gameState === 1) {
       if (approveGame.is_creator) {
         setTitle(t("opponentFoundDrawer.creatorTitle"));

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useTimer } from "react-use-precision-timer";
 import { Header } from "../../components/Header/Header";
 import { gameStates, useBattleships } from "../../context/BattleshipsContext";
 import { useDrawer } from "../../context/DrawerContext";
@@ -41,8 +40,15 @@ export function Game2() {
     shotKilledAudioRef,
   } = useSound();
 
-  const { gameState, myBoardState, userBoard, enemyBoard, myTurn, jwt } =
-    useBattleships();
+  const {
+    gameState,
+    myBoardState,
+    userBoard,
+    enemyBoard,
+    myTurn,
+    jwt,
+    handshakeTimer,
+  } = useBattleships();
 
   useEffect(() => {
     if (!jwt) {
@@ -56,32 +62,21 @@ export function Game2() {
   }, [jwt]);
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
-  const timer = useTimer(
-    { runOnce: true, startImmediately: false, delay: timerSeconds * 1000 },
-    () => {}
-  );
 
   useEffect(() => {
-    timer.stop();
     if (gameState !== gameStates.PLAYING) return;
-    timer.start();
+    setTimerValue(timerSeconds * 1000);
   }, [myTurn, gameState]);
 
   useEffect(() => {
-    let interval: any;
-    interval = setInterval(() => {
-      setTimerValue(timer.getRemainingTime());
-    });
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    if (myBoardState.ships && myBoardState.ships.length > 0)
+      setTimerValue(timerSeconds * 1000);
+  }, [JSON.stringify(myBoardState)]);
 
   useEffect(() => {
-    if (myBoardState.ships && myBoardState.ships.length > 0) {
-      timer.start();
-    }
-  }, [JSON.stringify(myBoardState)]);
+    if (handshakeTimer.state === 5 || handshakeTimer.state === 6)
+      setTimerValue(handshakeTimer.time * 1000);
+  }, [handshakeTimer]);
 
   return (
     <div className="game2">

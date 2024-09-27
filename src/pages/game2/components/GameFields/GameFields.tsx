@@ -8,8 +8,8 @@ import { UserBoard } from "./UserBoard";
 import { Gameboard } from "./gameboard";
 import { FC } from "react";
 import { EnemyBoard } from "./EnemyBoard";
-import { TimerII } from "./TimerII";
 import { useBattleships } from "../../../../context/BattleshipsContext";
+import { ClearedTimer } from "../../../../components/Modals/SeaBattle/components/ClearedTimer/ClearedTimer";
 
 export const GameFields: FC<{
   userBoard: Gameboard;
@@ -52,7 +52,7 @@ export const GameFields: FC<{
           </div>
         </div>
         <div className="gameFields__timer">
-          <TimerII timerValue={timerValue} />
+          <ClearedTimer remainTime={timerValue} callback={() => {}} />
         </div>
         <div className="gameFields__bottom">
           <img src={boardBgBottom} alt="" className="gameFields__bottom-bg" />

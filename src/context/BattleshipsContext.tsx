@@ -44,8 +44,6 @@ export const gameStates = {
   PLAYER_LEFT: 13,
 };
 
-const initialTimeRemain = 60;
-
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
 
@@ -57,7 +55,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
   const [approveGame, setApproveGame] = useState<any>(null);
   const [gameState, setGameState] = useState(gameStates.NOT_STARTED);
-  const [remainTime, setRemainTime] = useState(initialTimeRemain * 1000);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [jwt] = useState<string>(jwtToUse);
   const [isInitial, setIsInitial] = useState(true);
@@ -172,11 +169,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     });
   };
 
-  const handleRemainTime = (remainTime: string | number) => {
-    const timeInSeconds = Number(remainTime);
-    setRemainTime(timeInSeconds * 1000);
-  };
-
   async function loadRooms() {
     const res = await fetchRooms();
     if (res) {
@@ -210,7 +202,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         case "start_approve_phase":
           setGameState(gameStates.APPROVE);
           setApproveGame(parsedMessage);
-          handleRemainTime(60);
           break;
 
         case "accept_received":
@@ -223,12 +214,10 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
         case "game_canceled":
           setGameState(gameStates.GAME_CANCELED);
-          handleRemainTime(0);
           break;
 
         case "player_left":
           setGameState(gameStates.PLAYER_LEFT);
-          handleRemainTime(0);
           break;
 
         case "create_room":
@@ -450,8 +439,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setEnemyBoardState,
         isInitial,
         setIsInitial,
-        remainTime,
-        handleRemainTime,
       }}
     >
       {children}
