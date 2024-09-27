@@ -70,7 +70,9 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     }
     if (gameState === "NOT_STARTED") {
       restartBoards();
-      openModal!("seaBattle");
+      if (location.pathname === "/game2") {
+        openModal!("seaBattle");
+      }
     }
     if (gameState === "GIVE_UP") stopBackgroundAudio();
   }, [gameState, jwt]);
