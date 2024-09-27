@@ -36,9 +36,6 @@ const initialUnsettledShips = {
 };
 
 export function ShipsArrangement2() {
-  //WTF?
-  //const { gameState } = useBattleships();
-  //if (gameState !== gameStates.NOT_STARTED) return null;
   return <ShipsArrangementChild />;
 }
 export function ShipsArrangementChild() {

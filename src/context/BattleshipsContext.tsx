@@ -49,7 +49,7 @@ const initialTimeRemain = 60;
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
 
-  const { blastIt, setIsAudioStart, stopBackgroundAudio } = useSound();
+  const { blastIt, stopBackgroundAudio } = useSound();
 
   const socketRef = useRef<WebSocket | null>(null);
   const userDeadShips = useRef([]);
@@ -313,7 +313,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         case "game_over":
           setTimeout(() => {
             stopBackgroundAudio();
-            setIsAudioStart(false);
             restartBoards();
           }, 1500);
           break;
@@ -400,10 +399,17 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     };
   }, [activeCurrency]);
 
+  const [handshakeTimer, setHandshakeTimer] = useState<any>({
+    time: 0,
+    state: 0,
+  });
+
   return (
     <BattleshipsContext.Provider
       value={{
         me,
+        handshakeTimer,
+        setHandshakeTimer,
         blockedState,
         setBlockedState,
         handleDeclineMyRooms,

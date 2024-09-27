@@ -17,8 +17,6 @@ type SoundContextProps = any;
 const SoundContext = createContext<Partial<SoundContextProps>>({});
 
 export function SoundProvider({ children }: SoundProviderProps) {
-  const [isAudioStart, setIsAudioStart] = useState(false);
-
   const audioBgRef = useRef(null);
   const shotSuccessAudioRef = useRef(null);
   const shotMissAudioRef = useRef(null);
@@ -64,13 +62,19 @@ export function SoundProvider({ children }: SoundProviderProps) {
   };
 
   const startBackgroundAudio = () => {
+    console.log("START_BG_AUDIO_CALLED");
     if (audioBgRef.current) {
       // @ts-ignore
-      audioBgRef.current.play();
+      audioBgRef.current.pause();
+      // @ts-ignore
+      audioBgRef.current.currentTime = 0;
+      // @ts-ignore
+      audioBgRef.current.play().catch();
     }
   };
 
   const stopBackgroundAudio = () => {
+    console.log("STOOOOP_BG_AUDIO_CALLED");
     if (audioBgRef.current) {
       // @ts-ignore
       audioBgRef.current.pause();
@@ -78,10 +82,6 @@ export function SoundProvider({ children }: SoundProviderProps) {
       audioBgRef.current.currentTime = 0;
     }
   };
-
-  useEffect(() => {
-    if (isAudioStart) startBackgroundAudio();
-  }, [isAudioStart]);
 
   const blastIt = (isHit: string) => {
     playBeamSound();
@@ -100,8 +100,6 @@ export function SoundProvider({ children }: SoundProviderProps) {
         shotKilledAudioRef,
         shotAudioRef,
         audioBgRef,
-        isAudioStart,
-        setIsAudioStart,
         blastIt,
         startBackgroundAudio,
         stopBackgroundAudio,

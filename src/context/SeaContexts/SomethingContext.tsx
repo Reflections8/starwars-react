@@ -1,11 +1,17 @@
-import { ReactNode, createContext, useContext, useEffect } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { gameStates, useBattleships } from "../BattleshipsContext";
 import { useDrawer } from "../DrawerContext";
 import { useModal } from "../ModalContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSound } from "./SoundContext";
 
 import { Gameboard as ArrangementBoard } from "../../components/Modals/ShipsArrangement2/gameboard";
+import { useSound } from "./SoundContext";
 
 type SomethingProviderProps = {
   children: ReactNode;
@@ -31,14 +37,13 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     setMyBoardState,
     setEnemyBoardState,
     setGameState,
-    handleRemainTime,
+    handshakeTimer,
+    setHandshakeTimer,
   } = useBattleships();
-
-  const { setIsAudioStart } = useSound();
 
   const { openDrawer } = useDrawer();
   const { openModal, closeModal } = useModal();
-
+  const { startBackgroundAudio } = useSound();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -61,11 +66,11 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   const handleHandshake = (parsedMessage: string) => {
     //@ts-ignore
     const { state, data, remain_time } = parsedMessage;
+    setHandshakeTimer({ time: remain_time, state });
     if (state === 0) setGameState(gameStates.NOT_STARTED);
     if (state === 1 || state === 2) {
       setApproveGame(data);
       setGameState(gameStates.APPROVE);
-      handleRemainTime(remain_time);
     }
     if (state > 2) {
       if (state <= 4) setGameState(gameStates.PLACEMENT);
@@ -88,8 +93,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     }
     if (state > 4) {
       setGameState(gameStates.PLAYING);
-      setIsAudioStart(true);
-      setBlockedState(false);
+      startBackgroundAudio();
       setTimeout(() => {
         setMyBoardState(updateBoardState(data.field_view.player_board, true));
         setEnemyBoardState(
@@ -97,7 +101,11 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
         );
         closeModal!();
       }, 100);
+      setTimeout(() => {
+        startBackgroundAudio();
+      }, 500);
     }
+
     if (state === 5) setMyTurn(true);
     if (state === 6) setMyTurn(false);
   };
@@ -108,10 +116,10 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
       const response = JSON.parse(event.data);
       if (response.type === "game_over") {
         const { my_win } = JSON.parse(response.message);
-        setTimeout(() => {
-          console.log("OPEN MODAL WINLOSE");
-          openModal!(my_win ? "battleshipsWon" : "battleshipsLost");
-        }, 1500);
+        setTimeout(
+          () => openModal!(my_win ? "battleshipsWon" : "battleshipsLost"),
+          1500
+        );
         return;
       }
       if (response.type !== "handshake_success") return;
@@ -123,14 +131,13 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
 
   // TODO: это я добавил
   useEffect(() => {
-    // APPROVE
-    if (gameState === 1) {
-      openDrawer!("opponentFound");
-    }
+    if (gameState === 1) openDrawer!("opponentFound");
   }, [gameState]);
 
   return (
-    <SomethingContext.Provider value={{}}>{children}</SomethingContext.Provider>
+    <SomethingContext.Provider value={{ handshakeTimer }}>
+      {children}
+    </SomethingContext.Provider>
   );
 }
 
