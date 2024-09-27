@@ -31,19 +31,21 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     setMyBoardState,
     setEnemyBoardState,
     setGameState,
+    handleRemainTime,
   } = useBattleships();
 
   const { setIsAudioStart } = useSound();
 
-  const { openDrawer, closeDrawer } = useDrawer();
+  const { openDrawer } = useDrawer();
   const { openModal, closeModal } = useModal();
 
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!approveGame) closeDrawer!();
-    else openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
+    //  if (!approveGame) closeDrawer!();
+    if (approveGame)
+      openDrawer!("opponentFound", "bottom", JSON.stringify(approveGame));
   }, [JSON.stringify(approveGame)]);
 
   useEffect(() => {
@@ -63,6 +65,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     if (state === 1 || state === 2) {
       setApproveGame(data);
       setGameState(gameStates.APPROVE);
+      handleRemainTime(remain_time);
     }
     if (state > 2) {
       if (state <= 4) setGameState(gameStates.PLACEMENT);
@@ -117,6 +120,14 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     socket.addEventListener("message", handleMessage);
     return () => socket.removeEventListener("message", handleMessage);
   }, [socket, closeModal]);
+
+  // TODO: это я добавил
+  useEffect(() => {
+    // APPROVE
+    if (gameState === 1) {
+      openDrawer!("opponentFound");
+    }
+  }, [gameState]);
 
   return (
     <SomethingContext.Provider value={{}}>{children}</SomethingContext.Provider>

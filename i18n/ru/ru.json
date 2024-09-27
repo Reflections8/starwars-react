@@ -207,10 +207,15 @@
     "later": "Позже"
   },
   "opponentFoundDrawer": {
-    "title": "Нашелся игрок для дуэли в вашей комнате",
+    "creatorTitle": "Нашелся игрок для дуэли в вашей комнате",
+    "playerTitle": "Вы присоединяетесь в комнату",
     "bid": "Ставка",
     "accept": "Принять",
-    "dismiss": "Отклонить"
+    "dismiss": "Отклонить",
+    "waiting": "Ожидание ответа противника",
+    "youCanceledGame": "Вы отказались от игры",
+    "creatorCanceledGame": "Создатель комнаты отказался от игры",
+    "opponentCanceledGame": "Соперник отказался от игры"
   },
   "playerModal": {
     "title": "Игрок"

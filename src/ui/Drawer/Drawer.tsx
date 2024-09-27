@@ -10,9 +10,14 @@ import {
   useTonConnectUI,
   useTonWallet,
 } from "@tonconnect/ui-react";
-import { useState } from "react";
-import { Timer } from "../../components/Modals/ShipsArrangement2/components/Timer.tsx";
-import { useBattleships } from "../../context/BattleshipsContext.tsx";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ClearedTimer } from "../../components/Modals/SeaBattle/components/ClearedTimer/ClearedTimer.tsx";
+import { BetTypeEnum } from "../../components/Modals/SeaBattle/types/enum.ts";
+import {
+  gameStates,
+  useBattleships,
+} from "../../context/BattleshipsContext.tsx";
 import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../main.tsx";
 import { CharactersData, Prices, useUserData } from "../../UserDataService.tsx";
 import { formatWalletString } from "../../utils/index.ts";
@@ -25,7 +30,6 @@ import opponentFoundIcon from "./img/opponent-icon.svg";
 import upgradeArrowsSvg from "./img/upgrade/arrows.svg";
 import creditIcon from "./img/upgrade/credits.svg";
 import "./styles//drawer.css";
-import { useTranslation } from "react-i18next";
 
 type DrawerProps = {
   isOpen: boolean;
@@ -57,12 +61,15 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
       <div
         className={`drawer ${!isOpen ? "drawer--Hidden" : ""} ${drawerType}`}
       >
-        <img
-          src={closeIcon}
-          alt="closeIcon"
-          className="drawer__closeIcon"
-          onClick={closeDrawer}
-        />
+        {drawerType === "opponentFound" ? null : (
+          <img
+            src={closeIcon}
+            alt="closeIcon"
+            className="drawer__closeIcon"
+            onClick={closeDrawer}
+          />
+        )}
+
         {drawerContentType[drawerType as keyof typeof drawerContentType]}
       </div>
     </div>
@@ -665,14 +672,86 @@ function GiveUp() {
 
 function OpponentFound() {
   const { t } = useTranslation();
-  const { closeDrawer } = useDrawer();
-  const { handleApproveGame, handleDeclineGame } = useBattleships();
+  const { closeDrawer, openDrawer } = useDrawer();
+  const {
+    approveGame,
+    handleApproveGame,
+    handleDeclineGame,
+    remainTime,
+    setGameState,
+    gameState,
+  } = useBattleships();
+
+  const [betType] = useState(approveGame?.bet_type);
+  const [betAmount] = useState(approveGame?.bet_amount);
+
+  const [title, setTitle] = useState(
+    approveGame?.is_creator
+      ? t("opponentFoundDrawer.creatorTitle")
+      : t("opponentFoundDrawer.playerTitle")
+  );
+
+  useEffect(() => {
+    // PLACEMENT: 2,
+    // ACCEPT_RECIEVED: 10,
+    // DENY_RECIEVED: 11,
+    // GAME_CANCELED: 12,
+    // PLAYER_LEFT: 13,
+
+    // 	 {
+    // 		"room_name": "TEST",
+    // 		"opponent_name": "matthew_parker",
+    // 		"is_creator": false,
+    // 		"bet_type": 0,
+    // 		"bet_amount": 1
+    //   }
+
+    if (gameState === 1) {
+      if (approveGame.is_creator) {
+        setTitle(t("opponentFoundDrawer.creatorTitle"));
+      } else {
+        setTitle(t("opponentFoundDrawer.playerTitle"));
+      }
+    }
+
+    if (gameState === 2) {
+      closeDrawer!();
+    }
+
+    if (gameState === 10) {
+      setTitle(t("opponentFoundDrawer.waiting"));
+    }
+    if (gameState === 11) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("opponentFoundDrawer.youCanceledGame")
+      );
+      setGameState(gameStates.NOT_STARTED);
+    }
+    if (gameState === 12) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("opponentFoundDrawer.creatorCanceledGame")
+      );
+      console.log({ gameState });
+    }
+    if (gameState === 13) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("opponentFoundDrawer.opponentCanceledGame")
+      );
+      setGameState(gameStates.NOT_STARTED);
+    }
+  }, [gameState]);
 
   return (
     <div className="opponentFound">
       <img src={opponentFoundIcon} alt="" className="opponentFound__icon" />
       <div className="opponentFound__text">
-        {t("opponentFoundDrawer.title")}
+        {title} {approveGame?.room_name}
       </div>
 
       <div className="opponentFound__betBox">
@@ -680,12 +759,19 @@ function OpponentFound() {
           <div className="opponentFound__betBox-main-key">
             {t("opponentFoundDrawer.bid")}:
           </div>
-          <div className="opponentFound__betBox-main-value">1234.5678 ton</div>
+          <div className="opponentFound__betBox-main-value">
+            {betAmount} {BetTypeEnum[betType]}
+          </div>
         </div>
 
         <div className="opponentFound__betBox-timerWrapper">
           {/* @ts-ignore */}
-          <Timer timerValue={60000} />
+          <ClearedTimer
+            remainTime={remainTime}
+            callback={() => {
+              closeDrawer!();
+            }}
+          />
         </div>
       </div>
 
@@ -697,7 +783,6 @@ function OpponentFound() {
           callback={(e) => {
             handleDeclineGame();
             e.stopPropagation();
-            closeDrawer!();
           }}
         />
 
@@ -707,7 +792,6 @@ function OpponentFound() {
           callback={(e) => {
             handleApproveGame();
             e.stopPropagation();
-            closeDrawer!();
           }}
         />
       </div>
