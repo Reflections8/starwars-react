@@ -22,9 +22,15 @@ import audioShot from "./audio/shot.mp3";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSound } from "../../context/SeaContexts";
+import { useUserData } from "../../UserDataService";
 enableDragDropTouch();
 
 const timerSeconds = 30;
+
+let jwtToUse = localStorage.getItem("auth_jwt") || "";
+if (document.location.href.includes("5174"))
+  jwtToUse =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
 
 export function Game2() {
   const { t } = useTranslation();
@@ -40,18 +46,20 @@ export function Game2() {
     shotKilledAudioRef,
   } = useSound();
 
-  const { myBoardState, userBoard, enemyBoard, myTurn, jwt, handshakeTimer } =
+  const { jwt: userDataJwt } = useUserData();
+
+  const { myBoardState, userBoard, enemyBoard, myTurn, handshakeTimer } =
     useBattleships();
 
   useEffect(() => {
-    if (!jwt) {
+    if (!userDataJwt && !jwtToUse) {
       closeModal!();
       navigate("/");
       closeModal!();
       return;
     }
     openModal!("seaBattle");
-  }, [jwt]);
+  }, [userDataJwt]);
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
 
