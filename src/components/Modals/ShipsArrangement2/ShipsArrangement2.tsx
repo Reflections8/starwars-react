@@ -9,7 +9,10 @@ import gridBg from "./img/grid-bg.svg";
 import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
 import "./styles/ShipsArrangement.css";
-import { useBattleships } from "../../../context/BattleshipsContext";
+import {
+  gameStates,
+  useBattleships,
+} from "../../../context/BattleshipsContext";
 import { Rules } from "../SeaBattle/components/Rules/Rules";
 import backImg from "../SeaBattle/img/back-button.svg";
 import bgAudio from "./audio/arrangement.mp3";
@@ -52,6 +55,7 @@ export function ShipsArrangementChild() {
     sendMessage,
     gameboard,
     setGameboard,
+    gameState,
   } = useBattleships();
 
   useEffect(() => {
@@ -60,6 +64,17 @@ export function ShipsArrangementChild() {
     );
     setAllShipsSettled(isSettledAll);
   }, [gameboard.getUnsettledShips()]);
+
+  const resetGameboard = () => {
+    setAllShipsSettled(false);
+    setSelectedShipToSettle(null);
+    const newGameboard = new Gameboard();
+    setGameboard(newGameboard);
+  };
+
+  useEffect(() => {
+    if (gameState === gameStates.NOT_STARTED) resetGameboard();
+  }, [gameState]);
 
   const updateGameboard = () => {
     const newGameboard = new Gameboard();
