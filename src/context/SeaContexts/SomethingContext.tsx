@@ -117,7 +117,9 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
         return;
       }
       if (response.type !== "handshake_success") return;
-      handleHandshake(JSON.parse(response?.message));
+      setTimeout(() => {
+        handleHandshake(JSON.parse(response?.message));
+      }, 200);
     };
     socket.addEventListener("message", handleMessage);
     return () => socket.removeEventListener("message", handleMessage);

@@ -93,6 +93,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       misses: [],
       ships: [],
     });
+    setGameboard(new ArrangementBoard());
     setEnemyBoardState({
       hits: [],
       misses: [],
@@ -181,6 +182,15 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       setRooms(filtered || []);
     }
   }
+
+  const resetArrangementGameboard = () => {
+    const newGameboard = new ArrangementBoard();
+    setGameboard(newGameboard);
+  };
+
+  useEffect(() => {
+    if (gameState === gameStates.NOT_STARTED) resetArrangementGameboard();
+  }, [gameState]);
 
   useEffect(() => {
     if (!socket) return;
@@ -300,6 +310,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
 
         case "game_over":
+          setIsInitial(true);
+
           setTimeout(() => {
             stopBackgroundAudio();
             restartBoards();
