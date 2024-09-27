@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Header } from "../../components/Header/Header";
-import { gameStates, useBattleships } from "../../context/BattleshipsContext";
+import { useBattleships } from "../../context/BattleshipsContext";
 import { useDrawer } from "../../context/DrawerContext";
 import { useModal } from "../../context/ModalContext";
 import { LeaveIcon } from "../../icons/Leave";
@@ -24,7 +24,7 @@ import { useTranslation } from "react-i18next";
 import { useSound } from "../../context/SeaContexts";
 enableDragDropTouch();
 
-const timerSeconds = 60;
+const timerSeconds = 30;
 
 export function Game2() {
   const { t } = useTranslation();
@@ -40,15 +40,8 @@ export function Game2() {
     shotKilledAudioRef,
   } = useSound();
 
-  const {
-    gameState,
-    myBoardState,
-    userBoard,
-    enemyBoard,
-    myTurn,
-    jwt,
-    handshakeTimer,
-  } = useBattleships();
+  const { myBoardState, userBoard, enemyBoard, myTurn, jwt, handshakeTimer } =
+    useBattleships();
 
   useEffect(() => {
     if (!jwt) {
@@ -57,25 +50,33 @@ export function Game2() {
       closeModal!();
       return;
     }
-
     openModal!("seaBattle");
   }, [jwt]);
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
 
-  useEffect(() => {
-    if (gameState !== gameStates.PLAYING) return;
-    setTimerValue(timerSeconds * 1000);
-  }, [myTurn, gameState]);
+  const resetTimer = (v: number) => {
+    setTimerValue(0);
+    setTimeout(() => {
+      setTimerValue(v);
+    }, 10);
+  };
 
   useEffect(() => {
+    resetTimer(timerSeconds * 1000);
+  }, [myTurn]);
+  //change from 60 to 1 and then back to 60
+  useEffect(() => {
     if (myBoardState.ships && myBoardState.ships.length > 0)
-      setTimerValue(timerSeconds * 1000);
+      resetTimer(timerSeconds * 1000);
   }, [JSON.stringify(myBoardState)]);
 
   useEffect(() => {
-    if (handshakeTimer.state === 5 || handshakeTimer.state === 6)
-      setTimerValue(handshakeTimer.time * 1000);
+    if (handshakeTimer.state === 5 || handshakeTimer.state === 6) {
+      setTimeout(() => {
+        resetTimer(handshakeTimer.time * 1000);
+      }, 200);
+    }
   }, [handshakeTimer]);
 
   return (
