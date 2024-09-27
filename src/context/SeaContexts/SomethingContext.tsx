@@ -53,7 +53,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
       openModal!("seaBattle");
     }
     if (gameState === gameStates.PLACEMENT) openModal!("shipsArrangement2");
-    if (gameState === "NOT_STARTED") restartBoards();
+    if (gameState === gameStates.NOT_STARTED) restartBoards();
   }, [gameState, location.pathname]);
 
   const handleHandshake = (parsedMessage: string) => {
