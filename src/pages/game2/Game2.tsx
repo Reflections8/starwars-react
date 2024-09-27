@@ -51,6 +51,8 @@ export function Game2() {
       closeModal!();
       return;
     }
+
+    openModal!("seaBattle");
   }, [jwt]);
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
