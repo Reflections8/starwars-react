@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useEffect } from "react";
-import { useBattleships } from "../BattleshipsContext";
+import { gameStates, useBattleships } from "../BattleshipsContext";
 import { useDrawer } from "../DrawerContext";
 import { useModal } from "../ModalContext";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -18,10 +18,7 @@ const SomethingContext = createContext<Partial<SomethingContextProps>>({});
 export function SomethingProvider({ children }: SomethingProviderProps) {
   const {
     approveGame,
-    jwt,
     gameState,
-    joinedRoom,
-    setJoinedRoom,
     setApproveGame,
     setOpponentName,
     setRoomName,
@@ -33,9 +30,10 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     updateBoardState,
     setMyBoardState,
     setEnemyBoardState,
+    setGameState,
   } = useBattleships();
 
-  const { stopBackgroundAudio, setIsAudioStart } = useSound();
+  const { setIsAudioStart } = useSound();
 
   const { openDrawer, closeDrawer } = useDrawer();
   const { openModal, closeModal } = useModal();
@@ -49,40 +47,26 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   }, [JSON.stringify(approveGame)]);
 
   useEffect(() => {
-    if (joinedRoom) {
-      if (location.pathname !== "/game2") navigate("/game2");
-      openModal!("shipsArrangement2");
-      setJoinedRoom("");
-    }
-  }, [joinedRoom]);
-
-  useEffect(() => {
-    if (!jwt) return;
-    if (gameState === "LOST") {
-      stopBackgroundAudio();
-      openModal!("battleshipsLost");
-      restartBoards();
-    }
-    if (gameState === "WON") {
-      stopBackgroundAudio();
-      openModal!("battleshipsWon");
-      restartBoards();
-    }
-    if (gameState === "NOT_STARTED") {
-      restartBoards();
+    if ([2, 3].includes(gameState) && location.pathname !== "/game2")
+      navigate("/game2");
+    if ([0, 1].includes(gameState) && location.pathname === "/game2") {
       openModal!("seaBattle");
     }
-    if (gameState === "GIVE_UP") stopBackgroundAudio();
-  }, [gameState, jwt]);
+    if (gameState === gameStates.PLACEMENT) openModal!("shipsArrangement2");
+    if (gameState === "NOT_STARTED") restartBoards();
+  }, [gameState, location.pathname]);
 
   const handleHandshake = (parsedMessage: string) => {
-    return;
     //@ts-ignore
     const { state, data, remain_time } = parsedMessage;
-    if (state === 1 || state === 2) setApproveGame(data);
+    if (state === 0) setGameState(gameStates.NOT_STARTED);
+    if (state === 1 || state === 2) {
+      setApproveGame(data);
+      setGameState(gameStates.APPROVE);
+    }
     if (state > 2) {
+      if (state <= 4) setGameState(gameStates.PLACEMENT);
       setOpponentName(data.opponent_name);
-      setJoinedRoom(data.room_name);
       setRoomName(data.room_name);
     }
     if (state === 4) {
@@ -100,11 +84,14 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
       setBlockedState(true);
     }
     if (state > 4) {
-      setMyBoardState(updateBoardState(data.field_view.player_board, true));
-      setEnemyBoardState(updateBoardState(data.field_view.enemy_board, false));
+      setGameState(gameStates.PLAYING);
       setIsAudioStart(true);
       setBlockedState(false);
       setTimeout(() => {
+        setMyBoardState(updateBoardState(data.field_view.player_board, true));
+        setEnemyBoardState(
+          updateBoardState(data.field_view.opponent_board, false)
+        );
         closeModal!();
       }, 100);
     }
@@ -116,6 +103,14 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     if (!socket) return;
     const handleMessage = (event: MessageEvent) => {
       const response = JSON.parse(event.data);
+      if (response.type === "game_over") {
+        const { my_win } = JSON.parse(response.message);
+        setTimeout(() => {
+          console.log("OPEN MODAL WINLOSE");
+          openModal!(my_win ? "battleshipsWon" : "battleshipsLost");
+        }, 1500);
+        return;
+      }
       if (response.type !== "handshake_success") return;
       handleHandshake(JSON.parse(response?.message));
     };

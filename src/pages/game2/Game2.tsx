@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTimer } from "react-use-precision-timer";
 import { Header } from "../../components/Header/Header";
-import { useBattleships } from "../../context/BattleshipsContext";
+import { gameStates, useBattleships } from "../../context/BattleshipsContext";
 import { useDrawer } from "../../context/DrawerContext";
 import { useModal } from "../../context/ModalContext";
 import { LeaveIcon } from "../../icons/Leave";
@@ -41,16 +41,8 @@ export function Game2() {
     shotKilledAudioRef,
   } = useSound();
 
-  // @ts-ignore
-  const {
-    gameState,
-    myBoardState,
-    setGameState,
-    userBoard,
-    enemyBoard,
-    myTurn,
-    jwt,
-  } = useBattleships();
+  const { gameState, myBoardState, userBoard, enemyBoard, myTurn, jwt } =
+    useBattleships();
 
   useEffect(() => {
     if (!jwt) {
@@ -69,7 +61,7 @@ export function Game2() {
 
   useEffect(() => {
     timer.stop();
-    if (gameState !== "IN_PROGRESS") return;
+    if (gameState !== gameStates.PLAYING) return;
     timer.start();
   }, [myTurn, gameState]);
 
@@ -86,7 +78,6 @@ export function Game2() {
   useEffect(() => {
     if (myBoardState.ships && myBoardState.ships.length > 0) {
       timer.start();
-      setGameState!("IN_PROGRESS");
     }
   }, [JSON.stringify(myBoardState)]);
 

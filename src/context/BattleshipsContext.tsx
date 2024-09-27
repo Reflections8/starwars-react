@@ -32,17 +32,24 @@ if (document.location.href.includes("5174"))
 
 const BattleshipsContext = createContext<Partial<BattleshipsContextProps>>({});
 
+export const gameStates = {
+  NOT_STARTED: 0,
+  APPROVE: 1,
+  PLACEMENT: 2,
+  PLAYING: 3,
+};
+
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
 
-  const { blastIt, setIsAudioStart } = useSound();
+  const { blastIt, setIsAudioStart, stopBackgroundAudio } = useSound();
 
   const socketRef = useRef<WebSocket | null>(null);
   const userDeadShips = useRef([]);
   const enemyDeadShips = useRef([]);
 
   const [approveGame, setApproveGame] = useState<any>(null);
-  const [gameState, setGameState] = useState("NOT_STARTED");
+  const [gameState, setGameState] = useState(gameStates.NOT_STARTED);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [jwt] = useState<string>(jwtToUse);
   const [isInitial, setIsInitial] = useState(true);
@@ -53,7 +60,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [activeCurrency, setActiveCurrency] = useState("credits");
   const [me, setMe] = useState(null);
   const [createdRoom, setCreatedRoom] = useState({ name: "" });
-  const [joinedRoom, setJoinedRoom] = useState("");
   const [searchingDuel, setSearchingDuel] = useState(false);
   const [gameboard, setGameboard] = useState(new ArrangementBoard());
   const [userBoard, setUserBoard] = useState(new Gameboard());
@@ -189,6 +195,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
       switch (response.type) {
         case "start_approve_phase":
+          setGameState(gameStates.APPROVE);
           setApproveGame(parsedMessage);
           break;
 
@@ -198,8 +205,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
 
         case "start_placement_phase":
+          setGameState(gameStates.PLACEMENT);
           setOpponentName(response.message.opponent_name);
-          setJoinedRoom(parsedMessage?.room_name);
           setRoomName(parsedMessage?.room_name);
           break;
 
@@ -207,11 +214,13 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
 
         case "round_start":
+          setGameState(gameStates.PLAYING);
           setIsInitial(false);
           setMyTurn(parsedMessage.can_fire);
           break;
 
         case "fire_result":
+          setGameState(gameStates.PLAYING);
           const prevDeadEList = enemyDeadShips.current.filter(
             //@ts-ignore
             (ship) => ship.is_dead
@@ -241,6 +250,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
 
         case "enemy_fire_result":
+          setGameState(gameStates.PLAYING);
           const prevDeadList = userDeadShips.current.filter(
             //@ts-ignore
             (ship) => ship.is_dead
@@ -269,11 +279,9 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
 
         case "game_over":
-          // TODO: завершать игру и показывать модалки только когда анимация последнего выстрела закончится и поле закрасится
           setTimeout(() => {
-            setJoinedRoom("");
+            stopBackgroundAudio();
             setIsAudioStart(false);
-            setGameState(parsedMessage.my_win ? "WON" : "LOST");
             restartBoards();
           }, 1500);
           break;
@@ -382,14 +390,13 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setSearchingDuel,
         createdRoom,
         setCreatedRoom,
-        joinedRoom,
-        setJoinedRoom,
         userBoard,
         enemyBoard,
         restartBoards,
         myTurn,
         setMyTurn,
         approveGame,
+        setApproveGame,
         handleApproveGame,
         handleDeclineGame,
         rooms,

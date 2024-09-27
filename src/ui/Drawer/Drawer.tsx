@@ -639,7 +639,7 @@ function InviteFriend() {
 
 function GiveUp() {
   const { t } = useTranslation();
-  const { roomName, sendMessage, setGameState } = useBattleships();
+  const { roomName, sendMessage } = useBattleships();
   const { closeDrawer } = useDrawer();
   return (
     <div className="giveUp">
@@ -657,7 +657,6 @@ function GiveUp() {
             },
           });
           closeDrawer!();
-          setGameState("GIVE_UP");
         }}
       />
     </div>

@@ -3,8 +3,11 @@ import bg from "./img/bg.png";
 import textImg from "./img/text.svg";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import { useModal } from "../../../context/ModalContext";
-import { useBattleships } from "../../../context/BattleshipsContext";
 import { useTranslation } from "react-i18next";
+import {
+  gameStates,
+  useBattleships,
+} from "../../../context/BattleshipsContext";
 
 export function BattleshipsWon() {
   const { t } = useTranslation();
@@ -28,8 +31,8 @@ export function BattleshipsWon() {
         callback={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setGameState("NOT_STARTED");
           closeModal!();
+          setGameState(gameStates.NOT_STARTED);
           openModal!("seaBattle");
         }}
       />
