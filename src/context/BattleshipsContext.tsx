@@ -268,7 +268,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           }
           enemyDeadShips.current =
             parsedMessage.field_view.opponent_board.ships;
-          playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
+          parsedMessage.fire_target &&
+            playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
           setEnemyBoardState(
             //@ts-ignore
             updateBoardState(parsedMessage.field_view.opponent_board, false)
@@ -297,7 +298,13 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
             else isEHit = "success";
           }
           userDeadShips.current = parsedMessage.field_view.player_board.ships;
-          playBeamAnimation(parsedMessage.fire_target, false, isEHit, blastIt);
+          parsedMessage.fire_target &&
+            playBeamAnimation(
+              parsedMessage.fire_target,
+              false,
+              isEHit,
+              blastIt
+            );
           setEnemyBoardState(
             //@ts-ignore
             updateBoardState(parsedMessage.field_view.opponent_board, false)
