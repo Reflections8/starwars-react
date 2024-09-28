@@ -76,15 +76,17 @@
 
 .rivals__list-item-start-ava {
   width: 36px;
+  height: 46px;
   object-fit: cover;
   width: 100%;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 
 .rivals__list-item-start-avaDefault {
-  height: 36px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  height: 40px;
   width: 36px;
 
-  border-radius: 50%;
   overflow: hidden;
   background: #c9e2ff;
   color: #076ce9;

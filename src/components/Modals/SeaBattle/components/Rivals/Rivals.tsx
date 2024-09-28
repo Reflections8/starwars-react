@@ -182,7 +182,7 @@ export function Rivals() {
                       href={item.player}
                       className="rivals__list-item-start-login-value"
                     >
-                      {item.room_name}
+                      {item?.creator?.username}
                     </a>
                   </div>
                   <div className="rivals__list-item-start-bet">
@@ -206,7 +206,8 @@ export function Rivals() {
                     callback={(e) => {
                       e.stopPropagation();
                       joinRoom(item.room_name);
-                      setRoomName(item.room_name);
+                      //  setRoomName(item.room_name);
+                      setRoomName(item?.creator?.username);
                     }}
                     size="small"
                     className={`rivals__list-item-end-btn ${
