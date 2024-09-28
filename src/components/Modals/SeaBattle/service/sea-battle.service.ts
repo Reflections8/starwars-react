@@ -28,6 +28,7 @@ export async function fetchUserPhoto(username: string) {
   try {
     const res = await fetch(url, { redirect: "manual" });
 
+    console.log({ res });
     if (res.status === 302) {
       const location = res.headers.get("Location");
       if (location) {
