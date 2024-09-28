@@ -33,6 +33,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     setGameState,
     handshakeTimer,
     setHandshakeTimer,
+    setBetAmount,
   } = useBattleships();
 
   const { openDrawer } = useDrawer();
@@ -100,8 +101,14 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
       }, 500);
     }
 
-    if (state === 5) setMyTurn(true);
-    if (state === 6) setMyTurn(false);
+    if (state === 5) {
+      setMyTurn(true);
+      setBetAmount(data?.bet_amount);
+    }
+    if (state === 6) {
+      setMyTurn(false);
+      setBetAmount(data?.bet_amount);
+    }
   };
 
   useEffect(() => {

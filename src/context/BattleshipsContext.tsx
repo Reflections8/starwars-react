@@ -321,7 +321,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
         case "game_over":
           setIsInitial(true);
-
           setTimeout(() => {
             stopBackgroundAudio();
             restartBoards();
