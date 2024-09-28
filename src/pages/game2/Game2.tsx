@@ -13,16 +13,17 @@ import { GameHeader } from "./components/GameHeader/GameHeader";
 
 import "./styles/game2.css";
 //@ts-ignore
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useSound } from "../../context/SeaContexts";
+//@ts-ignore
 import { enableDragDropTouch } from "../../mobileDrag";
+import { useUserData } from "../../UserDataService";
 import audioBg from "./audio/game.mp3";
 import audioKilledShot from "./audio/shot-killed.mp3";
 import audioMissedShot from "./audio/shot-missed.mp3";
 import audioSuccessShot from "./audio/shot-success.mp3";
 import audioShot from "./audio/shot.mp3";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useSound } from "../../context/SeaContexts";
-import { useUserData } from "../../UserDataService";
 enableDragDropTouch();
 
 const timerSeconds = 30;

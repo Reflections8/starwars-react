@@ -8,8 +8,11 @@ import tonIcon from "../img/resources/ton.svg";
 import highlighCurrency from "../video/currency.svg";
 import searchBg from "../img/resources/search-bg.svg";
 import searchIcon from "../img/resources/search.svg";
-import searchCancelIcon from "../img/resources/search-cancel-bg.svg";
+import searchCancelIconRus from "../img/resources/search-cancel-bg.svg";
+import searchCancelIconEng from "../img/resources/search-cancel-en.svg";
 import { useBattleships } from "../../../context/BattleshipsContext";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 
 type ResourcesProps = {
   credits: number;
@@ -19,7 +22,14 @@ type ResourcesProps = {
 
 export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
   const { handleDeclineMyRooms, searchingDuel } = useBattleships();
+  const { t, i18n } = useTranslation();
 
+  const searchCancelIconLocale = {
+    ru: searchCancelIconRus,
+    en: searchCancelIconEng,
+  };
+
+  useEffect(() => {}, [i18n.language]);
   // {formatNumberWithCommas(credits)}
   return (
     <div className="resources">
@@ -122,11 +132,20 @@ export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
             <img src={searchBg} alt="" className="resources__search-bg" />
 
             <img src={searchIcon} alt="" className="resources__search-icon" />
-            <div className="resources__search-key">Идет поиск</div>
+            <div
+              className="resources__search-key"
+              style={{ fontSize: i18n.language === "en" ? "8px" : "10px" }}
+            >
+              {t("searchingDuel.searching")}
+            </div>
           </div>
           <img
-            src={searchCancelIcon}
-            alt=""
+            src={
+              searchCancelIconLocale[
+                i18n.language as keyof typeof searchCancelIconLocale
+              ]
+            }
+            alt="cancel"
             className="resources__searchCancel"
             onClick={handleDeclineMyRooms}
           />

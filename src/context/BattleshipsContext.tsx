@@ -82,6 +82,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     ships: [],
     preHit: null,
   });
+  const [betAmount, setBetAmount] = useState(null);
+  const [betType, setBetType] = useState(null);
 
   const restartBoards = () => {
     userDeadShips.current = [];
@@ -237,8 +239,10 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
         case "start_placement_phase":
           setGameState(gameStates.PLACEMENT);
-          setOpponentName(response.message.opponent_name);
+          setOpponentName(parsedMessage.opponent_name);
           setRoomName(parsedMessage?.room_name);
+          setBetAmount(parsedMessage.bet_amount);
+          setBetType(parsedMessage.bet_type);
           break;
 
         case "ships_placed":
@@ -280,7 +284,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           );
           setMyTurn(parsedMessage.can_fire);
           break;
-
         case "enemy_fire_result":
           setGameState(gameStates.PLAYING);
           const prevDeadList = userDeadShips.current.filter(
@@ -458,6 +461,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setEnemyBoardState,
         isInitial,
         setIsInitial,
+        betType,
+        betAmount,
       }}
     >
       {children}

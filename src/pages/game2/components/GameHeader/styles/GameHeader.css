@@ -36,8 +36,26 @@
 
 .gameHeader__left-avatarBlock-avatar {
   position: absolute;
-  width: 34px;
-  height: 40px;
+  height: 46px;
+  width: 40px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+.gameHeader__left-avatarBlock-avatarDefault {
+  height: 46px;
+  width: 40px;
+
+  /* border-radius: 50%; */
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  overflow: hidden;
+  background: #c9e2ff;
+  color: #076ce9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .gameHeader__infoBlock {

@@ -10,6 +10,18 @@ export async function fetchRooms() {
   }
 }
 
+export async function fetchStats() {
+  const token = localStorage.getItem("auth_jwt");
+  try {
+    const res = await fetch("https://socket.akronix.io/shipBattle/getStats", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return await res.json();
+  } catch (e) {
+    return [];
+  }
+}
+
 export async function fetchUserPhoto(username: string) {
   const url = `https://t.me/i/userpic/160/${username}.jpg`;
 
@@ -22,6 +34,7 @@ export async function fetchUserPhoto(username: string) {
         return location;
       }
     } else if (res.ok) {
+      console.log({ res });
       return url;
     }
 

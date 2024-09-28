@@ -1,14 +1,40 @@
-import "./styles/GameHeader.css";
-import leftBg from "./img/left-bg.svg";
-import rightBg from "./img/turn-bg.svg";
-import avatarBg from "./img/avatar-bg.png";
-import avatar from "./img/avatar.png";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { fetchUserPhoto } from "../../../../components/Modals/SeaBattle/service/sea-battle.service";
+import { useBattleships } from "../../../../context/BattleshipsContext";
+import avatarBg from "./img/avatar-bg.png";
+import leftBg from "./img/left-bg.svg";
+import rightBg from "./img/turn-bg.svg";
+import "./styles/GameHeader.css";
 
 export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
   const { t } = useTranslation();
-  const [rivalName] = useState("@pashadurovoffasdjaksd");
+  //   const [rivalName] = useState("@pashadurovoffasdjaksd");
+  const { opponentName } = useBattleships();
+
+  const [enemyPhoto, setEnemyPhoto] = useState(null);
+
+  async function loadOpponentAvatar(username: string) {
+    const res = await fetchUserPhoto(username);
+    // @ts-ignore
+    setEnemyPhoto(res);
+  }
+
+  useEffect(() => {
+    if (opponentName) {
+      loadOpponentAvatar(opponentName);
+    }
+
+    const images = document.querySelectorAll<HTMLImageElement>(".check-image");
+
+    images.forEach((img) => {
+      img.onload = function () {
+        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
+          img.src = "/ui/img/default_ava.png";
+        }
+      };
+    });
+  }, [opponentName]);
 
   const [myTurnDebounced, setMyTurnDebounced] = useState(myTurn);
   const [animate, setAnimate] = useState(false);
@@ -37,11 +63,18 @@ export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
             className="gameHeader__left-avatarBlock-bg"
           />
 
-          <img
-            src={avatar}
-            alt="avatar"
-            className="gameHeader__left-avatarBlock-avatar"
-          />
+          {enemyPhoto ? (
+            <img
+              src={enemyPhoto || ""}
+              alt=""
+              width="46px"
+              className="gameHeader__left-avatarBlock-avatar check-image"
+            />
+          ) : (
+            <div className="gameHeader__left-avatarBlock-avatarDefault">
+              {opponentName[0]}
+            </div>
+          )}
         </div>
 
         {/* INFO BLOCK */}
@@ -49,7 +82,9 @@ export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
           <div className="gameHeader__infoBlock-key">
             {t("battleships.yourRival")}:
           </div>
-          <div className="gameHeader__infoBlock-value">{rivalName}</div>
+          <div className="gameHeader__infoBlock-value">
+            @{opponentName || ""}
+          </div>
         </div>
       </div>
 

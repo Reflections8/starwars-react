@@ -1,24 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CryptoButtons } from "../../../../../ui/CryptoButtons/CryptoButtons";
-import "./styles/Statistic.css";
-import avatarImg from "./img/ava.png";
 import icon1 from "./img/1.svg";
 import icon2 from "./img/2.svg";
 import icon3 from "./img/3.svg";
 import icon4 from "./img/4.svg";
+import "./styles/Statistic.css";
 
-import creditPlus from "./img/credit__plus.svg";
-import creditMinus from "./img/credit__minus.svg";
 import credit from "./img/credit.svg";
+import creditMinus from "./img/credit__minus.svg";
+import creditPlus from "./img/credit__plus.svg";
 
-import akrPlus from "./img/akr__plus.svg";
-import akrMinus from "./img/akr__minus.svg";
 import akr from "./img/akr.svg";
+import akrMinus from "./img/akr__minus.svg";
+import akrPlus from "./img/akr__plus.svg";
 
-import tonPlus from "./img/ton__plus.svg";
-import tonMinus from "./img/ton__minus.svg";
-import ton from "./img/ton.svg";
 import { useTranslation } from "react-i18next";
+import {
+  fetchStats,
+  fetchUserPhoto,
+  getMe,
+} from "../../service/sea-battle.service";
+import ton from "./img/ton.svg";
+import tonMinus from "./img/ton__minus.svg";
+import tonPlus from "./img/ton__plus.svg";
 
 type CurrencyStatType = {
   [key: string]: {
@@ -29,9 +33,77 @@ type CurrencyStatType = {
   };
 };
 
+type Stats = {
+  games: number;
+  wins: number;
+  loses: number;
+  ton_win: number;
+  ton_lost: number;
+  akronix_win: number;
+  akronix_lost: number;
+  credits_win: number;
+  credits_lost: number;
+  id: number;
+};
+
 export function Statistic() {
   const { t } = useTranslation();
-  const [activeCurrency, setActiveCurrency] = useState("ton");
+  const [currency, setCurrency] = useState("ton");
+
+  const [photo, setPhoto] = useState(null);
+  const [login, setLogin] = useState(localStorage.getItem("username"));
+  const [stats, setStats] = useState<Stats | null>(null);
+
+  async function loadPhoto(username: string) {
+    const res = await fetchUserPhoto(username);
+    // @ts-ignore
+    setPhoto(res);
+  }
+  async function loadLogin() {
+    const storageLogin = localStorage.getItem("username");
+    if (storageLogin) {
+      // @ts-ignore
+      setLogin(storageLogin);
+      loadPhoto(storageLogin);
+      return;
+    }
+
+    const res = await getMe();
+    if (res?.username) {
+      localStorage.setItem("username", res.username);
+      setLogin(res.username);
+      loadPhoto(res.username);
+    }
+  }
+
+  useEffect(() => {
+    if (!localStorage.getItem("username")) {
+      loadLogin();
+    } else {
+      loadPhoto(localStorage.getItem("username")!);
+    }
+
+    const images = document.querySelectorAll<HTMLImageElement>(".check-image");
+
+    images.forEach((img) => {
+      img.onload = function () {
+        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
+          img.src = "/ui/img/default_ava.png";
+        }
+      };
+    });
+  }, [login]);
+
+  async function loadStats() {
+    const res = await fetchStats();
+    if (res?.stats) {
+      setStats(res.stats);
+    }
+  }
+
+  useEffect(() => {
+    loadStats();
+  }, []);
 
   const currencyStatEnum: CurrencyStatType = {
     credits: {
@@ -57,22 +129,29 @@ export function Statistic() {
     <div className="statistic">
       <CryptoButtons
         className="seaBattle__cryptoButtons"
-        activeCurrency={activeCurrency}
+        activeCurrency={currency}
         activeOptions={["credits", "akronix", "ton"]}
-        setActiveCurrency={setActiveCurrency}
+        setActiveCurrency={setCurrency}
       />
       <div className="statistic__info">
         <div className="statistic__info-avatarBlock">
-          <img
-            src={avatarImg}
-            alt="avatar"
-            className="statistic__info-avatarBlock-img"
-          />
+          {photo ? (
+            <img
+              src={photo}
+              alt=""
+              className="statistic__info-avatarBlock-img check-image"
+              width="56px"
+            />
+          ) : (
+            <div className="statistic__info-avatarBlock-imgDefault">
+              {login?.[0]}
+            </div>
+          )}
         </div>
 
         <div className="statistic__info-divider"></div>
 
-        <div className="statistic__info-login">@pashadurovofficial</div>
+        <div className="statistic__info-login">@{login}</div>
       </div>
       <div className="statistic__grid">
         {/* ITEM */}
@@ -81,7 +160,9 @@ export function Statistic() {
             <div className="statistic__grid-item-info-key">
               {t("battleshipsModal.statisticTab.duels")}:
             </div>
-            <div className="statistic__grid-item-info-value">1234</div>
+            <div className="statistic__grid-item-info-value">
+              {stats?.games || 0}
+            </div>
           </div>
           <img src={icon1} alt="icon" className="statistic__grid-item-img" />
         </div>
@@ -92,7 +173,10 @@ export function Statistic() {
             <div className="statistic__grid-item-info-key">
               % {t("battleshipsModal.statisticTab.victories")}:
             </div>
-            <div className="statistic__grid-item-info-value">87%</div>
+            <div className="statistic__grid-item-info-value">
+              {/* @ts-ignore */}
+              {parseInt((stats?.wins / stats?.games) * 100) || 0}%
+            </div>
           </div>
           <img src={icon2} alt="icon" className="statistic__grid-item-img" />
         </div>
@@ -103,7 +187,7 @@ export function Statistic() {
             <div className="statistic__grid-item-info-key">
               {t("battleshipsModal.statisticTab.won")}:
             </div>
-            <div className="statistic__grid-item-info-value">12345</div>
+            <div className="statistic__grid-item-info-value">{stats?.wins}</div>
           </div>
           <img src={icon3} alt="icon" className="statistic__grid-item-img" />
         </div>
@@ -114,7 +198,9 @@ export function Statistic() {
             <div className="statistic__grid-item-info-key">
               {t("battleshipsModal.statisticTab.lost")}:
             </div>
-            <div className="statistic__grid-item-info-value">12345</div>
+            <div className="statistic__grid-item-info-value">
+              {stats?.loses}
+            </div>
           </div>
           <img src={icon4} alt="icon" className="statistic__grid-item-img" />
         </div>
@@ -125,12 +211,15 @@ export function Statistic() {
           <div className="statistic__grid-item-info">
             <div className="statistic__grid-item-info-key">
               {t("battleshipsModal.statisticTab.won")}{" "}
-              {currencyStatEnum[activeCurrency]?.title}:
+              {currencyStatEnum[currency]?.title}:
             </div>
-            <div className="statistic__grid-item-info-value">12345</div>
+            <div className="statistic__grid-item-info-value">
+              {/* @ts-ignore */}
+              {stats?.[`${currency}_win`] || 0}
+            </div>
           </div>
           <img
-            src={currencyStatEnum[activeCurrency]?.plusIcon}
+            src={currencyStatEnum[currency]?.plusIcon}
             alt="icon"
             className="statistic__grid-item-img"
           />
@@ -141,12 +230,15 @@ export function Statistic() {
           <div className="statistic__grid-item-info">
             <div className="statistic__grid-item-info-key">
               {t("battleshipsModal.statisticTab.lost")}{" "}
-              {currencyStatEnum[activeCurrency]?.title}:
+              {currencyStatEnum[currency]?.title}:
             </div>
-            <div className="statistic__grid-item-info-value">12345</div>
+            <div className="statistic__grid-item-info-value">
+              {/* @ts-ignore */}
+              {stats?.[`${currency}_lost`] || 0}
+            </div>
           </div>
           <img
-            src={currencyStatEnum[activeCurrency]?.minusIcon}
+            src={currencyStatEnum[currency]?.minusIcon}
             alt="icon"
             className="statistic__grid-item-img"
           />
@@ -158,10 +250,13 @@ export function Statistic() {
             <div className="statistic__grid-item-info-key">
               {t("battleshipsModal.statisticTab.result")}:
             </div>
-            <div className="statistic__grid-item-info-value">12345</div>
+            <div className="statistic__grid-item-info-value">
+              {/* @ts-ignore */}
+              {stats?.[`${currency}_win`] - stats?.[`${currency}_lost`]}
+            </div>
           </div>
           <img
-            src={currencyStatEnum[activeCurrency]?.totalIcon}
+            src={currencyStatEnum[currency]?.totalIcon}
             alt="icon"
             className="statistic__grid-item-img"
           />

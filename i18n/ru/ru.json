@@ -298,5 +298,8 @@
     "damage": "Урон",
     "charge": "Заряд",
     "chargeReplenishementSpeed": "Скр. восполнения заряда"
+  },
+  "searchingDuel": {
+    "searching": "Идет поиск"
   }
 }

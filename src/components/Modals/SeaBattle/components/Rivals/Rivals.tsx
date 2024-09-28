@@ -103,6 +103,16 @@ export function Rivals() {
     if (rooms?.length) {
       fetchPhotos();
     }
+
+    const images = document.querySelectorAll<HTMLImageElement>(".check-image");
+
+    images.forEach((img) => {
+      img.onload = function () {
+        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
+          img.src = "/ui/img/default_ava.png";
+        }
+      };
+    });
   }, [rooms]);
 
   return (
@@ -154,8 +164,9 @@ export function Rivals() {
                           item.creator.username as keyof typeof userPhotos
                         ]
                       }
-                      alt="avatar"
-                      className="rivals__list-item-start-ava"
+                      alt=""
+                      width="36px"
+                      className="rivals__list-item-start-ava check-image"
                     />
                   ) : (
                     <div className="rivals__list-item-start-avaDefault">

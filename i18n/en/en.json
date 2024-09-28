@@ -298,5 +298,8 @@
     "damage": "Damage",
     "charge": "Charge",
     "chargeReplenishementSpeed": "Charge replenishment speed"
+  },
+  "searchingDuel": {
+    "searching": "Searching game"
   }
 }
