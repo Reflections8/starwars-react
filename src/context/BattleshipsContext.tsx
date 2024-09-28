@@ -212,6 +212,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       switch (response.type) {
         case "start_approve_phase":
           setGameState(gameStates.APPROVE);
+          setRoomName(parsedMessage?.opponent_name);
+
           setApproveGame(parsedMessage);
           break;
 
@@ -469,7 +471,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         gameState,
         setGameState,
         myBoardState,
-		  enemyBoardState,
+        enemyBoardState,
         socket,
         sendMessage,
         messages,

@@ -28,7 +28,7 @@ export async function fetchUserPhoto(username: string) {
     https://cdn4.cdn-telegram.org/file/JTm996sF1M2cKijtvnzy1e0V3P4J5jysUXM-kBSgh1lVyrTNLRfj-3Hizt5sPBmBkC-FF32ZTDWo5RCv2MmmGwyvyDTRSbvwkDrHKxvmFJa7U45CQ7E2rDs0wZ4frzNGRc2t8CXNUwSFe_2y2ZVZsn_JVZzcvUL4g25eXrIjx3-Eq1xEHhGxhIuxU4DxPHYt7nDYGJQPk0ambu6VtQeLDWVtrvoOqKDenWLublwnV3bHTcaa_-EKql_CpUJEFhTaLGurn6m5vOhm9cO4gK99hZjNJv3Hb7O-R8VtY6S0F4heZpYm8mA5uW-2zCgyMnDAAgb6gfg5X-iLD4fFFj5few.jpg`;
 
   try {
-    const res = await fetch(url2, { redirect: "follow" });
+    const res = await fetch(url, { redirect: "follow" });
     console.log({ resAva: res });
 
     if (res.status === 302) {
