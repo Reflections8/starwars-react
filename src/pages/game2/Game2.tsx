@@ -49,8 +49,14 @@ export function Game2() {
 
   const { jwt: userDataJwt } = useUserData();
 
-  const { myBoardState, userBoard, enemyBoard, myTurn, handshakeTimer } =
-    useBattleships();
+  const {
+    myBoardState,
+    enemyBoardState,
+    userBoard,
+    enemyBoard,
+    myTurn,
+    handshakeTimer,
+  } = useBattleships();
 
   useEffect(() => {
     if (!userDataJwt && !jwtToUse) {
@@ -78,7 +84,7 @@ export function Game2() {
   useEffect(() => {
     if (myBoardState.ships && myBoardState.ships.length > 0)
       resetTimer(timerSeconds * 1000);
-  }, [JSON.stringify(myBoardState)]);
+  }, [JSON.stringify(myBoardState), JSON.stringify(enemyBoardState)]);
 
   useEffect(() => {
     if (handshakeTimer.state === 5 || handshakeTimer.state === 6) {

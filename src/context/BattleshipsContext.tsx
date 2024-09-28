@@ -469,6 +469,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         gameState,
         setGameState,
         myBoardState,
+		  enemyBoardState,
         socket,
         sendMessage,
         messages,
@@ -505,6 +506,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setIsInitial,
         betType,
         betAmount,
+        setBetAmount,
       }}
     >
       {children}

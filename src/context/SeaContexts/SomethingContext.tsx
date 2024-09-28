@@ -33,6 +33,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     setGameState,
     handshakeTimer,
     setHandshakeTimer,
+    betAmount,
     setBetAmount,
   } = useBattleships();
 
@@ -141,7 +142,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   }, [gameState]);
 
   return (
-    <SomethingContext.Provider value={{ handshakeTimer }}>
+    <SomethingContext.Provider value={{ handshakeTimer, betAmount }}>
       {children}
     </SomethingContext.Provider>
   );
