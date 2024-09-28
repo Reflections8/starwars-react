@@ -1,18 +1,18 @@
-import "./styles/BattleshipsWon.css";
-import bg from "./img/bg.png";
-import textImg from "./img/text.svg";
-import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
-import { useModal } from "../../../context/ModalContext";
 import { useTranslation } from "react-i18next";
 import {
   gameStates,
   useBattleships,
 } from "../../../context/BattleshipsContext";
+import { useModal } from "../../../context/ModalContext";
+import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
+import bg from "./img/bg.png";
+import textImg from "./img/text.svg";
+import "./styles/BattleshipsWon.css";
 
 export function BattleshipsWon() {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-  const { setGameState } = useBattleships();
+  const { setGameState, betAmount } = useBattleships();
   return (
     <div className="battleshipsWon">
       <img src={bg} alt="" className="battleshipsWon__bg" />
@@ -22,7 +22,7 @@ export function BattleshipsWon() {
         <div className="battleshipsWon__text-key">
           {t("battleships.yourWinnings")}:
         </div>
-        <div className="battleshipsWon__text-value">1,235,954</div>
+        <div className="battleshipsWon__text-value">{betAmount || 0}</div>
       </div>
       <CuttedButton
         className="battleshipsWon__okBtn"
