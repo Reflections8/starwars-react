@@ -415,9 +415,19 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     state: 0,
   });
 
+  const changePreHit = (data: any) => {
+    const newEnemyBoard = new Gameboard();
+    newEnemyBoard.ships = enemyBoard.ships;
+    newEnemyBoard.hits = enemyBoard.hits;
+    newEnemyBoard.misses = enemyBoard.misses;
+    newEnemyBoard.preHit = data;
+    setEnemyBoard(newEnemyBoard);
+  };
+
   return (
     <BattleshipsContext.Provider
       value={{
+        changePreHit,
         me,
         handshakeTimer,
         setHandshakeTimer,

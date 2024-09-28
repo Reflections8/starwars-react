@@ -74,7 +74,7 @@ export function Game2() {
   useEffect(() => {
     resetTimer(timerSeconds * 1000);
   }, [myTurn]);
-  //change from 60 to 1 and then back to 60
+
   useEffect(() => {
     if (myBoardState.ships && myBoardState.ships.length > 0)
       resetTimer(timerSeconds * 1000);

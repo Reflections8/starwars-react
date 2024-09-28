@@ -17,11 +17,12 @@ export const GameFields: FC<{
   myTurn: boolean;
   timerValue: number;
 }> = ({ userBoard, enemyBoard, myTurn, timerValue }) => {
-  const { roomName, sendMessage } = useBattleships();
+  const { roomName, sendMessage, changePreHit } = useBattleships();
+
   const clickEnemyField = (row: number, column: number, zalupa: boolean) => {
     if (!zalupa) return;
     if (!myTurn) return;
-    enemyBoard.setPreHit({ row, column });
+    changePreHit({ row, column });
   };
 
   const confirmHit = () => {
@@ -33,7 +34,7 @@ export const GameFields: FC<{
         target: enemyBoard.preHit,
       },
     });
-    enemyBoard.setPreHit(null);
+    changePreHit(null);
   };
 
   return (
