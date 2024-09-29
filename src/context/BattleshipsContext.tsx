@@ -255,7 +255,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         case "invite_denied":
           setGameState(gameStates.INVITE_DENIED);
           break;
-
         case "start_approve_phase":
           setGameState(gameStates.APPROVE);
           setRoomName(parsedMessage?.opponent_name);

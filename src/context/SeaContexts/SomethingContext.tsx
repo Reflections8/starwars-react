@@ -123,9 +123,12 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     "2112": t("duelInvitationDrawer.errors.inviterAlreadyPlaying"),
     "2113": t("duelInvitationDrawer.errors.unknownError"),
     "2114": t("duelInvitationDrawer.errors.inviterOffline"),
+    "2103": t("duelInvitationDrawer.errors.inviteLimit"),
+    "2115": t("duelInvitationDrawer.errors.inviteCanceled"),
   };
 
   useEffect(() => {
+    const duelInviteErrors = ["invite_user_fail", "accept_invite_fail"];
     if (!socket) return;
     const handleMessage = (event: MessageEvent) => {
       const response = JSON.parse(event.data);
@@ -137,7 +140,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
         );
         return;
       }
-      if (response.type === "invite_user_fail") {
+      if (duelInviteErrors.includes(response?.type)) {
         openDrawer!(
           "rejected",
           "bottom",

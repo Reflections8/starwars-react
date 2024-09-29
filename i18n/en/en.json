@@ -319,7 +319,9 @@
       "notEnoughtMoney": "There are not enough funds on the balance to continue",
       "inviterAlreadyPlaying": "The player who invited you is already in another duel",
       "unknownError": "An error occurred while trying to connect. The inviting player may not have enough funds",
-      "inviterOffline": "The player who invited you was not found online"
+      "inviterOffline": "The player who invited you was not found online",
+      "inviteLimit": "Invites limit was reached. Can't send more than 3 invites at once",
+      "inviteCanceled": "Invite was canceled"
     }
   }
 }
