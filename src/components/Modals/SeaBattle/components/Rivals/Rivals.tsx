@@ -54,12 +54,10 @@ export function Rivals() {
       return;
     }
 
-    // TODO: функционал дуэли с другом
-    return;
     sendMessage({
-      type: "create_room",
+      type: "invite_user",
       message: {
-        room_name: friendsLogin,
+        username: friendsLogin.toLocaleLowerCase(),
         bet_type: BetTypeEnum[activeCurrency as keyof typeof BetTypeEnum],
         bet_amount: bet,
       },

@@ -42,6 +42,11 @@ export const gameStates = {
   DENY_RECIEVED: 11,
   GAME_CANCELED: 12,
   PLAYER_LEFT: 13,
+
+  APPROVE_FRIEND_DUEL: 20,
+  DENY_INVITE_SUCCESS: 21,
+  INVITE_DENIED: 22,
+  INVITE_USER_SUCCESS: 23,
 };
 
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
@@ -83,6 +88,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   });
   const [betAmount, setBetAmount] = useState(null);
   const [betType, setBetType] = useState(null);
+
+  const [approveDuel, setApproveDuel] = useState(null);
 
   const restartBoards = () => {
     userDeadShips.current = [];
@@ -140,6 +147,20 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     return { hits, misses, ships };
   };
 
+  const handleDeclineMyRooms = () => {
+    if (rooms.length === 0) return;
+    if (!me) return;
+    //@ts-ignore
+    const myRooms = rooms.filter((room) => room.creator.username === me);
+    myRooms.forEach((room) => {
+      sendMessage({
+        type: "give_up",
+        message: { room_name: room.room_name },
+      });
+    });
+  };
+
+  // Обработчики апрува игры
   const handleApproveGame = () => {
     if (!approveGame) return;
     sendMessage({
@@ -158,17 +179,25 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     setApproveGame(null);
   };
 
-  const handleDeclineMyRooms = () => {
-    if (rooms.length === 0) return;
-    if (!me) return;
-    //@ts-ignore
-    const myRooms = rooms.filter((room) => room.creator.username === me);
-    myRooms.forEach((room) => {
-      sendMessage({
-        type: "give_up",
-        message: { room_name: room.room_name },
-      });
+  // Обработчики апрува дуэли с другом
+  const handleApproveDuel = () => {
+    if (!approveDuel) return;
+    sendMessage({
+      type: "accept_invite",
+      // @ts-ignore
+      message: { wallet: approveDuel.wallet },
     });
+    setApproveDuel(null);
+  };
+
+  const handleDeclineDuel = () => {
+    if (!approveDuel) return;
+    sendMessage({
+      type: "deny_invite",
+      // @ts-ignore
+      message: { wallet: approveDuel.wallet },
+    });
+    setApproveDuel(null);
   };
 
   async function loadRooms() {
@@ -210,6 +239,23 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       console.log("Сообщение от сервера:", response.type, parsedMessage);
 
       switch (response.type) {
+        case "game_invitation":
+          setGameState(gameStates.APPROVE_FRIEND_DUEL);
+          setApproveDuel(parsedMessage);
+          break;
+
+        case "invite_user_success":
+          setGameState(gameStates.INVITE_USER_SUCCESS);
+          break;
+
+        case "deny_invite_success":
+          setGameState(gameStates.DENY_INVITE_SUCCESS);
+          break;
+
+        case "invite_denied":
+          setGameState(gameStates.INVITE_DENIED);
+          break;
+
         case "start_approve_phase":
           setGameState(gameStates.APPROVE);
           setRoomName(parsedMessage?.opponent_name);
@@ -239,6 +285,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           break;
 
         case "start_placement_phase":
+        case "invite_start_placement_phase":
           setGameState(gameStates.PLACEMENT);
           setOpponentName(parsedMessage.opponent_name);
           setRoomName(parsedMessage?.room_name);
@@ -367,7 +414,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         ) {
           createWebSocket();
         }
-      }, 1000);
+      }, 5000);
 
       // TODO: это переоткрывает только если код ошибки не 1000
       // if (event.code !== 1000) {
@@ -509,6 +556,10 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         betType,
         betAmount,
         setBetAmount,
+        setApproveDuel,
+        approveDuel,
+        handleApproveDuel,
+        handleDeclineDuel,
       }}
     >
       {children}

@@ -158,6 +158,7 @@
   max-width: 300px;
   text-transform: uppercase;
   text-align: center;
+  word-break: break-word;
 }
 
 /* MENU */
@@ -538,6 +539,84 @@
 }
 
 .opponentFound__betBox-main-value {
+  font-size: 16px;
+  color: #c9e9fb;
+}
+
+.opponentFound__betBox-timerWrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -6px;
+}
+
+/* DUEL INVITATION */
+.duelInvitation {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.drawer.duelInvitation {
+  max-height: 400px;
+  padding-bottom: 40px;
+}
+
+.duelInvitation__icon {
+  max-width: 45px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.duelInvitation__text {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-transform: uppercase;
+
+  max-width: 300px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.duelInvitation__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.duelInvitation__footer .cuttedButtonContainer {
+  max-width: 150px;
+  width: 100%;
+}
+
+.duelInvitation__betBox {
+  padding: 15px 15px 20px 15px;
+  border-radius: 4px;
+  border: 1px solid #19c2ef4b;
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.duelInvitation__betBox-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.duelInvitation__betBox-main-key {
+  font-size: 15px;
+  color: #0974f8;
+}
+
+.duelInvitation__betBox-main-value {
   font-size: 16px;
   color: #c9e9fb;
 }

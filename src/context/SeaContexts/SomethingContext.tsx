@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import { Gameboard as ArrangementBoard } from "../../components/Modals/ShipsArrangement2/gameboard";
 import { useSound } from "./SoundContext";
+import { useTranslation } from "react-i18next";
 
 type SomethingProviderProps = {
   children: ReactNode;
@@ -35,9 +36,11 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     setHandshakeTimer,
     betAmount,
     setBetAmount,
+    setApproveDuel,
   } = useBattleships();
 
-  const { openDrawer } = useDrawer();
+  const { t } = useTranslation();
+  const { openDrawer, closeDrawer } = useDrawer();
   const { openModal, closeModal } = useModal();
   const { startBackgroundAudio } = useSound();
   const location = useLocation();
@@ -112,6 +115,16 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     }
   };
 
+  const errorCodes = {
+    "2100": t("duelInvitationDrawer.errors.yourself"),
+    "2101": t("duelInvitationDrawer.errors.userOffline"),
+    "2102": t("duelInvitationDrawer.errors.alreadySent"),
+    "2111": t("duelInvitationDrawer.errors.notEnoughtMoney"),
+    "2112": t("duelInvitationDrawer.errors.inviterAlreadyPlaying"),
+    "2113": t("duelInvitationDrawer.errors.unknownError"),
+    "2114": t("duelInvitationDrawer.errors.inviterOffline"),
+  };
+
   useEffect(() => {
     if (!socket) return;
     const handleMessage = (event: MessageEvent) => {
@@ -124,9 +137,34 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
         );
         return;
       }
+      if (response.type === "invite_user_fail") {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          errorCodes[
+            JSON.parse(response?.message)?.code as keyof typeof errorCodes
+          ]
+        );
+      }
+      if (response.type === "invite_user_success") {
+        openDrawer!(
+          "resolved",
+          "bottom",
+          t("duelInvitationDrawer.invitationSuccess")
+        );
+      }
+      if (response.type === "game_invitation") {
+        openDrawer!("duelInvitation");
+        setApproveDuel(JSON.parse(response?.message));
+      }
+
       if (response.type === "start_approve_phase") {
         setHandshakeTimer({ time: 60, state: 1 });
       }
+      if (response.type === "invite_start_placement_phase") {
+        closeDrawer!();
+      }
+
       if (response.type !== "handshake_success") return;
       setTimeout(() => {
         handleHandshake(JSON.parse(response?.message));
@@ -139,6 +177,14 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   // TODO: это я добавил
   useEffect(() => {
     if (gameState === 1) openDrawer!("opponentFound");
+    if (gameState === 22) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("duelInvitationDrawer.opponentCanceledGame")
+      );
+      setGameState(gameStates.NOT_STARTED);
+    }
   }, [gameState]);
 
   return (
