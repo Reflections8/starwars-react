@@ -46,7 +46,6 @@ export const gameStates = {
 
 export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const navigate = useNavigate();
-
   const { blastIt, stopBackgroundAudio } = useSound();
 
   const socketRef = useRef<WebSocket | null>(null);
@@ -213,6 +212,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       switch (response.type) {
         case "start_approve_phase":
           setGameState(gameStates.APPROVE);
+          setRoomName(parsedMessage?.opponent_name);
+
           setApproveGame(parsedMessage);
           break;
 
@@ -321,7 +322,6 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
 
         case "game_over":
           setIsInitial(true);
-
           setTimeout(() => {
             stopBackgroundAudio();
             restartBoards();
@@ -352,6 +352,47 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     setSearchingDuel(myRooms.length > 0);
   }, [JSON.stringify(rooms), me]);
 
+  const createWebSocket = () => {
+    const ws = new WebSocket("wss://socket.akronix.io/shipBattle");
+    socketRef.current = ws;
+
+    ws.onopen = () =>
+      ws.send(JSON.stringify({ type: "handshake", message: "zdarova", jwt }));
+
+    ws.onclose = () => {
+      setTimeout(() => {
+        if (
+          !socketRef.current ||
+          socketRef.current.readyState === WebSocket.CLOSED
+        ) {
+          createWebSocket();
+        }
+      }, 1000);
+
+      // TODO: это переоткрывает только если код ошибки не 1000
+      // if (event.code !== 1000) {
+      //   console.error(
+      //     "Код закрытия WebSocket:",
+      //     event.code,
+      //     "Причина:",
+      //     event.reason || "Неизвестная причина"
+      //   );
+      //   // Попробовать переподключиться через 1 секунду
+      //   setTimeout(() => {
+      //     if (
+      //       !socketRef.current ||
+      //       socketRef.current.readyState === WebSocket.CLOSED
+      //     ) {
+      //       createWebSocket();
+      //     }
+      //   }, 1000);
+      // }
+    };
+
+    socketRef.current = ws;
+    setSocket(ws);
+  };
+
   useEffect(() => {
     if (!jwt) {
       navigate("/");
@@ -360,23 +401,16 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     getMe().then((res) => {
       setMe(res.username);
     });
-    const ws = new WebSocket("wss://socket.akronix.io/shipBattle");
-    socketRef.current = ws;
-    setSocket(ws);
-    ws.onopen = () =>
-      ws.send(JSON.stringify({ type: "handshake", message: "zdarova", jwt }));
-    ws.onclose = (event) => {
-      if (event.code !== 1000) {
-        console.error(
-          "Код закрытия WebSocket:",
-          event.code,
-          "Причина:",
-          event.reason || "Неизвестная причина"
-        );
-      }
-    };
+
+    createWebSocket();
+
     return () => {
-      if (ws.readyState === WebSocket.OPEN) ws.close();
+      if (
+        socketRef.current &&
+        socketRef.current.readyState === WebSocket.OPEN
+      ) {
+        socketRef.current.close();
+      }
       socketRef.current = null; // Обнуляем ссылку на сокет
     };
   }, [jwt]);
@@ -437,6 +471,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         gameState,
         setGameState,
         myBoardState,
+        enemyBoardState,
         socket,
         sendMessage,
         messages,
@@ -473,6 +508,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         setIsInitial,
         betType,
         betAmount,
+        setBetAmount,
       }}
     >
       {children}

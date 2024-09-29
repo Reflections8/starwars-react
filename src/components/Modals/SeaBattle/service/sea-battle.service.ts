@@ -26,7 +26,8 @@ export async function fetchUserPhoto(username: string) {
   const url = `https://t.me/i/userpic/160/${username}.jpg`;
 
   try {
-    const res = await fetch(url, { redirect: "manual" });
+    const res = await fetch(url, { redirect: "follow" });
+    console.log({ resAva: res });
 
     if (res.status === 302) {
       const location = res.headers.get("Location");
@@ -34,7 +35,7 @@ export async function fetchUserPhoto(username: string) {
         return location;
       }
     } else if (res.ok) {
-      console.log({ res });
+      console.log({ resOkAva: res });
       return url;
     }
 

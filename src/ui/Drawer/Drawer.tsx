@@ -750,7 +750,7 @@ function OpponentFound() {
     <div className="opponentFound">
       <img src={opponentFoundIcon} alt="" className="opponentFound__icon" />
       <div className="opponentFound__text">
-        {title} {approveGame?.room_name}
+        {title} ({approveGame?.opponent_name})
       </div>
 
       <div className="opponentFound__betBox">
