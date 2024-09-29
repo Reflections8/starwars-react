@@ -238,7 +238,11 @@ export function Rivals() {
                 type="decimal"
                 value={friendsLogin}
                 onChange={(e) => {
-                  setFriendsLogin(e.target.value);
+                  const value = e.target.value;
+                  const cleanedValue = value.startsWith("@")
+                    ? value.slice(1)
+                    : value;
+                  setFriendsLogin(cleanedValue);
                 }}
                 className="rivals__newDuel__inputBlock-input"
               />
