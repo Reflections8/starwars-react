@@ -691,12 +691,20 @@ function OpponentFound() {
       : t("opponentFoundDrawer.playerTitle")
   );
 
+  const resetTimer = () => {
+    setRemainTime(0);
+    setTimeout(() => {
+      setRemainTime(60 * 1000);
+    }, 10);
+  };
+
   useEffect(() => {
     if (handshakeTimer.state === 1 || handshakeTimer.state === 2)
       setRemainTime(handshakeTimer.time * 1000);
   }, [handshakeTimer]);
 
   useEffect(() => {
+    if (gameState === 0) resetTimer();
     if (gameState === 1) {
       if (approveGame.is_creator) {
         setTitle(t("opponentFoundDrawer.creatorTitle"));
