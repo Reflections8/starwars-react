@@ -8,7 +8,6 @@ export const playBeamAnimation = (
   const targetCell = document.getElementById(
     `${me ? "enemy" : "user"}Cell${row}-${column}`
   ) as HTMLElement;
-  return;
   return new Promise<void>((resolve) => {
     const beam = document.createElement("div");
     beam.className = "beam-animation-" + (me ? "green" : "red");
