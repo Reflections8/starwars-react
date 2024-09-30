@@ -37,6 +37,8 @@ export function Home() {
     activeCharacter,
     higherBlaster,
     soundSetting,
+    sessionsCount,
+    characters,
     updateUserInfo,
   } = useUserData();
   const navigate = useNavigate();
@@ -53,7 +55,6 @@ export function Home() {
     activeVideo,
     setActiveVideo,
     repeatCount,
-    sessionCount,
   } = useBackgroundVideo();
 
   // unity vars
@@ -132,14 +133,30 @@ export function Home() {
 
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
-    if (sessionCount! <= 5) {
-      openModal!("binks");
+    console.log({ sessionsCount, hasNFT: characters.length });
+
+    if (characters.length && sessionsCount! > 5) {
+      setReadyState!(false);
+      setActiveVideo!(null);
+      return;
     }
-    if (sessionCount! > 5) {
+
+    if (!characters.length && sessionsCount! > 5) {
       setReadyState!(true);
       setActiveVideo!("3");
+      return;
     }
-  }, [i18n.language, sessionCount]);
+
+    if (characters.length && sessionsCount! <= 5) {
+      openModal!("binks");
+      return;
+    }
+
+    if (!characters.length && sessionsCount! <= 5) {
+      openModal!("binks");
+      return;
+    }
+  }, [i18n.language, sessionsCount, characters.length]);
 
   async function openWalletDrawer() {
     closeDrawer!();
@@ -202,7 +219,7 @@ export function Home() {
         activeVideo={activeVideo}
         setActiveVideo={setActiveVideo}
         repeatCount={repeatCount!}
-        sessionCount={sessionCount!}
+        sessionsCount={sessionsCount!}
       />
 
       <Resources credits={credits} akron={tokens} ton={tons} />

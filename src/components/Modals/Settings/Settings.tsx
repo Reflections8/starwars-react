@@ -19,12 +19,13 @@ export function Settings() {
     activeCharacter,
     jwt,
     soundSetting,
+    sessionsCount,
     setSoundSetting,
     updateUserInfo,
   } = useUserData();
   const { t, i18n } = useTranslation();
 
-  const { restartTutorial, sessionCount } = useBackgroundVideo();
+  const { restartTutorial } = useBackgroundVideo();
   const { closeModal } = useModal();
 
   const pills: PillType[] = [
@@ -198,7 +199,7 @@ export function Settings() {
         </div>
       </div>
 
-      {!characters.length && sessionCount! <= 5 ? null : (
+      {!characters.length && sessionsCount! <= 5 ? null : (
         <div className="settings__row">
           <div className="settings__row-name">
             {t("settingsModal.tutorial")}:

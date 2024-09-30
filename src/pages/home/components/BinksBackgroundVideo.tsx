@@ -17,7 +17,7 @@ type BinksBackgroundVideoProps = {
   activeVideo: any;
   setActiveVideo: any;
   repeatCount: number;
-  sessionCount: number;
+  sessionsCount: number;
 };
 
 export function BinksBackgroundVideo({
@@ -26,7 +26,7 @@ export function BinksBackgroundVideo({
   activeVideo,
   setActiveVideo,
   repeatCount,
-  sessionCount,
+  sessionsCount,
 }: BinksBackgroundVideoProps) {
   const videoRef1 = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
@@ -164,27 +164,48 @@ export function BinksBackgroundVideo({
   }, [activeVideo, i18n.language, repeatCount]);
 
   function handleTutorialDone() {
-    console.log({ characters, sessionCount, readyState, activeVideo });
-    // Если есть НФТ и это 1-5 сессии
-    if (!characters.length && sessionCount <= 5) {
+    // Нет НФТ, 1-5
+    if (!characters.length && sessionsCount <= 5) {
+      stopVideo("2");
+      openModal!("binksDone");
+      return;
+    }
+
+    // Нет НФТ, 6+ (убрал модалку binksDone если это уже 6+ сессии)
+    if (!characters.length && sessionsCount > 5) {
+      stopVideo("2");
+      setActiveVideo("3");
+      return;
+    }
+
+    // Если есть НФТ, 1-5
+    if (characters.length && sessionsCount <= 5) {
       stopAllVideos();
       setReadyState(false);
       setActiveVideo(null);
       return;
     }
 
-    if (repeatCount === 0) {
-      // TODO: пока сделал так, что если в рамках сессии это первое проигрывание обучения, то показывать модалку...
-      stopVideo("2");
-      console.log("repeatCount === 0");
-      openModal!("binksDone");
+    // Если есть НФТ, 6+
+    if (characters.length && sessionsCount > 5) {
+      stopAllVideos();
+      setReadyState(false);
+      setActiveVideo(null);
+      return;
     }
 
-    // TODO: ...иначе сразу переключаем на 3-е видео
-    if (repeatCount > 0) {
-      stopVideo("2");
-      setActiveVideo("3");
-    }
+    //  if (repeatCount === 0) {
+    //    // TODO: пока сделал так, что если в рамках сессии это первое проигрывание обучения, то показывать модалку...
+    //    stopVideo("2");
+    //    console.log("repeatCount === 0");
+    //    openModal!("binksDone");
+    //  }
+
+    //  // TODO: ...иначе сразу переключаем на 3-е видео
+    //  if (repeatCount > 0) {
+    //    stopVideo("2");
+    //    setActiveVideo("3");
+    //  }
   }
 
   useEffect(() => {
@@ -293,7 +314,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 155) {
           highlightElement("games");
         }
-        if (fixedTime == 2) {
+        if (fixedTime == 193) {
           handleTutorialDone();
         }
       }

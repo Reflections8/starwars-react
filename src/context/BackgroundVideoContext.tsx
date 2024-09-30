@@ -27,9 +27,6 @@ export function BackgroundVideoProvider({
   const [activeVideo, setActiveVideo] = useState(null);
   const [repeatCount, setRepeatCount] = useState(0);
 
-  // TODO: мок
-  const [sessionCount] = useState(6);
-
   function restartTutorial() {
     setReadyState(true);
     // @ts-ignore
@@ -46,7 +43,6 @@ export function BackgroundVideoProvider({
         repeatCount,
         setRepeatCount,
         restartTutorial,
-        sessionCount,
       }}
     >
       {children}

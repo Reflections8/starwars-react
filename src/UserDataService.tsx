@@ -39,6 +39,7 @@ interface UserDataContextType {
   soundSetting: boolean;
   prices: Prices;
   refInfo: RefInfo | null;
+  sessionsCount: number | null;
   selectGun: (value: number) => void;
   selectHealingCharacter: (value: number) => void;
   updateCredits: (value: number) => void;
@@ -55,6 +56,7 @@ const defaultValue: UserDataContextType = {
   credits: 0,
   tokens: 0,
   tons: 0,
+  sessionsCount: null,
   exchangeRate: 0,
   jwt: "",
   checkGun: false,
@@ -120,6 +122,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     blaster_earned: 0,
   });
   const [exchangeRate, setExchangeRate] = useState(0);
+  const [sessionsCount, setSessionsCount] = useState(null);
 
   const [healingCharacter, setHealingCharacter] = useState<Character | null>(
     null
@@ -243,6 +246,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setTons(data.tons);
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
+      setSessionsCount(data.sessions);
       const userMetricsData: UserMetrics = data.metrics_response;
       setUserMetrics(userMetricsData);
       const activeCharacter: Character | null = data.active_character;
@@ -475,6 +479,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         userMetrics,
         checkGun,
         soundSetting,
+        sessionsCount,
         setSoundSetting,
         selectGun,
         selectHealingCharacter,

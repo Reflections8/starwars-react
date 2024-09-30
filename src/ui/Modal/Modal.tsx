@@ -236,7 +236,7 @@ export function Modal({ isOpen }: ModalProps) {
               />
 
               <div className="modal__body-top">
-                {modalType === "binks" ? null : (
+                {modalType === "binks" || modalType === "binksDone" ? null : (
                   <button
                     className="modal__body-top-closeBtn"
                     onClick={() => {
