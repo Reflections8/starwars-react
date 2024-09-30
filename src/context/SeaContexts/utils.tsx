@@ -12,7 +12,7 @@ export const playBeamAnimation = (
     const beam = document.createElement("div");
     beam.className = "beam-animation-" + (me ? "green" : "red");
     document.body.appendChild(beam);
-
+    document.body.style.overflow = "hidden";
     // Calculate the position of the target cell
     const targetRect = targetCell.getBoundingClientRect();
     const beamRect = beam.getBoundingClientRect();
@@ -43,6 +43,7 @@ export const playBeamAnimation = (
     // Remove the beam after the animation completes
     beam.addEventListener("transitionend", () => {
       document.body.removeChild(beam);
+      document.body.style.overflow = "auto";
       resolve();
     });
   });

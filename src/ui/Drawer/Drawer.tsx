@@ -51,7 +51,7 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
     giveUp: <GiveUp />,
     opponentFound: <OpponentFound />,
   };
-
+  if (!isOpen) return null;
   return (
     <div
       className={`drawerBg ${
@@ -680,6 +680,7 @@ function OpponentFound() {
     setGameState,
     gameState,
     handshakeTimer,
+    setHandshakeTimer,
   } = useBattleships();
   const [remainTime, setRemainTime] = useState(60 * 1000);
   const [betType] = useState(approveGame?.bet_type);
@@ -695,12 +696,18 @@ function OpponentFound() {
     setRemainTime(0);
     setTimeout(() => {
       setRemainTime(60 * 1000);
-    }, 10);
+    }, 50);
   };
 
   useEffect(() => {
-    if (handshakeTimer.state === 1 || handshakeTimer.state === 2)
+    resetTimer();
+  }, [JSON.stringify(approveGame)]);
+
+  useEffect(() => {
+    if (handshakeTimer.state === 1 || handshakeTimer.state === 2) {
       setRemainTime(handshakeTimer.time * 1000);
+      setHandshakeTimer({ time: 0, state: 0 });
+    }
   }, [handshakeTimer]);
 
   useEffect(() => {

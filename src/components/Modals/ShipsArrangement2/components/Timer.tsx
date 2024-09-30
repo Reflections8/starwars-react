@@ -14,6 +14,7 @@ export const Timer: FC<{
     setMyBoardState,
     setBlockedState,
     gameboard,
+    setHandshakeTimer,
   } = useBattleships();
   const { closeModal } = useModal();
   const { startBackgroundAudio } = useSound();
@@ -39,8 +40,10 @@ export const Timer: FC<{
       setRemainTime(5 * 1000);
       return;
     }
-    if (handshakeTimer.state === 3 || handshakeTimer.state === 4)
+    if (handshakeTimer.state === 3 || handshakeTimer.state === 4) {
       setRemainTime(handshakeTimer.time * 1000);
+      setHandshakeTimer({ time: 0, state: 0 });
+    }
   }, [isInitial, handshakeTimer]);
 
   return (

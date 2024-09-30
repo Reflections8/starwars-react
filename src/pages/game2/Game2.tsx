@@ -56,6 +56,7 @@ export function Game2() {
     enemyBoard,
     myTurn,
     handshakeTimer,
+    setHandshakeTimer,
   } = useBattleships();
 
   useEffect(() => {
@@ -90,6 +91,7 @@ export function Game2() {
     if (handshakeTimer.state === 5 || handshakeTimer.state === 6) {
       setTimeout(() => {
         resetTimer(handshakeTimer.time * 1000);
+        setHandshakeTimer({ time: 0, state: 0 });
       }, 200);
     }
   }, [handshakeTimer]);
