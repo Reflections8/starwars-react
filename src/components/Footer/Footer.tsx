@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { FooterAmmoBgIcon } from "../../icons/FooterAmmoBgIcon";
 import bgBottom from "./img/bg-bottom.png";
 import bgBottomBar from "./img/bottom-bar.png";
-import weaponBg from "./img/weapon-bg.png";
+import weaponBgTop from "./img/weapon-bg-top.png";
+import weaponBgBottom from "./img/weapon-bg-bottom.png";
+import weaponBgLeft from "./img/weapon-bg-left.png";
+import weaponBgRight from "./img/weapon-bg-right.png";
 import weaponImg from "./img/weapon.png";
 import "./styles/Footer.css";
 import "./styles/FooterAnimation.css";
@@ -39,11 +42,28 @@ export function Footer({ clip, power, charges }: Partial<FooterProps>) {
               alt="weapon"
               className="footer__top-center-weapon"
             />
-            <img
-              src={weaponBg}
-              alt="bg-weapon"
-              className="footer__top-center-weaponBg"
-            />
+            <div className="footer__top-center-weaponBg">
+              <img
+                src={weaponBgLeft}
+                alt=""
+                className="footer__top-center-weaponBg-left"
+              />
+              <img
+                src={weaponBgRight}
+                alt=""
+                className="footer__top-center-weaponBg-right"
+              />
+              <img
+                src={weaponBgTop}
+                alt=""
+                className="footer__top-center-weaponBg-top"
+              />
+              <img
+                src={weaponBgBottom}
+                alt=""
+                className="footer__top-center-weaponBg-bottom"
+              />
+            </div>
           </div>
           <div className="footer__top-right">
             <div className="footer__top-content">
