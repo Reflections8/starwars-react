@@ -34,7 +34,6 @@ export function Home() {
     tons,
     updateJwt,
     jwt,
-    characters,
     activeCharacter,
     higherBlaster,
     soundSetting,
