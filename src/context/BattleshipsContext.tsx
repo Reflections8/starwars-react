@@ -8,16 +8,16 @@ import {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
 import { Gameboard as ArrangementBoard } from "../components/Modals/ShipsArrangement2/gameboard";
-import { playBeamAnimation, useSound } from "./SeaContexts";
+import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
+import { useSound } from "./SeaContexts";
 
-import { Room } from "../components/Modals/SeaBattle/types/types";
 import {
   fetchRooms,
   getMe,
 } from "../components/Modals/SeaBattle/service/sea-battle.service";
 import { BetTypeEnum } from "../components/Modals/SeaBattle/types/enum";
+import { Room } from "../components/Modals/SeaBattle/types/types";
 
 type BattleshipsProviderProps = {
   children: ReactNode;
