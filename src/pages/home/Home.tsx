@@ -134,6 +134,7 @@ export function Home() {
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
     console.log({ sessionsCount, hasNFT: characters.length });
+    if (sessionsCount === null) return;
 
     if (characters.length && sessionsCount! > 5) {
       setReadyState!(false);
