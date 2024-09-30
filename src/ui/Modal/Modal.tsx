@@ -236,26 +236,28 @@ export function Modal({ isOpen }: ModalProps) {
               />
 
               <div className="modal__body-top">
-                <button
-                  className="modal__body-top-closeBtn"
-                  onClick={() => {
-                    if (modalType === "seaBattle") {
-                      closeModal!();
-                      navigate("/");
-                    } else {
-                      closeModal!();
-                    }
-                  }}
-                >
-                  <img
-                    src={modalBodyCloseIcon}
-                    alt="closeIcon"
-                    className="modal__body-top-closeBtn-bg"
-                  />
-                  <span className="modal__body-top-closeBtn-text">
-                    {t("global.close")}
-                  </span>
-                </button>
+                {modalType === "binks" ? null : (
+                  <button
+                    className="modal__body-top-closeBtn"
+                    onClick={() => {
+                      if (modalType === "seaBattle") {
+                        closeModal!();
+                        navigate("/");
+                      } else {
+                        closeModal!();
+                      }
+                    }}
+                  >
+                    <img
+                      src={modalBodyCloseIcon}
+                      alt="closeIcon"
+                      className="modal__body-top-closeBtn-bg"
+                    />
+                    <span className="modal__body-top-closeBtn-text">
+                      {t("global.close")}
+                    </span>
+                  </button>
+                )}
 
                 <div className="modal__body-top-title">
                   {
