@@ -24,6 +24,8 @@ import ton from "./img/ton.svg";
 import tonMinus from "./img/ton__minus.svg";
 import tonPlus from "./img/ton__plus.svg";
 
+import defaultAva from "../../../../../icons/no_avatar.png";
+
 type CurrencyStatType = {
   [key: string]: {
     title: string;
@@ -82,16 +84,6 @@ export function Statistic() {
     } else {
       loadPhoto(localStorage.getItem("username")!);
     }
-
-    const images = document.querySelectorAll<HTMLImageElement>(".check-image");
-
-    images.forEach((img) => {
-      img.onload = function () {
-        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
-          img.src = "/ui/img/default_ava.png";
-        }
-      };
-    });
   }, [login]);
 
   async function loadStats() {
@@ -143,9 +135,12 @@ export function Statistic() {
               width="56px"
             />
           ) : (
-            <div className="statistic__info-avatarBlock-imgDefault">
-              {login?.[0]}
-            </div>
+            <img
+              src={defaultAva}
+              alt=""
+              className="statistic__info-avatarBlock-imgDefault"
+              width="56px"
+            />
           )}
         </div>
 

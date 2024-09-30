@@ -30,11 +30,13 @@
   max-width: 56px;
   width: 100%;
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  height: 62px;
+  object-fit: cover;
 }
 
 .statistic__info-avatarBlock-imgDefault {
-  height: 66px;
-  width: 56px;
+  height: 77px;
+  width: 66px;
 
   /* border-radius: 50%; */
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);

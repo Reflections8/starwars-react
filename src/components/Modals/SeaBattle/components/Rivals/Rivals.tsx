@@ -10,6 +10,7 @@ import "./styles/Rivals.css";
 import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
 import { useTranslation } from "react-i18next";
 import { fetchUserPhoto } from "../../service/sea-battle.service";
+import defaultAva from "../../../../../icons/no_avatar.png";
 
 export function Rivals() {
   const { t } = useTranslation();
@@ -101,16 +102,6 @@ export function Rivals() {
     if (rooms?.length) {
       fetchPhotos();
     }
-
-    const images = document.querySelectorAll<HTMLImageElement>(".check-image");
-
-    images.forEach((img) => {
-      img.onload = function () {
-        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
-          img.src = "/ui/img/default_ava.png";
-        }
-      };
-    });
   }, [rooms]);
 
   return (
@@ -167,9 +158,12 @@ export function Rivals() {
                       className="rivals__list-item-start-ava check-image"
                     />
                   ) : (
-                    <div className="rivals__list-item-start-avaDefault">
-                      {item.creator.username[0]}
-                    </div>
+                    <img
+                      src={defaultAva}
+                      alt=""
+                      width="36px"
+                      className="rivals__list-item-start-avaDefault"
+                    />
                   )}
 
                   <div className="rivals__list-item-start-login">
