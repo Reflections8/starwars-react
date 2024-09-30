@@ -343,8 +343,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           //@ts-ignore
           const page = document.querySelector(".game2");
           if (currentScrollTop) page!.scrollTop = Number(currentScrollTop);
-          parsedMessage.fire_target &&
-            playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
+          //  parsedMessage.fire_target &&
+          //    playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
           setEnemyBoardState(
             //@ts-ignore
             updateBoardState(parsedMessage.field_view.opponent_board, false)
@@ -372,13 +372,13 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
             else isEHit = "success";
           }
           userDeadShips.current = parsedMessage.field_view.player_board.ships;
-          parsedMessage.fire_target &&
-            playBeamAnimation(
-              parsedMessage.fire_target,
-              false,
-              isEHit,
-              blastIt
-            );
+          //  parsedMessage.fire_target &&
+          //    playBeamAnimation(
+          //      parsedMessage.fire_target,
+          //      false,
+          //      isEHit,
+          //      blastIt
+          //    );
           setEnemyBoardState(
             //@ts-ignore
             updateBoardState(parsedMessage.field_view.opponent_board, false)
