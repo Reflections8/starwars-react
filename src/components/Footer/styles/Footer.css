@@ -48,11 +48,6 @@
 	transform: scaleY(1.09);
 }
 
-.footer__top-left .footer__top-content {
-	justify-content: flex-end;
-	align-items: flex-end;
-}
-
 .footer__top-content {
 	position: absolute;
 	margin-top: 5px;
@@ -147,7 +142,6 @@
 }
 
 .footer__top-right .footer__top-content {
-	align-items: flex-start;
 	right: 37px;
 }
 
