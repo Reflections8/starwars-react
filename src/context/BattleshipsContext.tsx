@@ -223,6 +223,24 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   }, [gameState]);
 
   useEffect(() => {
+    const page = document.querySelector(".game2");
+
+    function pageScrollListener(e: any) {
+      sessionStorage.setItem("gameScrollTop", e.target.scrollTop);
+    }
+
+    page?.addEventListener("scroll", (e) => pageScrollListener(e));
+
+    if (gameState === 0) {
+      page?.removeEventListener("scroll", pageScrollListener);
+    }
+
+    return () => {
+      page?.removeEventListener("scroll", pageScrollListener);
+    };
+  }, [gameState]);
+
+  useEffect(() => {
     if (!socket) return;
 
     const interval = setInterval(() => {
@@ -319,6 +337,12 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           }
           enemyDeadShips.current =
             parsedMessage.field_view.opponent_board.ships;
+
+          //@ts-ignore
+          const currentScrollTop = sessionStorage.getItem("gameScrollTop");
+          //@ts-ignore
+          const page = document.querySelector(".game2");
+          if (currentScrollTop) page!.scrollTop = Number(currentScrollTop);
           parsedMessage.fire_target &&
             playBeamAnimation(parsedMessage.fire_target, true, isHit, blastIt);
           setEnemyBoardState(
