@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { CharactersData, useUserData } from "../../../UserDataService.tsx";
+import { useBackgroundVideo } from "../../../context/BackgroundVideoContext.tsx";
+import { useModal } from "../../../context/ModalContext.tsx";
+import { SERVER_URL } from "../../../main.tsx";
+import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
 import { Select } from "../../../ui/Select/Select";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import { PillType } from "../../../ui/SlidingPills/types";
-import "./styles/settings.css";
-import { SelectOptionType } from "./types";
-import { CharactersData, useUserData } from "../../../UserDataService.tsx";
-import { SERVER_URL } from "../../../main.tsx";
-import { useTranslation } from "react-i18next";
 import engFlag from "./img/eng.svg";
 import rusFlag from "./img/rus.svg";
-import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
-import { useBackgroundVideo } from "../../../context/BackgroundVideoContext.tsx";
-import { useDrawer } from "../../../context/DrawerContext.tsx";
-import { useModal } from "../../../context/ModalContext.tsx";
+import "./styles/settings.css";
+import { SelectOptionType } from "./types";
 
 export function Settings() {
   const {
