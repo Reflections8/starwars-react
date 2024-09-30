@@ -27,10 +27,9 @@ export async function fetchUserPhoto(username: string) {
 
   try {
     const res = await fetch(url);
-    // @ts-ignore
-    if (res?.image) {
-      // @ts-ignore
-      return res?.image;
+    const json = await res.json();
+    if (json?.image) {
+      return json?.image;
     } else {
       return null;
     }
