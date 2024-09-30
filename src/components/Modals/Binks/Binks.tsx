@@ -8,6 +8,7 @@ export function Binks() {
   const { t } = useTranslation();
   const { closeModal } = useModal();
   const { setReadyState, setActiveVideo } = useBackgroundVideo();
+
   return (
     <div className="binks">
       <div className="binks__text">{t("binksModal.greetingsText")}</div>

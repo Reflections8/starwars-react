@@ -45,7 +45,7 @@ export function Home() {
   const [tonConnectUI] = useTonConnectUI();
 
   //const tonConnectModal = useTonConnectModal();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
 
@@ -133,31 +133,49 @@ export function Home() {
 
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
-    console.log({ sessionsCount, hasNFT: characters.length });
-    if (sessionsCount === null) return;
+    console.log({
+      sessionsCount,
+      hasNFT: characters.length,
+      jwt,
+      tonConnectUI: tonConnectUI.connected,
+    });
 
-    if (characters.length && sessionsCount! > 5) {
-      setReadyState!(false);
-      setActiveVideo!(null);
-      return;
-    }
-
-    if (!characters.length && sessionsCount! > 5) {
-      setReadyState!(true);
-      setActiveVideo!("3");
-      return;
-    }
-
-    if (characters.length && sessionsCount! <= 5) {
+    if (!jwt) {
       openModal!("binks");
       return;
     }
 
-    if (!characters.length && sessionsCount! <= 5) {
-      openModal!("binks");
-      return;
+    if (jwt) {
+      if (sessionsCount === null) return;
+
+      if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
+        setReadyState!(false);
+        setActiveVideo!(null);
+        return;
+      }
+
+      if (!characters.length && sessionsCount !== null && sessionsCount! > 5) {
+        setReadyState!(true);
+        // Если модалка вдруг открылась - закрываем (binks)
+        closeModal!();
+        setActiveVideo!("3");
+        return;
+      }
+
+      if (characters.length && sessionsCount !== null && sessionsCount! <= 5) {
+        openModal!("binks");
+        return;
+      }
+
+      if (!characters.length && sessionsCount !== null && sessionsCount! <= 5) {
+        console.log(
+          "!characters.length && sessionsCount !== null && sessionsCount! <= 5"
+        );
+        openModal!("binks");
+        return;
+      }
     }
-  }, [i18n.language, sessionsCount, characters.length]);
+  }, [i18n.language, sessionsCount, characters.length, jwt]);
 
   async function openWalletDrawer() {
     closeDrawer!();

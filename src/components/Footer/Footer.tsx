@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { FooterAmmoBgIcon } from "../../icons/FooterAmmoBgIcon";
 import bgBottom from "./img/bg-bottom.png";
 import bgBottomBar from "./img/bottom-bar.png";
-import weaponBgTop from "./img/weapon-bg-top.png";
-import weaponBgBottom from "./img/weapon-bg-bottom.png";
 import weaponBgLeft from "./img/weapon-bg-left.png";
 import weaponBgRight from "./img/weapon-bg-right.png";
 import weaponImg from "./img/weapon.png";
@@ -53,16 +51,16 @@ export function Footer({ clip, power, charges }: Partial<FooterProps>) {
                 alt=""
                 className="footer__top-center-weaponBg-right"
               />
-              <img
+              {/* <img
                 src={weaponBgTop}
                 alt=""
                 className="footer__top-center-weaponBg-top"
-              />
-              <img
+              /> */}
+              {/* <img
                 src={weaponBgBottom}
                 alt=""
                 className="footer__top-center-weaponBg-bottom"
-              />
+              /> */}
             </div>
           </div>
           <div className="footer__top-right">

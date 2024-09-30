@@ -43,6 +43,16 @@
 	align-items: center;
 }
 
+.footer__top-left-bg {
+	z-index: 1;
+	transform: scaleY(1.09);
+}
+
+.footer__top-right-bg {
+	z-index: 1;
+	transform: scaleY(1.09);
+}
+
 .footer__top-left .footer__top-content {
 	justify-content: flex-end;
 	align-items: flex-end;
@@ -77,18 +87,11 @@
 .footer__top-center-weapon {
 	position: absolute;
 	left: 50%;
-	top: 47%;
-	max-width: 110px;
+	top: 55%;
+	max-width: 140px;
 	z-index: 100;
 	transform: translate(-50%, -50%);
-	clip-path: polygon(8% 0%,
-			92% 0%,
-			100% 18%,
-			100% 82%,
-			92% 100%,
-			8% 100%,
-			0% 82%,
-			0% 18%);
+
 }
 
 .footer__top-center-weaponBg {
