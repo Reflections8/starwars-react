@@ -14,6 +14,8 @@ import { XIcon } from "../../../../icons/Modals/XIcon";
 import { OIcon } from "../../../../icons/Modals/OIcon";
 import { PreShotIcon } from "../../../../icons/Modals/PreShotIcon";
 import { ShotIcon } from "../../../../icons/Modals/ShotIcon";
+import { useTranslation } from "react-i18next";
+import { ShotIconEng } from "../../../../icons/Modals/ShotIconEng";
 
 interface Props {
   gameboard: Gameboard;
@@ -64,6 +66,7 @@ function Field({
   confirmHit,
   id,
 }: FieldProps) {
+  const { i18n } = useTranslation();
   const styleBase = {
     position: "absolute",
     width: 25,
@@ -125,7 +128,7 @@ function Field({
               left: -25,
             }}
           >
-            <ShotIcon />
+            {i18n.language === "ru" ? <ShotIcon /> : <ShotIconEng />}
           </div>
         </>
       );

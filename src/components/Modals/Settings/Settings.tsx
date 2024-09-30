@@ -9,6 +9,10 @@ import { SERVER_URL } from "../../../main.tsx";
 import { useTranslation } from "react-i18next";
 import engFlag from "./img/eng.svg";
 import rusFlag from "./img/rus.svg";
+import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
+import { useBackgroundVideo } from "../../../context/BackgroundVideoContext.tsx";
+import { useDrawer } from "../../../context/DrawerContext.tsx";
+import { useModal } from "../../../context/ModalContext.tsx";
 
 export function Settings() {
   const {
@@ -20,6 +24,9 @@ export function Settings() {
     updateUserInfo,
   } = useUserData();
   const { t, i18n } = useTranslation();
+
+  const { restartTutorial, sessionCount } = useBackgroundVideo();
+  const { closeModal } = useModal();
 
   const pills: PillType[] = [
     {
@@ -191,6 +198,23 @@ export function Settings() {
           />
         </div>
       </div>
+
+      {!characters.length && sessionCount! <= 5 ? null : (
+        <div className="settings__row">
+          <div className="settings__row-name">
+            {t("settingsModal.tutorial")}:
+          </div>
+          <div className="settings__row-action settings__row-selectContainer">
+            <CuttedButton
+              text={t("settingsModal.runTutorial")}
+              callback={() => {
+                restartTutorial!();
+                closeModal!();
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -12,6 +12,8 @@ type BackgroundVideoContextProps = {
   setActiveVideo: (state: any) => void;
   repeatCount: number;
   setRepeatCount: (state: number) => void;
+  restartTutorial: () => void;
+  sessionCount: number;
 };
 
 const BackgroundVideoContext = createContext<
@@ -25,6 +27,15 @@ export function BackgroundVideoProvider({
   const [activeVideo, setActiveVideo] = useState(null);
   const [repeatCount, setRepeatCount] = useState(0);
 
+  // TODO: мок
+  const [sessionCount] = useState(6);
+
+  function restartTutorial() {
+    setReadyState(true);
+    // @ts-ignore
+    setActiveVideo("2");
+  }
+
   return (
     <BackgroundVideoContext.Provider
       value={{
@@ -34,6 +45,8 @@ export function BackgroundVideoProvider({
         setActiveVideo,
         repeatCount,
         setRepeatCount,
+        restartTutorial,
+        sessionCount,
       }}
     >
       {children}

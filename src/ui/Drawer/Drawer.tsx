@@ -50,7 +50,10 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
     inviteFriend: <InviteFriend />,
     giveUp: <GiveUp />,
     opponentFound: <OpponentFound />,
+    duelInvitation: <DuelInvitation />,
   };
+
+  const drawersWithoutCloseIcon = ["opponentFound", "duelInvitation"];
   if (!isOpen) return null;
   return (
     <div
@@ -61,7 +64,7 @@ export function Drawer({ isOpen, drawerText }: DrawerProps) {
       <div
         className={`drawer ${!isOpen ? "drawer--Hidden" : ""} ${drawerType}`}
       >
-        {drawerType === "opponentFound" ? null : (
+        {drawersWithoutCloseIcon.includes(drawerType as any) ? null : (
           <img
             src={closeIcon}
             alt="closeIcon"
@@ -741,7 +744,6 @@ function OpponentFound() {
         "bottom",
         t("opponentFoundDrawer.creatorCanceledGame")
       );
-      console.log({ gameState });
     }
     if (gameState === 13) {
       openDrawer!(
@@ -797,6 +799,82 @@ function OpponentFound() {
           size="small"
           callback={(e) => {
             handleApproveGame();
+            e.stopPropagation();
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function DuelInvitation() {
+  const { openDrawer } = useDrawer();
+  const { t } = useTranslation();
+  const {
+    handleApproveDuel,
+    handleDeclineDuel,
+    approveDuel,
+    gameState,
+    setGameState,
+  } = useBattleships();
+  const [betType] = useState(approveDuel?.bet_type);
+  const [betAmount] = useState(approveDuel?.bet_amount);
+
+  useEffect(() => {
+    console.log({ gameState, approveDuel });
+    if (gameState === 21) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("duelInvitationDrawer.youCanceledGame")
+      );
+      setGameState(gameStates.NOT_STARTED);
+    }
+
+    if (gameState === 22) {
+      openDrawer!(
+        "rejected",
+        "bottom",
+        t("duelInvitationDrawer.opponentCanceledGame")
+      );
+      setGameState(gameStates.NOT_STARTED);
+    }
+  }, [gameState, approveDuel]);
+
+  return (
+    <div className="duelInvitation">
+      <img src={opponentFoundIcon} alt="" className="duelInvitation__icon" />
+      <div className="duelInvitation__text">
+        {t("duelInvitationDrawer.invitationText")}
+      </div>
+
+      <div className="duelInvitation__betBox">
+        <div className="duelInvitation__betBox-main">
+          <div className="duelInvitation__betBox-main-key">
+            {t("duelInvitationDrawer.bid")}:
+          </div>
+          <div className="duelInvitation__betBox-main-value">
+            {betAmount} {BetTypeEnum[betType]}
+          </div>
+        </div>
+      </div>
+
+      <div className="duelInvitation__footer">
+        <CuttedButton
+          text={t("duelInvitationDrawer.dismiss")}
+          className="secondary"
+          size="small"
+          callback={(e) => {
+            handleDeclineDuel();
+            e.stopPropagation();
+          }}
+        />
+
+        <CuttedButton
+          text={t("duelInvitationDrawer.accept")}
+          size="small"
+          callback={(e) => {
+            handleApproveDuel();
             e.stopPropagation();
           }}
         />

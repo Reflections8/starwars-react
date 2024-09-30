@@ -8,12 +8,13 @@ import { Rules } from "./components/Rules/Rules";
 import { Statistic } from "./components/Statistic/Statistic";
 import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
+import rulesImgEng from "./img/rules-button-eng.svg";
 import "./styles/SeaBattle.css";
 import { useTranslation } from "react-i18next";
 import { useBattleships } from "../../../context/BattleshipsContext";
 
 export function SeaBattle() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const pills: PillType[] = [
     {
       label: t("battleshipsModal.rivalsTab.title"),
@@ -71,7 +72,7 @@ export function SeaBattle() {
           className="seaBattle__rulesButtonWrapper-btn-corner--Left"
         />
         <img
-          src={rulesImg}
+          src={i18n.language === "ru" ? rulesImg : rulesImgEng}
           alt="rules"
           className="seaBattle__rulesButtonWrapper-btn"
           onClick={() => {

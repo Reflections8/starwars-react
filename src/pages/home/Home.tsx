@@ -34,6 +34,7 @@ export function Home() {
     tons,
     updateJwt,
     jwt,
+    characters,
     activeCharacter,
     higherBlaster,
     soundSetting,
@@ -53,6 +54,7 @@ export function Home() {
     activeVideo,
     setActiveVideo,
     repeatCount,
+    sessionCount,
   } = useBackgroundVideo();
 
   // unity vars
@@ -131,8 +133,14 @@ export function Home() {
 
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
-    openModal!("binks");
-  }, [i18n.language]);
+    if (sessionCount! <= 5) {
+      openModal!("binks");
+    }
+    if (sessionCount! > 5) {
+      setReadyState!(true);
+      setActiveVideo!("3");
+    }
+  }, [i18n.language, sessionCount]);
 
   async function openWalletDrawer() {
     closeDrawer!();
@@ -194,13 +202,14 @@ export function Home() {
         setReadyState={setReadyState}
         activeVideo={activeVideo}
         setActiveVideo={setActiveVideo}
-        repeatCount={repeatCount}
+        repeatCount={repeatCount!}
+        sessionCount={sessionCount!}
       />
 
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      <iframe
+      {/* <iframe
         ref={iframeRef}
         src="https://akronix.io/unity_main/"
         style={{
@@ -213,7 +222,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe>
+      ></iframe> */}
 
       <Header
         position={"bottom"}

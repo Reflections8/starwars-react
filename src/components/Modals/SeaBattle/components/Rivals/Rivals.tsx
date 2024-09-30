@@ -54,12 +54,10 @@ export function Rivals() {
       return;
     }
 
-    // TODO: функционал дуэли с другом
-    return;
     sendMessage({
-      type: "create_room",
+      type: "invite_user",
       message: {
-        room_name: friendsLogin,
+        username: friendsLogin.toLocaleLowerCase(),
         bet_type: BetTypeEnum[activeCurrency as keyof typeof BetTypeEnum],
         bet_amount: bet,
       },
@@ -240,7 +238,11 @@ export function Rivals() {
                 type="decimal"
                 value={friendsLogin}
                 onChange={(e) => {
-                  setFriendsLogin(e.target.value);
+                  const value = e.target.value;
+                  const cleanedValue = value.startsWith("@")
+                    ? value.slice(1)
+                    : value;
+                  setFriendsLogin(cleanedValue);
                 }}
                 className="rivals__newDuel__inputBlock-input"
               />

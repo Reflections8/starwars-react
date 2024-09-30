@@ -9,13 +9,15 @@ import videoRus1 from "../video/ru/1.mp4";
 import videoRus2 from "../video/ru/2.mp4";
 import videoRus3 from "../video/ru/3.mp4";
 import { useModal } from "../../../context/ModalContext";
+import { useUserData } from "../../../UserDataService";
 
 type BinksBackgroundVideoProps = {
   readyState: any;
   setReadyState: any;
   activeVideo: any;
   setActiveVideo: any;
-  repeatCount: any;
+  repeatCount: number;
+  sessionCount: number;
 };
 
 export function BinksBackgroundVideo({
@@ -24,11 +26,13 @@ export function BinksBackgroundVideo({
   activeVideo,
   setActiveVideo,
   repeatCount,
+  sessionCount,
 }: BinksBackgroundVideoProps) {
   const videoRef1 = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
   const videoRef3 = useRef<HTMLVideoElement>(null);
 
+  const { characters } = useUserData();
   const { i18n } = useTranslation();
   const { openModal } = useModal();
 
@@ -46,9 +50,63 @@ export function BinksBackgroundVideo({
   };
 
   useEffect(() => {
-    setActiveVideo("1");
+    setActiveVideo(null);
     setReadyState(false);
   }, [i18n.language]);
+
+  function stopVideo(index: string) {
+    const video1 = videoRef1.current;
+    const video2 = videoRef2.current;
+    const video3 = videoRef3.current;
+
+    if (video1 && video2 && video3) {
+      if (index === "1") {
+        video1.pause();
+        video1.muted = true;
+        video1.currentTime = 0;
+      }
+      if (index === "2") {
+        video2.pause();
+        video2.muted = true;
+        video2.currentTime = 0;
+      }
+      if (index === "3") {
+        video3.pause();
+        video3.muted = true;
+        video3.currentTime = 0;
+      }
+    }
+  }
+
+  function stopAllVideos() {
+    stopVideo("1");
+    stopVideo("2");
+    stopVideo("3");
+  }
+
+  useEffect(() => {
+    if (!activeVideo) {
+      stopAllVideos();
+    }
+
+    if (activeVideo === "1") {
+      stopVideo("2");
+      stopVideo("3");
+    }
+    if (activeVideo === "2") {
+      stopVideo("1");
+      stopVideo("3");
+    }
+    if (activeVideo === "3") {
+      stopVideo("1");
+      stopVideo("2");
+    }
+  }, [activeVideo]);
+
+  // Чтобы видео не воспроизводилось при маунте и появлении ref.current
+  useEffect(() => {
+    stopAllVideos();
+  }, [videoRef1.current, videoRef2.current, videoRef3.current]);
 
   useEffect(() => {
     const video1 = videoRef1.current;
@@ -56,18 +114,7 @@ export function BinksBackgroundVideo({
     const video3 = videoRef3.current;
 
     if (!readyState && video1 && video2 && video3) {
-      video1?.pause();
-      video1.muted = true;
-      video1.load();
-
-      video2.pause();
-      video2.muted = true;
-      video1.load();
-
-      video3.pause();
-      video3.muted = true;
-      video3.load();
-      2;
+      stopAllVideos();
     }
 
     if (readyState) {
@@ -117,9 +164,27 @@ export function BinksBackgroundVideo({
   }, [activeVideo, i18n.language, repeatCount]);
 
   function handleTutorialDone() {
-    const video2 = videoRef2.current;
-    video2 && video2.pause();
-    openModal!("binksDone");
+    console.log({ characters, sessionCount, readyState, activeVideo });
+    // Если есть НФТ и это 1-5 сессии
+    if (!characters.length && sessionCount <= 5) {
+      stopAllVideos();
+      setReadyState(false);
+      setActiveVideo(null);
+      return;
+    }
+
+    if (repeatCount === 0) {
+      // TODO: пока сделал так, что если в рамках сессии это первое проигрывание обучения, то показывать модалку...
+      stopVideo("2");
+      console.log("repeatCount === 0");
+      openModal!("binksDone");
+    }
+
+    // TODO: ...иначе сразу переключаем на 3-е видео
+    if (repeatCount > 0) {
+      stopVideo("2");
+      setActiveVideo("3");
+    }
   }
 
   useEffect(() => {
@@ -228,7 +293,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 155) {
           highlightElement("games");
         }
-        if (fixedTime == 193) {
+        if (fixedTime == 2) {
           handleTutorialDone();
         }
       }
