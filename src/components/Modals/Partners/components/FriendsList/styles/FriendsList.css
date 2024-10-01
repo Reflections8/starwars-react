@@ -58,6 +58,13 @@
   margin-right: 32px;
 }
 
+.friendsList__list-item-nameBlock-icon {
+  width: 40px;
+  height: 47px;
+  object-fit: cover;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
 .friendsList__list-item-nameBlock-name {
   text-decoration: underline;
   color: #fff;

@@ -2,11 +2,12 @@
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { ProofApiService } from "../../ProofApiService.ts";
 import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
 import { Info } from "../../components/Header/components/Info/Info.tsx";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
 import { useDrawer } from "../../context/DrawerContext";
 import { useLoader } from "../../context/LoaderContext";
@@ -15,14 +16,12 @@ import { ExitIcon } from "../../icons/Exit";
 import { GamesIcon } from "../../icons/Games";
 import { MenuIcon } from "../../icons/Menu";
 import { OptionsIcon } from "../../icons/Options";
+import highlightBook from "../home/video/currency.svg";
 import { BackgroundLayers } from "./components/BackgroundLayers";
-import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
-import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
-import highlightBook from "../home/video/currency.svg";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -40,22 +39,16 @@ export function Home() {
     sessionsCount,
     characters,
     updateUserInfo,
+    resetUserData,
   } = useUserData();
-  const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
 
   //const tonConnectModal = useTonConnectModal();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
 
-  const {
-    readyState,
-    setReadyState,
-    activeVideo,
-    setActiveVideo,
-    repeatCount,
-  } = useBackgroundVideo();
+  const { setReadyState, activeVideo, setActiveVideo } = useBackgroundVideo();
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
@@ -140,12 +133,12 @@ export function Home() {
       tonConnectUI: tonConnectUI.connected,
     });
 
-    if (!jwt) {
+    if (!jwt || !tonConnectUI.connected) {
       // openModal!("binks");
       return;
     }
 
-    if (jwt) {
+    if (jwt && tonConnectUI.connected) {
       if (sessionsCount === null) return;
 
       if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
@@ -182,7 +175,16 @@ export function Home() {
     openDrawer!("connectWallet");
   }
 
-  const [canQuit] = useState(false);
+  const [canQuit, setCanQuit] = useState(false);
+
+  useEffect(() => {
+    if (jwt && tonConnectUI.connected) {
+      setCanQuit(true);
+    } else {
+      setCanQuit(false);
+    }
+  }, [jwt, tonConnectUI.connected]);
+
   return (
     <>
       <ProofManager onValueChange={handleAuthTokenChange} />
@@ -193,7 +195,11 @@ export function Home() {
         leftIcon={<ExitIcon />}
         leftText={t("homePage.exit")}
         leftAction={() => {
-          navigate("/auth");
+          console.log("LEFT ACTION");
+          ProofApiService.reset();
+          tonConnectUI.disconnect();
+          resetUserData();
+          updateJwt(null);
         }}
         rightIcon={<MenuIcon />}
         rightText={t("homePage.menu")}

@@ -175,6 +175,11 @@
       "warrior": "Character",
       "clanName": "Clan name",
       "sendInviteToPartners": "Send an invitation to the clan to all your partners"
+    },
+
+    "friendsListTab": {
+      "name": "Name",
+      "profit": "Profit"
     }
   },
   "chooseGameModal": {

@@ -50,6 +50,7 @@ interface UserDataContextType {
   sendSocketMessage: (value: string) => void;
   setSoundSetting: (value: boolean) => void;
   updateUserInfo: (value: string) => void;
+  resetUserData: () => void;
 }
 
 const defaultValue: UserDataContextType = {
@@ -97,6 +98,7 @@ const defaultValue: UserDataContextType = {
   sendSocketMessage: () => {},
   setSoundSetting: () => {},
   updateUserInfo: () => {},
+  resetUserData: () => {},
 };
 
 const UserDataContext = createContext<UserDataContextType>(defaultValue);
@@ -460,6 +462,42 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     });
   };
 
+  const resetUserData = () => {
+    setCredits(0);
+    setTokens(0);
+    setTons(0);
+    setJwt(null);
+    setSoundSetting(true);
+    setUserMetrics({
+      total_deposited: 0,
+      total_earned_tokens: 0,
+      blaster_earn_required: 0,
+      blaster_earned: 0,
+    });
+    setExchangeRate(0);
+    setSessionsCount(null);
+    setActiveBlaster(null);
+    setHigherBlaster(null);
+    setActiveCharacter(null);
+    setHealingCharacter(null);
+    setBlasters([]);
+    setCharacters([]);
+    setPrices({
+      second_blaster_repair: 0,
+      third_blaster_repair: 0,
+      blaster_1_1: 0,
+      blaster_1_2: 0,
+      blaster_1_3: 0,
+      blaster_2_1: 0,
+      blaster_2_2: 0,
+      blaster_2_3: 0,
+      blaster_3_1: 0,
+      blaster_3_2: 0,
+      blaster_3_3: 0,
+    });
+    setRefInfo(null);
+  };
+
   return (
     <UserDataContext.Provider
       value={{
@@ -490,6 +528,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         startCheckBalance,
         sendSocketMessage,
         updateUserInfo,
+        resetUserData,
       }}
     >
       {children}
@@ -556,8 +595,9 @@ export interface RefInfo {
 }
 
 export interface InvitedUser {
-  username: string;
-  reward: 0;
+  type: number;
+  value: string;
+  reward: number;
 }
 
 export const BlastersData = [

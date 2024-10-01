@@ -175,6 +175,11 @@
       "warrior": "Воин",
       "clanName": "Название клана",
       "sendInviteToPartners": "Отправить приглашение в клан всем своим партнёрам"
+    },
+
+    "friendsListTab": {
+      "name": "Имя",
+      "profit": "Доход"
     }
   },
   "chooseGameModal": {
