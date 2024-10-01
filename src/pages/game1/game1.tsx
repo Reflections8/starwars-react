@@ -163,6 +163,8 @@ export function Game1() {
     if (iframeRef.current) {
       iframeRef.current.contentWindow?.postMessage(message, "*");
     }
+
+    console.log(message);
   };
 
   const handleLoadingFinish = useCallback(
@@ -175,21 +177,22 @@ export function Game1() {
     []
   );
 
-  const handleShoot = useCallback((value: ReactUnityEventParameter) => {
-    const data = JSON.parse(value as string);
-    console.log(data);
-    if (jwt != null && jwt !== "") {
-      const request = {
-        type: "shoot",
-        message: JSON.stringify({
-          type: parseInt(data.type),
-          seqno: data.seqno,
-        }),
-        jwt: jwt,
-      };
-      sendMessage(JSON.stringify(request));
-    }
-  }, []);
+  const handleShoot = ((value: ReactUnityEventParameter) => {
+      const data = JSON.parse(value as string);
+
+      if (jwt != null && jwt !== "") {
+        const request = {
+          type: "shoot",
+          message: JSON.stringify({
+            type: parseInt(data.type),
+            seqno: data.seqno,
+          }),
+          jwt: jwt,
+        };
+
+        sendMessage(JSON.stringify(request));
+      }
+    });
 
   // Обработчик сообщений, полученных из iFrame
   useEffect(() => {
@@ -234,7 +237,7 @@ export function Game1() {
 
       <iframe
         ref={iframeRef}
-        src="https://akronix.io/unity_vader"
+        src="https://purpleguy.dev/unity_vader"
         style={{
           position: "absolute",
           left: 0,
