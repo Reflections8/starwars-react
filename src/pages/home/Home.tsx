@@ -141,7 +141,7 @@ export function Home() {
     });
 
     if (!jwt) {
-      openModal!("binks");
+      // openModal!("binks");
       return;
     }
 
@@ -157,13 +157,13 @@ export function Home() {
       if (!characters.length && sessionsCount !== null && sessionsCount! > 5) {
         setReadyState!(true);
         // Если модалка вдруг открылась - закрываем (binks)
-        closeModal!();
-        setActiveVideo!("3");
+        //   closeModal!();
+        //   setActiveVideo!("3");
         return;
       }
 
       if (characters.length && sessionsCount !== null && sessionsCount! <= 5) {
-        openModal!("binks");
+        //   openModal!("binks");
         return;
       }
 
@@ -232,19 +232,19 @@ export function Home() {
         </div>
       ) : null}
 
-      <BinksBackgroundVideo
+      {/* <BinksBackgroundVideo
         readyState={readyState}
         setReadyState={setReadyState}
         activeVideo={activeVideo}
         setActiveVideo={setActiveVideo}
         repeatCount={repeatCount!}
         sessionsCount={sessionsCount!}
-      />
+      /> */}
 
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      {/* <iframe
+      <iframe
         ref={iframeRef}
         src="https://akronix.io/unity_main/"
         style={{
@@ -257,7 +257,7 @@ export function Home() {
         }}
         id="mainWrapper"
         className="mainWrapper"
-      ></iframe> */}
+      ></iframe>
 
       <Header
         position={"bottom"}
