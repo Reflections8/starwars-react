@@ -181,6 +181,10 @@ export function Home() {
     if (jwt && tonConnectUI.connected) {
       setCanQuit(true);
     } else {
+      ProofApiService.reset();
+      tonConnectUI.disconnect();
+      resetUserData();
+      updateJwt(null);
       setCanQuit(false);
     }
   }, [jwt, tonConnectUI.connected]);
@@ -195,7 +199,6 @@ export function Home() {
         leftIcon={<ExitIcon />}
         leftText={t("homePage.exit")}
         leftAction={() => {
-          console.log("LEFT ACTION");
           ProofApiService.reset();
           tonConnectUI.disconnect();
           resetUserData();

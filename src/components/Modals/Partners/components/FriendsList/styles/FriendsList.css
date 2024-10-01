@@ -53,9 +53,8 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  max-width: 120px;
   width: 100%;
-  margin-right: 32px;
+  margin-right: 2px;
 }
 
 .friendsList__list-item-nameBlock-icon {
@@ -71,6 +70,7 @@
   text-shadow: 2px -1px 0 rgba(7, 109, 233, 0.26);
   text-overflow: ellipsis;
   overflow: hidden;
+  max-width: 150px;
 }
 
 .friendsList__list-item-model {
