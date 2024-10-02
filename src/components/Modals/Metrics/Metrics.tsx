@@ -135,14 +135,19 @@ export function Models() {
   const { characters } = useUserData();
   useEffect(() => {
     const createModel = (character: Character): MockModelsType => {
+      const maxHealth = CharactersData[character.type - 1].price * 1000;
       const health = Math.round(
-        2000 - (character.earned / character.earn_required) * 2000
+        maxHealth - (character.earned / character.earn_required) * maxHealth
       );
       return {
         title: "-" + CharactersData[character.type - 1].name + "-",
         imgSrc: CharactersData[character.type - 1].image,
-        healthCurrent: health <= 0 ? 0 : health,
-        healthMax: 2000,
+        healthCurrent: ((health <= 0 ? 0 : health) / 1000)
+          .toFixed(3)
+          .toString(),
+        healthMax: CharactersData[character.type - 1].price
+          .toFixed(3)
+          .toString(),
         deposits: character.total_deposited,
         earned: character.total_earned_tokens.toString(),
       };

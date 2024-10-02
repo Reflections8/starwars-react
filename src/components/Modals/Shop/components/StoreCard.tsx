@@ -118,6 +118,7 @@ export function StoreCardWeapon({
   additionalIncomeMax,
   damage,
   charge,
+  max_charge,
   reload,
   rateOfFire,
   durabilityCurrent,
@@ -178,7 +179,7 @@ export function StoreCardWeapon({
                 {t("shopModal.storeTab.charge")}:
               </div>
               <div className="store-card-main-info-list-item-value">
-                {charge} {t("global.point")}
+                {max_charge} {t("global.point")}
               </div>
             </div>
 

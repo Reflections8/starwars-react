@@ -399,6 +399,7 @@ export function Store() {
           blaster.level == 1 ? 0 : BlastersData[blaster.level - 1].price * 1.5,
         damage: blaster.damage,
         charge: blaster.charge,
+        max_charge: blaster.max_charge,
         reload: blaster.charge_step,
         rateOfFire: weaponRates[blaster.level - 1],
         durabilityCurrent: blaster.usage,
@@ -424,6 +425,7 @@ export function Store() {
             additionalIncomeMax={weapon.additionalIncomeMax}
             damage={weapon.damage}
             charge={weapon.charge}
+            max_charge={weapon.max_charge}
             reload={weapon.reload}
             rateOfFire={weapon.rateOfFire}
             durabilityCurrent={weapon.durabilityCurrent}

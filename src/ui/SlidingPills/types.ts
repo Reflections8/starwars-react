@@ -74,6 +74,7 @@ export type StoreWeaponType = {
   additionalIncomeMax: number;
   damage: number;
   charge: number;
+  max_charge: number;
   reload: number;
   rateOfFire: number;
   durabilityCurrent: number;
