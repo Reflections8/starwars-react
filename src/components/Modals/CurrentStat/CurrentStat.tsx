@@ -66,7 +66,7 @@ export function CurrentStat() {
     setCharge(charge);
     setDamageUpgrade(needHealing ? 0 : highestLevelBlaster.damage);
     setReloadUpgrade(needHealing ? 0 : highestLevelBlaster.charge_step);
-    setChargeUpgrade(needHealing ? 0 : highestLevelBlaster.charge);
+    setChargeUpgrade(needHealing ? 0 : highestLevelBlaster.max_charge);
   }, [activeCharacter, blasters]);
 
   return (
