@@ -209,7 +209,6 @@ export function BinksBackgroundVideo({
   }
 
   useEffect(() => {
-    console.log({ repeatCount, activeVideo, readyState });
     const video1 = videoRef1.current;
     const video2 = videoRef2.current;
 

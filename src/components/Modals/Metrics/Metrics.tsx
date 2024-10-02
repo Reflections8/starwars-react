@@ -142,9 +142,11 @@ export function Models() {
       return {
         title: "-" + CharactersData[character.type - 1].name + "-",
         imgSrc: CharactersData[character.type - 1].image,
+        // @ts-ignore
         healthCurrent: ((health <= 0 ? 0 : health) / 1000)
           .toFixed(3)
           .toString(),
+        // @ts-ignore
         healthMax: CharactersData[character.type - 1].price
           .toFixed(3)
           .toString(),

@@ -22,6 +22,7 @@ import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
+import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -48,7 +49,13 @@ export function Home() {
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
 
-  const { setReadyState, activeVideo, setActiveVideo } = useBackgroundVideo();
+  const {
+    setReadyState,
+    activeVideo,
+    setActiveVideo,
+    readyState,
+    repeatCount,
+  } = useBackgroundVideo();
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
@@ -134,11 +141,11 @@ export function Home() {
     });
 
     if (!jwt || !tonConnectUI.connected) {
-      // openModal!("binks");
+      openModal!("binks");
       return;
     }
 
-    if (jwt && tonConnectUI.connected) {
+    if (jwt) {
       if (sessionsCount === null) return;
 
       if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
@@ -156,7 +163,7 @@ export function Home() {
       }
 
       if (characters.length && sessionsCount !== null && sessionsCount! <= 5) {
-        //   openModal!("binks");
+        openModal!("binks");
         return;
       }
 
@@ -241,32 +248,34 @@ export function Home() {
         </div>
       ) : null}
 
-      {/* <BinksBackgroundVideo
+      <BinksBackgroundVideo
         readyState={readyState}
         setReadyState={setReadyState}
         activeVideo={activeVideo}
         setActiveVideo={setActiveVideo}
         repeatCount={repeatCount!}
         sessionsCount={sessionsCount!}
-      /> */}
+      />
 
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      <iframe
-        ref={iframeRef}
-        src="https://purpleguy.dev/unity_main/"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: "100%",
-          height: "100%",
-          border: "none",
-        }}
-        id="mainWrapper"
-        className="mainWrapper"
-      ></iframe>
+      {jwt && tonConnectUI.connected && characters.length ? (
+        <iframe
+          ref={iframeRef}
+          src="https://purpleguy.dev/unity_main/"
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: "100%",
+            height: "100%",
+            border: "none",
+          }}
+          id="mainWrapper"
+          className="mainWrapper"
+        ></iframe>
+      ) : null}
 
       <Header
         position={"bottom"}

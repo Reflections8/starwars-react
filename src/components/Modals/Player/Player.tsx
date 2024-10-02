@@ -111,7 +111,11 @@ export function Player() {
         reloadUpgrade: reloadUpgrade,
         charge: charge,
         chargeUpgrade: chargeUpgrade,
-        healthCurrent: ((health <= 0 ? 0 : health) / 1000).toFixed(3).toString(),
+        // @ts-ignore
+        healthCurrent: ((health <= 0 ? 0 : health) / 1000)
+          .toFixed(3)
+          .toString(),
+        // @ts-ignore
         healthMax: CharactersData[character.type - 1].price
           .toFixed(3)
           .toString(),

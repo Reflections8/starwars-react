@@ -117,7 +117,6 @@ export function StoreCardWeapon({
   additionalIncomeCurrent,
   additionalIncomeMax,
   damage,
-  charge,
   max_charge,
   reload,
   rateOfFire,
