@@ -14,8 +14,14 @@ type FooterProps = {
   charges: number;
 };
 
-export function Footer({ clip, power, charges }: Partial<FooterProps>) {
+export function Footer({ clip, power, charges, weaponLevel }: Partial<FooterProps>) {
   const chargeArray = Array.from(Array(25));
+
+  const weaponArr = [
+      weaponImg,
+      weaponImg,
+      weaponImg
+  ]
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -36,7 +42,7 @@ export function Footer({ clip, power, charges }: Partial<FooterProps>) {
           </div>
           <div className="footer__top-center">
             <img
-              src={weaponImg}
+              src={weaponArr[weaponLevel - 1]}
               alt="weapon"
               className="footer__top-center-weapon"
             />
