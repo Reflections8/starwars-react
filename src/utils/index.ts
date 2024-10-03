@@ -1,5 +1,6 @@
 export function formatNumberWithCommas(number?: number) {
   if (number) {
+    if (number == 0) return "0";
     const strNumber = number.toString();
     const parts = strNumber.split(".");
     let integerPart = parts[0];
@@ -9,7 +10,7 @@ export function formatNumberWithCommas(number?: number) {
     } else {
       return integerPart;
     }
-  }
+  } else return "0";
 }
 
 export function formatWalletString(walletId: string) {

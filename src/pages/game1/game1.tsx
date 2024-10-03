@@ -30,6 +30,7 @@ export function Game1() {
   const [damage, setDamage] = useState(1);
   const [blasterCharge, setBlasterCharge] = useState(0);
   const [blasterChargeExt, setBlasterChargeExt] = useState(0);
+  const [blasterLevel, setBlasterLevel] = useState(0);
 
   const [publicKey, setPublicKey] = useState("");
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
@@ -85,7 +86,7 @@ export function Game1() {
         sendMessageToUnity("ReceiveServerPublicKey", message.public_key);
 
         const score = parseInt(message.info.score);
-        setScore(score);
+        setScore(score | 0);
 
         updateGameInfo(message.info);
         break;
@@ -135,7 +136,7 @@ export function Game1() {
     const chargeFillField = calculateFilled(blaster.charge, blaster.max_charge);
     setBlasterChargeExt(blaster.charge);
     setBlasterCharge(chargeFillField);
-
+    setBlasterLevel(blaster.level);
     const info = {
       character: character.type,
       blaster: blaster.level,
@@ -177,22 +178,25 @@ export function Game1() {
     []
   );
 
-  const handleShoot = ((value: ReactUnityEventParameter) => {
-      const data = JSON.parse(value as string);
+  const handleShoot = (
+    value: ReactUnityEventParameter,
+    token: string | null
+  ) => {
+    const data = JSON.parse(value as string);
 
-      if (jwt != null && jwt !== "") {
-        const request = {
-          type: "shoot",
-          message: JSON.stringify({
-            type: parseInt(data.type),
-            seqno: data.seqno,
-          }),
-          jwt: jwt,
-        };
+    if (token != null && token !== "") {
+      const request = {
+        type: "shoot",
+        message: JSON.stringify({
+          type: parseInt(data.type),
+          seqno: data.seqno,
+        }),
+        jwt: token,
+      };
 
-        sendMessage(JSON.stringify(request));
-      }
-    });
+      sendMessage(JSON.stringify(request));
+    }
+  };
 
   // Обработчик сообщений, полученных из iFrame
   useEffect(() => {
@@ -203,7 +207,7 @@ export function Game1() {
         switch (data.type) {
           case "multiple": {
             if (data.method === "LoadFinish") handleLoadingFinish(data.value);
-            if (data.method === "Shoot") handleShoot(data.value);
+            if (data.method === "Shoot") handleShoot(data.value, jwt);
           }
         }
       } catch (error) {
@@ -215,7 +219,7 @@ export function Game1() {
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, []);
+  }, [jwt]);
 
   async function handleReturn() {
     navigate("/");
@@ -250,7 +254,12 @@ export function Game1() {
         className="mainWrapper"
       ></iframe>
 
-      <Footer power={damage} clip={blasterChargeExt} charges={blasterCharge} />
+      <Footer
+        power={damage}
+        clip={blasterChargeExt}
+        charges={blasterCharge}
+        weaponLevel={blasterLevel}
+      />
     </>
   );
 }

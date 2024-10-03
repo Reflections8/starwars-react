@@ -207,7 +207,7 @@ export function Exchange() {
     if (/^[0-9]*$/.test(value)) {
       setCredits(value);
       setTokens(
-        value === "" ? "" : (parseInt(value, 10) * exchangeRate).toFixed(1)
+        value === "" ? "" : (parseInt(value, 10) * exchangeRate).toString()
       );
     }
   };
