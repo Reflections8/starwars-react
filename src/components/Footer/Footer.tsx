@@ -4,7 +4,9 @@ import bgBottom from "./img/bg-bottom.png";
 import bgBottomBar from "./img/bottom-bar.png";
 import weaponBgLeft from "./img/weapon-bg-left.png";
 import weaponBgRight from "./img/weapon-bg-right.png";
-import weaponImg from "./img/weapon.png";
+import weaponImg1 from "./img/m 002.png";
+import weaponImg2 from "./img/ef 4.png";
+import weaponImg3 from "./img/fg 13.png";
 import "./styles/Footer.css";
 import "./styles/FooterAnimation.css";
 
@@ -18,9 +20,9 @@ export function Footer({ clip, power, charges, weaponLevel }: Partial<FooterProp
   const chargeArray = Array.from(Array(25));
 
   const weaponArr = [
-      weaponImg,
-      weaponImg,
-      weaponImg
+      weaponImg1,
+      weaponImg2,
+      weaponImg3
   ]
 
   const [isMounted, setIsMounted] = useState(false);
