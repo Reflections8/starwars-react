@@ -16,14 +16,17 @@ type FooterProps = {
   charges: number;
 };
 
-export function Footer({ clip, power, charges, weaponLevel }: Partial<FooterProps>) {
+// @ts-ignore
+export function Footer({
+  clip,
+  power,
+  charges,
+  // @ts-ignore
+  weaponLevel,
+}: Partial<FooterProps>) {
   const chargeArray = Array.from(Array(25));
 
-  const weaponArr = [
-      weaponImg1,
-      weaponImg2,
-      weaponImg3
-  ]
+  const weaponArr = [weaponImg1, weaponImg2, weaponImg3];
 
   const [isMounted, setIsMounted] = useState(false);
 

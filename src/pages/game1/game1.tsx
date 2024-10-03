@@ -258,6 +258,7 @@ export function Game1() {
         power={damage}
         clip={blasterChargeExt}
         charges={blasterCharge}
+        // @ts-ignore
         weaponLevel={blasterLevel}
       />
     </>
