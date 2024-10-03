@@ -188,11 +188,11 @@ export function Home() {
     if (jwt && tonConnectUI.connected) {
       setCanQuit(true);
     } else {
-      ProofApiService.reset();
-      tonConnectUI.disconnect();
-      resetUserData();
-      updateJwt(null);
-      setCanQuit(false);
+      // ProofApiService.reset();
+      // tonConnectUI.disconnect();
+      // resetUserData();
+      // updateJwt(null);
+      // setCanQuit(false);
     }
   }, [jwt, tonConnectUI.connected]);
 
