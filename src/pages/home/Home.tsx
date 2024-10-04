@@ -45,7 +45,7 @@ export function Home() {
   const [tonConnectUI] = useTonConnectUI();
 
   //const tonConnectModal = useTonConnectModal();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
 
@@ -142,7 +142,6 @@ export function Home() {
 
     if (!jwt || !tonConnectUI.connected) {
       openModal!("binks");
-      return;
     }
 
     if (jwt) {
@@ -151,14 +150,17 @@ export function Home() {
       if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
         setReadyState!(false);
         setActiveVideo!(null);
+
+        // Если модалка вдруг открылась - закрываем (binks)
+        closeModal!();
         return;
       }
 
       if (!characters.length && sessionsCount !== null && sessionsCount! > 5) {
         setReadyState!(true);
         // Если модалка вдруг открылась - закрываем (binks)
-        //   closeModal!();
-        //   setActiveVideo!("3");
+        closeModal!();
+        setActiveVideo!("3");
         return;
       }
 
