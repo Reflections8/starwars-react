@@ -140,7 +140,7 @@ export function Home() {
       tonConnectUI: tonConnectUI.connected,
     });
 
-    if (!jwt || !tonConnectUI.connected) {
+    if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
       openModal!("binks");
     }
 
@@ -170,9 +170,6 @@ export function Home() {
       }
 
       if (!characters.length && sessionsCount !== null && sessionsCount! <= 5) {
-        console.log(
-          "!characters.length && sessionsCount !== null && sessionsCount! <= 5"
-        );
         openModal!("binks");
         return;
       }
