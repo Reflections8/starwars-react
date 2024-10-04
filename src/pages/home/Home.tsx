@@ -146,6 +146,7 @@ export function Home() {
     if (userDataDefined) {
       if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
         openModal!("binks");
+        setIsLoading!(false);
       }
 
       if (jwt) {

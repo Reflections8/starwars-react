@@ -13,6 +13,7 @@ import searchCancelIconEng from "../img/resources/search-cancel-en.svg";
 import { useBattleships } from "../../../context/BattleshipsContext";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
+import { formatBalance } from "../../../utils";
 
 type ResourcesProps = {
   credits: number;
@@ -51,7 +52,9 @@ export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
             alt="main-bg"
             className="resources__item-main-bg highlighterParent credits"
           />
-          <div className="resources__item-main-value">{credits}</div>
+          <div className="resources__item-main-value">
+            {formatBalance(credits)}
+          </div>
         </div>
 
         <div className="resources__item-bottom">
@@ -82,7 +85,9 @@ export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
             alt="main-bg"
             className="resources__item-main-bg highlighterParent akron"
           />
-          <div className="resources__item-main-value">{akron}</div>
+          <div className="resources__item-main-value">
+            {formatBalance(akron)}
+          </div>
         </div>
 
         <div className="resources__item-bottom">
@@ -113,7 +118,7 @@ export function Resources({ credits, akron, ton }: Partial<ResourcesProps>) {
             alt="main-bg"
             className="highlighterParent ton resources__item-main-bg"
           />
-          <div className="resources__item-main-value">{ton}</div>
+          <div className="resources__item-main-value">{formatBalance(ton)}</div>
         </div>
 
         <div className="resources__item-bottom">
