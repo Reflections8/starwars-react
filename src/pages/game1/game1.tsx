@@ -241,7 +241,7 @@ export function Game1() {
 
       <iframe
         ref={iframeRef}
-        src="https://purpleguy.dev/unity_vader"
+        src="https://game.akronix.io/unity_vader"
         style={{
           position: "absolute",
           left: 0,

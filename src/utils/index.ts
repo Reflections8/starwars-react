@@ -31,8 +31,8 @@ export function formatBalance(balance: number | undefined): string {
   } else if (balance < 10) {
     return parseFloat(balance.toFixed(2)).toString();
   } else if (balance < 10000) {
-    return parseFloat(balance.toFixed(1)).toString();
+    return parseFloat(balance.toFixed(2)).toString();
   } else {
-    return (balance / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+    return (balance / 1000).toFixed(2).replace(/\.0$/, "") + "K";
   }
 }

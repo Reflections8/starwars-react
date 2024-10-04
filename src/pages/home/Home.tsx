@@ -280,7 +280,7 @@ export function Home() {
       {jwt && tonConnectUI.connected && characters.length ? (
         <iframe
           ref={iframeRef}
-          src="https://purpleguy.dev/unity_main/"
+          src="https://game.akronix.io/unity_main/"
           style={{
             position: "absolute",
             left: 0,
