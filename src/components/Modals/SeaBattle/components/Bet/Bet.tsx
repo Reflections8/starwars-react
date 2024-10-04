@@ -7,6 +7,7 @@ import { useDrawer } from "../../../../../context/DrawerContext";
 import { useBattleships } from "../../../../../context/BattleshipsContext";
 import { useTranslation } from "react-i18next";
 import { useUserData } from "../../../../../UserDataService";
+import { CurrentBalace } from "../CurrentBalance";
 
 export function Bet() {
   const { t } = useTranslation();
@@ -35,12 +36,6 @@ export function Bet() {
         bet_amount: bet,
       },
     });
-  }
-
-  function handleActiveCurrency() {
-    if (activeCurrency === "credits") return credits;
-    if (activeCurrency === "akronix") return akronix;
-    if (activeCurrency === "ton") return tons;
   }
 
   function handleCreateDuel(e: any) {
@@ -93,20 +88,12 @@ export function Bet() {
         {t("battleshipsModal.betTab.createYourOwnDuel")}!
       </div>
 
-      <div className="bet__inputBlock bet__inputBlock--CurrentBalance">
-        <div className="bet__inputBlock-sup">
-          <label className="bet__inputBlock-sup-label">
-            {t("global.currentBalance")}:
-          </label>
-        </div>
-
-        <div className="bet__inputBlock-inputWrapper--CurrentBalance">
-          <span>{handleActiveCurrency()}</span>
-          <div className="bet__inputBlock-postfix">
-            {activeCurrency.toUpperCase()}
-          </div>
-        </div>
-      </div>
+      <CurrentBalace
+        activeCurrency={activeCurrency}
+        credits={credits}
+        akronix={akronix}
+        tons={tons}
+      />
 
       <div className="bet__inputBlock">
         <div className="bet__inputBlock-sup">

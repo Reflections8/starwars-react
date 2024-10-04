@@ -296,7 +296,10 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         const isLogged = await auth(jwt);
         if (!isLogged) {
           ProofApiService.reset();
-          if (tonConnectUI.connected) await tonConnectUI.disconnect();
+          if (tonConnectUI.connected) {
+            await tonConnectUI.disconnect();
+          }
+          setUserDataDefined(true);
           return;
         } else {
           await updateUserInfo(jwt);
@@ -322,6 +325,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       authenticateUser();
     } else if (tonConnectUI.connected) {
       tonConnectUI.disconnect();
+      setUserDataDefined(true);
     }
   }, [jwt]);
 

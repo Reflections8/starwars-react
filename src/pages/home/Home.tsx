@@ -225,6 +225,7 @@ export function Home() {
           tonConnectUI.disconnect();
           resetUserData();
           updateJwt(null);
+          setCanQuit(false);
         }}
         rightIcon={<MenuIcon />}
         rightText={t("homePage.menu")}

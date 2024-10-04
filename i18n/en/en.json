@@ -5,7 +5,7 @@
     "point": "Pt.",
     "minute": "min",
     "second": "sec",
-    "currentBalance": "Current balance"
+    "currentBalance": "Available"
   },
   "homePage": {
     "exit": "Exit",
@@ -293,7 +293,8 @@
   },
   "binksModal": {
     "title": "Tutorial",
-    "greetingsText": "Welcome to Acronix, no character NFTs were found on your wallet, perhaps you are a new recruit, so Bings will provide training for you. Turn on the sound and listen carefully",
+    "greetingsTitle": "Welcome to Acronix",
+    "greetingsText": "no character NFTs were found on your wallet, perhaps you are a new recruit, so Bings will provide training for you. Turn on the sound and listen carefully",
     "readyBtn": "I'm ready",
     "doneText": "You're done with tutorial. Want to repeat it once again?",
     "repeat": "Repeat",

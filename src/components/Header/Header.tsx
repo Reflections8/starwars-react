@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import bgImgBlur from "./img/left-bg-blur.png";
+import bgImgBlurHome from "./img/left-bg-blur-home.png";
 import bgImg from "./img/left-bg.png";
 import highlightHeader from "../../pages/home/video/header.svg";
 import "./styles/Header.css";
@@ -94,7 +95,11 @@ export function Header({
                 alt="bg"
                 className="header__top-bg header__top-left-bg"
               />
-              <img src={bgImgBlur} alt="" className="header__top-left-bgBlur" />
+              <img
+                src={leftClassName === "games" ? bgImgBlurHome : bgImgBlur}
+                alt=""
+                className={`header__top-left-bgBlur ${leftClassName}`}
+              />
 
               {!onlyRight && (
                 <div className={`header__top-left-content`}>
@@ -127,7 +132,11 @@ export function Header({
               alt="bg"
               className="header__top-bg header__top-right-bg"
             />
-            <img src={bgImgBlur} alt="" className="header__top-right-bgBlur" />
+            <img
+              src={rightClassName === "options" ? bgImgBlurHome : bgImgBlur}
+              alt=""
+              className={`header__top-right-bgBlur ${rightClassName}`}
+            />
 
             {!onlyLeft && (
               <div className={`header__top-right-content ${rightClassName}`}>

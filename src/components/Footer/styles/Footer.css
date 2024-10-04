@@ -1,7 +1,7 @@
 .footerWrapper {
 	position: fixed;
 	width: 100%;
-	z-index: 1000;
+	z-index: 10000;
 	bottom: 0;
 	max-width: 528px;
 	left: 50%;

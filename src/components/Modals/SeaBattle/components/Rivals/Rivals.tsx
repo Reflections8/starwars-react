@@ -3,15 +3,16 @@ import { CryptoButtons } from "../../../../../ui/CryptoButtons/CryptoButtons";
 import arrowIcon from "./img/arrow.svg";
 import fightIcon from "./img/fight.svg";
 
+import { useTranslation } from "react-i18next";
 import { useBattleships } from "../../../../../context/BattleshipsContext";
 import { useDrawer } from "../../../../../context/DrawerContext";
-import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
-import "./styles/Rivals.css";
-import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
-import { useTranslation } from "react-i18next";
-import { fetchUserPhoto } from "../../service/sea-battle.service";
 import defaultAva from "../../../../../icons/no_avatar.png";
+import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
 import { useUserData } from "../../../../../UserDataService";
+import { fetchUserPhoto } from "../../service/sea-battle.service";
+import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
+import { CurrentBalace } from "../CurrentBalance";
+import "./styles/Rivals.css";
 
 export function Rivals() {
   const { t } = useTranslation();
@@ -139,12 +140,6 @@ export function Rivals() {
     }
   }, [rooms]);
 
-  function handleActiveCurrency() {
-    if (activeCurrency === "credits") return credits;
-    if (activeCurrency === "akronix") return akronix;
-    if (activeCurrency === "ton") return tons;
-  }
-
   return (
     <div className="rivals">
       <CryptoButtons
@@ -261,20 +256,12 @@ export function Rivals() {
             {t("battleshipsModal.rivalsTab.createDuelWithFriend")}!
           </div>
 
-          <div className="bet__inputBlock bet__inputBlock--CurrentBalance">
-            <div className="bet__inputBlock-sup">
-              <label className="bet__inputBlock-sup-label">
-                {t("global.currentBalance")}:
-              </label>
-            </div>
-
-            <div className="bet__inputBlock-inputWrapper--CurrentBalance">
-              <span>{handleActiveCurrency()}</span>
-              <div className="bet__inputBlock-postfix">
-                {activeCurrency.toUpperCase()}
-              </div>
-            </div>
-          </div>
+          <CurrentBalace
+            activeCurrency={activeCurrency}
+            credits={credits}
+            akronix={akronix}
+            tons={tons}
+          />
 
           <div className="rivals__newDuel__inputBlock">
             <div className="rivals__newDuel__inputBlock-sup">

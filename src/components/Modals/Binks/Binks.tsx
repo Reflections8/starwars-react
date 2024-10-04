@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useBackgroundVideo } from "../../../context/BackgroundVideoContext";
 import { useModal } from "../../../context/ModalContext";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
+import bgImg from "./img/jar.png";
 import "./styles/Binks.css";
 
 export function Binks() {
@@ -11,6 +12,8 @@ export function Binks() {
 
   return (
     <div className="binks">
+      <img src={bgImg} alt="" className="binks__bgImg" />
+      <div className="binks__title">{t("binksModal.greetingsTitle")}</div>
       <div className="binks__text">{t("binksModal.greetingsText")}</div>
 
       <CuttedButton

@@ -5,9 +5,22 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: 10px;
   position: relative;
+}
+
+.binks__bgImg {
+  margin-bottom: -55px;
+}
+
+.binks__title {
+  background: -webkit-linear-gradient(#e1f0ff, #c9e9fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 18px;
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 0 #0974f820;
+  text-align: center;
 }
 
 .binks__text {
@@ -16,7 +29,6 @@
   position: relative;
   z-index: 1;
   text-align: center;
-  margin-top: 32px;
 }
 
 .binks__video2 {
@@ -55,7 +67,10 @@
 }
 
 .binks__btnReady {
-  margin-bottom: 32px;
+  margin: 0 auto;
+  margin-bottom: 60px;
+  margin-top: auto;
+  width: fit-content;
 }
 
 .binksDone__footer {

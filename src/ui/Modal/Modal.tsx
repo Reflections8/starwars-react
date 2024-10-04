@@ -39,6 +39,7 @@ import "./styles/modal.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BinksDone } from "../../components/Modals/Binks/BinksDone";
+import { BookOpenedIcon } from "../../icons/Modals/BookOpened";
 
 type ModalProps = {
   isOpen: boolean;
@@ -124,7 +125,7 @@ export function Modal({ isOpen }: ModalProps) {
     },
     binks: {
       title: t("binksModal.title"),
-      icon: <GearIcon />,
+      icon: <BookOpenedIcon />,
       component: <Binks />,
     },
     binksDone: {

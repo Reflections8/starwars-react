@@ -238,6 +238,9 @@ export function Game1() {
         centerComponent={<HeaderCenterCredits credits={score} />}
       />
 
+      <div className="topLinearGradient" />
+      <div className="bottomLinearGradient" />
+
       <iframe
         ref={iframeRef}
         src="https://game.akronix.io/new/unity_vader/"
