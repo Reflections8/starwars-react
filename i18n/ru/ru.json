@@ -52,6 +52,9 @@
   "shopModal": {
     "title": "Магазин",
 
+	 "transactionSent": "Транзакция успешно отправлена.\n Ожидайте подтвержения",
+	 "transactionDenied": "Отправка транзакции была отклонена",
+
     "playerTab": {
       "title": "Игрок",
       "powerDamage": "Сила (Урон)",
@@ -94,6 +97,18 @@
   },
   "walletModal": {
     "title": "Кошелек",
+
+    "successExhange": "Обмен выполнен успешно",
+    "failedExchange": "Произошла ошибка во время обмена",
+    "invalidAmountOfCredits": "Неккоректное количество кредитов для обмена",
+    "withDrawalInProgress": "Вывод добавлен в обработку. Скорость подтверждения зависит от загруженности сети TON.",
+    "onePerHour": "Вы можете выводить 1 раз в час",
+    "notEnoughTON": "Недостаточно TON для вывода",
+    "notEnoughAKRON": "Недостаточно AKRON для вывода",
+    "notEnoughTONTaxes": "Недостаточно TON для оплаты комиссии для вывода AKRON\nНеобходимо минимум: 0.05 TON",
+    "failedWithdrawal": "Произошла ошибка во время вывода",
+    "invalidAmount": "Некорректное количество",
+    "forExchange": "для обмена",
 
     "depositTab": {
       "title": "Пополнить",

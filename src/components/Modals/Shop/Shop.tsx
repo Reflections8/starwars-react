@@ -71,6 +71,7 @@ export function Player() {
   const { characters, jwt } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
+  const { t } = useTranslation();
 
   /*const initialCharacters: ModelType[] = [
     {
@@ -192,13 +193,9 @@ export function Player() {
       };
       try {
         await tonConnectUI.sendTransaction(fillTx);
-        openDrawer!(
-          "resolved",
-          "bottom",
-          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-        );
+        openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
       } catch (e) {
-        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+        openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
       }
     }
   };
@@ -225,6 +222,7 @@ export function Weapon() {
   const { blasters, jwt } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
+  const { t } = useTranslation();
 
   const initialWeapons: WeaponType[] = [
     {
@@ -280,13 +278,9 @@ export function Weapon() {
       };
       try {
         await tonConnectUI.sendTransaction(fillTx);
-        openDrawer!(
-          "resolved",
-          "bottom",
-          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-        );
+        openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
       } catch (e) {
-        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+        openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
       }
     }
   };

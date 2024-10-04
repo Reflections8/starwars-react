@@ -52,6 +52,9 @@
   "shopModal": {
     "title": "Shop",
 
+    "transactionSent": "Transaction sent successfully.\n Wait for confirmation",
+    "transactionDenied": "Transaction submission was rejected",
+
     "playerTab": {
       "title": "Player",
       "powerDamage": "Power (Damage)",
@@ -94,6 +97,18 @@
   },
   "walletModal": {
     "title": "Wallet",
+
+    "successExhange": "Exchange completed successfully",
+    "failedExchange": "An error occurred during the exchange",
+    "invalidAmountOfCredits": "Incorrect amount of credits for exchange",
+    "withDrawalInProgress": "The output has been added to processing. The confirmation speed depends on the load on the TON network.",
+    "onePerHour": "You can withdraw 1 time per hour",
+    "notEnoughTON": "Not enough TON for withdrawal",
+    "notEnoughAKRON": "Not enough AKRON for withdrawal",
+    "notEnoughTONTaxes": "There is not enough TON to pay the commission for withdrawing AKRON\nMinimum required: 0.05 TON",
+    "failedWithdrawal": "An error occurred during output",
+    "invalidAmount": "Incorrect quantity",
+    "forExchange": "for exchange",
 
     "depositTab": {
       "title": "Deposit",
