@@ -20,7 +20,7 @@ export function FriendsList() {
     console.log({ refInfo });
     if (refInfo && refInfo.invited_users) {
       const newFriends = refInfo.invited_users.map((user: InvitedUser) => ({
-        link: "#", // Замените на фактическую ссылку, если доступна
+        link: user.type == 0 ? "https://t.me/" + user.value : "#", // Замените на фактическую ссылку, если доступна
         name: user.value,
         profit: user.reward || 0,
         type: user.type,
