@@ -23,6 +23,7 @@ import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useLocation } from "react-router-dom";
 
 interface UserDataContextType {
+  userDataDefined: boolean;
   credits: number;
   tokens: number;
   tons: number;
@@ -111,7 +112,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const { openDrawer, isOpen, drawerText } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
 
-  const [jwt, setJwt] = useState<string | null>("");
+  const [jwt, setJwt] = useState<string | null>(
+    localStorage.getItem("auth_jwt")
+  );
 
   const [credits, setCredits] = useState(0);
   const [tokens, setTokens] = useState(0);
@@ -275,7 +278,12 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     tonsRef.current = tons;
   }, [tons, checkBalance]);
 
+  const [userDataDefined, setUserDataDefined] = useState(false);
+
   useEffect(() => {
+    if (!jwt) {
+      setUserDataDefined(true);
+    }
     if (jwt != null && jwt !== "") {
       const authenticateUser = async () => {
         const isLogged = await auth(jwt);
@@ -283,12 +291,16 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
           ProofApiService.reset();
           if (tonConnectUI.connected) await tonConnectUI.disconnect();
           return;
-        } else await updateUserInfo(jwt);
+        } else {
+          await updateUserInfo(jwt);
+          setUserDataDefined(true);
+        }
 
         const interval = setInterval(() => {
           if (jwt != null && jwt !== "") {
             const refreshUserInfo = async () => {
               await updateUserInfo(jwt);
+              setUserDataDefined(true);
             };
 
             refreshUserInfo();
@@ -301,7 +313,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       };
 
       authenticateUser();
-    } else if (tonConnectUI.connected) tonConnectUI.disconnect();
+    } else if (tonConnectUI.connected) {
+      tonConnectUI.disconnect();
+    }
   }, [jwt]);
 
   /*useEffect(() => {
@@ -529,6 +543,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         sendSocketMessage,
         updateUserInfo,
         resetUserData,
+        userDataDefined,
       }}
     >
       {children}

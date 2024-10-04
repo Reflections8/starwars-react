@@ -41,6 +41,7 @@ export function Home() {
     characters,
     updateUserInfo,
     resetUserData,
+    userDataDefined,
   } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
 
@@ -140,41 +141,57 @@ export function Home() {
       tonConnectUI: tonConnectUI.connected,
     });
 
-    if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
-      openModal!("binks");
-    }
+    console.log({ userDataDefined });
 
-    if (jwt) {
-      if (sessionsCount === null) return;
-
-      if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
-        setReadyState!(false);
-        setActiveVideo!(null);
-
-        // Если модалка вдруг открылась - закрываем (binks)
-        closeModal!();
-        return;
-      }
-
-      if (!characters.length && sessionsCount !== null && sessionsCount! > 5) {
-        setReadyState!(true);
-        // Если модалка вдруг открылась - закрываем (binks)
-        closeModal!();
-        setActiveVideo!("3");
-        return;
-      }
-
-      if (characters.length && sessionsCount !== null && sessionsCount! <= 5) {
+    if (userDataDefined) {
+      if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
         openModal!("binks");
-        return;
       }
 
-      if (!characters.length && sessionsCount !== null && sessionsCount! <= 5) {
-        openModal!("binks");
-        return;
+      if (jwt) {
+        if (sessionsCount === null) return;
+
+        if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
+          setReadyState!(false);
+          setActiveVideo!(null);
+
+          // Если модалка вдруг открылась - закрываем (binks)
+          closeModal!();
+          return;
+        }
+
+        if (
+          !characters.length &&
+          sessionsCount !== null &&
+          sessionsCount! > 5
+        ) {
+          setReadyState!(true);
+          // Если модалка вдруг открылась - закрываем (binks)
+          closeModal!();
+          setActiveVideo!("3");
+          return;
+        }
+
+        if (
+          characters.length &&
+          sessionsCount !== null &&
+          sessionsCount! <= 5
+        ) {
+          openModal!("binks");
+          return;
+        }
+
+        if (
+          !characters.length &&
+          sessionsCount !== null &&
+          sessionsCount! <= 5
+        ) {
+          openModal!("binks");
+          return;
+        }
       }
     }
-  }, [i18n.language, sessionsCount, characters.length, jwt]);
+  }, [i18n.language, sessionsCount, characters.length, jwt, userDataDefined]);
 
   async function openWalletDrawer() {
     closeDrawer!();
