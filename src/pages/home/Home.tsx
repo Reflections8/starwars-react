@@ -142,16 +142,14 @@ export function Home() {
     });
 
     console.log({ userDataDefined });
-
+    setIsLoading!(false);
     if (userDataDefined) {
       if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
         openModal!("binks");
-        setIsLoading!(false);
       }
 
       if (jwt) {
         if (sessionsCount === null) return;
-        setIsLoading!(false);
         if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
           setReadyState!(false);
           setActiveVideo!(null);
