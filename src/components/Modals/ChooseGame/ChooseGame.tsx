@@ -8,11 +8,15 @@ import game2Bg from "./img/game2-bg.png";
 import "./styles/chooseGame.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import {useUserData} from "../../../UserDataService.tsx";
+import {useDrawer} from "../../../context/DrawerContext.tsx";
 
 export function ChooseGame() {
   const { t } = useTranslation();
   const { closeModal } = useModal();
+  const { openDrawer } = useDrawer();
   const navigate = useNavigate();
+  const {characters, blasters} = useUserData()
   function openGame(linkToGame: string) {
     //@ts-ignore
     closeModal();
@@ -41,6 +45,14 @@ export function ChooseGame() {
           text={t("chooseGameModal.play")}
           size="small"
           callback={() => {
+            if(characters.length == 0) {
+              openDrawer("rejected", "bottom", t("chooseGameModal.nonPlayableCh"))
+              return;
+            }
+            if(blasters.length == 0) {
+              openDrawer("rejected", "bottom", t("chooseGameModal.nonPlayableBl"))
+              return;
+            }
             openGame("/game1");
           }}
         />

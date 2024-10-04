@@ -310,7 +310,9 @@ export function Home() {
         rightAction={() => {
           openModal!("settings");
         }}
-        centerComponent={<Info />}
+        centerComponent={
+          characters.length !== 0 && higherBlaster != null ? <Info /> : null
+        }
       />
     </>
   );

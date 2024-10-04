@@ -199,6 +199,8 @@
     }
   },
   "chooseGameModal": {
+    "nonPlayableCh": "You must have at least one character to start playing.\n Visit Shop to find more details.",
+    "nonPlayableBl": "You must have at least one blaster to start playing.\n Visit Shop to find more details.",
     "title": "game selection",
     "vader": "Vader",
     "battleships": "Battleships",
