@@ -166,6 +166,7 @@ export function BinksBackgroundVideo({
   function handleTutorialDone() {
     // Нет НФТ, 1-5
     if (!characters.length && sessionsCount <= 5) {
+      console.log("!characters.length && sessionsCount <= 5");
       stopVideo("2");
       openModal!("binksDone");
       return;
@@ -173,6 +174,7 @@ export function BinksBackgroundVideo({
 
     // Нет НФТ, 6+ (убрал модалку binksDone если это уже 6+ сессии)
     if (!characters.length && sessionsCount > 5) {
+      console.log("!characters.length && sessionsCount > 5");
       stopVideo("2");
       setActiveVideo("3");
       return;
@@ -180,6 +182,7 @@ export function BinksBackgroundVideo({
 
     // Если есть НФТ, 1-5
     if (characters.length && sessionsCount <= 5) {
+      console.log("characters.length && sessionsCount <= 5");
       stopAllVideos();
       setReadyState(false);
       setActiveVideo(null);
@@ -188,11 +191,15 @@ export function BinksBackgroundVideo({
 
     // Если есть НФТ, 6+
     if (characters.length && sessionsCount > 5) {
+      console.log("characters.length && sessionsCount > 5");
       stopAllVideos();
       setReadyState(false);
       setActiveVideo(null);
       return;
     }
+
+    console.log("UNHANDLED TUTORIAL ENDING");
+    openModal!("binksDone");
 
     //  if (repeatCount === 0) {
     //    // TODO: пока сделал так, что если в рамках сессии это первое проигрывание обучения, то показывать модалку...
@@ -226,6 +233,7 @@ export function BinksBackgroundVideo({
 
   function findTimeFunction(activeVideo: string, currentTime: number) {
     const fixedTime = currentTime?.toFixed(0) as any;
+    console.log({ activeVideo, fixedTime });
 
     if (i18n.language === "ru") {
       if (activeVideo === "1") {
