@@ -11,10 +11,12 @@ import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
 import { useTranslation } from "react-i18next";
 import { fetchUserPhoto } from "../../service/sea-battle.service";
 import defaultAva from "../../../../../icons/no_avatar.png";
+import { useUserData } from "../../../../../UserDataService";
 
 export function Rivals() {
   const { t } = useTranslation();
   const { openDrawer } = useDrawer();
+  const { credits, tokens: akronix, tons } = useUserData();
   const [isCreatingDuel, setIsCreatingDuel] = useState(false);
   const [friendsLogin, setFriendsLogin] = useState("");
   const [bet, setBet] = useState(0);
@@ -53,6 +55,39 @@ export function Rivals() {
         t("battleshipsModal.rivalsTab.enterBetAmount")
       );
       return;
+    }
+
+    if (activeCurrency === "credits") {
+      if (credits < bet) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          `${t("battleshipsModal.notEnoughCurrency")} (${activeCurrency})`
+        );
+        return;
+      }
+    }
+
+    if (activeCurrency === "akronix") {
+      if (akronix < bet) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          `${t("battleshipsModal.notEnoughCurrency")} (${activeCurrency})`
+        );
+        return;
+      }
+    }
+
+    if (activeCurrency === "ton") {
+      if (tons < bet) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          `${t("battleshipsModal.notEnoughCurrency")} (${activeCurrency})`
+        );
+        return;
+      }
     }
 
     sendMessage({
@@ -103,6 +138,12 @@ export function Rivals() {
       fetchPhotos();
     }
   }, [rooms]);
+
+  function handleActiveCurrency() {
+    if (activeCurrency === "credits") return credits;
+    if (activeCurrency === "akronix") return akronix;
+    if (activeCurrency === "ton") return tons;
+  }
 
   return (
     <div className="rivals">
@@ -218,6 +259,21 @@ export function Rivals() {
         <div className="rivals__newDuel">
           <div className="rivals__newDuel__title">
             {t("battleshipsModal.rivalsTab.createDuelWithFriend")}!
+          </div>
+
+          <div className="bet__inputBlock bet__inputBlock--CurrentBalance">
+            <div className="bet__inputBlock-sup">
+              <label className="bet__inputBlock-sup-label">
+                {t("global.currentBalance")}:
+              </label>
+            </div>
+
+            <div className="bet__inputBlock-inputWrapper--CurrentBalance">
+              <span>{handleActiveCurrency()}</span>
+              <div className="bet__inputBlock-postfix">
+                {activeCurrency.toUpperCase()}
+              </div>
+            </div>
           </div>
 
           <div className="rivals__newDuel__inputBlock">

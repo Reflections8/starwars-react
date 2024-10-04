@@ -4,7 +4,8 @@
     "close": "Close",
     "point": "Pt.",
     "minute": "min",
-    "second": "sec"
+    "second": "sec",
+    "currentBalance": "Current balance"
   },
   "homePage": {
     "exit": "Exit",
@@ -248,6 +249,8 @@
   },
   "battleshipsModal": {
     "title": "Battleships",
+
+    "notEnoughCurrency": "Not enough currency on balance for bets",
 
     "rivalsTab": {
       "title": "Rivals",

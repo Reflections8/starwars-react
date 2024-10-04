@@ -55,6 +55,7 @@ interface UserDataContextType {
 }
 
 const defaultValue: UserDataContextType = {
+  userDataDefined: false,
   credits: 0,
   tokens: 0,
   tons: 0,
@@ -123,6 +124,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [tokens, setTokens] = useState(0);
   const [tons, setTons] = useState(0);
   const [soundSetting, setSoundSetting] = useState(true);
+  // @ts-ignore
   const [userMetrics, setUserMetrics] = useState<UserMetrics>({
     total_deposited: 0,
     total_earned_tokens: 0,
@@ -485,6 +487,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     setTons(0);
     setJwt(null);
     setSoundSetting(true);
+    // @ts-ignore
     setUserMetrics({
       total_deposited: 0,
       total_earned_tokens: 0,

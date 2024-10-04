@@ -4,7 +4,8 @@
     "close": "Закрыть",
     "point": "Ед.",
     "minute": "мин",
-    "second": "сек"
+    "second": "сек",
+    "currentBalance": "Текущий баланс"
   },
   "homePage": {
     "exit": "Выход",
@@ -52,8 +53,8 @@
   "shopModal": {
     "title": "Магазин",
 
-	 "transactionSent": "Транзакция успешно отправлена.\n Ожидайте подтвержения",
-	 "transactionDenied": "Отправка транзакции была отклонена",
+    "transactionSent": "Транзакция успешно отправлена.\n Ожидайте подтвержения",
+    "transactionDenied": "Отправка транзакции была отклонена",
 
     "playerTab": {
       "title": "Игрок",
@@ -248,6 +249,8 @@
   },
   "battleshipsModal": {
     "title": "Морской бой",
+
+	 "notEnoughCurrency": "Недостаточно валюты на балансе для ставки",
 
     "rivalsTab": {
       "title": "Соперники",
