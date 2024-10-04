@@ -233,8 +233,6 @@ export function BinksBackgroundVideo({
 
   function findTimeFunction(activeVideo: string, currentTime: number) {
     const fixedTime = currentTime?.toFixed(0) as any;
-    console.log({ activeVideo, fixedTime });
-
     if (i18n.language === "ru") {
       if (activeVideo === "1") {
         if (fixedTime == 13) {
@@ -275,7 +273,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 155) {
           highlightElement("games");
         }
-        if (fixedTime == 193) {
+        if (fixedTime == 191) {
           handleTutorialDone();
         }
       }
@@ -321,7 +319,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 155) {
           highlightElement("games");
         }
-        if (fixedTime == 193) {
+        if (fixedTime == 191) {
           handleTutorialDone();
         }
       }
