@@ -254,6 +254,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       const data = await response.json();
       setCredits(data.credits);
       setTons(data.tons);
+      console.log(data.tons);
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
       setSessionsCount(data.sessions);
@@ -270,7 +271,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setPrices(pricesResponse);
       setRefInfo(refInfo);
       setBlasters(blasters);
-      setHigherBlaster(calculateHighestLevelBlaster(blasters));
+      if (blasters.length > 0)
+        setHigherBlaster(calculateHighestLevelBlaster(blasters));
     } catch (error) {
       console.error("Failed to fetch user info:", error);
     }

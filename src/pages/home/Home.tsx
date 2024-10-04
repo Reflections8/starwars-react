@@ -151,7 +151,7 @@ export function Home() {
 
       if (jwt) {
         if (sessionsCount === null) return;
-
+        setIsLoading!(false);
         if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
           setReadyState!(false);
           setActiveVideo!(null);

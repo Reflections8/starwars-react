@@ -202,7 +202,6 @@ export function Game1() {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       try {
-        console.log(event.data);
         const data: any = JSON.parse(event.data);
         switch (data.type) {
           case "multiple": {
