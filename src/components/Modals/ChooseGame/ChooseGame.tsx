@@ -46,11 +46,11 @@ export function ChooseGame() {
           size="small"
           callback={() => {
             if(characters.length == 0) {
-              openDrawer("rejected", "bottom", t("chooseGameModal.nonPlayableCh"))
+              openDrawer!("rejected", "bottom", t("chooseGameModal.nonPlayableCh"))
               return;
             }
             if(blasters.length == 0) {
-              openDrawer("rejected", "bottom", t("chooseGameModal.nonPlayableBl"))
+              openDrawer!("rejected", "bottom", t("chooseGameModal.nonPlayableBl"))
               return;
             }
             openGame("/game1");
