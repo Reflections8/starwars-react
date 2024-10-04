@@ -211,6 +211,12 @@ export function Home() {
     }
   }, [jwt, tonConnectUI.connected]);
 
+  useEffect(() => {
+    if (!localStorage.getItem("language")) {
+      localStorage.setItem("language", "ru");
+    }
+  }, []);
+
   return (
     <>
       <ProofManager onValueChange={handleAuthTokenChange} />
