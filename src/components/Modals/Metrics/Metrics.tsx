@@ -101,16 +101,22 @@ export function Finances() {
             <div className="finances__item-bottom-row-key">
               {t("metricsModal.financesTab.credits")}
             </div>
-            <div className="finances__item-bottom-row-value">0</div>
+            <div className="finances__item-bottom-row-value">
+              {userMetrics.credits_won}
+            </div>
           </div>
           <div className="finances__item-bottom-row">
             <div className="finances__item-bottom-row-key">akron</div>
-            <div className="finances__item-bottom-row-value">0</div>
+            <div className="finances__item-bottom-row-value">
+              {userMetrics.akronix_won}
+            </div>
           </div>
 
           <div className="finances__item-bottom-row">
             <div className="finances__item-bottom-row-key">ton</div>
-            <div className="finances__item-bottom-row-value">0</div>
+            <div className="finances__item-bottom-row-value">
+              {userMetrics.ton_won}
+            </div>
           </div>
         </div>
       </div>

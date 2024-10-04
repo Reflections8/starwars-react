@@ -67,6 +67,9 @@ const defaultValue: UserDataContextType = {
     total_earned_tokens: 0,
     blaster_earn_required: 0,
     blaster_earned: 0,
+    akronix_won: 0,
+    credits_won: 0,
+    ton_won: 0,
   },
   blasters: [],
   characters: [],
@@ -584,6 +587,9 @@ export interface UserMetrics {
   total_earned_tokens: number;
   blaster_earned: number;
   blaster_earn_required: number;
+  akronix_won: number;
+  ton_won: number;
+  credits_won: number;
 }
 
 export interface Prices {
