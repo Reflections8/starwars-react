@@ -351,5 +351,8 @@
       "inviteLimit": "Достигнул лимит отправленных приглашений. Нельзя отправить больше 3-х приглашений за раз",
       "inviteCanceled": "Приглашение было отменено"
     }
+  },
+  "audio": {
+    "vader": "https://game.akronix.io/audio/vader_speak_ru.wav"
   }
 }

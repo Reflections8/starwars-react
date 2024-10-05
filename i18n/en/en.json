@@ -351,5 +351,8 @@
       "inviteLimit": "Invites limit was reached. Can't send more than 3 invites at once",
       "inviteCanceled": "Invite was canceled"
     }
+  },
+  "audio": {
+    "vader": "https://game.akronix.io/audio/vader_speak_en.wav"
   }
 }
