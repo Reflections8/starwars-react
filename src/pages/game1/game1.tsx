@@ -78,11 +78,12 @@ export function Game1() {
     const response: string = lastMessage.data.toString();
 
     const data = JSON.parse(response);
-    const message = JSON.parse(data.message);
+
     switch (data.type) {
       case "pong":
         break;
       case "handshake": {
+        const message = JSON.parse(data.message);
         sendMessageToUnity("ReceiveServerPublicKey", message.public_key);
 
         const score = parseInt(message.info.score);
@@ -92,6 +93,7 @@ export function Game1() {
         break;
       }
       case "shoot_response": {
+        const message = JSON.parse(data.message);
         const score = parseInt(message.score);
         setScore(score);
 
@@ -195,6 +197,7 @@ export function Game1() {
       };
 
       sendMessage(JSON.stringify(request));
+      console.log(JSON.stringify(request));
     }
   };
 

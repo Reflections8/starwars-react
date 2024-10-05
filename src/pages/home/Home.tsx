@@ -142,10 +142,11 @@ export function Home() {
     });
 
     console.log({ userDataDefined });
-    setIsLoading!(false);
+
     if (userDataDefined) {
       if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
         openModal!("binks");
+        setIsLoading!(false);
       }
 
       if (jwt) {
@@ -167,6 +168,7 @@ export function Home() {
           setReadyState!(true);
           // Если модалка вдруг открылась - закрываем (binks)
           closeModal!();
+          setIsLoading!(false);
           setActiveVideo!("3");
           return;
         }
@@ -177,6 +179,7 @@ export function Home() {
           sessionsCount! <= 5
         ) {
           openModal!("binks");
+          setIsLoading!(false);
           return;
         }
 
@@ -186,10 +189,11 @@ export function Home() {
           sessionsCount! <= 5
         ) {
           openModal!("binks");
+          setIsLoading!(false);
           return;
         }
-      }
-    }
+      } else setIsLoading!(false);
+    } else setIsLoading!(false);
   }, [i18n.language, sessionsCount, characters.length, jwt, userDataDefined]);
 
   async function openWalletDrawer() {
