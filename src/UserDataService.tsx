@@ -66,8 +66,8 @@ const defaultValue: UserDataContextType = {
   userMetrics: {
     total_deposited: 0,
     total_earned_tokens: 0,
-    blaster_earn_required: 0,
-    blaster_earned: 0,
+    earn_required: 0,
+    earned: 0,
     akronix_won: 0,
     credits_won: 0,
     ton_won: 0,
@@ -128,8 +128,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [userMetrics, setUserMetrics] = useState<UserMetrics>({
     total_deposited: 0,
     total_earned_tokens: 0,
-    blaster_earn_required: 0,
-    blaster_earned: 0,
+    earn_required: 0,
+    earned: 0,
   });
   const [exchangeRate, setExchangeRate] = useState(0);
   const [sessionsCount, setSessionsCount] = useState(null);
@@ -307,13 +307,16 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         }
 
         const interval = setInterval(() => {
-          if (jwt != null && jwt !== "") {
+          if (jwt && jwt !== "") {
             const refreshUserInfo = async () => {
               await updateUserInfo(jwt);
               setUserDataDefined(true);
             };
 
             refreshUserInfo();
+          }
+          else {
+            clearInterval(interval);
           }
         }, 20000);
 
@@ -497,8 +500,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     setUserMetrics({
       total_deposited: 0,
       total_earned_tokens: 0,
-      blaster_earn_required: 0,
-      blaster_earned: 0,
+      earn_required: 0,
+      earned: 0,
     });
     setExchangeRate(0);
     setSessionsCount(null);
@@ -594,8 +597,8 @@ export interface Character {
 export interface UserMetrics {
   total_deposited: number;
   total_earned_tokens: number;
-  blaster_earned: number;
-  blaster_earn_required: number;
+  earned: number;
+  earn_required: number;
   akronix_won: number;
   ton_won: number;
   credits_won: number;

@@ -375,8 +375,8 @@ export function Store() {
         blaster.damage_level +
         blaster.max_charge_level;
 
-      const earningsPercentage =
-        (userMetrics.blaster_earned / userMetrics.blaster_earn_required) * 100;
+      const earningsPercentage = userMetrics.earned / userMetrics.earn_required;
+
       return {
         title: BlastersData[blaster.level - 1].name,
         rarity: BlastersData[blaster.level - 1].rarity,
@@ -385,10 +385,7 @@ export function Store() {
         additionalIncomeCurrent:
           blaster.level == 1
             ? 0
-            : (BlastersData[blaster.level - 1].price *
-                1.5 *
-                earningsPercentage) /
-              100,
+            : BlastersData[blaster.level - 1].price * 1.5 * earningsPercentage,
         additionalIncomeMax:
           blaster.level == 1 ? 0 : BlastersData[blaster.level - 1].price * 1.5,
         damage: blaster.damage,
