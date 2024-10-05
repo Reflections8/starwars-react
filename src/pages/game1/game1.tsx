@@ -26,6 +26,8 @@ export function Game1() {
 
   //const [initDataUnsafe] = useInitData();
 
+  const bgRef = useRef(null);
+
   const [score, setScore] = useState(0);
   const [damage, setDamage] = useState(1);
   const [blasterCharge, setBlasterCharge] = useState(0);
@@ -117,7 +119,12 @@ export function Game1() {
 
   useEffect(() => {
     if (!isUnityLoaded) return;
+
     if (soundSetting) {
+      bgRef.current.loop = true;
+      bgRef.current.play();
+      bgRef.current.playbackRate = 0.8;
+      bgRef.current.volume = 0.2;
       sendMessageToUnity("EnableGameSounds", "s");
     } else sendMessageToUnity("DisableGameSounds", "s");
   }, [soundSetting, isUnityLoaded]);
@@ -243,6 +250,7 @@ export function Game1() {
       <div className="topLinearGradient" />
       <div className="bottomLinearGradient" />
 
+      <audio ref={bgRef} src="https://game.akronix.io/audio/bg.mp3" />
       <iframe
         ref={iframeRef}
         src="https://game.akronix.io/new/unity_vader/"
