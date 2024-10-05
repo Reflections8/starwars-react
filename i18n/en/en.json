@@ -309,9 +309,12 @@
   },
   "rulesModal": {
     "title": "Правила",
-    "p1": "an armed duel regulated by written rules or customs, the purpose of which is to satisfy the desire of one of the duelists",
-    "p2": "(challenging a duel) to respond to the insult inflicted on his honor in compliance with pre-agreed and equal conditions of the battle. As a rule, duels occur only within certain social strata and are often associated with the aristocracy, although in fact they are not tied to any of them.",
-    "p3": "Currently prohibited by the legislation of the vast majority of countries in the world. The exception is Paraguay."
+    "p1": "Space Battle is a turn-based strategy game on a 10x10 grid, where players command a fleet of 10 ships: 1 four-deck ship, 2 three-deck ships, 3 two-deck ships, and 4 one-deck ships. Ships can be arranged vertically or horizontally but cannot touch each other. The objective of the game is to destroy the entire enemy fleet. Each player has 30 seconds for their turn. A hit allows the player to continue the attack, while a miss passes the turn to the opponent. The game continues until one player's fleet is completely destroyed.",
+    "p2": "Players can choose from three modes:",
+    "p3": "Waiting for an opponent: place a bet in credits, Akron, or TON and wait for a player.",
+    "p4": "Choosing an opponent: select an opponent and a bet from the list of waiting players.",
+    "p5": "Playing with a friend: challenge a friend directly in a special mode.",
+    "p6": "Once both players accept the terms of the battle and the bet amount, the match cannot be canceled. The game will end only with one player’s victory. The winner receives the pot, which includes their own funds and the opponent's bet. Akronix takes a 5% commission for organizing the battle."
   },
   "battleships": {
     "yourRival": "Your rival",

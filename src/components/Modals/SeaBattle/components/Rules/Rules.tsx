@@ -8,6 +8,9 @@ export function Rules() {
       <p>{t("rulesModal.p1")}</p>
       <p>{t("rulesModal.p2")}</p>
       <p>{t("rulesModal.p3")}</p>
+      <p>{t("rulesModal.p4")}</p>
+      <p>{t("rulesModal.p5")}</p>
+      <p>{t("rulesModal.p6")}</p>
     </div>
   );
 }
