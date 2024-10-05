@@ -81,7 +81,7 @@ export function Finances() {
           <div className="finances__item-info-key">
             {t("metricsModal.financesTab.earn")}:
           </div>
-          <div className="finances__item-info-value">{totalEarned} akron</div>
+          <div className="finances__item-info-value">{totalEarned.toFixed(4).toString()} akron</div>
         </div>
         <img src={financesIcon2} alt="icon" className="finances__item-icon" />
       </div>

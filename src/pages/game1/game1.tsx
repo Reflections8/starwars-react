@@ -197,7 +197,6 @@ export function Game1() {
       };
 
       sendMessage(JSON.stringify(request));
-      console.log(JSON.stringify(request));
     }
   };
 

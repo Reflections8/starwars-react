@@ -23,6 +23,7 @@ import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
 import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
+import { useExpand } from "@vkruglikov/react-telegram-web-app";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -44,6 +45,7 @@ export function Home() {
     userDataDefined,
   } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
+  const [isExpanded, expand] = useExpand();
 
   //const tonConnectModal = useTonConnectModal();
   const { openModal, closeModal } = useModal();
@@ -134,14 +136,14 @@ export function Home() {
 
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
-    console.log({
-      sessionsCount,
-      hasNFT: characters.length,
-      jwt,
-      tonConnectUI: tonConnectUI.connected,
-    });
-
-    console.log({ userDataDefined });
+    // console.log({
+    //   sessionsCount,
+    //   hasNFT: characters.length,
+    //   jwt,
+    //   tonConnectUI: tonConnectUI.connected,
+    // });
+    //
+    // console.log({ userDataDefined });
 
     if (userDataDefined) {
       if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
@@ -219,6 +221,8 @@ export function Home() {
     if (!localStorage.getItem("language")) {
       localStorage.setItem("language", "ru");
     }
+
+    if (isExpanded != undefined && !isExpanded) expand();
   }, []);
 
   return (
