@@ -15,6 +15,7 @@ import {
   useUserData,
 } from "../../../UserDataService.tsx";
 import { useTranslation } from "react-i18next";
+import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
 
 export function CurrentStat() {
   const { t } = useTranslation();
@@ -167,7 +168,7 @@ export function CurrentStat() {
           </div>
         </div>
       </div>
-      <div
+      {/* <div
         className="currentStat__btn"
         onClick={() => {
           closeModal!();
@@ -175,7 +176,15 @@ export function CurrentStat() {
       >
         <div className="currentStat__btn-content">OK</div>
         <img src={footerBtnBg} alt="bg" className="currentStat__btn-bg" />
-      </div>
+      </div> */}
+
+      <CuttedButton
+        className="currentStat__btn"
+        text="OK"
+        callback={() => {
+          closeModal!();
+        }}
+      />
     </div>
   );
 }
