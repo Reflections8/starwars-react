@@ -111,6 +111,10 @@
     "invalidAmount": "Некорректное количество",
     "forExchange": "для обмена",
 
+    "deposit": "Пополнить",
+    "exchange": "Обменять",
+    "withdrawal": "Вывести",
+
     "depositTab": {
       "title": "Пополнить",
       "depositTon": "Пополнение баланса Ton",
@@ -243,7 +247,10 @@
     "opponentCanceledGame": "Соперник отказался от игры"
   },
   "playerModal": {
-    "title": "Игрок"
+    "title": "Игрок",
+    "characters": "Персонажи",
+    "weapons": "Оружие",
+	 "noNFTText": "У Вас нет купленных НФТ"
   },
   "tournamentsModal": {
     "title": "Турниры",
@@ -315,7 +322,8 @@
     "bet": "Ставка",
     "rules": "Правила",
     "giveUp": "Сдаться",
-    "yourWinnings": "Выш выигрыш"
+    "yourWinnings": "Ваш выигрыш",
+    "yourLoss": "Ваш проигрыш"
   },
   "giveUpDrawer": {
     "text": "Вы точно хотите сдаться?",

@@ -376,10 +376,18 @@
   .fullscreenModalBg.currentStat .fullscreenModal {
     padding-top: 16px;
   }
+
+  .fullscreenModalBg.welcome .fullscreenModal {
+    padding-top: 16px;
+  }
 }
 
 @media screen and (max-height: 650px) {
   .fullscreenModalBg.currentStat .fullscreenModal {
+    padding-top: 16px;
+  }
+
+  .fullscreenModalBg.welcome .fullscreenModal {
     padding-top: 16px;
   }
 }

@@ -10,7 +10,7 @@ import tonIcon from "./img/ton.svg";
 import { Balance } from "../../../ui/Balance/Balance";
 import { StoreCardModel } from "../Shop/components/StoreCard";
 import model1Img from "./img/model1.png";
-import footerBtnBg from "./img/footerButtonBg.svg";
+import footerBtnBg from "./img/btn.svg";
 import { useModal } from "../../../context/ModalContext";
 import { useTranslation } from "react-i18next";
 
@@ -39,7 +39,6 @@ export function Welcome() {
     type: 1,
   };
 
-  console.log({ t });
   return (
     <div className="welcome">
       <div className="welcome__title">{t("welcomeModal.title")}</div>

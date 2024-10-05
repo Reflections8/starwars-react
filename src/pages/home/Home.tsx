@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import { useExpand } from "@vkruglikov/react-telegram-web-app";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ProofApiService } from "../../ProofApiService.ts";
 import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
-import { Info } from "../../components/Header/components/Info/Info.tsx";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
 import { useDrawer } from "../../context/DrawerContext";
@@ -18,12 +18,11 @@ import { MenuIcon } from "../../icons/Menu";
 import { OptionsIcon } from "../../icons/Options";
 import highlightBook from "../home/video/currency.svg";
 import { BackgroundLayers } from "./components/BackgroundLayers";
+import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
-import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
-import { useExpand } from "@vkruglikov/react-telegram-web-app";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -136,14 +135,14 @@ export function Home() {
 
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
-    // console.log({
-    //   sessionsCount,
-    //   hasNFT: characters.length,
-    //   jwt,
-    //   tonConnectUI: tonConnectUI.connected,
-    // });
-    //
-    // console.log({ userDataDefined });
+    //  console.log({
+    //    sessionsCount,
+    //    hasNFT: characters.length,
+    //    jwt,
+    //    tonConnectUI: tonConnectUI.connected,
+    //  });
+
+    //  console.log({ userDataDefined });
 
     if (userDataDefined) {
       if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
@@ -154,11 +153,12 @@ export function Home() {
       if (jwt) {
         if (sessionsCount === null) return;
         if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
+          openModal!("welcome");
           setReadyState!(false);
           setActiveVideo!(null);
 
           // Если модалка вдруг открылась - закрываем (binks)
-          closeModal!();
+          //  closeModal!();
           return;
         }
 
@@ -325,9 +325,6 @@ export function Home() {
         rightAction={() => {
           openModal!("settings");
         }}
-        centerComponent={
-          characters.length !== 0 && higherBlaster != null ? <Info /> : null
-        }
       />
     </>
   );

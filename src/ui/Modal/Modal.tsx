@@ -40,6 +40,8 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BinksDone } from "../../components/Modals/Binks/BinksDone";
 import { BookOpenedIcon } from "../../icons/Modals/BookOpened";
+import { WalletNew } from "../../components/Modals/WalletNew/WalletNew";
+import { PlayerNew } from "../../components/Modals/PlayerNew/PlayerNew";
 
 type ModalProps = {
   isOpen: boolean;
@@ -96,10 +98,20 @@ export function Modal({ isOpen }: ModalProps) {
       icon: <WalletIcon />,
       component: <Wallet />,
     },
+    walletNew: {
+      title: t("walletModal.title"),
+      icon: <WalletIcon />,
+      component: <WalletNew />,
+    },
     player: {
       title: t("playerModal.title"),
       icon: <HelmetIcon />,
       component: <Player />,
+    },
+    playerNew: {
+      title: t("playerModal.title"),
+      icon: <HelmetIcon />,
+      component: <PlayerNew />,
     },
     seaBattle: {
       title: t("battleshipsModal.title"),

@@ -1,0 +1,88 @@
+.withdraw__inputBlock {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.withdraw__inputBlock-sup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.withdraw__inputBlock-sup-label {
+  color: #e1f0ff;
+  font-size: 12px;
+  text-shadow: 2px 2px 0 #0975f83d;
+}
+
+.withdraw__inputBlock-sup-minValue {
+  font-size: 8px;
+  color: #076ce9;
+  text-shadow: 2px -1px 0 #076ce944;
+}
+
+.withdraw__inputBlock-inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.withdraw__inputBlock-input {
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #0974f8;
+  padding: 10px 15px 10px 135px;
+  font-size: 20px;
+  color: #19c2ef;
+  width: 100%;
+  background: linear-gradient(to top, #0975f848, #0975f800);
+  text-align: end;
+}
+
+.withdraw__inputBlock-iconBox {
+  position: absolute;
+  top: 50%;
+  left: 11px;
+  font-size: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #19c2ef;
+  color: #c9e9fb;
+}
+
+.withdraw__cuttedButtonWrapper {
+  max-width: 210px;
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.withdraw .selectWrapper {
+  position: absolute;
+  max-width: 115px;
+  width: 100%;
+  left: 11px;
+}
+
+.withdraw .select {
+  padding: 6px 15px;
+}
+
+.withdraw__bottomText {
+  max-width: 300px;
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+  color: #076ce9;
+  text-shadow: 2px -1px 0 #076de941;
+}

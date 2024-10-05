@@ -12,7 +12,13 @@ import "./styles/BattleshipsWon.css";
 export function BattleshipsWon() {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-  const { setGameState, betAmount } = useBattleships();
+  const { setGameState, betAmount, betType } = useBattleships();
+
+  const betTypeObject = {
+    "0": "CREDITS",
+    "1": "AKRON",
+    "2": "TON",
+  };
   return (
     <div className="battleshipsWon">
       <img src={bg} alt="" className="battleshipsWon__bg" />
@@ -22,7 +28,10 @@ export function BattleshipsWon() {
         <div className="battleshipsWon__text-key">
           {t("battleships.yourWinnings")}:
         </div>
-        <div className="battleshipsWon__text-value">{betAmount || 0}</div>
+        <div className="battleshipsWon__text-value">
+          {betAmount * 1.95 || 0}{" "}
+          {betTypeObject[String(betType) as keyof typeof betTypeObject]}
+        </div>
       </div>
       <CuttedButton
         className="battleshipsWon__okBtn"

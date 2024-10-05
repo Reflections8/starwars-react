@@ -42,7 +42,7 @@ export function MainLinks() {
               return;
             }
             // @ts-ignore
-            openModal("wallet");
+            openModal("walletNew");
           }}
         >
           <img
@@ -77,7 +77,7 @@ export function MainLinks() {
               return;
             }
 
-            openModal!("player");
+            openModal!("playerNew");
           }}
         >
           <img

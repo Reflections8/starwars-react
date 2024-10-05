@@ -111,6 +111,10 @@
     "invalidAmount": "Incorrect quantity",
     "forExchange": "for exchange",
 
+    "deposit": "Deposit",
+    "exchange": "Exchange",
+    "withdrawal": "Withdrawal",
+
     "depositTab": {
       "title": "Deposit",
       "depositTon": "Deposit Ton",
@@ -243,7 +247,10 @@
     "opponentCanceledGame": "The opponent abandoned the game"
   },
   "playerModal": {
-    "title": "Player"
+    "title": "Player",
+    "characters": "Models",
+    "weapons": "Weapons",
+    "noNFTText": "You don't have purchased NFT's"
   },
   "tournamentsModal": {
     "title": "Tournaments",
@@ -315,7 +322,8 @@
     "bet": "Bet",
     "rules": "Rules",
     "giveUp": "Give up",
-    "yourWinnings": "Your winnings"
+    "yourWinnings": "Your winnings",
+    "yourLoss": "Your loss"
   },
   "giveUpDrawer": {
     "text": "Are you sure you want to give up?",

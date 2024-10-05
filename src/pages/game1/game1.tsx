@@ -19,6 +19,7 @@ import {
   useUserData,
 } from "../../UserDataService.tsx";
 import "./styles/game1.css";
+import { useModal } from "../../context/ModalContext.tsx";
 
 export function Game1() {
   const { jwt, soundSetting } = useUserData();
@@ -127,8 +128,7 @@ export function Game1() {
     if (!isUnityLoaded) return;
 
     if (soundSetting) {
-      if(bgRef.current)
-      {
+      if (bgRef.current) {
         bgRef.current.loop = true;
         bgRef.current.play();
         bgRef.current.playbackRate = 0.8;
@@ -186,10 +186,13 @@ export function Game1() {
     console.log(message);
   };
 
+  const { openModal } = useModal();
+
   const handleLoadingFinish = useCallback(
     (publicKey: ReactUnityEventParameter) => {
       setIsUnityLoaded(true);
       setIsLoading!(false);
+      openModal!("currentStat");
       setPublicKey(publicKey as string);
       iframeRef.current?.focus();
     },
@@ -201,16 +204,14 @@ export function Game1() {
       const data = value as string;
       switch (data) {
         case "vader_speak": {
-          if(!vaderTalkAudioRef.current)
-            return;
+          if (!vaderTalkAudioRef.current) return;
           vaderTalkAudioRef.current.src = t("audio.vader");
           vaderTalkAudioRef.current.volume = 1;
           vaderTalkAudioRef.current.play();
           break;
         }
         case "vader_breath": {
-          if(!vaderTalkAudioRef.current)
-            return;
+          if (!vaderTalkAudioRef.current) return;
           vaderTalkAudioRef.current.src =
             "https://game.akronix.io/audio/vader_breath.mp3";
           vaderTalkAudioRef.current.volume = 0.4;
@@ -218,8 +219,7 @@ export function Game1() {
           break;
         }
         case "vader_slice_bullet": {
-          if(!vaderTalkAudioRef.current)
-            return;
+          if (!vaderTalkAudioRef.current) return;
           const options = [
             "https://game.akronix.io/audio/vader_slice_bullet_1.mp3",
             "https://game.akronix.io/audio/vader_slice_bullet_3.mp3",
@@ -231,8 +231,7 @@ export function Game1() {
           vaderTalkAudioRef.current.volume = 0.5;
           vaderTalkAudioRef.current.play();
 
-          if(!swordAudioRef.current)
-            return;
+          if (!swordAudioRef.current) return;
 
           const options1 = [
             "https://game.akronix.io/audio/sword_sway_1.mp3",
@@ -245,8 +244,7 @@ export function Game1() {
           break;
         }
         case "sword_unholster": {
-          if(!swordAudioRef.current)
-            return;
+          if (!swordAudioRef.current) return;
           swordAudioRef.current.src =
             "https://game.akronix.io/audio/sword_unholster.mp3";
           swordAudioRef.current.volume = 0.3;
@@ -254,8 +252,7 @@ export function Game1() {
           break;
         }
         case "sword_sway": {
-          if(!swordAudioRef.current)
-            return;
+          if (!swordAudioRef.current) return;
           const options = [
             "https://game.akronix.io/audio/sword_sway_1.mp3",
             "https://game.akronix.io/audio/sword_sway_2.mp3",
@@ -267,8 +264,7 @@ export function Game1() {
           break;
         }
         case "gun_holster": {
-          if(!playerAudioRef.current)
-            return;
+          if (!playerAudioRef.current) return;
           playerAudioRef.current.src =
             "https://game.akronix.io/audio/gun_holster.mp3";
           playerAudioRef.current.volume = 0.5;
