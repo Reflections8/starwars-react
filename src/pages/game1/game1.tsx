@@ -1,24 +1,25 @@
+// @ts-nocheck
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
+import useWebSocket from "react-use-websocket";
 import { Footer } from "../../components/Footer/Footer";
+import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
 import { Header } from "../../components/Header/Header";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
+import { useDrawer } from "../../context/DrawerContext.tsx";
+import { useLoader } from "../../context/LoaderContext.tsx";
 import { HomeIcon } from "../../icons/Home";
 import { MenuIcon } from "../../icons/Menu";
-import "./styles/game1.css";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ReactUnityEventParameter } from "react-unity-webgl/distribution/types/react-unity-event-parameters";
-import { HeaderCenterCredits } from "../../components/Header/components/HeaderCenter/HeaderCenterCredits.tsx";
-import { useNavigate } from "react-router-dom";
-import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
-import { useLoader } from "../../context/LoaderContext.tsx";
+import { VADER_SOCKET } from "../../main.tsx";
 import {
   Blaster,
   Character,
   CharactersData,
   useUserData,
 } from "../../UserDataService.tsx";
-import useWebSocket from "react-use-websocket";
-import { VADER_SOCKET } from "../../main.tsx";
-import { t } from "i18next";
-import { useTranslation } from "react-i18next";
+import "./styles/game1.css";
 
 export function Game1() {
   const { jwt, soundSetting } = useUserData();
@@ -312,6 +313,8 @@ export function Game1() {
 
   const handleAuthTokenChange = () => {};
 
+  const { openDrawer } = useDrawer();
+
   return (
     <>
       <ProofManager onValueChange={handleAuthTokenChange} />
@@ -321,6 +324,9 @@ export function Game1() {
         leftAction={handleReturn}
         rightIcon={<MenuIcon />}
         rightText={"Меню"}
+        rightAction={() => {
+          openDrawer!("menu", "top");
+        }}
         centerComponent={<HeaderCenterCredits credits={score} />}
       />
 

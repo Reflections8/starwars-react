@@ -20,7 +20,7 @@ export function Rivals() {
   const { credits, tokens: akronix, tons } = useUserData();
   const [isCreatingDuel, setIsCreatingDuel] = useState(false);
   const [friendsLogin, setFriendsLogin] = useState("");
-  const [bet, setBet] = useState(0);
+  const [bet, setBet] = useState<string | number | null>(null);
 
   function handleDuelCreating(e: Event) {
     e.stopPropagation();
@@ -59,7 +59,7 @@ export function Rivals() {
     }
 
     if (activeCurrency === "credits") {
-      if (credits < bet) {
+      if (credits < Number(bet)) {
         openDrawer!(
           "rejected",
           "bottom",
@@ -69,8 +69,8 @@ export function Rivals() {
       }
     }
 
-    if (activeCurrency === "akronix") {
-      if (akronix < bet) {
+    if (activeCurrency === "akron") {
+      if (akronix < Number(bet)) {
         openDrawer!(
           "rejected",
           "bottom",
@@ -81,7 +81,7 @@ export function Rivals() {
     }
 
     if (activeCurrency === "ton") {
-      if (tons < bet) {
+      if (tons < Number(bet)) {
         openDrawer!(
           "rejected",
           "bottom",
@@ -96,7 +96,7 @@ export function Rivals() {
       message: {
         username: friendsLogin.toLocaleLowerCase(),
         bet_type: BetTypeEnum[activeCurrency as keyof typeof BetTypeEnum],
-        bet_amount: bet,
+        bet_amount: Number(bet),
       },
     });
   }
@@ -143,7 +143,7 @@ export function Rivals() {
   return (
     <div className="rivals">
       <CryptoButtons
-        activeOptions={["credits", "akronix", "ton"]}
+        activeOptions={["credits", "akron", "ton"]}
         className="seaBattle__cryptoButtons"
         activeCurrency={activeCurrency}
         setActiveCurrency={setActiveCurrency}
@@ -295,17 +295,21 @@ export function Rivals() {
 
             <div className="rivals__newDuel__inputBlock-inputWrapper">
               <input
-                type="decimal"
-                value={bet}
+                type="text"
+                value={bet || ""}
                 onChange={(e) => {
                   const value = e.target.value;
+
+                  // Регулярное выражение для проверки: целое положительное число или положительное число с плавающей запятой
+                  const regex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
+
                   if (value === "") {
-                    setBet(0);
+                    setBet(null);
                     return;
                   }
-                  const numericValue = Number(value);
-                  if (!isNaN(numericValue)) {
-                    setBet(numericValue);
+
+                  if (regex.test(value)) {
+                    setBet(value);
                   }
                 }}
                 className={`rivals__newDuel__inputBlock-input ${activeCurrency}`}

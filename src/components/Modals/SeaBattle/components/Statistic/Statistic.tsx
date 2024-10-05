@@ -122,7 +122,7 @@ export function Statistic() {
       <CryptoButtons
         className="seaBattle__cryptoButtons"
         activeCurrency={currency}
-        activeOptions={["credits", "akronix", "ton"]}
+        activeOptions={["credits", "akron", "ton"]}
         setActiveCurrency={setCurrency}
       />
       <div className="statistic__info">

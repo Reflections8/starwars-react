@@ -17,7 +17,7 @@ export function CurrentBalace({
   const { t } = useTranslation();
   function getActiveCurrency() {
     if (activeCurrency === "credits") return credits;
-    if (activeCurrency === "akronix") return akronix;
+    if (activeCurrency === "akron") return akronix;
     if (activeCurrency === "ton") return tons;
   }
 

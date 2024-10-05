@@ -126,6 +126,7 @@ function Resolved({ drawerText }: { drawerText?: string }) {
 
 function Rejected({ drawerText }: { drawerText?: string }) {
   const { t } = useTranslation();
+  const { button } = useDrawer();
   return (
     <div className="responseStatus">
       <img src={rejectedIcon} alt="resolved" className="responseStatus__icon" />
@@ -133,6 +134,8 @@ function Rejected({ drawerText }: { drawerText?: string }) {
       <div className="responseStatus__title">{t("rejectedDrawer.title")}!</div>
 
       <div className="responseStatus__text">{drawerText}</div>
+
+      {button ? button : null}
     </div>
   );
 }
