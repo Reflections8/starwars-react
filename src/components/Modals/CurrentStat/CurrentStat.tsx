@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import { useModal } from "../../../context/ModalContext";
 
-import footerBtnBg from "./img/footerButtonBg.svg";
-
-import damageIcon from "./img/broken-skull.svg";
 import chargeIcon from "./img/battery.svg";
+import damageIcon from "./img/broken-skull.svg";
 import reloadIcon from "./img/reload.svg";
 
-import "./styles/CurrentStat.css";
+import { useTranslation } from "react-i18next";
+import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
 import {
   Blaster,
   BlastersData,
   CharactersData,
   useUserData,
 } from "../../../UserDataService.tsx";
-import { useTranslation } from "react-i18next";
-import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
+import "./styles/CurrentStat.css";
 
 export function CurrentStat() {
   const { t } = useTranslation();
