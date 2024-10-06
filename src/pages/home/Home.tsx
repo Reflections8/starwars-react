@@ -222,6 +222,9 @@ export function Home() {
       localStorage.setItem("language", "ru");
     }
 
+    if (!localStorage.getItem("sound_setting")) {
+      localStorage.setItem("sound_setting", "on");
+    }
     if (isExpanded != undefined && !isExpanded) expand();
   }, []);
 

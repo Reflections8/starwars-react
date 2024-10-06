@@ -1,12 +1,13 @@
 import { ReactNode, createContext, useContext, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { gameStates, useBattleships } from "../BattleshipsContext";
 import { useDrawer } from "../DrawerContext";
 import { useModal } from "../ModalContext";
-import { useLocation, useNavigate } from "react-router-dom";
 
-import { Gameboard as ArrangementBoard } from "../../components/Modals/ShipsArrangement2/gameboard";
-import { useSound } from "./SoundContext";
 import { useTranslation } from "react-i18next";
+import { Gameboard as ArrangementBoard } from "../../components/Modals/ShipsArrangement2/gameboard";
+import { useUserData } from "../../UserDataService";
+import { useSound } from "./SoundContext";
 
 type SomethingProviderProps = {
   children: ReactNode;
@@ -45,6 +46,7 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   const { startBackgroundAudio } = useSound();
   const location = useLocation();
   const navigate = useNavigate();
+  const { soundSetting } = useUserData();
 
   useEffect(() => {
     //  if (!approveGame) closeDrawer!();
@@ -92,7 +94,9 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
     }
     if (state > 4) {
       setGameState(gameStates.PLAYING);
-      startBackgroundAudio();
+      if (soundSetting) {
+        startBackgroundAudio();
+      }
       setTimeout(() => {
         setMyBoardState(updateBoardState(data.field_view.player_board, true));
         setEnemyBoardState(
@@ -101,7 +105,9 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
         closeModal!();
       }, 100);
       setTimeout(() => {
-        startBackgroundAudio();
+        if (soundSetting) {
+          startBackgroundAudio();
+        }
       }, 500);
     }
 
@@ -191,7 +197,9 @@ export function SomethingProvider({ children }: SomethingProviderProps) {
   }, [gameState]);
 
   return (
-    <SomethingContext.Provider value={{ handshakeTimer, betAmount }}>
+    <SomethingContext.Provider
+      value={{ handshakeTimer, betAmount, soundSetting }}
+    >
       {children}
     </SomethingContext.Provider>
   );

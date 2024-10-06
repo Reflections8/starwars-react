@@ -123,7 +123,13 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [credits, setCredits] = useState(0);
   const [tokens, setTokens] = useState(0);
   const [tons, setTons] = useState(0);
-  const [soundSetting, setSoundSetting] = useState(true);
+  const [soundSetting, setSoundSetting] = useState(
+    localStorage.getItem("sound_setting") === "on"
+      ? true
+      : localStorage.getItem("sound_setting") === "off"
+        ? false
+        : true
+  );
   // @ts-ignore
   const [userMetrics, setUserMetrics] = useState<UserMetrics>({
     total_deposited: 0,
@@ -314,8 +320,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
             };
 
             refreshUserInfo();
-          }
-          else {
+          } else {
             clearInterval(interval);
           }
         }, 20000);

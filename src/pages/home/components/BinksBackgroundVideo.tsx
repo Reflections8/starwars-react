@@ -32,7 +32,7 @@ export function BinksBackgroundVideo({
   const videoRef2 = useRef<HTMLVideoElement>(null);
   const videoRef3 = useRef<HTMLVideoElement>(null);
 
-  const { characters } = useUserData();
+  const { characters, soundSetting } = useUserData();
   const { i18n } = useTranslation();
   const { openModal } = useModal();
 
@@ -78,6 +78,28 @@ export function BinksBackgroundVideo({
     }
   }
 
+  function muteVideos() {
+    const video1 = videoRef1.current;
+    const video2 = videoRef2.current;
+    const video3 = videoRef3.current;
+    if (video1 && video2 && video3) {
+      video1.muted = true;
+      video2.muted = true;
+      video3.muted = true;
+    }
+  }
+
+  function unmuteVideos() {
+    const video1 = videoRef1.current;
+    const video2 = videoRef2.current;
+    const video3 = videoRef3.current;
+    if (video1 && video2 && video3) {
+      video1.muted = false;
+      video2.muted = false;
+      video3.muted = false;
+    }
+  }
+
   function stopAllVideos() {
     stopVideo("1");
     stopVideo("2");
@@ -102,6 +124,20 @@ export function BinksBackgroundVideo({
       stopVideo("2");
     }
   }, [activeVideo]);
+
+  useEffect(() => {
+    if (soundSetting) unmuteVideos();
+    if (!soundSetting) muteVideos();
+  }, [
+    soundSetting,
+    readyState,
+    activeVideo,
+    i18n.language,
+    repeatCount,
+    videoRef1.current,
+    videoRef2.current,
+    videoRef3.current,
+  ]);
 
   // Чтобы видео не воспроизводилось при маунте и появлении ref.current
   useEffect(() => {
@@ -141,6 +177,8 @@ export function BinksBackgroundVideo({
         video3.muted = false;
       }
     }
+
+    if (!soundSetting) muteVideos();
   }, [readyState, activeVideo, i18n.language, repeatCount]);
 
   useEffect(() => {

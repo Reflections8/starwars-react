@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ReactNode, createContext, useContext, useRef } from "react";
+import { useSomething } from "./SomethingContext";
 
 type SoundProviderProps = {
   children: ReactNode;
@@ -15,6 +16,14 @@ export function SoundProvider({ children }: SoundProviderProps) {
   const shotMissAudioRef = useRef(null);
   const shotKilledAudioRef = useRef(null);
   const shotAudioRef = useRef(null);
+  const { soundSetting } = useSomething();
+  //   const [soundSetting] = useState(
+  //     localStorage.getItem("sound_setting") === "on"
+  //       ? true
+  //       : localStorage.getItem("sound_setting") === "off"
+  //       ? false
+  //       : true
+  //   );
 
   const playBeamSound = () => {
     if (!shotAudioRef.current) return;
@@ -77,11 +86,24 @@ export function SoundProvider({ children }: SoundProviderProps) {
   };
 
   const blastIt = (isHit: string) => {
-    playBeamSound();
+    const sound = localStorage.getItem("sound_setting");
+    const soundResult = sound === "off" ? false : true;
+
+    console.log("blastIt");
+    console.log({ soundSetting });
+    if (soundResult) {
+      playBeamSound();
+    } else {
+      return;
+    }
     setTimeout(() => {
-      if (isHit === "success") playSuccessShotAudio();
-      else if (isHit === "fail") playMissedShotAudio();
-      else if (isHit === "dead") playKilledShopAudio();
+      if (soundResult) {
+        if (isHit === "success") playSuccessShotAudio();
+        else if (isHit === "fail") playMissedShotAudio();
+        else if (isHit === "dead") playKilledShopAudio();
+      } else {
+        return;
+      }
     }, 200);
   };
 

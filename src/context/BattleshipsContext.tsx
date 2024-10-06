@@ -25,11 +25,6 @@ type BattleshipsProviderProps = {
 
 type BattleshipsContextProps = any;
 
-let jwtToUse = localStorage.getItem("auth_jwt") || "";
-if (document.location.href.includes("5174"))
-  jwtToUse =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
-
 const BattleshipsContext = createContext<Partial<BattleshipsContextProps>>({});
 
 export const gameStates = {
@@ -60,7 +55,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [approveGame, setApproveGame] = useState<any>(null);
   const [gameState, setGameState] = useState(gameStates.NOT_STARTED);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [jwt] = useState<string>(jwtToUse);
+  const [jwt] = useState<string>(localStorage.getItem("auth_jwt") || "");
   const [isInitial, setIsInitial] = useState(true);
   const [roomName, setRoomName] = useState("");
   const [opponentName, setOpponentName] = useState("");

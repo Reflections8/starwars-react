@@ -36,7 +36,6 @@ export function Rivals() {
     setCreatedRoom,
     sendMessage,
     setRoomName,
-    me,
   } = useBattleships();
 
   async function createRoom() {
@@ -238,9 +237,7 @@ export function Rivals() {
                       setRoomName(item?.creator?.username);
                     }}
                     size="small"
-                    className={`rivals__list-item-end-btn ${
-                      item.creator.username === me ? "halfTransparent" : ""
-                    }`}
+                    className={`rivals__list-item-end-btn `}
                     text={t("battleshipsModal.rivalsTab.duel")}
                   />
                 </div>

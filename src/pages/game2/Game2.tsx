@@ -18,21 +18,16 @@ import { useNavigate } from "react-router-dom";
 import { useSound } from "../../context/SeaContexts";
 //@ts-ignore
 import { enableDragDropTouch } from "../../mobileDrag";
+import { LoadingModal } from "../../ui/Modal/LoadingModal";
 import { useUserData } from "../../UserDataService";
 import audioBg from "./audio/game.mp3";
 import audioKilledShot from "./audio/shot-killed.mp3";
 import audioMissedShot from "./audio/shot-missed.mp3";
 import audioSuccessShot from "./audio/shot-success.mp3";
 import audioShot from "./audio/shot.mp3";
-import { LoadingModal } from "../../ui/Modal/LoadingModal";
 enableDragDropTouch();
 
 const timerSeconds = 30;
-
-let jwtToUse = localStorage.getItem("auth_jwt") || "";
-if (document.location.href.includes("5174"))
-  jwtToUse =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
 
 export function Game2() {
   const { t } = useTranslation();
@@ -62,7 +57,7 @@ export function Game2() {
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    if (!userDataJwt && !jwtToUse) {
+    if (!userDataJwt) {
       closeModal!();
       navigate("/");
       closeModal!();
