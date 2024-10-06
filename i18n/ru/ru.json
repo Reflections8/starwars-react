@@ -364,6 +364,6 @@
     }
   },
   "audio": {
-    "vader": "https://game.akronix.io/audio/vader_speak_ru.wav"
+    "vader": "ru"
   }
 }

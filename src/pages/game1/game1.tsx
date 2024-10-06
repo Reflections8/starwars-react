@@ -21,6 +21,22 @@ import {
 import "./styles/game1.css";
 import { useModal } from "../../context/ModalContext.tsx";
 
+import bgSound from "../game1/audio/bg.mp3";
+import vader_breath from "../game1/audio/vader_breath.mp3";
+import vader_speak_en from "../game1/audio/vader_speak_en.wav";
+import vader_speak_ru from "../game1/audio/vader_speak_ru.wav";
+import vader_slice_bullet_1 from "../game1/audio/vader_slice_bullet_1.mp3";
+import vader_slice_bullet_2 from "../game1/audio/vader_slice_bullet_2.wav";
+import vader_slice_bullet_3 from "../game1/audio/vader_slice_bullet_3.mp3";
+import vader_slice_bullet_4 from "../game1/audio/vader_slice_bullet_4.wav";
+
+import sword_sway_1 from "../game1/audio/sword_sway_1.mp3";
+import sword_sway_2 from "../game1/audio/sword_sway_2.mp3";
+import sword_unholster from "../game1/audio/sword_unholster.mp3";
+
+import gun_holster from "../game1/audio/gun_holster.mp3";
+
+
 export function Game1() {
   const { jwt, soundSetting } = useUserData();
   const { t } = useTranslation();
@@ -205,15 +221,25 @@ export function Game1() {
       switch (data) {
         case "vader_speak": {
           if (!vaderTalkAudioRef.current) return;
-          vaderTalkAudioRef.current.src = t("audio.vader");
+          let lang = t("audio.vader");
+          const options_en = [
+            vader_speak_en,
+          ];
+
+          const options_ru = [
+            vader_speak_ru
+          ];
+
+          const randomIndex = Math.floor(Math.random() * options_en.length);
+
+          vaderTalkAudioRef.current.src = lang == "en" ? options_en[randomIndex] : options_ru[randomIndex];
           vaderTalkAudioRef.current.volume = 1;
           vaderTalkAudioRef.current.play();
           break;
         }
         case "vader_breath": {
           if (!vaderTalkAudioRef.current) return;
-          vaderTalkAudioRef.current.src =
-            "https://game.akronix.io/audio/vader_breath.mp3";
+          vaderTalkAudioRef.current.src = vader_breath;
           vaderTalkAudioRef.current.volume = 0.4;
           vaderTalkAudioRef.current.play();
           break;
@@ -221,10 +247,10 @@ export function Game1() {
         case "vader_slice_bullet": {
           if (!vaderTalkAudioRef.current) return;
           const options = [
-            "https://game.akronix.io/audio/vader_slice_bullet_1.mp3",
-            "https://game.akronix.io/audio/vader_slice_bullet_3.mp3",
-            "https://game.akronix.io/audio/vader_slice_bullet_2.wav",
-            "https://game.akronix.io/audio/vader_slice_bullet_4.wav",
+            vader_slice_bullet_1,
+            vader_slice_bullet_2,
+            vader_slice_bullet_3,
+            vader_slice_bullet_4,
           ];
           const randomIndex = Math.floor(Math.random() * options.length);
           vaderTalkAudioRef.current.src = options[randomIndex];
@@ -234,8 +260,8 @@ export function Game1() {
           if (!swordAudioRef.current) return;
 
           const options1 = [
-            "https://game.akronix.io/audio/sword_sway_1.mp3",
-            "https://game.akronix.io/audio/sword_sway_2.mp3",
+            sword_sway_1,
+            sword_sway_2,
           ];
           const randomIndex1 = Math.floor(Math.random() * options1.length);
           swordAudioRef.current.src = options1[randomIndex1];
@@ -245,8 +271,7 @@ export function Game1() {
         }
         case "sword_unholster": {
           if (!swordAudioRef.current) return;
-          swordAudioRef.current.src =
-            "https://game.akronix.io/audio/sword_unholster.mp3";
+          swordAudioRef.current.src = sword_unholster;
           swordAudioRef.current.volume = 0.3;
           swordAudioRef.current.play();
           break;
@@ -254,8 +279,8 @@ export function Game1() {
         case "sword_sway": {
           if (!swordAudioRef.current) return;
           const options = [
-            "https://game.akronix.io/audio/sword_sway_1.mp3",
-            "https://game.akronix.io/audio/sword_sway_2.mp3",
+            sword_sway_1,
+            sword_sway_2,
           ];
           const randomIndex = Math.floor(Math.random() * options.length);
           swordAudioRef.current.src = options[randomIndex];
@@ -265,8 +290,7 @@ export function Game1() {
         }
         case "gun_holster": {
           if (!playerAudioRef.current) return;
-          playerAudioRef.current.src =
-            "https://game.akronix.io/audio/gun_holster.mp3";
+          playerAudioRef.current.src = gun_holster;
           playerAudioRef.current.volume = 0.5;
           playerAudioRef.current.play();
           break;
@@ -346,11 +370,7 @@ export function Game1() {
       <div className="topLinearGradient" />
       <div className="bottomLinearGradient" />
 
-      <audio
-        ref={bgRef}
-        src="https://game.akronix.io/audio/bg.mp3"
-        autoFocus={true}
-      />
+      <audio ref={bgRef} src={bgSound} autoFocus={true} />
       <audio ref={vaderTalkAudioRef} autoFocus={true} />
       <audio ref={swordAudioRef} autoFocus={true} />
       <audio ref={playerAudioRef} autoFocus={true} />
