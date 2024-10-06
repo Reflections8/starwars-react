@@ -1,0 +1,17 @@
+.repair {
+  margin-top: 100px;
+}
+
+.repair__textBlock {
+  position: relative;
+  z-index: 1;
+  padding: 0 20px;
+  text-align: center;
+  color: #e1f0ff;
+  font-size: 14px;
+}
+
+.repair__button {
+  width: fit-content;
+  margin: 0 auto;
+}

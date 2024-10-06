@@ -42,6 +42,8 @@ import { BinksDone } from "../../components/Modals/Binks/BinksDone";
 import { BookOpenedIcon } from "../../icons/Modals/BookOpened";
 import { WalletNew } from "../../components/Modals/WalletNew/WalletNew";
 import { PlayerNew } from "../../components/Modals/PlayerNew/PlayerNew";
+import { Repair } from "../../components/Modals/Repair/Repair";
+import { Heal } from "../../components/Modals/Heal/Heal";
 
 type ModalProps = {
   isOpen: boolean;
@@ -150,6 +152,16 @@ export function Modal({ isOpen }: ModalProps) {
       icon: <SeaBattleIcon />,
       component: <SeaBattleRules />,
     },
+    repair: {
+      title: t("repairModal.title"),
+      icon: <StoreIcon />,
+      component: <Repair />,
+    },
+    heal: {
+      title: t("healModal.title"),
+      icon: <StoreIcon />,
+      component: <Heal />,
+    },
   };
 
   type ModalContentKeys = keyof typeof modalContentType;
@@ -249,7 +261,10 @@ export function Modal({ isOpen }: ModalProps) {
               />
 
               <div className="modal__body-top">
-                {modalType === "binks" || modalType === "binksDone" ? null : (
+                {modalType === "binks" ||
+                modalType === "binksDone" ||
+                modalType === "repair" ||
+                modalType === "heal" ? null : (
                   <button
                     className="modal__body-top-closeBtn"
                     onClick={() => {

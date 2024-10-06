@@ -365,5 +365,17 @@
   },
   "audio": {
     "vader": "en"
+  },
+  "repairModal": {
+    "title": "Weapon repair",
+    "text1": "Durability of your weapon",
+    "text2": "ended. To use the weapon again you need to repair it",
+    "buttonText": "Repair"
+  },
+  "healModal": {
+    "title": "Heal a character",
+    "text1": "Your character's health",
+    "text2": "has dried up. To continue playing you need to heal him",
+    "buttonText": "Heal"
   }
 }
