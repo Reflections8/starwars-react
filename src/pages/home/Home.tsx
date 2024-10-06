@@ -133,6 +133,22 @@ export function Home() {
   //     openModal!("welcome");
   //   }, []);
 
+  const unityBgMusicRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const audioRef = unityBgMusicRef.current;
+    if (audioRef) {
+      if (activeVideo === null) {
+        audioRef.play();
+        return;
+      }
+
+      if (activeVideo) {
+        audioRef.pause();
+      }
+    }
+  }, [activeVideo]);
+
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
     //  console.log({
@@ -294,20 +310,23 @@ export function Home() {
       <MainLinks />
 
       {jwt && tonConnectUI.connected && characters.length ? (
-        <iframe
-          ref={iframeRef}
-          src="https://purpleguy.dev/newroot/unity_main/"
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 0,
-            width: "100%",
-            height: "100%",
-            border: "none",
-          }}
-          id="mainWrapper"
-          className="mainWrapper"
-        ></iframe>
+        <>
+          <iframe
+            ref={iframeRef}
+            src="https://purpleguy.dev/newroot/unity_main/"
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+              border: "none",
+            }}
+            id="mainWrapper"
+            className="mainWrapper"
+          ></iframe>
+          <audio ref={unityBgMusicRef} src={"#"} autoFocus={true} />
+        </>
       ) : null}
 
       <Header

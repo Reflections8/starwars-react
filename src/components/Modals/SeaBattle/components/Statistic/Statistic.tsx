@@ -104,8 +104,8 @@ export function Statistic() {
       minusIcon: creditMinus,
       totalIcon: credit,
     },
-    akronix: {
-      title: "akronix",
+    akron: {
+      title: "akron",
       plusIcon: akrPlus,
       minusIcon: akrMinus,
       totalIcon: akr,
