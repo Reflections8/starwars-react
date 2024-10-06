@@ -29,7 +29,7 @@ export function BattleshipsWon() {
           {t("battleships.yourWinnings")}:
         </div>
         <div className="battleshipsWon__text-value">
-          {betAmount * 1.95 || 0}{" "}
+          {betAmount * 1.9 || 0}{" "}
           {betTypeObject[String(betType) as keyof typeof betTypeObject]}
         </div>
       </div>
