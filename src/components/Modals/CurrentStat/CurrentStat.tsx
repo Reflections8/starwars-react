@@ -17,7 +17,7 @@ import "./styles/CurrentStat.css";
 
 export function CurrentStat() {
   const { t } = useTranslation();
-  const { activeCharacter, blasters, jwt } = useUserData();
+  const { activeCharacter, blasters, jwt, setGame1State } = useUserData();
   const [damage, setDamage] = useState(0);
   const [damageUpgrade, setDamageUpgrade] = useState(0);
 
@@ -180,6 +180,8 @@ export function CurrentStat() {
         className="currentStat__btn"
         text="OK"
         callback={() => {
+          // @ts-ignore
+          setGame1State("PRIVET IS KONTESKTA");
           closeModal!();
         }}
       />

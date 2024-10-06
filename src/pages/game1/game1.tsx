@@ -36,9 +36,8 @@ import sword_unholster from "../game1/audio/sword_unholster.mp3";
 
 import gun_holster from "../game1/audio/gun_holster.mp3";
 
-
 export function Game1() {
-  const { jwt, soundSetting } = useUserData();
+  const { jwt, soundSetting, game1State } = useUserData();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setIsLoading } = useLoader();
@@ -60,6 +59,10 @@ export function Game1() {
   const [publicKey, setPublicKey] = useState("");
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
   const { sendMessage, lastMessage } = useWebSocket(VADER_SOCKET, {});
+
+  useEffect(() => {
+    console.log({ game1State });
+  }, [game1State]);
 
   useEffect(() => {
     setIsLoading!(true);
@@ -222,17 +225,14 @@ export function Game1() {
         case "vader_speak": {
           if (!vaderTalkAudioRef.current) return;
           let lang = t("audio.vader");
-          const options_en = [
-            vader_speak_en,
-          ];
+          const options_en = [vader_speak_en];
 
-          const options_ru = [
-            vader_speak_ru
-          ];
+          const options_ru = [vader_speak_ru];
 
           const randomIndex = Math.floor(Math.random() * options_en.length);
 
-          vaderTalkAudioRef.current.src = lang == "en" ? options_en[randomIndex] : options_ru[randomIndex];
+          vaderTalkAudioRef.current.src =
+            lang == "en" ? options_en[randomIndex] : options_ru[randomIndex];
           vaderTalkAudioRef.current.volume = 1;
           vaderTalkAudioRef.current.play();
           break;
@@ -259,10 +259,7 @@ export function Game1() {
 
           if (!swordAudioRef.current) return;
 
-          const options1 = [
-            sword_sway_1,
-            sword_sway_2,
-          ];
+          const options1 = [sword_sway_1, sword_sway_2];
           const randomIndex1 = Math.floor(Math.random() * options1.length);
           swordAudioRef.current.src = options1[randomIndex1];
           swordAudioRef.current.volume = 0.8;
@@ -278,10 +275,7 @@ export function Game1() {
         }
         case "sword_sway": {
           if (!swordAudioRef.current) return;
-          const options = [
-            sword_sway_1,
-            sword_sway_2,
-          ];
+          const options = [sword_sway_1, sword_sway_2];
           const randomIndex = Math.floor(Math.random() * options.length);
           swordAudioRef.current.src = options[randomIndex];
           swordAudioRef.current.volume = 0.3;

@@ -52,6 +52,8 @@ interface UserDataContextType {
   setSoundSetting: (value: boolean) => void;
   updateUserInfo: (value: string) => void;
   resetUserData: () => void;
+  game1State: any;
+  setGame1State: () => void;
 }
 
 const defaultValue: UserDataContextType = {
@@ -104,6 +106,8 @@ const defaultValue: UserDataContextType = {
   setSoundSetting: () => {},
   updateUserInfo: () => {},
   resetUserData: () => {},
+  game1State: null,
+  setGame1State: () => {},
 };
 
 const UserDataContext = createContext<UserDataContextType>(defaultValue);
@@ -127,8 +131,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     localStorage.getItem("sound_setting") === "on"
       ? true
       : localStorage.getItem("sound_setting") === "off"
-        ? false
-        : true
+      ? false
+      : true
   );
   // @ts-ignore
   const [userMetrics, setUserMetrics] = useState<UserMetrics>({
@@ -532,6 +536,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     setRefInfo(null);
   };
 
+  const [game1State, setGame1State] = useState(null);
+
   return (
     <UserDataContext.Provider
       value={{
@@ -564,6 +570,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         updateUserInfo,
         resetUserData,
         userDataDefined,
+        game1State,
+        // @ts-ignore
+        setGame1State,
       }}
     >
       {children}
