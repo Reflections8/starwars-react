@@ -24,6 +24,7 @@ import audioKilledShot from "./audio/shot-killed.mp3";
 import audioMissedShot from "./audio/shot-missed.mp3";
 import audioSuccessShot from "./audio/shot-success.mp3";
 import audioShot from "./audio/shot.mp3";
+import { LoadingModal } from "../../ui/Modal/LoadingModal";
 enableDragDropTouch();
 
 const timerSeconds = 30;
@@ -59,6 +60,7 @@ export function Game2() {
     setHandshakeTimer,
   } = useBattleships();
 
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     if (!userDataJwt && !jwtToUse) {
       closeModal!();
@@ -67,6 +69,7 @@ export function Game2() {
       return;
     }
     openModal!("seaBattle");
+    setIsLoading(false);
   }, [userDataJwt]);
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
@@ -97,60 +100,86 @@ export function Game2() {
   }, [handshakeTimer]);
 
   return (
-    <div className="game2">
-      {/* AUDIO */}
-      <audio
-        ref={audioBgRef}
-        src={audioBg}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotAudioRef}
-        src={audioShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotSuccessAudioRef}
-        src={audioSuccessShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotMissAudioRef}
-        src={audioMissedShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotKilledAudioRef}
-        src={audioKilledShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <div className="game2__gradientTop"></div>
-      <div className="game2__gradientBottom"></div>
-      <GameHeader myTurn={myTurn} />
-      <EnemyShips ships={enemyBoard.getShipsRemain()} />
-      <GameFields
-        {...{
-          timerValue,
-          enemyBoard,
-          userBoard,
-          myTurn,
-        }}
-      />
-      <GameBet />
+    <>
+      {isLoading ? (
+        <LoadingModal isOpen={isLoading} />
+      ) : (
+        <div className="game2">
+          {/* AUDIO */}
+          <audio
+            ref={audioBgRef}
+            src={audioBg}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotAudioRef}
+            src={audioShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotSuccessAudioRef}
+            src={audioSuccessShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotMissAudioRef}
+            src={audioMissedShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotKilledAudioRef}
+            src={audioKilledShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <div className="game2__gradientTop"></div>
+          <div className="game2__gradientBottom"></div>
+          <GameHeader myTurn={myTurn} />
+          <EnemyShips ships={enemyBoard.getShipsRemain()} />
+          <GameFields
+            {...{
+              timerValue,
+              enemyBoard,
+              userBoard,
+              myTurn,
+            }}
+          />
+          <GameBet />
 
-      <Header
-        position={"bottom"}
-        leftIcon={<RulesIcon />}
-        leftText={t("battleships.rules")}
-        leftAction={() => {
-          openModal!("rules");
-        }}
-        rightIcon={<LeaveIcon />}
-        rightText={t("battleships.giveUp")}
-        rightAction={() => {
-          openDrawer!("giveUp");
-        }}
-      />
-    </div>
+          <Header
+            position={"bottom"}
+            leftIcon={<RulesIcon />}
+            leftText={t("battleships.rules")}
+            leftAction={() => {
+              openModal!("rules");
+            }}
+            rightIcon={<LeaveIcon />}
+            rightText={t("battleships.giveUp")}
+            rightAction={() => {
+              openDrawer!("giveUp");
+            }}
+          />
+        </div>
+      )}
+    </>
   );
 }
