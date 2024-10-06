@@ -215,7 +215,7 @@ export function Home() {
       // updateJwt(null);
       // setCanQuit(false);
     }
-  }, [jwt, tonConnectUI.connected]);
+  }, [jwt, tonConnectUI.connected, userDataDefined]);
 
   useEffect(() => {
     if (!localStorage.getItem("language")) {
