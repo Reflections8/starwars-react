@@ -103,6 +103,36 @@ export function ChooseGame() {
           text={t("chooseGameModal.play")}
           size="small"
           callback={() => {
+            if (characters.length == 0) {
+              openDrawer!(
+                "rejected",
+                "bottom",
+                t("chooseGameModal.nonPlayableCh"),
+                <CuttedButton
+                  text={t("shopModal.title")}
+                  callback={() => {
+                    closeDrawer!();
+                    openModal!("shop");
+                  }}
+                />
+              );
+              return;
+            }
+            if (blasters.length == 0) {
+              openDrawer!(
+                "rejected",
+                "bottom",
+                t("chooseGameModal.nonPlayableBl"),
+                <CuttedButton
+                  text={t("shopModal.title")}
+                  callback={() => {
+                    closeDrawer!();
+                    openModal!("shop");
+                  }}
+                />
+              );
+              return;
+            }
             openGame("/game2");
           }}
         />
