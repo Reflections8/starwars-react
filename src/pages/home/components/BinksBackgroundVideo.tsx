@@ -367,6 +367,7 @@ export function BinksBackgroundVideo({
         // @ts-ignore
         src={videoWithLocale[i18n.language].video1}
         muted
+        loop
         preload="auto"
         playsInline
       ></video>
