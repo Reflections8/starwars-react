@@ -42,7 +42,7 @@ export function MainLinks() {
               return;
             }
             // @ts-ignore
-            openModal("walletNew");
+            openModal("wallet");
           }}
         >
           <img

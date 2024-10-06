@@ -36,11 +36,11 @@ export function Shop() {
       value: "WEAPON",
       component: <Weapon />,
     },
-    {
-      label: t("shopModal.storeTab.title"),
-      value: "STORE",
-      component: <Store />,
-    },
+   //  {
+   //    label: t("shopModal.storeTab.title"),
+   //    value: "STORE",
+   //    component: <Store />,
+   //  },
   ];
 
   const { activePillProp } = useModal();
