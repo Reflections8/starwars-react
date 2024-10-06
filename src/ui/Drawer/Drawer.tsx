@@ -158,12 +158,20 @@ function Menu() {
       <div className="menu__text">{t("quickMenu.title")}</div>
 
       <div className="menu__list">
-        <a href="https://t.me/akronix_p2e" className="menu__list-item">
+        <a
+          href="https://t.me/akronix_p2e"
+          className="menu__list-item"
+          target="_blank"
+        >
           <img src={telegramIcon} alt="icon" className="menu__list-item-icon" />
           <div className="menu__list-item-text">{t("quickMenu.telegram")}</div>
         </a>
 
-        <a href="https://x.com/akronix_p2e" className="menu__list-item">
+        <a
+          href="https://x.com/akronix_p2e"
+          className="menu__list-item"
+          target="_blank"
+        >
           <img src={xIcon} alt="icon" className="menu__list-item-icon" />
           <div className="menu__list-item-text">{t("quickMenu.xTwitter")}</div>
         </a>
@@ -171,6 +179,7 @@ function Menu() {
         <a
           href="https://youtube.com/@akronix_legacy"
           className="menu__list-item"
+          target="_blank"
         >
           <img src={youtubeIcon} alt="icon" className="menu__list-item-icon" />
           <div className="menu__list-item-text">{t("quickMenu.youtube")}</div>
