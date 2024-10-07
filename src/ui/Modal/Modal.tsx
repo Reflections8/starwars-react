@@ -172,6 +172,8 @@ export function Modal({ isOpen }: ModalProps) {
     "battleshipsWon",
     "battleshipsLost",
   ];
+
+  const nonePointerEventsModals: ModalContentKeys[] = ["currentStat"];
   const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement2"];
 
   const navigate = useNavigate();
@@ -179,6 +181,7 @@ export function Modal({ isOpen }: ModalProps) {
 
   const shortModalBody = shortModals.includes(modalType!);
   const fullscreen = fullscreenModals.includes(modalType!);
+  const nonePointer = nonePointerEventsModals.includes(modalType!);
 
   return (
     <>
@@ -187,6 +190,7 @@ export function Modal({ isOpen }: ModalProps) {
           className={`fullscreenModalBg ${modalType} ${
             !isOpen ? "fullscreenModalBg--Hidden" : ""
           }`}
+          style={nonePointer ? { pointerEvents: "none" } : {}}
         >
           <div className="fullscreenModalBg__color"></div>
           {/* <img src={bgImg} alt="bg" className="fullscreenModalBg__img" /> */}

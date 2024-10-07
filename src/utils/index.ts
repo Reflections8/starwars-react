@@ -19,7 +19,7 @@ export function formatWalletString(walletId: string) {
   }
 
   const firstPart = walletId.slice(0, 7);
-  const lastPart = walletId.slice(-11);
+  const lastPart = walletId.slice(-8);
 
   return `${firstPart}...${lastPart}`;
 }

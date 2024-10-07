@@ -84,7 +84,11 @@ export function Settings() {
 
   useEffect(() => {
     if (characters) {
-      const options: SelectOptionType[] = characters.map((character) => ({
+      const options: SelectOptionType[] = characters.sort((a, b) => {
+        if (a.type < b.type) return -1;
+        if (a.type > b.type) return 1;
+        return 0;
+      }).map((character) => ({
         label: `${CharactersData[character.type - 1].name}`,
         value: character.id.toString(),
       }));

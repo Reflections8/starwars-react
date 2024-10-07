@@ -63,38 +63,48 @@ export function StoreCardWeaponWrapper() {
   const weaponRates = [1.25, 2, 3.3];
 
   useEffect(() => {
-    console.log("MOUNT");
-    const newWeapons = blasters.map((blaster) => {
-      const level =
-        1 +
-        blaster.charge_level +
-        blaster.damage_level +
-        blaster.max_charge_level;
+    const newWeapons = blasters
+      .sort((a, b) => {
+        if (a.level < b.level) return -1;
+        if (a.level > b.level) return 1;
+        return 0;
+      })
+      .map((blaster) => {
+        const level =
+          1 +
+          blaster.charge_level +
+          blaster.damage_level +
+          blaster.max_charge_level;
 
-      const earningsPercentage = userMetrics.earned / userMetrics.earn_required;
+        const earningsPercentage =
+          userMetrics.earned / userMetrics.earn_required;
 
-      return {
-        title: BlastersData[blaster.level - 1].name,
-        rarity: BlastersData[blaster.level - 1].rarity,
-        level: level,
-        needRestoration: blaster.usage <= 0,
-        additionalIncomeCurrent:
-          blaster.level == 1
-            ? 0
-            : BlastersData[blaster.level - 1].price * 1.5 * earningsPercentage,
-        additionalIncomeMax:
-          blaster.level == 1 ? 0 : BlastersData[blaster.level - 1].price * 1.5,
-        damage: blaster.damage,
-        charge: blaster.charge,
-        max_charge: blaster.max_charge,
-        reload: blaster.charge_step,
-        rateOfFire: weaponRates[blaster.level - 1],
-        durabilityCurrent: blaster.usage,
-        durabilityMax: blaster.max_usage,
-        imgSrc: BlastersData[blaster.level - 1].image,
-        blasterLevel: blaster.level,
-      };
-    });
+        return {
+          title: BlastersData[blaster.level - 1].name,
+          rarity: BlastersData[blaster.level - 1].rarity,
+          level: level,
+          needRestoration: blaster.usage <= 0,
+          additionalIncomeCurrent:
+            blaster.level == 1
+              ? 0
+              : BlastersData[blaster.level - 1].price *
+                1.5 *
+                earningsPercentage,
+          additionalIncomeMax:
+            blaster.level == 1
+              ? 0
+              : BlastersData[blaster.level - 1].price * 1.5,
+          damage: blaster.damage,
+          charge: blaster.charge,
+          max_charge: blaster.max_charge,
+          reload: blaster.charge_step,
+          rateOfFire: weaponRates[blaster.level - 1],
+          durabilityCurrent: blaster.usage,
+          durabilityMax: blaster.max_usage,
+          imgSrc: BlastersData[blaster.level - 1].image,
+          blasterLevel: blaster.level,
+        };
+      });
 
     setWeapons(newWeapons);
   }, [blasters, prices.third_blaster_repair, prices.second_blaster_repair]);
@@ -145,7 +155,7 @@ export function StoreCardCharacterWrapper() {
   const { t } = useTranslation();
   const { openModal } = useModal();
 
-  const [storeModels, setStoreModels] = useState([]);
+  const [storeModels, setStoreModels] = useState<StoreModelType[]>([]);
 
   useEffect(() => {
     const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
@@ -178,11 +188,6 @@ export function StoreCardCharacterWrapper() {
       const strengthUpgrade = !needRestoration ? blaster.damage : -1;
       const chargeUpgrade = !needRestoration ? blaster.max_charge : -1;
 
-      const maxHealth = CharactersData[character.type - 1].price * 1000;
-      const health = Math.round(
-        maxHealth - (character.earned / character.earn_required) * maxHealth
-      );
-
       return {
         title: "-" + CharactersData[character.type - 1].name + "-",
         needRestoration: needRestoration,
@@ -193,27 +198,25 @@ export function StoreCardCharacterWrapper() {
         reloadUpgrade: reloadUpgrade,
         charge: charge,
         chargeUpgrade: chargeUpgrade,
-        // @ts-ignore
-        healthCurrent: ((health <= 0 ? 0 : health) / 1000)
-          .toFixed(3)
-          .toString(),
-        // @ts-ignore
-        healthMax: CharactersData[character.type - 1].price
-          .toFixed(3)
-          .toString(),
+        healthCurrent: character.earn_required - character.earned,
+        healthMax: character.earn_required,
         imgSrc: CharactersData[character.type - 1].image,
         type: character.type,
       };
     };
 
     const newModels = characters
+      .sort((a, b) => {
+        if (a.type < b.type) return -1;
+        if (a.type > b.type) return 1;
+        return 0;
+      })
       .map((character) => {
         const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
         return createModel(character, highestLevelBlaster);
       })
       .filter((model) => model !== null);
 
-    // @ts-ignore
     setStoreModels(newModels);
   }, [characters, blasters]);
 

@@ -17,7 +17,7 @@ import "./styles/CurrentStat.css";
 
 export function CurrentStat() {
   const { t } = useTranslation();
-  const { activeCharacter, blasters, jwt, setGame1State } = useUserData();
+  const { activeCharacter, blasters, jwt, game1State } = useUserData();
   const [damage, setDamage] = useState(0);
   const [damageUpgrade, setDamageUpgrade] = useState(0);
 
@@ -34,6 +34,10 @@ export function CurrentStat() {
       return blaster.level > (highest.level || 0) ? blaster : highest;
     });
   };
+
+  useEffect(() => {
+    if (game1State == true) closeModal!();
+  }, [game1State]);
 
   useEffect(() => {
     if (!activeCharacter || !blasters || blasters.length == 0) return;
@@ -176,15 +180,7 @@ export function CurrentStat() {
         <img src={footerBtnBg} alt="bg" className="currentStat__btn-bg" />
       </div> */}
 
-      <CuttedButton
-        className="currentStat__btn"
-        text="OK"
-        callback={() => {
-          // @ts-ignore
-          setGame1State("PRIVET IS KONTESKTA");
-          closeModal!();
-        }}
-      />
+      <CuttedButton className="currentStat__btn" text="OK" />
     </div>
   );
 }
