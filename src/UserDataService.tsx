@@ -20,7 +20,6 @@ import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
 import { useTonConnectUI } from "@tonconnect/ui-react";
-import { useLocation } from "react-router-dom";
 
 interface UserDataContextType {
   userDataDefined: boolean;
@@ -153,7 +152,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [healingCharacter, setHealingCharacter] = useState<Character | null>(
     null
   );
-  const location = useLocation();
 
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
   const [higherBlaster, setHigherBlaster] = useState<Blaster | null>(null);
@@ -231,9 +229,10 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const auth = async (jwt: string) => {
     try {
-      const searchParams = new URLSearchParams(window.location.search);
+      const searchParams = new URLSearchParams(window.location.search); // Извлекаем строку параметров до хэша
       const idParam = searchParams.get("id");
-      const id = idParam !== null ? Number(BigInt(idParam)) : -1n;
+      const id = idParam !== null ? Number(idParam) : -1;
+      console.log(idParam)
 
       const response = await fetch(SERVER_URL + "/main/auth", {
         method: "POST", // или 'POST', в зависимости от требований к API

@@ -11,7 +11,7 @@ interface ProofManagerComponentProps {
 export const ProofManager: React.FC<ProofManagerComponentProps> = () => {
   const firstProofLoading = useRef<boolean>(true);
   const [tonConnectUI] = useTonConnectUI();
-  const { updateJwt, auth } = useUserData();
+  const { updateJwt } = useUserData();
 
   const recreateProofPayload = useCallback(async () => {
     if (firstProofLoading.current) {
