@@ -21,7 +21,7 @@ import {
 import "./styles/game1.css";
 import { useModal } from "../../context/ModalContext.tsx";
 
-import bgSound from "../game1/audio/bg.mp3";
+import bgSound from "../game1/audio/bgg.mp3";
 
 export function Game1() {
   const { jwt, soundSetting, game1State, setGame1State } = useUserData();
@@ -48,7 +48,7 @@ export function Game1() {
         bgRef.current.loop = true;
         bgRef.current.play();
       }
-      sendMessageToUnity("StartGame", t("audio.vader"));
+      sendMessageToUnity("LangInit", t("audio.vader"));
 
       setGame1State(false);
     }

@@ -141,24 +141,16 @@ export function Models() {
   const { characters } = useUserData();
   useEffect(() => {
     const createModel = (character: Character): MockModelsType => {
-      const maxHealth = CharactersData[character.type - 1].price * 1000;
-      const health = Math.round(
-        maxHealth - (character.earned / character.earn_required) * maxHealth
-      );
+      const health = character.earn_required - character.earned;
       return {
         title: "-" + CharactersData[character.type - 1].name + "-",
         imgSrc: CharactersData[character.type - 1].image,
-        // @ts-ignore
-        healthCurrent: ((health <= 0 ? 0 : health) / 1000)
-          .toFixed(3)
-          .toString(),
-        // @ts-ignore
-        healthMax: CharactersData[character.type - 1].price
-          .toFixed(3)
-          .toString(),
+        healthCurrent: (health <= 0 ? 0 : health),
+        healthMax: character.earn_required,
         deposits: character.total_deposited,
-        earned: character.total_earned_tokens.toString(),
+        earned: character.total_earned_tokens.toFixed(3).toString()
       };
+
     };
 
     const newModels = characters
@@ -216,8 +208,8 @@ export function Models() {
                       {t("metricsModal.modelsTab.health")}:
                     </div>
                     <div className="models__item-body-list-item-info-value">
-                      <span className="red">{item.healthCurrent}</span>
-                      <span className="white">/{item.healthMax}</span>
+                      <span className="red">{item.healthCurrent == 0 ? "0" : item.healthCurrent.toFixed(3)}</span>
+                      <span className="white">/{item.healthMax.toFixed(3)}</span>
                     </div>
                   </div>
                   <img
