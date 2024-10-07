@@ -249,7 +249,7 @@ export function Home() {
     const pageLoader = document.querySelector(".pageLoader");
     setTimeout(() => {
       pageLoader?.classList.add("loadingModalBg--Hidden");
-    }, 100);
+    }, 3000);
   }, []);
 
   return (
