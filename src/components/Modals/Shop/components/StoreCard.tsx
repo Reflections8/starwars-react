@@ -83,8 +83,8 @@ export function StoreCardModel({
                 здоровье:
               </div>
               <div className="player-card-main-info-list-item-value">
-                <span className="red">{healthCurrent}</span>{" "}
-                <span className="blue">\{healthMax}</span>
+                <span className="red">{healthCurrent.toFixed(3)}</span>{" "}
+                <span className="blue">\{healthMax.toFixed(3)}</span>
               </div>
             </div>
 
@@ -159,7 +159,10 @@ export function StoreCardWeapon({
                 {t("shopModal.storeTab.additionalIncome")}:
               </div>
               <div className="store-card-main-info-list-item-value">
-                {additionalIncomeCurrent}/{additionalIncomeMax}
+                {blasterLevel == 1 || additionalIncomeCurrent == 0
+                  ? 0
+                  : additionalIncomeCurrent.toFixed(3)}
+                /{additionalIncomeMax}
               </div>
             </div>
             {/* ITEM */}

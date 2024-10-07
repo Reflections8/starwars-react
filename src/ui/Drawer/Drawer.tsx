@@ -7,6 +7,7 @@ import resolvedIcon from "./img/resolved.svg";
 
 import {
   SendTransactionRequest,
+  useTonAddress,
   useTonConnectUI,
   useTonWallet,
 } from "@tonconnect/ui-react";
@@ -143,6 +144,7 @@ function Rejected({ drawerText }: { drawerText?: string }) {
 function Menu() {
   const { t } = useTranslation();
   const wallet = useTonWallet();
+  const userFriendlyAddress = useTonAddress();
   const { closeDrawer, openDrawer } = useDrawer();
 
   async function openWalletDrawer() {
@@ -189,7 +191,7 @@ function Menu() {
           <div className="menu__list-item menu__list-item--Transparent">
             <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
             <div className="menu__list-item-text">
-              {formatWalletString(wallet.account.address)}
+              {formatWalletString(userFriendlyAddress.toString())}
             </div>
           </div>
         ) : (

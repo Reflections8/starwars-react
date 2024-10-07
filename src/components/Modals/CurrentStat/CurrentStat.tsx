@@ -180,8 +180,7 @@ export function CurrentStat() {
         className="currentStat__btn"
         text="OK"
         callback={() => {
-          // @ts-ignore
-          setGame1State("PRIVET IS KONTESKTA");
+          setGame1State(true);
           closeModal!();
         }}
       />

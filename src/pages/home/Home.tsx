@@ -23,6 +23,7 @@ import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
+import bgSound from "../home/audio/main_bg.mp3";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -42,6 +43,8 @@ export function Home() {
     updateUserInfo,
     resetUserData,
     userDataDefined,
+    homeState,
+    setHomeState,
   } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
   const [isExpanded, expand] = useExpand();
@@ -133,21 +136,24 @@ export function Home() {
   //     openModal!("welcome");
   //   }, []);
 
-  const unityBgMusicRef = useRef<HTMLVideoElement | null>(null);
+  const unityBgMusicRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
-    const audioRef = unityBgMusicRef.current;
-    if (audioRef) {
-      if (activeVideo === null) {
-        audioRef.play();
+    if (unityBgMusicRef.current) {
+      if (homeState == true) {
+        unityBgMusicRef.current.volume = 0.15;
+        unityBgMusicRef.current.loop = true;
+        unityBgMusicRef.current.play();
+        setHomeState(false);
         return;
       }
 
       if (activeVideo) {
-        audioRef.pause();
+        unityBgMusicRef.current.pause();
+        setHomeState(false);
       }
     }
-  }, [activeVideo]);
+  }, [activeVideo, homeState]);
 
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
@@ -313,7 +319,7 @@ export function Home() {
         <>
           <iframe
             ref={iframeRef}
-            src="https://purpleguy.dev/newroot/unity_main/"
+            src="https://game.akronix.io/new/unity_main_2/"
             style={{
               position: "absolute",
               left: 0,
@@ -325,7 +331,7 @@ export function Home() {
             id="mainWrapper"
             className="mainWrapper"
           ></iframe>
-          <audio ref={unityBgMusicRef} src={"#"} autoFocus={true} />
+          <audio ref={unityBgMusicRef} src={bgSound} autoFocus={true} />
         </>
       ) : null}
 

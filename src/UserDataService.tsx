@@ -52,8 +52,10 @@ interface UserDataContextType {
   setSoundSetting: (value: boolean) => void;
   updateUserInfo: (value: string) => void;
   resetUserData: () => void;
-  game1State: any;
-  setGame1State: () => void;
+  game1State: boolean | null;
+  setGame1State: (value: boolean) => void;
+  homeState: boolean | null;
+  setHomeState: (value: boolean) => void;
 }
 
 const defaultValue: UserDataContextType = {
@@ -108,6 +110,8 @@ const defaultValue: UserDataContextType = {
   resetUserData: () => {},
   game1State: null,
   setGame1State: () => {},
+  homeState: null,
+  setHomeState: () => {},
 };
 
 const UserDataContext = createContext<UserDataContextType>(defaultValue);
@@ -536,7 +540,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     setRefInfo(null);
   };
 
-  const [game1State, setGame1State] = useState(null);
+  const [game1State, setGame1State] = useState<boolean | null>(null);
+  const [homeState, setHomeState] = useState<boolean | null>(null);
 
   return (
     <UserDataContext.Provider
@@ -571,8 +576,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         resetUserData,
         userDataDefined,
         game1State,
-        // @ts-ignore
         setGame1State,
+        homeState,
+        setHomeState,
       }}
     >
       {children}

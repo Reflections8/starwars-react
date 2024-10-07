@@ -23,8 +23,14 @@ import { useModal } from "../../context/ModalContext.tsx";
 
 import bgSound from "../game1/audio/bg.mp3";
 import vader_breath from "../game1/audio/vader_breath.mp3";
-import vader_speak_en from "../game1/audio/vader_speak_en.wav";
-import vader_speak_ru from "../game1/audio/vader_speak_ru.wav";
+
+import vader_speak_en1 from "../game1/audio/vader_en1.wav";
+import vader_speak_en3 from "../game1/audio/vader_en3.wav";
+import vader_speak_en4 from "../game1/audio/vader_en4.wav";
+import vader_speak_ru1 from "../game1/audio/vader_ru1.wav";
+import vader_speak_ru3 from "../game1/audio/vader_ru3.wav";
+import vader_speak_ru4 from "../game1/audio/vader_ru4.wav";
+
 import vader_slice_bullet_1 from "../game1/audio/vader_slice_bullet_1.mp3";
 import vader_slice_bullet_2 from "../game1/audio/vader_slice_bullet_2.wav";
 import vader_slice_bullet_3 from "../game1/audio/vader_slice_bullet_3.mp3";
@@ -37,17 +43,26 @@ import sword_unholster from "../game1/audio/sword_unholster.mp3";
 import gun_holster from "../game1/audio/gun_holster.mp3";
 
 export function Game1() {
-  const { jwt, soundSetting, game1State } = useUserData();
+  const { jwt, soundSetting, game1State, setGame1State } = useUserData();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { setIsLoading } = useLoader();
 
-  //const [initDataUnsafe] = useInitData();
-
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const bgRef = useRef<HTMLAudioElement>(null);
   const vaderTalkAudioRef = useRef<HTMLAudioElement>(null);
-  const swordAudioRef = useRef<HTMLAudioElement>(null);
+
+  const vaderBreatheAudioRef = useRef<HTMLAudioElement>(null);
+
+  const swordSway1AudioRef = useRef<HTMLAudioElement>(null);
+  const swordSway2AudioRef = useRef<HTMLAudioElement>(null);
+  const swordUnholsterAudioRef = useRef<HTMLAudioElement>(null);
+
+  const vaderSlice1AudioRef = useRef<HTMLAudioElement>(null);
+  const vaderSlice2AudioRef = useRef<HTMLAudioElement>(null);
+  const vaderSlice3AudioRef = useRef<HTMLAudioElement>(null);
+  const vaderSlice4AudioRef = useRef<HTMLAudioElement>(null);
+
   const playerAudioRef = useRef<HTMLAudioElement>(null);
 
   const [score, setScore] = useState(0);
@@ -61,7 +76,26 @@ export function Game1() {
   const { sendMessage, lastMessage } = useWebSocket(VADER_SOCKET, {});
 
   useEffect(() => {
-    console.log({ game1State });
+    if (game1State == true) {
+      if (bgRef.current && soundSetting) {
+        bgRef.current.loop = true;
+        bgRef.current.play();
+        bgRef.current.playbackRate = 0.8;
+        bgRef.current.volume = 0.14;
+
+        let lang = t("audio.vader");
+        const options_en = [vader_speak_en1, vader_speak_en3, vader_speak_en4];
+        const options_ru = [vader_speak_ru1, vader_speak_ru3, vader_speak_ru4];
+
+        const randomIndex = Math.floor(Math.random() * options_en.length);
+
+        vaderTalkAudioRef.current.src =
+          lang == "en" ? options_en[randomIndex] : options_ru[randomIndex];
+      }
+      sendMessageToUnity("StartGame", "");
+
+      setGame1State(false);
+    }
   }, [game1State]);
 
   useEffect(() => {
@@ -147,12 +181,6 @@ export function Game1() {
     if (!isUnityLoaded) return;
 
     if (soundSetting) {
-      if (bgRef.current) {
-        bgRef.current.loop = true;
-        bgRef.current.play();
-        bgRef.current.playbackRate = 0.8;
-        bgRef.current.volume = 0.14;
-      }
       sendMessageToUnity("EnableGameSounds", "s");
     } else sendMessageToUnity("DisableGameSounds", "s");
   }, [soundSetting, isUnityLoaded]);
@@ -201,8 +229,6 @@ export function Game1() {
     if (iframeRef.current) {
       iframeRef.current.contentWindow?.postMessage(message, "*");
     }
-
-    console.log(message);
   };
 
   const { openModal } = useModal();
@@ -223,68 +249,55 @@ export function Game1() {
       const data = value as string;
       switch (data) {
         case "vader_speak": {
-          if (!vaderTalkAudioRef.current) return;
-          let lang = t("audio.vader");
-          const options_en = [vader_speak_en];
+          if (!vaderTalkAudioRef.current || !soundSetting) return;
 
-          const options_ru = [vader_speak_ru];
-
-          const randomIndex = Math.floor(Math.random() * options_en.length);
-
-          vaderTalkAudioRef.current.src =
-            lang == "en" ? options_en[randomIndex] : options_ru[randomIndex];
           vaderTalkAudioRef.current.volume = 1;
           vaderTalkAudioRef.current.play();
           break;
         }
         case "vader_breath": {
-          if (!vaderTalkAudioRef.current) return;
-          vaderTalkAudioRef.current.src = vader_breath;
-          vaderTalkAudioRef.current.volume = 0.4;
-          vaderTalkAudioRef.current.play();
+          if (!vaderBreatheAudioRef.current || !soundSetting) return;
+          vaderBreatheAudioRef.current.volume = 0.4;
+          vaderBreatheAudioRef.current.play();
           break;
         }
         case "vader_slice_bullet": {
-          if (!vaderTalkAudioRef.current) return;
           const options = [
-            vader_slice_bullet_1,
-            vader_slice_bullet_2,
-            vader_slice_bullet_3,
-            vader_slice_bullet_4,
+            vaderSlice1AudioRef,
+            vaderSlice2AudioRef,
+            vaderSlice3AudioRef,
+            vaderSlice4AudioRef,
           ];
           const randomIndex = Math.floor(Math.random() * options.length);
-          vaderTalkAudioRef.current.src = options[randomIndex];
-          vaderTalkAudioRef.current.volume = 0.5;
-          vaderTalkAudioRef.current.play();
 
-          if (!swordAudioRef.current) return;
+          if (!options[randomIndex].current || !soundSetting) return;
+          options[randomIndex].current.volume = 0.5;
+          options[randomIndex].current.play();
 
-          const options1 = [sword_sway_1, sword_sway_2];
+          const options1 = [swordSway1AudioRef, swordSway2AudioRef];
+
           const randomIndex1 = Math.floor(Math.random() * options1.length);
-          swordAudioRef.current.src = options1[randomIndex1];
-          swordAudioRef.current.volume = 0.8;
-          swordAudioRef.current.play();
+          if (!options1[randomIndex1].current) return;
+          options1[randomIndex1].current.volume = 0.8;
+          options1[randomIndex1].current.play();
           break;
         }
         case "sword_unholster": {
-          if (!swordAudioRef.current) return;
-          swordAudioRef.current.src = sword_unholster;
-          swordAudioRef.current.volume = 0.3;
-          swordAudioRef.current.play();
+          if (!swordUnholsterAudioRef.current || !soundSetting) return;
+          swordUnholsterAudioRef.current.volume = 0.3;
+          swordUnholsterAudioRef.current.play();
           break;
         }
         case "sword_sway": {
-          if (!swordAudioRef.current) return;
-          const options = [sword_sway_1, sword_sway_2];
-          const randomIndex = Math.floor(Math.random() * options.length);
-          swordAudioRef.current.src = options[randomIndex];
-          swordAudioRef.current.volume = 0.3;
-          swordAudioRef.current.play();
+          const options1 = [swordSway1AudioRef, swordSway2AudioRef];
+          const randomIndex1 = Math.floor(Math.random() * options1.length);
+          if (!options1[randomIndex1].current) return;
+          options1[randomIndex1].current.volume = 0.8;
+          options1[randomIndex1].current.play();
           break;
         }
         case "gun_holster": {
-          if (!playerAudioRef.current) return;
-          playerAudioRef.current.src = gun_holster;
+          if (!playerAudioRef.current || !soundSetting) return;
           playerAudioRef.current.volume = 0.5;
           playerAudioRef.current.play();
           break;
@@ -366,11 +379,41 @@ export function Game1() {
 
       <audio ref={bgRef} src={bgSound} autoFocus={true} />
       <audio ref={vaderTalkAudioRef} autoFocus={true} />
-      <audio ref={swordAudioRef} autoFocus={true} />
-      <audio ref={playerAudioRef} autoFocus={true} />
+
+      <audio ref={vaderBreatheAudioRef} src={vader_breath} autoFocus={true} />
+      <audio
+        ref={vaderSlice1AudioRef}
+        src={vader_slice_bullet_1}
+        autoFocus={true}
+      />
+      <audio
+        ref={vaderSlice2AudioRef}
+        src={vader_slice_bullet_2}
+        autoFocus={true}
+      />
+      <audio
+        ref={vaderSlice3AudioRef}
+        src={vader_slice_bullet_3}
+        autoFocus={true}
+      />
+      <audio
+        ref={vaderSlice4AudioRef}
+        src={vader_slice_bullet_4}
+        autoFocus={true}
+      />
+
+      <audio ref={swordSway1AudioRef} src={sword_sway_1} autoFocus={true} />
+      <audio ref={swordSway2AudioRef} src={sword_sway_2} autoFocus={true} />
+      <audio
+        ref={swordUnholsterAudioRef}
+        src={sword_unholster}
+        autoFocus={true}
+      />
+
+      <audio ref={playerAudioRef} src={gun_holster} autoFocus={true} />
       <iframe
         ref={iframeRef}
-        src="https://game.akronix.io/new/unity_vader_2/"
+        src="https://game.akronix.io/new/unity_vader_3/"
         style={{
           position: "absolute",
           left: 0,

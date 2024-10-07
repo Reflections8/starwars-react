@@ -36,11 +36,11 @@ export function Shop() {
       value: "WEAPON",
       component: <Weapon />,
     },
-   //  {
-   //    label: t("shopModal.storeTab.title"),
-   //    value: "STORE",
-   //    component: <Store />,
-   //  },
+    //  {
+    //    label: t("shopModal.storeTab.title"),
+    //    value: "STORE",
+    //    component: <Store />,
+    //  },
   ];
 
   const { activePillProp } = useModal();
@@ -68,7 +68,7 @@ export function Shop() {
 }
 
 export function Player() {
-  const { characters, jwt } = useUserData();
+  const { characters, jwt, blasters } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
   const { t } = useTranslation();
@@ -185,7 +185,8 @@ export function Player() {
             address: PROJECT_CONTRACT_ADDRESS,
             amount: (
               CharactersData[i - 1].price * 1000000000 +
-              50000000
+              60000000 +
+              (blasters.some((b) => b.level == 1) ? 60000000 : 0)
             ).toString(),
             payload: CharactersData[i - 1].payload,
           },
@@ -270,7 +271,8 @@ export function Weapon() {
             address: PROJECT_CONTRACT_ADDRESS,
             amount: (
               BlastersData[i - 1].price * 1000000000 +
-              50000000
+              60000000 +
+              (blasters.some((b) => b.level == 1) ? 60000000 : 0)
             ).toString(),
             payload: BlastersData[i - 1].payload,
           },
