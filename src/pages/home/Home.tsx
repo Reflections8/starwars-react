@@ -246,11 +246,15 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    const pageLoader = document.querySelector(".pageLoader");
-    setTimeout(() => {
-      pageLoader?.classList.add("loadingModalBg--Hidden");
-    }, 3000);
-  }, []);
+    if (userDataDefined) {
+      const pageLoader = document.querySelector(".pageLoader");
+      if (!pageLoader?.classList.contains("loadingModalBg--Hidden")) {
+        setTimeout(() => {
+          pageLoader?.classList.add("loadingModalBg--Hidden");
+        }, 100);
+      }
+    }
+  }, [userDataDefined]);
 
   return (
     <>
