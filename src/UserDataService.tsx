@@ -46,7 +46,7 @@ interface UserDataContextType {
   updateCredits: (value: number) => void;
   updateTokens: (value: number) => void;
   updateJwt: (value: string | null) => void;
-  auth:(value: string) => void;
+  auth: (value: string) => void;
   startCheckBalance: () => void;
   setCheckGun: (value: boolean) => void;
   sendSocketMessage: (value: string) => void;
@@ -231,9 +231,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const auth = async (jwt: string) => {
     try {
-      const searchParams = new URLSearchParams(location.search);
+      const searchParams = new URLSearchParams(window.location.search);
       const idParam = searchParams.get("id");
-      const id = idParam !== null ? parseInt(idParam, 10) : -1;
+      const id = idParam !== null ? Number(BigInt(idParam)) : -1n;
 
       const response = await fetch(SERVER_URL + "/main/auth", {
         method: "POST", // или 'POST', в зависимости от требований к API
@@ -249,6 +249,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data);
       return data.code === 1;
     } catch (error) {
       console.error("Failed to authenticate:", error);
@@ -580,7 +581,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         setGame1State,
         homeState,
         setHomeState,
-        auth
+        auth,
       }}
     >
       {children}

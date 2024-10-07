@@ -53,7 +53,6 @@ export const ProofManager: React.FC<ProofManagerComponentProps> = () => {
           );
           if (token) {
             updateJwt(token);
-            await auth(token);
             console.log("authorized");
           } else {
             updateJwt(null);
