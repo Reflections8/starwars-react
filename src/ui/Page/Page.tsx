@@ -1,13 +1,14 @@
 import { ReactElement, useEffect } from "react";
-import "./styles/Page.css";
-import { ModalProvider } from "../../context/ModalContext";
+import { BackgroundVideoProvider } from "../../context/BackgroundVideoContext.tsx";
+import { BattleshipsProvider } from "../../context/BattleshipsContext.tsx";
 import { DrawerProvider } from "../../context/DrawerContext";
 import { LoaderProvider } from "../../context/LoaderContext";
-import { UserDataProvider } from "../../UserDataService.tsx";
-import { BattleshipsProvider } from "../../context/BattleshipsContext.tsx";
-import { BackgroundVideoProvider } from "../../context/BackgroundVideoContext.tsx";
-import { SoundProvider } from "../../context/SeaContexts/SoundContext.tsx";
+import { ModalProvider } from "../../context/ModalContext";
 import { SomethingProvider } from "../../context/SeaContexts/SomethingContext.tsx";
+import { SoundProvider } from "../../context/SeaContexts/SoundContext.tsx";
+import { UserDataProvider } from "../../UserDataService.tsx";
+import { PageLoader } from "../Modal/PageLoader.tsx";
+import "./styles/Page.css";
 
 type PageProps = {
   dataPage: string;
@@ -50,6 +51,7 @@ export function Page({ dataPage, children }: PageProps) {
                 <ModalProvider>
                   <SomethingProvider>
                     <div className="page" data-page={dataPage}>
+                      <PageLoader isOpen={true} className="pageLoader" />
                       <div className="page__container">
                         <div className="page__container-gradient page__container-gradient--Left"></div>
                         <div className="page__container-gradient page__container-gradient--Right"></div>

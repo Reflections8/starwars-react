@@ -245,6 +245,13 @@ export function Home() {
     if (isExpanded != undefined && !isExpanded) expand();
   }, []);
 
+  useEffect(() => {
+    const pageLoader = document.querySelector(".pageLoader");
+    setTimeout(() => {
+      pageLoader?.classList.add("loadingModalBg--Hidden");
+    }, 100);
+  }, []);
+
   return (
     <>
       <ProofManager onValueChange={handleAuthTokenChange} />

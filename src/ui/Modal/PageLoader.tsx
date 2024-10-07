@@ -13,7 +13,7 @@ type LoadingModalProps = {
   className?: string;
 };
 
-export function LoadingModal({ isOpen, className }: LoadingModalProps) {
+export function PageLoader({ isOpen, className }: LoadingModalProps) {
   useEffect(() => {
     const green = document.querySelector(".loadingModal__loader-green");
     const outer = document.querySelector(".loadingModal__loader-outer");
