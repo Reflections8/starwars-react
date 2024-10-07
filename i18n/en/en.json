@@ -307,6 +307,10 @@
     "repeat": "Repeat",
     "finish": "Finish"
   },
+  "binksBackModal": {
+    "title": "Welcome back to Akronix!",
+    "text": "You have already completed the training, and Jaja thinks it's time for you to acquire an NFT character and join the battle against the forces of darkness!"
+  },
   "rulesModal": {
     "title": "Правила",
     "p1": "Space Battle is a turn-based strategy game on a 10x10 grid, where players command a fleet of 10 ships: 1 four-deck ship, 2 three-deck ships, 3 two-deck ships, and 4 one-deck ships. Ships can be arranged vertically or horizontally but cannot touch each other. The objective of the game is to destroy the entire enemy fleet. Each player has 30 seconds for their turn. A hit allows the player to continue the attack, while a miss passes the turn to the opponent. The game continues until one player's fleet is completely destroyed.",

@@ -14,7 +14,7 @@ type LoaderContextProps = {
 const LoaderContext = createContext<Partial<LoaderContextProps>>({});
 
 export function LoaderProvider({ children }: LoaderProviderProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <LoaderContext.Provider value={{ isLoading, setIsLoading }}>

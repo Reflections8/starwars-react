@@ -44,6 +44,7 @@ import { WalletNew } from "../../components/Modals/WalletNew/WalletNew";
 import { PlayerNew } from "../../components/Modals/PlayerNew/PlayerNew";
 import { Repair } from "../../components/Modals/Repair/Repair";
 import { Heal } from "../../components/Modals/Heal/Heal";
+import { BinksBack } from "../../components/Modals/Binks/BinksBack";
 
 type ModalProps = {
   isOpen: boolean;
@@ -141,6 +142,11 @@ export function Modal({ isOpen }: ModalProps) {
       title: t("binksModal.title"),
       icon: <BookOpenedIcon />,
       component: <Binks />,
+    },
+    binksBack: {
+      title: t("binksModal.title"),
+      icon: <BookOpenedIcon />,
+      component: <BinksBack />,
     },
     binksDone: {
       title: t("binksModal.title"),
@@ -266,6 +272,7 @@ export function Modal({ isOpen }: ModalProps) {
 
               <div className="modal__body-top">
                 {modalType === "binks" ||
+                modalType === "binksBack" ||
                 modalType === "binksDone" ||
                 modalType === "repair" ||
                 modalType === "heal" ? null : (

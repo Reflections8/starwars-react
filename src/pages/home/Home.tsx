@@ -50,7 +50,7 @@ export function Home() {
   const [isExpanded, expand] = useExpand();
 
   //const tonConnectModal = useTonConnectModal();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
   const { setIsLoading } = useLoader();
 
@@ -178,9 +178,6 @@ export function Home() {
           openModal!("welcome");
           setReadyState!(false);
           setActiveVideo!(null);
-
-          // Если модалка вдруг открылась - закрываем (binks)
-          //  closeModal!();
           return;
         }
 
@@ -189,11 +186,8 @@ export function Home() {
           sessionsCount !== null &&
           sessionsCount! > 5
         ) {
-          setReadyState!(true);
-          // Если модалка вдруг открылась - закрываем (binks)
-          closeModal!();
-          setIsLoading!(false);
-          setActiveVideo!("3");
+          console.log("НЕТ НФТ. 6+");
+          openModal!("binksBack");
           return;
         }
 
