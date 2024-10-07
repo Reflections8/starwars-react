@@ -155,7 +155,7 @@ export function StoreCardCharacterWrapper() {
   const { t } = useTranslation();
   const { openModal } = useModal();
 
-  const [storeModels, setStoreModels] = useState([]);
+  const [storeModels, setStoreModels] = useState<StoreModelType[]>([]);
 
   useEffect(() => {
     const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
