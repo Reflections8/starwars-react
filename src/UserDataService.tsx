@@ -46,6 +46,7 @@ interface UserDataContextType {
   updateCredits: (value: number) => void;
   updateTokens: (value: number) => void;
   updateJwt: (value: string | null) => void;
+  auth:(value: string) => void;
   startCheckBalance: () => void;
   setCheckGun: (value: boolean) => void;
   sendSocketMessage: (value: string) => void;
@@ -103,6 +104,7 @@ const defaultValue: UserDataContextType = {
   updateJwt: () => {},
   setCheckGun: () => {},
   selectHealingCharacter: () => {},
+  auth: () => {},
   startCheckBalance: () => {},
   sendSocketMessage: () => {},
   setSoundSetting: () => {},
@@ -268,7 +270,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       const data = await response.json();
       setCredits(data.credits);
       setTons(data.tons);
-      console.log(data.tons);
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
       setSessionsCount(data.sessions);
@@ -579,6 +580,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         setGame1State,
         homeState,
         setHomeState,
+        auth
       }}
     >
       {children}

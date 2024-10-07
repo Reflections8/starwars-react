@@ -11,7 +11,7 @@ interface ProofManagerComponentProps {
 export const ProofManager: React.FC<ProofManagerComponentProps> = () => {
   const firstProofLoading = useRef<boolean>(true);
   const [tonConnectUI] = useTonConnectUI();
-  const { updateJwt } = useUserData();
+  const { updateJwt, auth } = useUserData();
 
   const recreateProofPayload = useCallback(async () => {
     if (firstProofLoading.current) {
@@ -53,6 +53,7 @@ export const ProofManager: React.FC<ProofManagerComponentProps> = () => {
           );
           if (token) {
             updateJwt(token);
+            await auth(token);
             console.log("authorized");
           } else {
             updateJwt(null);

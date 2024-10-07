@@ -186,7 +186,7 @@ export function Player() {
             amount: (
               CharactersData[i - 1].price * 1000000000 +
               60000000 +
-              (blasters.some((b) => b.level == 1) ? 60000000 : 0)
+              (blasters.length == 0 ? 60000000 : 0)
             ).toString(),
             payload: CharactersData[i - 1].payload,
           },
@@ -272,7 +272,7 @@ export function Weapon() {
             amount: (
               BlastersData[i - 1].price * 1000000000 +
               60000000 +
-              (blasters.some((b) => b.level == 1) ? 60000000 : 0)
+              (blasters.length == 0 ? 60000000 : 0)
             ).toString(),
             payload: BlastersData[i - 1].payload,
           },

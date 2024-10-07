@@ -48,6 +48,7 @@ export function Game1() {
         bgRef.current.loop = true;
         bgRef.current.play();
       }
+      console.log("sss")
       sendMessageToUnity("LangInit", t("audio.vader"));
 
       setGame1State(false);
@@ -273,7 +274,7 @@ export function Game1() {
       <div className="bottomLinearGradient" />
       <iframe
         ref={iframeRef}
-        src="https://socket.purpleguy.dev/"
+        src="https://game.akronix.io/new/unity_vader_5/"
         style={{
           position: "absolute",
           left: 0,
@@ -282,10 +283,11 @@ export function Game1() {
           height: "100%",
           border: "none",
         }}
+        autoFocus={true}
         id="mainWrapper"
         className="mainWrapper"
       >
-        <audio ref={bgRef} src={bgSound} autoPlay={false} autoFocus={true} />
+        <audio ref={bgRef} src={bgSound} autoPlay={false} autoFocus={false} />
       </iframe>
       <Footer
         power={damage}
