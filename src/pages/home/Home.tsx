@@ -52,7 +52,7 @@ export function Home() {
   //const tonConnectModal = useTonConnectModal();
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
-  const { setIsLoading } = useLoader();
+  const { setIsLoading, sessionInteracted } = useLoader();
 
   const {
     setReadyState,
@@ -175,7 +175,9 @@ export function Home() {
       if (jwt) {
         if (sessionsCount === null) return;
         if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
-          openModal!("welcome");
+          if (!sessionInteracted) {
+            openModal!("welcome");
+          }
           setReadyState!(false);
           setActiveVideo!(null);
           return;
@@ -186,7 +188,6 @@ export function Home() {
           sessionsCount !== null &&
           sessionsCount! > 5
         ) {
-          console.log("НЕТ НФТ. 6+");
           openModal!("binksBack");
           return;
         }

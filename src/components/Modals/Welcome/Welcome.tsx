@@ -19,11 +19,20 @@ import {
   useUserData,
 } from "../../../UserDataService.tsx";
 import { StoreModelType } from "../../../ui/SlidingPills/types.ts";
+import { useLoader } from "../../../context/LoaderContext.tsx";
 
 export function Welcome() {
+  const { setSessionInteracted } = useLoader();
   const { t } = useTranslation();
-  const { tons, credits, tokens, activeCharacter, exchangeRate, blasters, setHomeState } =
-    useUserData();
+  const {
+    tons,
+    credits,
+    tokens,
+    activeCharacter,
+    exchangeRate,
+    blasters,
+    setHomeState,
+  } = useUserData();
 
   const [character, setCharacter] = useState<StoreModelType | null>(null);
 
@@ -170,6 +179,7 @@ export function Welcome() {
         className="welcome__btn"
         onClick={() => {
           setHomeState(true);
+          setSessionInteracted!(true);
           closeModal!();
         }}
       >

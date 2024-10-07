@@ -9,15 +9,25 @@ type LoaderProviderProps = {
 type LoaderContextProps = {
   isLoading: boolean;
   setIsLoading: (state: boolean) => void;
+  sessionInteracted: boolean;
+  setSessionInteracted: (state: boolean) => void;
 };
 
 const LoaderContext = createContext<Partial<LoaderContextProps>>({});
 
 export function LoaderProvider({ children }: LoaderProviderProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionInteracted, setSessionInteracted] = useState(false);
 
   return (
-    <LoaderContext.Provider value={{ isLoading, setIsLoading }}>
+    <LoaderContext.Provider
+      value={{
+        isLoading,
+        setIsLoading,
+        sessionInteracted,
+        setSessionInteracted,
+      }}
+    >
       {children}
       <LoadingModal isOpen={isLoading} />
     </LoaderContext.Provider>
