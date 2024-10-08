@@ -324,7 +324,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [userDataDefined, setUserDataDefined] = useState(false);
 
   useEffect(() => {
-    let interval; // вынеси переменную выше
+    let interval: any; // вынеси переменную выше
     if (!jwt) {
       setUserDataDefined(true);
     }

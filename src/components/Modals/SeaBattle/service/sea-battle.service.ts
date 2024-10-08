@@ -1,5 +1,6 @@
 export async function fetchRooms() {
   const token = localStorage.getItem("auth_jwt");
+  if (!token || token == "") return [];
   try {
     const res = await fetch("https://socket.akronix.io/shipBattle/getRooms", {
       headers: { Authorization: `Bearer ${token}` },
@@ -12,6 +13,7 @@ export async function fetchRooms() {
 
 export async function fetchStats() {
   const token = localStorage.getItem("auth_jwt");
+  if (!token || token == "") return [];
   try {
     const res = await fetch("https://socket.akronix.io/shipBattle/getStats", {
       headers: { Authorization: `Bearer ${token}` },
