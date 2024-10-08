@@ -58,7 +58,7 @@
     "characterFilled": "New character successfully added to your account",
     "transactionSent": "Transaction sent successfully.\n Wait for confirmation",
     "transactionDenied": "Transaction submission was rejected",
-    "blasterBuyDeclined": "Blaster purchase declined\n First of all purchase the character",
+    "blasterBuyDeclined": "Blaster purchase declined.\n First of all purchase the character",
 
     "playerTab": {
       "title": "Player",

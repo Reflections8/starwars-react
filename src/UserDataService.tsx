@@ -324,6 +324,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [userDataDefined, setUserDataDefined] = useState(false);
 
   useEffect(() => {
+    let interval; // вынеси переменную выше
     if (!jwt) {
       setUserDataDefined(true);
     }
@@ -342,22 +343,15 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
           setUserDataDefined(true);
         }
 
-        const interval = setInterval(() => {
+        interval = setInterval(() => {
           if (jwt && jwt !== "") {
             const refreshUserInfo = async () => {
               await updateUserInfo(jwt);
               setUserDataDefined(true);
             };
-
             refreshUserInfo();
-          } else {
-            clearInterval(interval);
           }
         }, 20000);
-
-        return () => {
-          clearInterval(interval);
-        };
       };
 
       authenticateUser();
@@ -365,148 +359,12 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       tonConnectUI.disconnect();
       setUserDataDefined(true);
     }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [jwt]);
-
-  /*useEffect(() => {
-    if (lastMessage == null) return;
-
-    const response: string = lastMessage.data.toString();
-
-    if (response.startsWith("financeData:")) {
-      const data = JSON.parse(response.slice("financeData:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      const userMetricsData: UserMetrics = data.metrics_response;
-      setUserMetrics(userMetricsData);
-      const activeCharacter: Character | null = data.active_character;
-      setActiveCharacter(activeCharacter);
-    }
-    if (response.startsWith("refreshData:")) {
-      const data = JSON.parse(response.slice("refreshData:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      const userMetricsData: UserMetrics = data.metrics_response;
-      setUserMetrics(userMetricsData);
-      const activeCharacter: Character | null = data.active_character;
-      setActiveCharacter(activeCharacter);
-      setCheckGun(true);
-    } else if (response.startsWith("exchangeResponse:")) {
-      const data = JSON.parse(response.slice("exchangeResponse:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      openDrawer!("resolved", "bottom", "Обмен успешно произведён");
-    } else if (response.startsWith("blastersResponse:")) {
-      const blastersResult = JSON.parse(
-        response.slice("blastersResponse:".length)
-      );
-
-      const blasters: Blaster[] = blastersResult.blasters;
-      const pricesResponse: Prices = blastersResult.prices;
-
-      setPrices(pricesResponse);
-      setBlasters(blasters);
-    } else if (response.startsWith("charactersResponse:")) {
-      const characters: Character[] = JSON.parse(
-        response.slice("charactersResponse:".length)
-      );
-
-      setCharacters(characters);
-    } else if (response.startsWith("blasterBuyResponse:")) {
-      openDrawer!(
-        "resolved",
-        "bottom",
-        "Покупка бластера выполнена.\nNFT отправлена на подключенный кошелек. Скорость подтверждения зависит от загруженности сети TON."
-      );
-      const blasters: Blaster[] = JSON.parse(
-        response.slice("blasterBuyResponse:".length)
-      );
-      setBlasters(blasters);
-      setCheckGun(true);
-    } else if (response.startsWith("blasterUpgradeResponse:")) {
-      openDrawer!(
-        "resolved",
-        "bottom",
-        "Улучшение бластера выполнено успешно."
-      );
-      const blasters: Blaster[] = JSON.parse(
-        response.slice("blasterUpgradeResponse:".length)
-      );
-      setBlasters(blasters);
-    } else if (response.startsWith("withdrawResponse:")) {
-      const data = JSON.parse(response.slice("withdrawResponse:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      openDrawer!(
-        "resolved",
-        "bottom",
-        "Вывод добавлен в обработку. Скорость подтверждения зависит от загруженности сети TON."
-      );
-    } else if (response.startsWith("blasterRepairResponse:")) {
-      const num = parseInt(response.slice("blasterRepairResponse:".length));
-
-      if (num == 2) prices.second_blaster_repair = 0;
-      else if (num == 3) prices.third_blaster_repair = 0;
-
-      const blasterTemp = blasters;
-      for (let i = 0; i < blasterTemp.length; i++) {
-        if (blasterTemp[i].level == num) {
-          blasterTemp[i].usage = blasterTemp[i].max_usage;
-        }
-      }
-
-      setBlasters(blasterTemp);
-
-      openDrawer!("resolved", "bottom", "Починка бластера успешна выполнена.");
-    } else if (response.startsWith("CODE:")) {
-      const exitCode = parseInt(response.slice("CODE:".length));
-      switch (exitCode) {
-        case 901: {
-          openDrawer!("rejected", "bottom", "Ошибка при выполнении обмена");
-          break;
-        }
-        case 1001: {
-          openDrawer!("rejected", "bottom", "Недостаточно TON для вывода");
-          break;
-        }
-        case 1002: {
-          openDrawer!("rejected", "bottom", "Недостаточно AKRON для вывода");
-          break;
-        }
-        case 1003: {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для оплаты комиссии для вывода AKRON\nНеобходимо минимум: 0.05 TON"
-          );
-          break;
-        }
-        case 10001: {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для покупки бластера 2 уровня\nНеобходимо 1 TON + 0.05 TON (gas fee)"
-          );
-          break;
-        }
-        case 10002: {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для покупки бластера 3 уровня\nНеобходимо 2 TON + 0.05 TON (gas fee)"
-          );
-          break;
-        }
-      }
-    }
-  }, [lastMessage]);*/
 
   useEffect(() => {
     setJwt(localStorage.getItem(ProofApiService.localStorageKey));
