@@ -73,6 +73,14 @@
   width: fit-content;
 }
 
+.binksBack__btnReady {
+  margin: 0 auto;
+  margin-bottom: 60px;
+  margin-top: auto;
+  max-width: 100px;
+  width: 100%;
+}
+
 .binksDone__footer {
   display: flex;
   flex-direction: column;

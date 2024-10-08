@@ -21,7 +21,7 @@ export function BinksBack() {
       <CuttedButton
         text={"OK"}
         size="small"
-        className="binks__btnReady"
+        className="binksBack__btnReady"
         callback={(e) => {
           e.stopPropagation();
           setReadyState!(true);
