@@ -52,7 +52,7 @@ export function Home() {
   //const tonConnectModal = useTonConnectModal();
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
-  const { setIsLoading, sessionInteracted } = useLoader();
+  const { setIsLoading, sessionInteracted, tutorialClicked } = useLoader();
 
   const {
     setReadyState,
@@ -168,7 +168,9 @@ export function Home() {
 
     if (userDataDefined) {
       if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
-        openModal!("binks");
+        if (!tutorialClicked) {
+          openModal!("binks");
+        }
         setIsLoading!(false);
       }
 
@@ -188,7 +190,9 @@ export function Home() {
           sessionsCount !== null &&
           sessionsCount! > 5
         ) {
-          openModal!("binksBack");
+          if (!tutorialClicked) {
+            openModal!("binksBack");
+          }
           return;
         }
 
@@ -197,7 +201,9 @@ export function Home() {
           sessionsCount !== null &&
           sessionsCount! <= 5
         ) {
-          openModal!("binks");
+          if (!tutorialClicked) {
+            openModal!("binks");
+          }
           setIsLoading!(false);
           return;
         }
@@ -207,7 +213,9 @@ export function Home() {
           sessionsCount !== null &&
           sessionsCount! <= 5
         ) {
-          openModal!("binks");
+          if (!tutorialClicked) {
+            openModal!("binks");
+          }
           setIsLoading!(false);
           return;
         }

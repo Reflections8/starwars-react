@@ -11,6 +11,8 @@ type LoaderContextProps = {
   setIsLoading: (state: boolean) => void;
   sessionInteracted: boolean;
   setSessionInteracted: (state: boolean) => void;
+  tutorialClicked: boolean;
+  setTutorialClicked: (state: boolean) => void;
 };
 
 const LoaderContext = createContext<Partial<LoaderContextProps>>({});
@@ -18,6 +20,7 @@ const LoaderContext = createContext<Partial<LoaderContextProps>>({});
 export function LoaderProvider({ children }: LoaderProviderProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [sessionInteracted, setSessionInteracted] = useState(false);
+  const [tutorialClicked, setTutorialClicked] = useState(false);
 
   return (
     <LoaderContext.Provider
@@ -26,6 +29,8 @@ export function LoaderProvider({ children }: LoaderProviderProps) {
         setIsLoading,
         sessionInteracted,
         setSessionInteracted,
+        tutorialClicked,
+        setTutorialClicked,
       }}
     >
       {children}
