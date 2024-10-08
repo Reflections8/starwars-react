@@ -57,6 +57,12 @@ export function Game2() {
 
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    const pageLoader = document.querySelector(".pageLoader");
+    if (!pageLoader?.classList.contains("loadingModalBg--Hidden")) {
+      pageLoader?.classList.add("loadingModalBg--Hidden");
+    }
+  }, []);
+  useEffect(() => {
     if (!userDataJwt) {
       closeModal!();
       navigate("/");
