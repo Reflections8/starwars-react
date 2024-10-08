@@ -222,7 +222,7 @@ export function Player() {
   );
 }
 export function Weapon() {
-  const { blasters, jwt, startCheckBalance } = useUserData();
+  const { blasters, jwt, startCheckBalance, characters } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
   const { t } = useTranslation();
@@ -267,6 +267,11 @@ export function Weapon() {
     if (jwt == null || jwt === "" || !tonConnectUI.connected) {
       openDrawer!("connectWallet");
     } else {
+      if(characters.length == 0)
+      {
+        openDrawer!("rejected", "bottom", t("shopModal.blasterBuyDeclined"));
+        return;
+      }
       const fillTx: SendTransactionRequest = {
         validUntil: Math.floor(Date.now() / 1000) + 600,
         messages: [
