@@ -20,6 +20,7 @@ import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import {useTranslation} from "react-i18next";
 
 interface UserDataContextType {
   userDataDefined: boolean;
@@ -139,13 +140,16 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       ? false
       : true
   );
-  // @ts-ignore
   const [userMetrics, setUserMetrics] = useState<UserMetrics>({
     total_deposited: 0,
     total_earned_tokens: 0,
     earn_required: 0,
     earned: 0,
+    akronix_won: 0,
+    ton_won: 0,
+    credits_won: 0
   });
+  const { t } = useTranslation();
   const [exchangeRate, setExchangeRate] = useState(0);
   const [sessionsCount, setSessionsCount] = useState(null);
 
@@ -181,16 +185,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   //const [shouldReconnectFlag, setShouldReconnectFlag] = useState(true);
 
   const tonsRef = useRef<number>(tons);
-
-  /*const { sendMessage, lastMessage, readyState } = useWebSocket(SERVER_URL, {
-    share: false,
-    shouldReconnect: () => shouldReconnectFlag,
-    onClose: (event) => {
-      if (event.code == 249) {
-        setShouldReconnectFlag(false);
-      }
-    },
-  });*/
+  const blastersRef = useRef<Blaster[]>(blasters);
+  const charactersRef = useRef<Character[]>(characters);
 
   const updateCredits = (newCredits: number) => {
     setCredits(newCredits);
@@ -232,7 +228,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       const searchParams = new URLSearchParams(window.location.search); // Извлекаем строку параметров до хэша
       const idParam = searchParams.get("id");
       const id = idParam !== null ? Number(idParam) : -1;
-      console.log(idParam)
 
       const response = await fetch(SERVER_URL + "/main/auth", {
         method: "POST", // или 'POST', в зависимости от требований к API
@@ -295,10 +290,36 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   useEffect(() => {
     if (tonsRef.current < tons && checkBalance) {
-      openDrawer!("resolved", "bottom", "Успешное пополнение баланса");
+      openDrawer!("resolved", "bottom", t("shopModal.accountFilled"));
+      setCheckBalance(false);
     }
     tonsRef.current = tons;
   }, [tons, checkBalance]);
+
+  useEffect(() => {
+    if (blastersRef.current.length < blasters.length && checkBalance) {
+      try {
+        const newBlaster = blasters.filter(item2 => !blastersRef.current.some(item1 => item1.level === item2.level))[0];
+        if(newBlaster.level != 1) {
+          openDrawer!("resolved", "bottom", t("shopModal.blasterFilled"));
+          setCheckBalance(false);
+        }
+      }
+      catch (e)
+      {
+        //
+      }
+    }
+    blastersRef.current = blasters;
+  }, [blasters, checkBalance]);
+
+  useEffect(() => {
+    if (charactersRef.current.length < characters.length && checkBalance) {
+      openDrawer!("resolved", "bottom", t("shopModal.characterFilled"));
+      setCheckBalance(false);
+    }
+    charactersRef.current = characters;
+  }, [characters, checkBalance]);
 
   const [userDataDefined, setUserDataDefined] = useState(false);
 

@@ -174,17 +174,9 @@ export function Fill() {
             try {
               await tonConnectUI.sendTransaction(fillTx);
               startCheckBalance();
-              openDrawer!(
-                "resolved",
-                "bottom",
-                "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-              );
+              openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
             } catch (e) {
-              openDrawer!(
-                "rejected",
-                "bottom",
-                "Отправка транзакции была отклонена"
-              );
+              openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
             }
           }}
         />

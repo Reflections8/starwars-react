@@ -53,6 +53,9 @@
   "shopModal": {
     "title": "Shop",
 
+    "accountFilled": "Account filled successfully",
+    "blasterFilled": "New blaster successfully added to your account",
+    "characterFilled": "New character successfully added to your account",
     "transactionSent": "Transaction sent successfully.\n Wait for confirmation",
     "transactionDenied": "Transaction submission was rejected",
 

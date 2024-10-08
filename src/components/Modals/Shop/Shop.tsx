@@ -68,7 +68,7 @@ export function Shop() {
 }
 
 export function Player() {
-  const { characters, jwt, blasters } = useUserData();
+  const { characters, jwt, blasters, startCheckBalance } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
   const { t } = useTranslation();
@@ -107,6 +107,7 @@ export function Player() {
   ];*/
 
   /* TODO: NEW MOCK DATA FOR MODEL (base on new figma) */
+  // @ts-ignore
   const mockPlayerCards: ModelTypeNew[] = [
     {
       title: CharactersData[1].name,
@@ -194,6 +195,7 @@ export function Player() {
       };
       try {
         await tonConnectUI.sendTransaction(fillTx);
+        startCheckBalance();
         openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
       } catch (e) {
         openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
@@ -220,11 +222,12 @@ export function Player() {
   );
 }
 export function Weapon() {
-  const { blasters, jwt } = useUserData();
+  const { blasters, jwt, startCheckBalance } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
   const { t } = useTranslation();
 
+  // @ts-ignore
   const initialWeapons: WeaponType[] = [
     {
       title: BlastersData[1].name,
@@ -280,6 +283,7 @@ export function Weapon() {
       };
       try {
         await tonConnectUI.sendTransaction(fillTx);
+        startCheckBalance();
         openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
       } catch (e) {
         openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
