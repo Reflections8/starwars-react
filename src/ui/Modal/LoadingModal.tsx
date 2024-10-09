@@ -18,13 +18,15 @@ export function LoadingModal({ isOpen, className }: LoadingModalProps) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const green = document.querySelector(".loadingModal__loader-green");
-    const outer = document.querySelector(".loadingModal__loader-outer");
-    const inner = document.querySelector(".loadingModal__loader-inner");
-    const planet = document.querySelector(".loadingModal__loader-planet");
+    const green = document.querySelectorAll(".loadingModal__loader-green");
+    const outer = document.querySelectorAll(".loadingModal__loader-outer");
+    const inner = document.querySelectorAll(".loadingModal__loader-inner");
+    const planet = document.querySelectorAll(".loadingModal__loader-planet");
 
     [green, outer, inner, planet].forEach((item) => {
-      item?.classList.remove("animationPaused");
+      item.forEach((nested) => {
+        nested?.classList.remove("animationPaused");
+      });
     });
   }, []);
   return (
