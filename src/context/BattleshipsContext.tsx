@@ -8,16 +8,16 @@ import {
   useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
 import { Gameboard as ArrangementBoard } from "../components/Modals/ShipsArrangement2/gameboard";
+import { Gameboard } from "../pages/game2/components/GameFields/gameboard";
 import { playBeamAnimation, useSound } from "./SeaContexts";
 
-import { Room } from "../components/Modals/SeaBattle/types/types";
 import {
   fetchRooms,
   getMe,
 } from "../components/Modals/SeaBattle/service/sea-battle.service";
 import { BetTypeEnum } from "../components/Modals/SeaBattle/types/enum";
+import { Room } from "../components/Modals/SeaBattle/types/types";
 
 type BattleshipsProviderProps = {
   children: ReactNode;
@@ -55,7 +55,9 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
   const [approveGame, setApproveGame] = useState<any>(null);
   const [gameState, setGameState] = useState(gameStates.NOT_STARTED);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [jwt] = useState<string>(localStorage.getItem("auth_jwt") || "");
+  const [jwt, setJwt] = useState<string>(
+    localStorage.getItem("auth_jwt") || ""
+  );
   const [isInitial, setIsInitial] = useState(true);
   const [roomName, setRoomName] = useState("");
   const [opponentName, setOpponentName] = useState("");
@@ -433,32 +435,36 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
           createWebSocket();
         }
       }, 5000);
-
-      // TODO: это переоткрывает только если код ошибки не 1000
-      // if (event.code !== 1000) {
-      //   console.error(
-      //     "Код закрытия WebSocket:",
-      //     event.code,
-      //     "Причина:",
-      //     event.reason || "Неизвестная причина"
-      //   );
-      //   // Попробовать переподключиться через 1 секунду
-      //   setTimeout(() => {
-      //     if (
-      //       !socketRef.current ||
-      //       socketRef.current.readyState === WebSocket.CLOSED
-      //     ) {
-      //       createWebSocket();
-      //     }
-      //   }, 1000);
-      // }
     };
 
     socketRef.current = ws;
     setSocket(ws);
   };
 
+  const [intervalJwt, setIntervalJwt] = useState(
+    localStorage.getItem("auth_jwt")
+  );
+
+  const getLocalJwt = () => {
+    const jwt = localStorage.getItem("auth_jwt");
+    if (jwt) {
+      setIntervalJwt(jwt || "");
+      setJwt(jwt);
+    }
+  };
+
   useEffect(() => {
+    const interval = setInterval(() => {
+      getLocalJwt();
+    }, 3000);
+
+    if (intervalJwt) {
+      clearInterval(interval);
+    }
+  }, [intervalJwt]);
+
+  useEffect(() => {
+    console.log({ intervalJwt, jwt });
     if (!jwt) {
       navigate("/");
       return;
@@ -478,7 +484,7 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
       }
       socketRef.current = null; // Обнуляем ссылку на сокет
     };
-  }, [jwt]);
+  }, [jwt, intervalJwt]);
 
   useEffect(() => {
     const newGameboard = new Gameboard();

@@ -20,7 +20,7 @@ import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
 import { useTonConnectUI } from "@tonconnect/ui-react";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 interface UserDataContextType {
   userDataDefined: boolean;
@@ -147,7 +147,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     earned: 0,
     akronix_won: 0,
     ton_won: 0,
-    credits_won: 0
+    credits_won: 0,
   });
   const { t } = useTranslation();
   const [exchangeRate, setExchangeRate] = useState(0);
@@ -299,14 +299,15 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   useEffect(() => {
     if (blastersRef.current.length < blasters.length && checkBalance) {
       try {
-        const newBlaster = blasters.filter(item2 => !blastersRef.current.some(item1 => item1.level === item2.level))[0];
-        if(newBlaster.level != 1) {
+        const newBlaster = blasters.filter(
+          (item2) =>
+            !blastersRef.current.some((item1) => item1.level === item2.level)
+        )[0];
+        if (newBlaster.level != 1) {
           openDrawer!("resolved", "bottom", t("shopModal.blasterFilled"));
           setCheckBalance(false);
         }
-      }
-      catch (e)
-      {
+      } catch (e) {
         //
       }
     }
