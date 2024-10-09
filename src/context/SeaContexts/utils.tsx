@@ -4,6 +4,7 @@ export const playBeamAnimation = (
   isHit: string,
   blastIt: (isHit: string) => void
 ) => {
+  return;
   blastIt(isHit);
   const targetCell = document.getElementById(
     `${me ? "enemy" : "user"}Cell${row}-${column}`
