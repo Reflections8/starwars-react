@@ -25,6 +25,7 @@ import audioKilledShot from "./audio/shot-killed.mp3";
 import audioMissedShot from "./audio/shot-missed.mp3";
 import audioSuccessShot from "./audio/shot-success.mp3";
 import audioShot from "./audio/shot.mp3";
+import { getMe } from "../../components/Modals/SeaBattle/service/sea-battle.service";
 enableDragDropTouch();
 
 const timerSeconds = 30;
@@ -68,6 +69,9 @@ export function Game2() {
       closeModal!();
       return;
     }
+    getMe().then((res) => {
+      localStorage.setItem("username", res.username);
+    });
     openModal!("seaBattle");
     setIsLoading(false);
   }, [userDataJwt]);

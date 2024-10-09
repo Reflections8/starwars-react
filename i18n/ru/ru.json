@@ -5,7 +5,8 @@
     "point": "Ед.",
     "minute": "мин",
     "second": "сек",
-    "currentBalance": "Доступно"
+    "currentBalance": "Доступно",
+    "galaxyLoading": "Загрузка галактики"
   },
   "homePage": {
     "exit": "Выход",
@@ -52,12 +53,14 @@
   },
   "shopModal": {
     "title": "Магазин",
+
     "accountFilled": "Успешное пополнение баланса",
     "blasterFilled": "Новый бластер успешно приобретен",
     "characterFilled": "Новый персонаж успешно приобретен",
     "transactionSent": "Транзакция успешно отправлена.\n Ожидайте подтвержения",
     "transactionDenied": "Отправка транзакции была отклонена",
     "blasterBuyDeclined": "Покупка бластера отклонена. \n Для начала необходимо приобрести персонажа",
+    "combatIndicators": "Боевые показатели",
 
     "playerTab": {
       "title": "Игрок",
@@ -220,12 +223,17 @@
   "repairDrawer": {
     "repair100": "Починить на 100%",
     "price": "Цена",
-    "repair": "Подтвердить"
+    "repair": "Подтвердить",
+    "notEnoughCredits": "Недостаточно кредитов для починки бластера",
+    "error": "Произошла ошибка во время выполнения операции",
+    "succesfullRepair": "Починка бластера выполнена успешно"
   },
   "healDrawer": {
     "heal100": "Исцелить на 100%",
     "price": "Цена",
-    "heal": "Подтвердить"
+    "heal": "Подтвердить",
+    "transactionSent": "Транзакция успешно отправлена.\n Ожидайте подтвержения",
+    "transactionDenied": "Отправка транзакции была отклонена"
   },
   "resolvedDrawer": {
     "title": "Успешно"
@@ -343,7 +351,10 @@
     "upgrade": "Улучшение",
     "damage": "Урон",
     "charge": "Заряд",
-    "chargeReplenishementSpeed": "Скр. восполнения заряда"
+    "chargeReplenishementSpeed": "Скр. восполнения заряда",
+    "notEnoughCredits": "Недостаточно кредитов для улучшения бластера",
+    "operationError": "Произошла ошибка во время выполнения операции",
+    "successUpgrade": "Улучшение бластера выполнено успешно"
   },
   "searchingDuel": {
     "searching": "Идет поиск"

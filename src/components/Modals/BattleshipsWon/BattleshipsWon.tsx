@@ -7,10 +7,11 @@ import { useModal } from "../../../context/ModalContext";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import bg from "./img/bg.png";
 import textImg from "./img/text.svg";
+import textImgEng from "./img/text-eng.svg";
 import "./styles/BattleshipsWon.css";
 
 export function BattleshipsWon() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { openModal, closeModal } = useModal();
   const { setGameState, betAmount, betType } = useBattleships();
 
@@ -22,7 +23,11 @@ export function BattleshipsWon() {
   return (
     <div className="battleshipsWon">
       <img src={bg} alt="" className="battleshipsWon__bg" />
-      <img src={textImg} alt="" className="battleshipsWon__textImg" />
+      <img
+        src={i18n.language === "en" ? textImgEng : textImg}
+        alt=""
+        className="battleshipsWon__textImg"
+      />
 
       <div className="battleshipsWon__text">
         <div className="battleshipsWon__text-key">

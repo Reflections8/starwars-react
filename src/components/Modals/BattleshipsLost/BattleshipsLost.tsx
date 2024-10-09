@@ -1,6 +1,7 @@
 import "./styles/BattleshipsLost.css";
 import bg from "./img/bg.png";
 import textImg from "./img/text.svg";
+import textImgEng from "./img/text-eng.svg";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import { useModal } from "../../../context/ModalContext";
 import {
@@ -10,7 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 export function BattleshipsLost() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { openModal, closeModal } = useModal();
   const { setGameState, betAmount, betType } = useBattleships();
 
@@ -22,7 +23,11 @@ export function BattleshipsLost() {
   return (
     <div className="battleshipsLost">
       <img src={bg} alt="" className="battleshipsLost__bg" />
-      <img src={textImg} alt="" className="battleshipsLost__textImg" />
+      <img
+        src={i18n.language === "en" ? textImgEng : textImg}
+        alt=""
+        className="battleshipsLost__textImg"
+      />
 
       <div className="battleshipsWon__text">
         <div className="battleshipsWon__text-key">

@@ -24,6 +24,7 @@ import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
 import bgSound from "../home/audio/main_bg.mp3";
+import { getMe } from "../../components/Modals/SeaBattle/service/sea-battle.service.ts";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -232,6 +233,9 @@ export function Home() {
 
   useEffect(() => {
     if (jwt && tonConnectUI.connected) {
+      getMe().then((res) => {
+        localStorage.setItem("username", res.username);
+      });
       setCanQuit(true);
     } else {
       // ProofApiService.reset();

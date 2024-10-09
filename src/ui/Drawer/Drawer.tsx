@@ -264,11 +264,7 @@ function Upgrade() {
     if (nextOptionLevel >= 4) return;
 
     if (credits < getPriceByLevel(nextOptionLevel)) {
-      openDrawer!(
-        "rejected",
-        "bottom",
-        "Недостаточно кредитов для улучшения бластера"
-      );
+      openDrawer!("rejected", "bottom", t("upgradeDrawer.notEnoughCredits"));
       return;
     }
 
@@ -288,25 +284,13 @@ function Upgrade() {
         });
 
         if (!response.ok) {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Произошла ошибка во время выполнения операции"
-          );
+          openDrawer!("rejected", "bottom", t("upgradeDrawer.operationError"));
         } else {
-          openDrawer!(
-            "resolved",
-            "bottom",
-            "Улучшение бластера выполнено успешно."
-          );
+          openDrawer!("resolved", "bottom", t("upgradeDrawer.successUpgrade"));
           await updateUserInfo(jwt);
         }
       } catch (e) {
-        openDrawer!(
-          "rejected",
-          "bottom",
-          "Произошла ошибка во время выполнения операции"
-        );
+        openDrawer!("rejected", "bottom", t("upgradeDrawer.operationError"));
       }
     }
   };
@@ -470,11 +454,7 @@ function Repair() {
     if (!activeBlaster || activeBlaster.level == 1) return;
 
     if (credits < getBlasterRepairPrice(activeBlaster.level)) {
-      openDrawer!(
-        "rejected",
-        "bottom",
-        "Недостаточно кредитов для починки бластера"
-      );
+      openDrawer!("rejected", "bottom", t("repairDrawer.notEnoughCredits"));
       return;
     }
 
@@ -493,25 +473,13 @@ function Repair() {
         });
 
         if (!response.ok) {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Произошла ошибка во время выполнения операции"
-          );
+          openDrawer!("rejected", "bottom", t("repairDrawer.error"));
         } else {
-          openDrawer!(
-            "resolved",
-            "bottom",
-            "Починка бластера выполнена успешно."
-          );
+          openDrawer!("resolved", "bottom", t("repairDrawer.succesfullRepair"));
           await updateUserInfo(jwt);
         }
       } catch (e) {
-        openDrawer!(
-          "rejected",
-          "bottom",
-          "Произошла ошибка во время выполнения операции"
-        );
+        openDrawer!("rejected", "bottom", t("repairDrawer.error"));
       }
     }
   };
@@ -591,14 +559,10 @@ function Heal() {
       };
       try {
         await tonConnectUI.sendTransaction(fillTx);
-        openDrawer!(
-          "resolved",
-          "bottom",
-          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-        );
+        openDrawer!("resolved", "bottom", t("healDrawer.transactionSent"));
       } catch (e) {
         console.log(e);
-        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+        openDrawer!("rejected", "bottom", t("healDrawer.transactionDenied"));
       }
     }
   };

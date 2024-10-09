@@ -8,6 +8,7 @@ import gridBottomElement from "./img/grid-bg-bottom-element.png";
 import gridBg from "./img/grid-bg.svg";
 import rulesCornerImg from "./img/rules-button-corner.svg";
 import rulesImg from "./img/rules-button.svg";
+import rulesImgEng from "./img/rules-button-eng.svg";
 import "./styles/ShipsArrangement.css";
 import {
   gameStates,
@@ -15,6 +16,7 @@ import {
 } from "../../../context/BattleshipsContext";
 import { Rules } from "../SeaBattle/components/Rules/Rules";
 import backImg from "../SeaBattle/img/back-button.svg";
+import backImgEng from "../SeaBattle/img/back-button-eng.svg";
 import bgAudio from "./audio/arrangement.mp3";
 import { useTranslation } from "react-i18next";
 
@@ -42,7 +44,7 @@ export function ShipsArrangement2() {
   return <ShipsArrangementChild />;
 }
 export function ShipsArrangementChild() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [allShipsSettled, setAllShipsSettled] = useState(false);
   const [selectedShipToSettle, setSelectedShipToSettle] =
@@ -212,7 +214,7 @@ export function ShipsArrangementChild() {
             className="seaBattle__rulesButtonWrapper-btn-corner--Left"
           />
           <img
-            src={rulesImg}
+            src={i18n.language === "en" ? rulesImgEng : rulesImg}
             alt="rules"
             className="seaBattle__rulesButtonWrapper-btn"
             onClick={(e) => {
@@ -311,7 +313,7 @@ export function ShipsArrangementChild() {
             className="seaBattle__rulesButtonWrapper-btn-corner--Left"
           />
           <img
-            src={backImg}
+            src={i18n.language === "en" ? backImgEng : backImg}
             alt="rules"
             className="seaBattle__rulesButtonWrapper-btn"
             onClick={(e) => {

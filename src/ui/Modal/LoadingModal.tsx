@@ -7,6 +7,7 @@ import innerBorder from "./img/loader/inner-border.svg";
 import planet from "./img/loader/planet.png";
 import "./styles/loadingModal.css";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 type LoadingModalProps = {
   isOpen?: boolean;
@@ -14,6 +15,8 @@ type LoadingModalProps = {
 };
 
 export function LoadingModal({ isOpen, className }: LoadingModalProps) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     const green = document.querySelector(".loadingModal__loader-green");
     const outer = document.querySelector(".loadingModal__loader-outer");
@@ -44,7 +47,7 @@ export function LoadingModal({ isOpen, className }: LoadingModalProps) {
       />
 
       <div className="loadingModal">
-        <div className="loadingModal__title">Загрузка галактики</div>
+        <div className="loadingModal__title">{t("global.galaxyLoading")}</div>
         <div className="loadingModal__dots">...</div>
 
         <div className="loadingModal__loader">

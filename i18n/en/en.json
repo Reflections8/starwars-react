@@ -5,7 +5,8 @@
     "point": "Pt.",
     "minute": "min",
     "second": "sec",
-    "currentBalance": "Available"
+    "currentBalance": "Available",
+    "galaxyLoading": "Galaxy loading"
   },
   "homePage": {
     "exit": "Exit",
@@ -59,6 +60,7 @@
     "transactionSent": "Transaction sent successfully.\n Wait for confirmation",
     "transactionDenied": "Transaction submission was rejected",
     "blasterBuyDeclined": "Blaster purchase declined.\n First of all purchase the character",
+    "combatIndicators": "Combat indicators",
 
     "playerTab": {
       "title": "Player",
@@ -221,12 +223,17 @@
   "repairDrawer": {
     "repair100": "Repair 100%",
     "price": "Price",
-    "repair": "Repair"
+    "repair": "Repair",
+    "notEnoughCredits": "Not enough credits to repair the blaster",
+    "error": "An error occurred during the operation",
+    "succesfullRepair": "Blaster repair completed successfully"
   },
   "healDrawer": {
     "heal100": "Heal 100%",
     "price": "Price",
-    "heal": "Heal"
+    "heal": "Heal",
+    "transactionSent": "Transaction sent successfully.\n Wait for confirmation",
+    "transactionDenied": "Transaction submission was rejected"
   },
   "resolvedDrawer": {
     "title": "Done"
@@ -344,7 +351,10 @@
     "upgrade": "Upgrade",
     "damage": "Damage",
     "charge": "Charge",
-    "chargeReplenishementSpeed": "Charge replenishment speed"
+    "chargeReplenishementSpeed": "Charge replenishment speed",
+    "notEnoughCredits": "Not enough credits to upgrade the blaster",
+    "operationError": "An error occurred during the operation",
+    "successUpgrade": "Blaster upgrade completed successfully"
   },
   "searchingDuel": {
     "searching": "Searching game"

@@ -22,6 +22,7 @@ export function StoreCardModel({
   imgSrc,
   type,
 }: StoreModelType) {
+  const { t } = useTranslation();
   const { openDrawer } = useDrawer();
   const { selectHealingCharacter } = useUserData();
   return (
@@ -32,7 +33,7 @@ export function StoreCardModel({
     >
       <div className="player-card-title">{title}</div>
       <div className="player-card-subtitle">
-        <span> Боевые показатели:</span>
+        <span> {t("shopModal.combatIndicators")}:</span>
         <span className="red">
           {combatPerfomanceReduction ? ` ${combatPerfomanceReduction}%` : ""}
         </span>
@@ -43,20 +44,20 @@ export function StoreCardModel({
           <div className="player-card-main-info-list">
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
-                сила(урон):
+                {t("shopModal.playerTab.powerDamage")}:
               </div>
               <div className="player-card-main-info-list-item-value">
                 {strength}{" "}
                 {needRestoration ? null : (
                   <span className="green">(+{strengthUpgrade}) </span>
                 )}
-                ед.
+                {t("global.point")}
               </div>
             </div>
 
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
-                перезарядка:
+                {t("shopModal.weaponTab.reload")}:
               </div>
               <div className="player-card-main-info-list-item-value">
                 {reload}
@@ -64,12 +65,14 @@ export function StoreCardModel({
                 {needRestoration ? null : (
                   <span className="green"> (+{reloadUpgrade})</span>
                 )}
-                %/мин
+                %/{t("global.minute")}
               </div>
             </div>
 
             <div className="player-card-main-info-list-item">
-              <div className="player-card-main-info-list-item-key">заряд:</div>
+              <div className="player-card-main-info-list-item-key">
+                {t("shopModal.weaponTab.charge")}:
+              </div>
               <div className="player-card-main-info-list-item-value">
                 {charge}{" "}
                 {needRestoration ? null : (
@@ -80,7 +83,7 @@ export function StoreCardModel({
 
             <div className="player-card-main-info-list-item">
               <div className="player-card-main-info-list-item-key">
-                здоровье:
+                {t("shopModal.playerTab.health")}:
               </div>
               <div className="player-card-main-info-list-item-value">
                 <span className="red">{healthCurrent.toFixed(3)}</span>{" "}
@@ -95,7 +98,7 @@ export function StoreCardModel({
             >
               <CuttedButton
                 size="small"
-                text={"Исцелить"}
+                text={t("healModal.buttonText")}
                 callback={() => {
                   selectHealingCharacter(type);
                   openDrawer!("heal");
