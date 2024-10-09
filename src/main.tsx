@@ -69,7 +69,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     }}
   >
     <RouterProvider router={router} />
-
   </TonConnectUIProvider>
   //   </React.StrictMode>
 );

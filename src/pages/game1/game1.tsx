@@ -57,9 +57,7 @@ export function Game1() {
 
   useEffect(() => {
     const pageLoader = document.querySelector(".pageLoader");
-    if (!pageLoader?.classList.contains("loadingModalBg--Hidden")) {
-      pageLoader?.classList.add("loadingModalBg--Hidden");
-    }
+    pageLoader?.classList.add("loadingModalBg--Hidden");
     setIsLoading!(true);
   }, []);
 

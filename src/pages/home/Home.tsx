@@ -256,11 +256,9 @@ export function Home() {
   useEffect(() => {
     if (userDataDefined) {
       const pageLoader = document.querySelector(".pageLoader");
-      if (!pageLoader?.classList.contains("loadingModalBg--Hidden")) {
-        setTimeout(() => {
-          pageLoader?.classList.add("loadingModalBg--Hidden");
-        }, 100);
-      }
+      setTimeout(() => {
+        pageLoader?.classList.add("loadingModalBg--Hidden");
+      }, 100);
     }
   }, [userDataDefined]);
 
