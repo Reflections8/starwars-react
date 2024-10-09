@@ -19,6 +19,13 @@
   gap: 5px;
 }
 
+.bet__inputBlock--CurrentBalance {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .bet__inputBlock-sup {
   display: flex;
   align-items: center;

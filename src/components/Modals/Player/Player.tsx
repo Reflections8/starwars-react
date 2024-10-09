@@ -96,6 +96,11 @@ export function Player() {
       const strengthUpgrade = !needRestoration ? blaster.damage : -1;
       const chargeUpgrade = !needRestoration ? blaster.max_charge : -1;
 
+      const maxHealth = CharactersData[character.type - 1].price * 1000;
+      const health = Math.round(
+        maxHealth - (character.earned / character.earn_required) * maxHealth
+      );
+
       return {
         title: "-" + CharactersData[character.type - 1].name + "-",
         needRestoration: needRestoration,
@@ -106,10 +111,14 @@ export function Player() {
         reloadUpgrade: reloadUpgrade,
         charge: charge,
         chargeUpgrade: chargeUpgrade,
-        healthCurrent: Math.round(
-          2000 - (character.earned / character.earn_required) * 2000
-        ),
-        healthMax: 2000,
+        // @ts-ignore
+        healthCurrent: ((health <= 0 ? 0 : health) / 1000)
+          .toFixed(3)
+          .toString(),
+        // @ts-ignore
+        healthMax: CharactersData[character.type - 1].price
+          .toFixed(3)
+          .toString(),
         imgSrc: CharactersData[character.type - 1].image,
         type: character.type,
       };

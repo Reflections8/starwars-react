@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import { useSound } from "../../../../context/SeaContexts";
 import { useBattleships } from "../../../../context/BattleshipsContext";
 import { useModal } from "../../../../context/ModalContext";
+import { useSound } from "../../../../context/SeaContexts";
 import { ClearedTimer } from "../../SeaBattle/components/ClearedTimer/ClearedTimer";
 
 const initialSeconds = 60;
@@ -18,6 +18,14 @@ export const Timer: FC<{
   } = useBattleships();
   const { closeModal } = useModal();
   const { startBackgroundAudio } = useSound();
+  //   const { soundSetting } = useUserData();
+  const [soundSetting] = useState(
+    localStorage.getItem("sound_setting") === "on"
+      ? true
+      : localStorage.getItem("sound_setting") === "off"
+      ? false
+      : true
+  );
 
   const handleStartGame = () => {
     setMyBoardState((prev: any) => ({
@@ -29,7 +37,9 @@ export const Timer: FC<{
         };
       }),
     }));
-    startBackgroundAudio();
+    if (soundSetting) {
+      startBackgroundAudio();
+    }
     closeModal!();
     setBlockedState(false);
   };

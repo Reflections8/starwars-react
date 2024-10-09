@@ -10,11 +10,13 @@ type DrawerContextProps = {
   openDrawer: (
     type: string,
     position?: "top" | "bottom",
-    text?: string
+    text?: string,
+    button?: ReactNode | null
   ) => void;
   closeDrawer: () => void;
   drawerPosition: string;
   drawerText: string;
+  button?: ReactNode | null;
 };
 
 const DrawerContext = createContext<Partial<DrawerContextProps>>({});
@@ -24,21 +26,25 @@ export function DrawerProvider({ children }: DrawerProviderProps) {
   const [drawerType, setDrawerType] = useState("");
   const [drawerPosition, setDrawerPosition] = useState("bottom");
   const [drawerText, setDrawerText] = useState("");
+  const [button, setButton] = useState<ReactNode | null>(null);
 
   const openDrawer = (
     type: string,
     position: "top" | "bottom" = "bottom",
-    text?: string
+    text?: string,
+    argsButton?: ReactNode
   ) => {
     setDrawerText(text || "");
     setDrawerPosition(position);
     setDrawerType(type);
     setIsOpen(true);
+    setButton(argsButton || null);
   };
 
   const closeDrawer = () => {
     setIsOpen(false);
     setDrawerText("");
+    setButton(null);
   };
 
   return (
@@ -50,6 +56,7 @@ export function DrawerProvider({ children }: DrawerProviderProps) {
         closeDrawer,
         drawerPosition,
         drawerText,
+        button,
       }}
     >
       {children}

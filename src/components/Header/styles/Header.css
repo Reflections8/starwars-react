@@ -84,6 +84,13 @@
   pointer-events: none;
 }
 
+.header__top-left-bgBlur.games {
+  position: absolute;
+  pointer-events: none;
+  transform: scaleX(-1);
+  top: -70px;
+}
+
 .header__top-right {
   position: relative;
   width: 100%;
@@ -112,6 +119,13 @@
   width: 100%;
   transform: scaleX(-1);
   pointer-events: none;
+}
+
+.header__top-right-bgBlur.options {
+  position: absolute;
+  pointer-events: none;
+  transform: none;
+  top: -70px;
 }
 
 .header__top-right {

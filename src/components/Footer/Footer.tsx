@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { FooterAmmoBgIcon } from "../../icons/FooterAmmoBgIcon";
 import bgBottom from "./img/bg-bottom.png";
 import bgBottomBar from "./img/bottom-bar.png";
-import weaponBg from "./img/weapon-bg.png";
-import weaponImg from "./img/weapon.png";
+import weaponBgLeft from "./img/weapon-bg-left.png";
+import weaponBgRight from "./img/weapon-bg-right.png";
+import weaponImg1 from "./img/m 002.png";
+import weaponImg2 from "./img/fg 13.png";
+import weaponImg3 from "./img/ef 4.png";
+
 import "./styles/Footer.css";
 import "./styles/FooterAnimation.css";
 
@@ -13,8 +17,17 @@ type FooterProps = {
   charges: number;
 };
 
-export function Footer({ clip, power, charges }: Partial<FooterProps>) {
+// @ts-ignore
+export function Footer({
+  clip,
+  power,
+  charges,
+  // @ts-ignore
+  weaponLevel,
+}: Partial<FooterProps>) {
   const chargeArray = Array.from(Array(25));
+
+  const weaponArr = [weaponImg1, weaponImg2, weaponImg3];
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -35,15 +48,32 @@ export function Footer({ clip, power, charges }: Partial<FooterProps>) {
           </div>
           <div className="footer__top-center">
             <img
-              src={weaponImg}
+              src={weaponArr[weaponLevel - 1]}
               alt="weapon"
               className="footer__top-center-weapon"
             />
-            <img
-              src={weaponBg}
-              alt="bg-weapon"
-              className="footer__top-center-weaponBg"
-            />
+            <div className="footer__top-center-weaponBg">
+              <img
+                src={weaponBgLeft}
+                alt=""
+                className="footer__top-center-weaponBg-left"
+              />
+              <img
+                src={weaponBgRight}
+                alt=""
+                className="footer__top-center-weaponBg-right"
+              />
+              {/* <img
+                src={weaponBgTop}
+                alt=""
+                className="footer__top-center-weaponBg-top"
+              /> */}
+              {/* <img
+                src={weaponBgBottom}
+                alt=""
+                className="footer__top-center-weaponBg-bottom"
+              /> */}
+            </div>
           </div>
           <div className="footer__top-right">
             <div className="footer__top-content">

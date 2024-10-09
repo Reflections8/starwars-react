@@ -77,7 +77,7 @@ export function MainLinks() {
               return;
             }
 
-            openModal!("player");
+            openModal!("playerNew");
           }}
         >
           <img

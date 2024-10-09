@@ -8,11 +8,15 @@ import game2Bg from "./img/game2-bg.png";
 import "./styles/chooseGame.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useUserData } from "../../../UserDataService.tsx";
+import { useDrawer } from "../../../context/DrawerContext.tsx";
 
 export function ChooseGame() {
   const { t } = useTranslation();
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
+  const { openDrawer, closeDrawer } = useDrawer();
   const navigate = useNavigate();
+  const { characters, blasters } = useUserData();
   function openGame(linkToGame: string) {
     //@ts-ignore
     closeModal();
@@ -41,6 +45,36 @@ export function ChooseGame() {
           text={t("chooseGameModal.play")}
           size="small"
           callback={() => {
+            if (characters.length == 0) {
+              openDrawer!(
+                "rejected",
+                "bottom",
+                t("chooseGameModal.nonPlayableCh"),
+                <CuttedButton
+                  text={t("shopModal.title")}
+                  callback={() => {
+                    closeDrawer!();
+                    openModal!("shop");
+                  }}
+                />
+              );
+              return;
+            }
+            if (blasters.length == 0) {
+              openDrawer!(
+                "rejected",
+                "bottom",
+                t("chooseGameModal.nonPlayableBl"),
+                <CuttedButton
+                  text={t("shopModal.title")}
+                  callback={() => {
+                    closeDrawer!();
+                    openModal!("shop");
+                  }}
+                />
+              );
+              return;
+            }
             openGame("/game1");
           }}
         />
@@ -58,7 +92,10 @@ export function ChooseGame() {
             alt="game-2"
             className="chooseGame__game-main-icon"
           />
-          <div className="chooseGame__game-main-text">
+          <div
+            className="chooseGame__game-main-text"
+            style={{ fontSize: "13px" }}
+          >
             {t("chooseGameModal.battleships")}
           </div>
         </div>
@@ -66,6 +103,36 @@ export function ChooseGame() {
           text={t("chooseGameModal.play")}
           size="small"
           callback={() => {
+            if (characters.length == 0) {
+              openDrawer!(
+                "rejected",
+                "bottom",
+                t("chooseGameModal.nonPlayableCh"),
+                <CuttedButton
+                  text={t("shopModal.title")}
+                  callback={() => {
+                    closeDrawer!();
+                    openModal!("shop");
+                  }}
+                />
+              );
+              return;
+            }
+            if (blasters.length == 0) {
+              openDrawer!(
+                "rejected",
+                "bottom",
+                t("chooseGameModal.nonPlayableBl"),
+                <CuttedButton
+                  text={t("shopModal.title")}
+                  callback={() => {
+                    closeDrawer!();
+                    openModal!("shop");
+                  }}
+                />
+              );
+              return;
+            }
             openGame("/game2");
           }}
         />

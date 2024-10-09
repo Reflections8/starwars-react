@@ -174,17 +174,9 @@ export function Fill() {
             try {
               await tonConnectUI.sendTransaction(fillTx);
               startCheckBalance();
-              openDrawer!(
-                "resolved",
-                "bottom",
-                "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-              );
+              openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
             } catch (e) {
-              openDrawer!(
-                "rejected",
-                "bottom",
-                "Отправка транзакции была отклонена"
-              );
+              openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
             }
           }}
         />
@@ -207,7 +199,7 @@ export function Exchange() {
     if (/^[0-9]*$/.test(value)) {
       setCredits(value);
       setTokens(
-        value === "" ? "" : (parseInt(value, 10) * exchangeRate).toFixed(1)
+        value === "" ? "" : (parseInt(value, 10) * exchangeRate).toString()
       );
     }
   };
@@ -263,21 +255,21 @@ export function Exchange() {
         if (response.ok) {
           const data = await response.json();
           if (data.code == 1) {
-            openDrawer!("resolved", "bottom", "Обмен выполнен успешно");
+            openDrawer!("resolved", "bottom", t("walletModal.successExhange"));
             await updateUserInfo(jwt);
             return;
           }
         }
-        openDrawer!("rejected", "bottom", "Произошла ошибка во время обмена");
+        openDrawer!("rejected", "bottom", t("walletModal.failedExchange"));
       } catch (error) {
         console.log(error);
-        openDrawer!("rejected", "bottom", "Произошла ошибка во время обмена");
+        openDrawer!("rejected", "bottom", t("walletModal.failedExchange"));
       }
     } else {
       openDrawer!(
         "rejected",
         "bottom",
-        "Неккоректное количество кредитов для обмена"
+        t("walletModal.invalidAmountOfCredits")
       );
     }
   };
@@ -459,7 +451,7 @@ export function Withdraw() {
             openDrawer!(
               "resolved",
               "bottom",
-              "Вывод добавлен в обработку. Скорость подтверждения зависит от загруженности сети TON."
+              t("walletModal.withDrawalInProgress")
             );
             await updateUserInfo(jwt);
             return;
@@ -467,31 +459,32 @@ export function Withdraw() {
         } else if (response.status === 400) {
           const reason = await response.text();
           if (reason === "you can withdraw 1 time per hour")
-            openDrawer!("rejected", "bottom", "Вы можете выводить 1 раз в час");
+            openDrawer!("rejected", "bottom", t("walletModal.onePerHour"));
           else if (reason === "not enough ton balance")
-            openDrawer!("rejected", "bottom", "Недостаточно TON для вывода");
+            openDrawer!("rejected", "bottom", t("walletModal.notEnoughTON"));
           else if (reason === "not enough jetton balance")
-            openDrawer!("rejected", "bottom", "Недостаточно AKRON для вывода");
+            openDrawer!("rejected", "bottom", t("walletModal.notEnoughAKRON"));
           else if (reason === "not enough ton fee for jetton withdraw")
             openDrawer!(
               "rejected",
               "bottom",
-              "Недостаточно TON для оплаты комиссии для вывода AKRON\nНеобходимо минимум: 0.05 TON"
+              t("walletModal.notEnoughTONTaxes")
             );
           return;
         }
-        openDrawer!("rejected", "bottom", "Произошла ошибка во время вывода");
+        openDrawer!("rejected", "bottom", t("walletModal.failedWithdrawal"));
       } catch (error) {
         console.log(error);
-        openDrawer!("rejected", "bottom", "Произошла ошибка во время вывода");
+        openDrawer!("rejected", "bottom", t("walletModal.failedWithdrawal"));
       }
     } else {
       openDrawer!(
         "rejected",
         "bottom",
-        "Неккоректное количество " +
+        t("walletModal.invalidAmount") +
           activeCurrency.label.toUpperCase() +
-          " для обмена"
+          " " +
+          t("walletModal.forExchange")
       );
     }
   };

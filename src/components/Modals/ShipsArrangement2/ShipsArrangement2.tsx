@@ -58,6 +58,15 @@ export function ShipsArrangementChild() {
     gameState,
   } = useBattleships();
 
+  //   const { soundSetting } = useUserData();
+  const [soundSetting] = useState(
+    localStorage.getItem("sound_setting") === "on"
+      ? true
+      : localStorage.getItem("sound_setting") === "off"
+      ? false
+      : true
+  );
+
   useEffect(() => {
     const isSettledAll = Object.values(gameboard.getUnsettledShips()).every(
       (item) => item === 0
@@ -182,8 +191,10 @@ export function ShipsArrangementChild() {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    // @ts-ignore
-    audioRef.current.play();
+    if (soundSetting) {
+      // @ts-ignore
+      audioRef.current.play();
+    }
   }, []);
 
   return (

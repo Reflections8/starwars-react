@@ -6,6 +6,7 @@ import avatarBg from "./img/avatar-bg.png";
 import leftBg from "./img/left-bg.svg";
 import rightBg from "./img/turn-bg.svg";
 import "./styles/GameHeader.css";
+import defaultAva from "../../../../icons/no_avatar.png";
 
 export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
   const { t } = useTranslation();
@@ -24,16 +25,6 @@ export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
     if (opponentName) {
       loadOpponentAvatar(opponentName);
     }
-
-    const images = document.querySelectorAll<HTMLImageElement>(".check-image");
-
-    images.forEach((img) => {
-      img.onload = function () {
-        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
-          img.src = "/ui/img/default_ava.png";
-        }
-      };
-    });
   }, [opponentName]);
 
   const [myTurnDebounced, setMyTurnDebounced] = useState(myTurn);
@@ -71,9 +62,12 @@ export const GameHeader: FC<{ myTurn: boolean }> = ({ myTurn }) => {
               className="gameHeader__left-avatarBlock-avatar check-image"
             />
           ) : (
-            <div className="gameHeader__left-avatarBlock-avatarDefault">
-              {opponentName[0]}
-            </div>
+            <img
+              src={defaultAva}
+              alt=""
+              width="46px"
+              className="gameHeader__left-avatarBlock-avatarDefault"
+            />
           )}
         </div>
 

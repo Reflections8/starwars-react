@@ -60,7 +60,7 @@ export function PlayerCard({
                 {t("shopModal.playerTab.health")}:
               </div>
               <div className="player-card-main-info-list-item-value">
-                {health} {t("global.point")}
+                {health.toFixed(3)} {t("global.point")}
               </div>
             </div>
           </div>

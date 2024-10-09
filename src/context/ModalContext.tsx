@@ -44,7 +44,15 @@ export function ModalProvider({ children }: ModalProviderProps) {
         // @ts-ignore
         event.target.classList.contains("seaBattle") ||
         // @ts-ignore
-        event.target.classList.contains("binks");
+        event.target.classList.contains("binks") ||
+        // @ts-ignore
+        event.target.classList.contains("binksBack") ||
+        // @ts-ignore
+        event.target.classList.contains("repair") ||
+        // @ts-ignore
+        event.target.classList.contains("heal") ||
+        // @ts-ignore
+        event.target.classList.contains("binksDone");
 
       if (isShipArrangementModal) return;
       if (

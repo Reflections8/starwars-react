@@ -3,20 +3,24 @@ import { CryptoButtons } from "../../../../../ui/CryptoButtons/CryptoButtons";
 import arrowIcon from "./img/arrow.svg";
 import fightIcon from "./img/fight.svg";
 
+import { useTranslation } from "react-i18next";
 import { useBattleships } from "../../../../../context/BattleshipsContext";
 import { useDrawer } from "../../../../../context/DrawerContext";
+import defaultAva from "../../../../../icons/no_avatar.png";
 import { CuttedButton } from "../../../../../ui/CuttedButton/CuttedButton";
-import "./styles/Rivals.css";
-import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
-import { useTranslation } from "react-i18next";
+import { useUserData } from "../../../../../UserDataService";
 import { fetchUserPhoto } from "../../service/sea-battle.service";
+import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
+import { CurrentBalace } from "../CurrentBalance";
+import "./styles/Rivals.css";
 
 export function Rivals() {
   const { t } = useTranslation();
   const { openDrawer } = useDrawer();
+  const { credits, tokens: akronix, tons } = useUserData();
   const [isCreatingDuel, setIsCreatingDuel] = useState(false);
   const [friendsLogin, setFriendsLogin] = useState("");
-  const [bet, setBet] = useState(0);
+  const [bet, setBet] = useState<string | number | null>(null);
 
   function handleDuelCreating(e: Event) {
     e.stopPropagation();
@@ -32,7 +36,6 @@ export function Rivals() {
     setCreatedRoom,
     sendMessage,
     setRoomName,
-    me,
   } = useBattleships();
 
   async function createRoom() {
@@ -54,12 +57,45 @@ export function Rivals() {
       return;
     }
 
+    if (activeCurrency === "credits") {
+      if (credits < Number(bet)) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          `${t("battleshipsModal.notEnoughCurrency")} (${activeCurrency})`
+        );
+        return;
+      }
+    }
+
+    if (activeCurrency === "akron") {
+      if (akronix < Number(bet)) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          `${t("battleshipsModal.notEnoughCurrency")} (${activeCurrency})`
+        );
+        return;
+      }
+    }
+
+    if (activeCurrency === "ton") {
+      if (tons < Number(bet)) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          `${t("battleshipsModal.notEnoughCurrency")} (${activeCurrency})`
+        );
+        return;
+      }
+    }
+
     sendMessage({
       type: "invite_user",
       message: {
         username: friendsLogin.toLocaleLowerCase(),
         bet_type: BetTypeEnum[activeCurrency as keyof typeof BetTypeEnum],
-        bet_amount: bet,
+        bet_amount: Number(bet),
       },
     });
   }
@@ -101,22 +137,12 @@ export function Rivals() {
     if (rooms?.length) {
       fetchPhotos();
     }
-
-    const images = document.querySelectorAll<HTMLImageElement>(".check-image");
-
-    images.forEach((img) => {
-      img.onload = function () {
-        if (img.naturalWidth < 10 || img.naturalHeight < 10) {
-          img.src = "/ui/img/default_ava.png";
-        }
-      };
-    });
   }, [rooms]);
 
   return (
     <div className="rivals">
       <CryptoButtons
-        activeOptions={["credits", "akronix", "ton"]}
+        activeOptions={["credits", "akron", "ton"]}
         className="seaBattle__cryptoButtons"
         activeCurrency={activeCurrency}
         setActiveCurrency={setActiveCurrency}
@@ -167,9 +193,12 @@ export function Rivals() {
                       className="rivals__list-item-start-ava check-image"
                     />
                   ) : (
-                    <div className="rivals__list-item-start-avaDefault">
-                      {item.creator.username[0]}
-                    </div>
+                    <img
+                      src={defaultAva}
+                      alt=""
+                      width="36px"
+                      className="rivals__list-item-start-avaDefault"
+                    />
                   )}
 
                   <div className="rivals__list-item-start-login">
@@ -208,9 +237,7 @@ export function Rivals() {
                       setRoomName(item?.creator?.username);
                     }}
                     size="small"
-                    className={`rivals__list-item-end-btn ${
-                      item.creator.username === me ? "halfTransparent" : ""
-                    }`}
+                    className={`rivals__list-item-end-btn `}
                     text={t("battleshipsModal.rivalsTab.duel")}
                   />
                 </div>
@@ -225,6 +252,13 @@ export function Rivals() {
           <div className="rivals__newDuel__title">
             {t("battleshipsModal.rivalsTab.createDuelWithFriend")}!
           </div>
+
+          <CurrentBalace
+            activeCurrency={activeCurrency}
+            credits={credits}
+            akronix={akronix}
+            tons={tons}
+          />
 
           <div className="rivals__newDuel__inputBlock">
             <div className="rivals__newDuel__inputBlock-sup">
@@ -258,17 +292,21 @@ export function Rivals() {
 
             <div className="rivals__newDuel__inputBlock-inputWrapper">
               <input
-                type="decimal"
-                value={bet}
+                type="text"
+                value={bet || ""}
                 onChange={(e) => {
                   const value = e.target.value;
+
+                  // Регулярное выражение для проверки: целое положительное число или положительное число с плавающей запятой
+                  const regex = /^(0|[1-9]\d*)(\.\d{0,2})?$/;
+
                   if (value === "") {
-                    setBet(0);
+                    setBet(null);
                     return;
                   }
-                  const numericValue = Number(value);
-                  if (!isNaN(numericValue)) {
-                    setBet(numericValue);
+
+                  if (regex.test(value)) {
+                    setBet(value);
                   }
                 }}
                 className={`rivals__newDuel__inputBlock-input ${activeCurrency}`}

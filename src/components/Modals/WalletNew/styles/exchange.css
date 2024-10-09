@@ -1,0 +1,129 @@
+.exchange__badge {
+	width: 100%;
+	background: linear-gradient(to right, #fd9d1750 0%, #1bdd1550 100%);
+	position: relative;
+	padding: 8px 20px;
+	border-image: linear-gradient(to right, #fd9d17, #1bdd15) 1;
+	border-width: 1px;
+	border-style: solid;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 15px;
+	margin-bottom: 20px;
+}
+
+.exchange__badge-bg {
+	position: absolute;
+	height: 100%;
+	top: 0;
+	pointer-events: none;
+}
+
+.exchange__badge-bg--Left {
+	left: 0;
+}
+
+.exchange__badge-bg--Right {
+	right: 0;
+}
+
+.exchange__badge-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.exchange__badge-item--Left {
+	color: #ffd954;
+	text-shadow: 2px -1px 0 #fdbc1749;
+}
+
+.exchange__badge-item--Right {
+	color: #9fff9c;
+	text-shadow: 2px -1px 0 #9fff9c42;
+}
+
+.exchange__badge-item-name {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 10px;
+}
+
+.exchange__badge-item-amount {
+	font-size: 14px;
+}
+
+.exchange__badge-item-equalsSign {
+	color: white;
+}
+
+.exchange__inputBlock {
+	margin-bottom: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.exchange__inputBlock-sup {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.exchange__inputBlock-sup-label {
+	color: #e1f0ff;
+	font-size: 12px;
+	text-shadow: 2px 2px 0 #0975f83d;
+}
+
+.exchange__inputBlock-sup-minValue {
+	font-size: 8px;
+	color: #076ce9;
+	text-shadow: 2px -1px 0 #076ce944;
+}
+
+.exchange__inputBlock-inputWrapper {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.exchange__inputBlock-input {
+	outline: none;
+	border: none;
+	border-bottom: 1px solid #0974f8;
+	padding: 10px 15px 10px 115px;
+	font-size: 20px;
+	color: #19c2ef;
+	width: 100%;
+	background: linear-gradient(to top, #0975f848, #0975f800);
+	text-align: end;
+}
+
+.exchange__inputBlock-iconBox {
+	position: absolute;
+	top: 50%;
+	left: 11px;
+	font-size: 12px;
+	transform: translateY(-50%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+	padding: 8px 10px;
+	border-radius: 8px;
+	border: 1px solid #19c2ef;
+	color: #c9e9fb;
+}
+
+.exchange__cuttedButtonWrapper {
+	max-width: 210px;
+	margin: 0 auto;
+	margin-bottom: 40px;
+}

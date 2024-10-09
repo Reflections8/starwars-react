@@ -5,6 +5,7 @@
   object-fit: cover;
   user-select: none;
   -webkit-user-drag: none;
+  z-index: 1;
 }
 
 .binksBackgroundVideo.hidden {

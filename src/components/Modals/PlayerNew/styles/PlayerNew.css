@@ -1,0 +1,27 @@
+.playerModal .modal__scrollContainer {
+  max-height: 325px;
+  padding-bottom: 15px;
+}
+
+.playerModal__pillsContainer {
+  width: 100%;
+  max-width: 310px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.playerNew__emptyWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+  margin-top: 100px;
+}
+
+.playerNew__emptyWrapper-text {
+  text-align: center;
+  font-size: 10px;
+  color: #076ce9;
+}

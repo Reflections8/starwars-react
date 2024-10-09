@@ -1,5 +1,6 @@
 export async function fetchRooms() {
   const token = localStorage.getItem("auth_jwt");
+  if (!token || token == "") return [];
   try {
     const res = await fetch("https://socket.akronix.io/shipBattle/getRooms", {
       headers: { Authorization: `Bearer ${token}` },
@@ -12,6 +13,7 @@ export async function fetchRooms() {
 
 export async function fetchStats() {
   const token = localStorage.getItem("auth_jwt");
+  if (!token || token == "") return [];
   try {
     const res = await fetch("https://socket.akronix.io/shipBattle/getStats", {
       headers: { Authorization: `Bearer ${token}` },
@@ -23,23 +25,16 @@ export async function fetchStats() {
 }
 
 export async function fetchUserPhoto(username: string) {
-  const url = `https://t.me/i/userpic/160/${username}.jpg`;
+  const url = `https://socket.akronix.io/main/getTgImageLink?username=${username}`;
 
   try {
-    const res = await fetch(url, { redirect: "follow" });
-    console.log({ resAva: res });
-
-    if (res.status === 302) {
-      const location = res.headers.get("Location");
-      if (location) {
-        return location;
-      }
-    } else if (res.ok) {
-      console.log({ resOkAva: res });
-      return url;
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json?.image) {
+      return json?.image;
+    } else {
+      return null;
     }
-
-    return null;
   } catch (e) {
     return null;
   }

@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import { useModal } from "../../../context/ModalContext";
 
-import footerBtnBg from "./img/footerButtonBg.svg";
-
-import damageIcon from "./img/broken-skull.svg";
 import chargeIcon from "./img/battery.svg";
+import damageIcon from "./img/broken-skull.svg";
 import reloadIcon from "./img/reload.svg";
 
-import "./styles/CurrentStat.css";
+import { useTranslation } from "react-i18next";
+import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
 import {
   Blaster,
   BlastersData,
   CharactersData,
   useUserData,
 } from "../../../UserDataService.tsx";
-import { useTranslation } from "react-i18next";
+import "./styles/CurrentStat.css";
 
 export function CurrentStat() {
   const { t } = useTranslation();
-  const { activeCharacter, blasters, jwt } = useUserData();
+  const { activeCharacter, blasters, jwt, game1State } = useUserData();
   const [damage, setDamage] = useState(0);
   const [damageUpgrade, setDamageUpgrade] = useState(0);
 
@@ -35,6 +34,10 @@ export function CurrentStat() {
       return blaster.level > (highest.level || 0) ? blaster : highest;
     });
   };
+
+  useEffect(() => {
+    if (game1State == true) closeModal!();
+  }, [game1State]);
 
   useEffect(() => {
     if (!activeCharacter || !blasters || blasters.length == 0) return;
@@ -66,7 +69,7 @@ export function CurrentStat() {
     setCharge(charge);
     setDamageUpgrade(needHealing ? 0 : highestLevelBlaster.damage);
     setReloadUpgrade(needHealing ? 0 : highestLevelBlaster.charge_step);
-    setChargeUpgrade(needHealing ? 0 : highestLevelBlaster.charge);
+    setChargeUpgrade(needHealing ? 0 : highestLevelBlaster.max_charge);
   }, [activeCharacter, blasters]);
 
   return (
@@ -167,7 +170,7 @@ export function CurrentStat() {
           </div>
         </div>
       </div>
-      <div
+      {/* <div
         className="currentStat__btn"
         onClick={() => {
           closeModal!();
@@ -175,7 +178,9 @@ export function CurrentStat() {
       >
         <div className="currentStat__btn-content">OK</div>
         <img src={footerBtnBg} alt="bg" className="currentStat__btn-bg" />
-      </div>
+      </div> */}
+
+      <CuttedButton className="currentStat__btn" text="OK" />
     </div>
   );
 }

@@ -39,6 +39,12 @@ import "./styles/modal.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { BinksDone } from "../../components/Modals/Binks/BinksDone";
+import { BookOpenedIcon } from "../../icons/Modals/BookOpened";
+import { WalletNew } from "../../components/Modals/WalletNew/WalletNew";
+import { PlayerNew } from "../../components/Modals/PlayerNew/PlayerNew";
+import { Repair } from "../../components/Modals/Repair/Repair";
+import { Heal } from "../../components/Modals/Heal/Heal";
+import { BinksBack } from "../../components/Modals/Binks/BinksBack";
 
 type ModalProps = {
   isOpen: boolean;
@@ -95,10 +101,20 @@ export function Modal({ isOpen }: ModalProps) {
       icon: <WalletIcon />,
       component: <Wallet />,
     },
+    walletNew: {
+      title: t("walletModal.title"),
+      icon: <WalletIcon />,
+      component: <WalletNew />,
+    },
     player: {
       title: t("playerModal.title"),
       icon: <HelmetIcon />,
       component: <Player />,
+    },
+    playerNew: {
+      title: t("playerModal.title"),
+      icon: <HelmetIcon />,
+      component: <PlayerNew />,
     },
     seaBattle: {
       title: t("battleshipsModal.title"),
@@ -124,8 +140,13 @@ export function Modal({ isOpen }: ModalProps) {
     },
     binks: {
       title: t("binksModal.title"),
-      icon: <GearIcon />,
+      icon: <BookOpenedIcon />,
       component: <Binks />,
+    },
+    binksBack: {
+      title: t("binksModal.title"),
+      icon: <BookOpenedIcon />,
+      component: <BinksBack />,
     },
     binksDone: {
       title: t("binksModal.title"),
@@ -137,6 +158,16 @@ export function Modal({ isOpen }: ModalProps) {
       icon: <SeaBattleIcon />,
       component: <SeaBattleRules />,
     },
+    repair: {
+      title: t("repairModal.title"),
+      icon: <StoreIcon />,
+      component: <Repair />,
+    },
+    heal: {
+      title: t("healModal.title"),
+      icon: <StoreIcon />,
+      component: <Heal />,
+    },
   };
 
   type ModalContentKeys = keyof typeof modalContentType;
@@ -147,6 +178,8 @@ export function Modal({ isOpen }: ModalProps) {
     "battleshipsWon",
     "battleshipsLost",
   ];
+
+  const nonePointerEventsModals: ModalContentKeys[] = ["currentStat"];
   const shortModals: ModalContentKeys[] = ["chooseGame", "shipsArrangement2"];
 
   const navigate = useNavigate();
@@ -154,6 +187,7 @@ export function Modal({ isOpen }: ModalProps) {
 
   const shortModalBody = shortModals.includes(modalType!);
   const fullscreen = fullscreenModals.includes(modalType!);
+  const nonePointer = nonePointerEventsModals.includes(modalType!);
 
   return (
     <>
@@ -162,6 +196,7 @@ export function Modal({ isOpen }: ModalProps) {
           className={`fullscreenModalBg ${modalType} ${
             !isOpen ? "fullscreenModalBg--Hidden" : ""
           }`}
+          style={nonePointer ? { pointerEvents: "none" } : {}}
         >
           <div className="fullscreenModalBg__color"></div>
           {/* <img src={bgImg} alt="bg" className="fullscreenModalBg__img" /> */}
@@ -236,7 +271,11 @@ export function Modal({ isOpen }: ModalProps) {
               />
 
               <div className="modal__body-top">
-                {modalType === "binks" ? null : (
+                {modalType === "binks" ||
+                modalType === "binksBack" ||
+                modalType === "binksDone" ||
+                modalType === "repair" ||
+                modalType === "heal" ? null : (
                   <button
                     className="modal__body-top-closeBtn"
                     onClick={() => {

@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useSound } from "../../context/SeaContexts";
 //@ts-ignore
 import { enableDragDropTouch } from "../../mobileDrag";
+import { LoadingModal } from "../../ui/Modal/LoadingModal";
 import { useUserData } from "../../UserDataService";
 import audioBg from "./audio/game.mp3";
 import audioKilledShot from "./audio/shot-killed.mp3";
@@ -27,11 +28,6 @@ import audioShot from "./audio/shot.mp3";
 enableDragDropTouch();
 
 const timerSeconds = 30;
-
-let jwtToUse = localStorage.getItem("auth_jwt") || "";
-if (document.location.href.includes("5174"))
-  jwtToUse =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZGRyZXNzIjoiVVFBaXFIZkg5NnpHSUMzOG9OUnMxQVdIUnluM3JzalQxek9pQVlmalE0TktOX1BwIiwiZXhwIjoxNzI2OTE1MjQyLCJpc3MiOiJBa3Jvbml4IEF1dGgifQ.96N5LMUaufEMXhsLSkHqOntGO6TBNApeEbr9OGdid2U";
 
 export function Game2() {
   const { t } = useTranslation();
@@ -59,14 +55,22 @@ export function Game2() {
     setHandshakeTimer,
   } = useBattleships();
 
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    if (!userDataJwt && !jwtToUse) {
+    const pageLoader = document.querySelector(".pageLoader");
+    if (!pageLoader?.classList.contains("loadingModalBg--Hidden")) {
+      pageLoader?.classList.add("loadingModalBg--Hidden");
+    }
+  }, []);
+  useEffect(() => {
+    if (!userDataJwt) {
       closeModal!();
       navigate("/");
       closeModal!();
       return;
     }
     openModal!("seaBattle");
+    setIsLoading(false);
   }, [userDataJwt]);
 
   const [timerValue, setTimerValue] = useState(timerSeconds * 1000);
@@ -97,60 +101,86 @@ export function Game2() {
   }, [handshakeTimer]);
 
   return (
-    <div className="game2">
-      {/* AUDIO */}
-      <audio
-        ref={audioBgRef}
-        src={audioBg}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotAudioRef}
-        src={audioShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotSuccessAudioRef}
-        src={audioSuccessShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotMissAudioRef}
-        src={audioMissedShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <audio
-        ref={shotKilledAudioRef}
-        src={audioKilledShot}
-        style={{ position: "absolute", opacity: "0", pointerEvents: "none" }}
-      />
-      <div className="game2__gradientTop"></div>
-      <div className="game2__gradientBottom"></div>
-      <GameHeader myTurn={myTurn} />
-      <EnemyShips ships={enemyBoard.getShipsRemain()} />
-      <GameFields
-        {...{
-          timerValue,
-          enemyBoard,
-          userBoard,
-          myTurn,
-        }}
-      />
-      <GameBet />
+    <>
+      {isLoading ? (
+        <LoadingModal isOpen={isLoading} />
+      ) : (
+        <div className="game2">
+          {/* AUDIO */}
+          <audio
+            ref={audioBgRef}
+            src={audioBg}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotAudioRef}
+            src={audioShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotSuccessAudioRef}
+            src={audioSuccessShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotMissAudioRef}
+            src={audioMissedShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <audio
+            ref={shotKilledAudioRef}
+            src={audioKilledShot}
+            style={{
+              position: "absolute",
+              opacity: "0",
+              pointerEvents: "none",
+            }}
+          />
+          <div className="game2__gradientTop"></div>
+          <div className="game2__gradientBottom"></div>
+          <GameHeader myTurn={myTurn} />
+          <EnemyShips ships={enemyBoard.getShipsRemain()} />
+          <GameFields
+            {...{
+              timerValue,
+              enemyBoard,
+              userBoard,
+              myTurn,
+            }}
+          />
+          <GameBet />
 
-      <Header
-        position={"bottom"}
-        leftIcon={<RulesIcon />}
-        leftText={t("battleships.rules")}
-        leftAction={() => {
-          openModal!("rules");
-        }}
-        rightIcon={<LeaveIcon />}
-        rightText={t("battleships.giveUp")}
-        rightAction={() => {
-          openDrawer!("giveUp");
-        }}
-      />
-    </div>
+          <Header
+            position={"bottom"}
+            leftIcon={<RulesIcon />}
+            leftText={t("battleships.rules")}
+            leftAction={() => {
+              openModal!("rules");
+            }}
+            rightIcon={<LeaveIcon />}
+            rightText={t("battleships.giveUp")}
+            rightAction={() => {
+              openDrawer!("giveUp");
+            }}
+          />
+        </div>
+      )}
+    </>
   );
 }

@@ -14,7 +14,7 @@ export function GameBet() {
       <img src={bg} alt="" className="gameBet__bg" />
       <div className="gameBet__info">
         <div className="gameBet__info-value">
-          {betAmount || handshakeBetAmount || 0}
+          {Number(betAmount) * 1.9 || Number(handshakeBetAmount) * 1.9 || 0}
         </div>
         <div className="gameBet__info-key">{t("battleships.bet")}</div>
       </div>

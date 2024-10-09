@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { useTonConnectUI } from "@tonconnect/ui-react";
+import { useExpand } from "@vkruglikov/react-telegram-web-app";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { ProofApiService } from "../../ProofApiService.ts";
 import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
-import { Info } from "../../components/Header/components/Info/Info.tsx";
+import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
 import { useDrawer } from "../../context/DrawerContext";
 import { useLoader } from "../../context/LoaderContext";
@@ -15,14 +16,14 @@ import { ExitIcon } from "../../icons/Exit";
 import { GamesIcon } from "../../icons/Games";
 import { MenuIcon } from "../../icons/Menu";
 import { OptionsIcon } from "../../icons/Options";
+import highlightBook from "../home/video/currency.svg";
 import { BackgroundLayers } from "./components/BackgroundLayers";
 import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
 import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
-import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
-import highlightBook from "../home/video/currency.svg";
+import bgSound from "../home/audio/main_bg.mp3";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -37,21 +38,27 @@ export function Home() {
     activeCharacter,
     higherBlaster,
     soundSetting,
+    sessionsCount,
+    characters,
     updateUserInfo,
+    resetUserData,
+    userDataDefined,
+    homeState,
+    setHomeState,
   } = useUserData();
-  const navigate = useNavigate();
   const [tonConnectUI] = useTonConnectUI();
+  const [isExpanded, expand] = useExpand();
 
   //const tonConnectModal = useTonConnectModal();
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
-  const { setIsLoading } = useLoader();
+  const { setIsLoading, sessionInteracted, tutorialClicked } = useLoader();
 
   const {
-    readyState,
     setReadyState,
     activeVideo,
     setActiveVideo,
+    readyState,
     repeatCount,
   } = useBackgroundVideo();
 
@@ -129,17 +136,134 @@ export function Home() {
   //     openModal!("welcome");
   //   }, []);
 
+  const unityBgMusicRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (unityBgMusicRef.current) {
+      if (homeState == true) {
+        unityBgMusicRef.current.volume = 0.15;
+        unityBgMusicRef.current.loop = true;
+        unityBgMusicRef.current.play();
+        setHomeState(false);
+        return;
+      }
+
+      if (activeVideo) {
+        unityBgMusicRef.current.pause();
+        setHomeState(false);
+      }
+    }
+  }, [activeVideo, homeState]);
+
   // TODO: всплывшка с бинксом при заходе на страницу
   useEffect(() => {
-    openModal!("binks");
-  }, [i18n.language]);
+    //  console.log({
+    //    sessionsCount,
+    //    hasNFT: characters.length,
+    //    jwt,
+    //    tonConnectUI: tonConnectUI.connected,
+    //  });
+
+    //  console.log({ userDataDefined });
+
+    if (userDataDefined) {
+      if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
+        if (!tutorialClicked) {
+          openModal!("binks");
+        }
+        setIsLoading!(false);
+      }
+
+      if (jwt) {
+        if (sessionsCount === null) return;
+        if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
+          if (!sessionInteracted) {
+            openModal!("welcome");
+          }
+          setReadyState!(false);
+          setActiveVideo!(null);
+          return;
+        }
+
+        if (
+          !characters.length &&
+          sessionsCount !== null &&
+          sessionsCount! > 5
+        ) {
+          if (!tutorialClicked) {
+            openModal!("binksBack");
+          }
+          return;
+        }
+
+        if (
+          characters.length &&
+          sessionsCount !== null &&
+          sessionsCount! <= 5
+        ) {
+          if (!tutorialClicked) {
+            openModal!("binks");
+          }
+          setIsLoading!(false);
+          return;
+        }
+
+        if (
+          !characters.length &&
+          sessionsCount !== null &&
+          sessionsCount! <= 5
+        ) {
+          if (!tutorialClicked) {
+            openModal!("binks");
+          }
+          setIsLoading!(false);
+          return;
+        }
+      } else setIsLoading!(false);
+    } else setIsLoading!(false);
+  }, [i18n.language, sessionsCount, characters.length, jwt, userDataDefined]);
 
   async function openWalletDrawer() {
     closeDrawer!();
     openDrawer!("connectWallet");
   }
 
-  const [canQuit] = useState(false);
+  const [canQuit, setCanQuit] = useState(false);
+
+  useEffect(() => {
+    if (jwt && tonConnectUI.connected) {
+      setCanQuit(true);
+    } else {
+      // ProofApiService.reset();
+      // tonConnectUI.disconnect();
+      // resetUserData();
+      // updateJwt(null);
+      // setCanQuit(false);
+    }
+  }, [jwt, tonConnectUI.connected, userDataDefined]);
+
+  useEffect(() => {
+    if (!localStorage.getItem("language")) {
+      localStorage.setItem("language", "ru");
+    }
+
+    if (!localStorage.getItem("sound_setting")) {
+      localStorage.setItem("sound_setting", "on");
+    }
+    if (isExpanded != undefined && !isExpanded) expand();
+  }, []);
+
+  useEffect(() => {
+    if (userDataDefined) {
+      const pageLoader = document.querySelector(".pageLoader");
+      if (!pageLoader?.classList.contains("loadingModalBg--Hidden")) {
+        setTimeout(() => {
+          pageLoader?.classList.add("loadingModalBg--Hidden");
+        }, 100);
+      }
+    }
+  }, [userDataDefined]);
+
   return (
     <>
       <ProofManager onValueChange={handleAuthTokenChange} />
@@ -150,7 +274,11 @@ export function Home() {
         leftIcon={<ExitIcon />}
         leftText={t("homePage.exit")}
         leftAction={() => {
-          navigate("/auth");
+          ProofApiService.reset();
+          tonConnectUI.disconnect();
+          resetUserData();
+          updateJwt(null);
+          setCanQuit(false);
         }}
         rightIcon={<MenuIcon />}
         rightText={t("homePage.menu")}
@@ -194,26 +322,32 @@ export function Home() {
         setReadyState={setReadyState}
         activeVideo={activeVideo}
         setActiveVideo={setActiveVideo}
-        repeatCount={repeatCount}
+        repeatCount={repeatCount!}
+        sessionsCount={sessionsCount!}
       />
 
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      <iframe
-        ref={iframeRef}
-        src="https://akronix.io/unity_main/"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: "100%",
-          height: "100%",
-          border: "none",
-        }}
-        id="mainWrapper"
-        className="mainWrapper"
-      ></iframe>
+      {jwt && tonConnectUI.connected && characters.length ? (
+        <>
+          <iframe
+            ref={iframeRef}
+            src="https://game.akronix.io/new/unity_main_2/"
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: "100%",
+              height: "100%",
+              border: "none",
+            }}
+            id="mainWrapper"
+            className="mainWrapper"
+          ></iframe>
+          <audio ref={unityBgMusicRef} src={bgSound} autoFocus={true} />
+        </>
+      ) : null}
 
       <Header
         position={"bottom"}
@@ -233,7 +367,6 @@ export function Home() {
         rightAction={() => {
           openModal!("settings");
         }}
-        centerComponent={<Info />}
       />
     </>
   );

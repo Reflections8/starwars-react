@@ -9,13 +9,15 @@ import videoRus1 from "../video/ru/1.mp4";
 import videoRus2 from "../video/ru/2.mp4";
 import videoRus3 from "../video/ru/3.mp4";
 import { useModal } from "../../../context/ModalContext";
+import { useUserData } from "../../../UserDataService";
 
 type BinksBackgroundVideoProps = {
   readyState: any;
   setReadyState: any;
   activeVideo: any;
   setActiveVideo: any;
-  repeatCount: any;
+  repeatCount: number;
+  sessionsCount: number;
 };
 
 export function BinksBackgroundVideo({
@@ -24,11 +26,13 @@ export function BinksBackgroundVideo({
   activeVideo,
   setActiveVideo,
   repeatCount,
+  sessionsCount,
 }: BinksBackgroundVideoProps) {
   const videoRef1 = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
   const videoRef3 = useRef<HTMLVideoElement>(null);
 
+  const { characters, soundSetting } = useUserData();
   const { i18n } = useTranslation();
   const { openModal } = useModal();
 
@@ -46,9 +50,99 @@ export function BinksBackgroundVideo({
   };
 
   useEffect(() => {
-    setActiveVideo("1");
+    setActiveVideo(null);
     setReadyState(false);
   }, [i18n.language]);
+
+  function stopVideo(index: string) {
+    const video1 = videoRef1.current;
+    const video2 = videoRef2.current;
+    const video3 = videoRef3.current;
+
+    if (video1 && video2 && video3) {
+      if (index === "1") {
+        video1.pause();
+        video1.muted = true;
+        video1.currentTime = 0;
+      }
+      if (index === "2") {
+        video2.pause();
+        video2.muted = true;
+        video2.currentTime = 0;
+      }
+      if (index === "3") {
+        video3.pause();
+        video3.muted = true;
+        video3.currentTime = 0;
+      }
+    }
+  }
+
+  function muteVideos() {
+    const video1 = videoRef1.current;
+    const video2 = videoRef2.current;
+    const video3 = videoRef3.current;
+    if (video1 && video2 && video3) {
+      video1.muted = true;
+      video2.muted = true;
+      video3.muted = true;
+    }
+  }
+
+  function unmuteVideos() {
+    const video1 = videoRef1.current;
+    const video2 = videoRef2.current;
+    const video3 = videoRef3.current;
+    if (video1 && video2 && video3) {
+      video1.muted = false;
+      video2.muted = false;
+      video3.muted = false;
+    }
+  }
+
+  function stopAllVideos() {
+    stopVideo("1");
+    stopVideo("2");
+    stopVideo("3");
+  }
+
+  useEffect(() => {
+    if (!activeVideo) {
+      stopAllVideos();
+    }
+
+    if (activeVideo === "1") {
+      stopVideo("2");
+      stopVideo("3");
+    }
+    if (activeVideo === "2") {
+      stopVideo("1");
+      stopVideo("3");
+    }
+    if (activeVideo === "3") {
+      stopVideo("1");
+      stopVideo("2");
+    }
+  }, [activeVideo]);
+
+  useEffect(() => {
+    if (soundSetting) unmuteVideos();
+    if (!soundSetting) muteVideos();
+  }, [
+    soundSetting,
+    readyState,
+    activeVideo,
+    i18n.language,
+    repeatCount,
+    videoRef1.current,
+    videoRef2.current,
+    videoRef3.current,
+  ]);
+
+  // Чтобы видео не воспроизводилось при маунте и появлении ref.current
+  useEffect(() => {
+    stopAllVideos();
+  }, [videoRef1.current, videoRef2.current, videoRef3.current]);
 
   useEffect(() => {
     const video1 = videoRef1.current;
@@ -56,18 +150,7 @@ export function BinksBackgroundVideo({
     const video3 = videoRef3.current;
 
     if (!readyState && video1 && video2 && video3) {
-      video1?.pause();
-      video1.muted = true;
-      video1.load();
-
-      video2.pause();
-      video2.muted = true;
-      video1.load();
-
-      video3.pause();
-      video3.muted = true;
-      video3.load();
-      2;
+      stopAllVideos();
     }
 
     if (readyState) {
@@ -94,6 +177,8 @@ export function BinksBackgroundVideo({
         video3.muted = false;
       }
     }
+
+    if (!soundSetting) muteVideos();
   }, [readyState, activeVideo, i18n.language, repeatCount]);
 
   useEffect(() => {
@@ -117,13 +202,58 @@ export function BinksBackgroundVideo({
   }, [activeVideo, i18n.language, repeatCount]);
 
   function handleTutorialDone() {
-    const video2 = videoRef2.current;
-    video2 && video2.pause();
+    // Нет НФТ, 1-5
+    if (!characters.length && sessionsCount <= 5) {
+      console.log("!characters.length && sessionsCount <= 5");
+      stopVideo("2");
+      openModal!("binksDone");
+      return;
+    }
+
+    // Нет НФТ, 6+ (убрал модалку binksDone если это уже 6+ сессии)
+    if (!characters.length && sessionsCount > 5) {
+      console.log("!characters.length && sessionsCount > 5");
+      stopVideo("2");
+      setActiveVideo("3");
+      return;
+    }
+
+    // Если есть НФТ, 1-5
+    if (characters.length && sessionsCount <= 5) {
+      console.log("characters.length && sessionsCount <= 5");
+      stopAllVideos();
+      setReadyState(false);
+      setActiveVideo(null);
+      return;
+    }
+
+    // Если есть НФТ, 6+
+    if (characters.length && sessionsCount > 5) {
+      console.log("characters.length && sessionsCount > 5");
+      stopAllVideos();
+      setReadyState(false);
+      setActiveVideo(null);
+      return;
+    }
+
+    console.log("UNHANDLED TUTORIAL ENDING");
     openModal!("binksDone");
+
+    //  if (repeatCount === 0) {
+    //    // TODO: пока сделал так, что если в рамках сессии это первое проигрывание обучения, то показывать модалку...
+    //    stopVideo("2");
+    //    console.log("repeatCount === 0");
+    //    openModal!("binksDone");
+    //  }
+
+    //  // TODO: ...иначе сразу переключаем на 3-е видео
+    //  if (repeatCount > 0) {
+    //    stopVideo("2");
+    //    setActiveVideo("3");
+    //  }
   }
 
   useEffect(() => {
-    console.log({ repeatCount, activeVideo, readyState });
     const video1 = videoRef1.current;
     const video2 = videoRef2.current;
 
@@ -141,7 +271,6 @@ export function BinksBackgroundVideo({
 
   function findTimeFunction(activeVideo: string, currentTime: number) {
     const fixedTime = currentTime?.toFixed(0) as any;
-
     if (i18n.language === "ru") {
       if (activeVideo === "1") {
         if (fixedTime == 13) {
@@ -182,7 +311,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 155) {
           highlightElement("games");
         }
-        if (fixedTime == 193) {
+        if (fixedTime == 191) {
           handleTutorialDone();
         }
       }
@@ -228,7 +357,7 @@ export function BinksBackgroundVideo({
         if (fixedTime == 155) {
           highlightElement("games");
         }
-        if (fixedTime == 193) {
+        if (fixedTime == 191) {
           handleTutorialDone();
         }
       }
@@ -276,6 +405,7 @@ export function BinksBackgroundVideo({
         // @ts-ignore
         src={videoWithLocale[i18n.language].video1}
         muted
+        loop
         preload="auto"
         playsInline
       ></video>

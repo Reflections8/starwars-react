@@ -83,8 +83,8 @@ export function StoreCardModel({
                 здоровье:
               </div>
               <div className="player-card-main-info-list-item-value">
-                <span className="red">{healthCurrent}</span>{" "}
-                <span className="blue">\{healthMax}</span>
+                <span className="red">{healthCurrent.toFixed(3)}</span>{" "}
+                <span className="blue">\{healthMax.toFixed(3)}</span>
               </div>
             </div>
 
@@ -117,7 +117,7 @@ export function StoreCardWeapon({
   additionalIncomeCurrent,
   additionalIncomeMax,
   damage,
-  charge,
+  max_charge,
   reload,
   rateOfFire,
   durabilityCurrent,
@@ -159,7 +159,10 @@ export function StoreCardWeapon({
                 {t("shopModal.storeTab.additionalIncome")}:
               </div>
               <div className="store-card-main-info-list-item-value">
-                {additionalIncomeCurrent}/{additionalIncomeMax}
+                {blasterLevel == 1 || additionalIncomeCurrent == 0
+                  ? 0
+                  : additionalIncomeCurrent.toFixed(3)}
+                /{additionalIncomeMax}
               </div>
             </div>
             {/* ITEM */}
@@ -178,7 +181,7 @@ export function StoreCardWeapon({
                 {t("shopModal.storeTab.charge")}:
               </div>
               <div className="store-card-main-info-list-item-value">
-                {charge} {t("global.point")}
+                {max_charge} {t("global.point")}
               </div>
             </div>
 

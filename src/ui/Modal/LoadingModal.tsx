@@ -9,10 +9,11 @@ import "./styles/loadingModal.css";
 import { useEffect } from "react";
 
 type LoadingModalProps = {
-  isOpen: boolean;
+  isOpen?: boolean;
+  className?: string;
 };
 
-export function LoadingModal({ isOpen }: LoadingModalProps) {
+export function LoadingModal({ isOpen, className }: LoadingModalProps) {
   useEffect(() => {
     const green = document.querySelector(".loadingModal__loader-green");
     const outer = document.querySelector(".loadingModal__loader-outer");
@@ -25,7 +26,9 @@ export function LoadingModal({ isOpen }: LoadingModalProps) {
   }, []);
   return (
     <div
-      className={`loadingModalBg ${!isOpen ? "loadingModalBg--Hidden" : ""}`}
+      className={`loadingModalBg ${!isOpen ? "loadingModalBg--Hidden" : ""} ${
+        className ?? ""
+      }`}
     >
       <div className="loadingModalBg__color"></div>
       <img src={bgImg} alt="bg" className="loadingModalBg__img" />

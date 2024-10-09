@@ -3,8 +3,10 @@ import { useBackgroundVideo } from "../../../context/BackgroundVideoContext";
 import { useModal } from "../../../context/ModalContext";
 import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton";
 import "./styles/Binks.css";
+import { useLoader } from "../../../context/LoaderContext";
 
 export function BinksDone() {
+  const { setTutorialClicked } = useLoader();
   const { t } = useTranslation();
   const { closeModal } = useModal();
   const { setActiveVideo, repeatCount, setRepeatCount } = useBackgroundVideo();
@@ -32,6 +34,7 @@ export function BinksDone() {
           callback={(e) => {
             e.stopPropagation();
             setActiveVideo!("3");
+            setTutorialClicked!(true);
             closeModal!();
           }}
         />

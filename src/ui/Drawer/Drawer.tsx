@@ -7,6 +7,7 @@ import resolvedIcon from "./img/resolved.svg";
 
 import {
   SendTransactionRequest,
+  useTonAddress,
   useTonConnectUI,
   useTonWallet,
 } from "@tonconnect/ui-react";
@@ -126,6 +127,7 @@ function Resolved({ drawerText }: { drawerText?: string }) {
 
 function Rejected({ drawerText }: { drawerText?: string }) {
   const { t } = useTranslation();
+  const { button } = useDrawer();
   return (
     <div className="responseStatus">
       <img src={rejectedIcon} alt="resolved" className="responseStatus__icon" />
@@ -133,6 +135,8 @@ function Rejected({ drawerText }: { drawerText?: string }) {
       <div className="responseStatus__title">{t("rejectedDrawer.title")}!</div>
 
       <div className="responseStatus__text">{drawerText}</div>
+
+      {button ? button : null}
     </div>
   );
 }
@@ -140,6 +144,7 @@ function Rejected({ drawerText }: { drawerText?: string }) {
 function Menu() {
   const { t } = useTranslation();
   const wallet = useTonWallet();
+  const userFriendlyAddress = useTonAddress();
   const { closeDrawer, openDrawer } = useDrawer();
 
   async function openWalletDrawer() {
@@ -155,17 +160,29 @@ function Menu() {
       <div className="menu__text">{t("quickMenu.title")}</div>
 
       <div className="menu__list">
-        <a href="#" className="menu__list-item">
+        <a
+          href="https://t.me/akronix_p2e"
+          className="menu__list-item"
+          target="_blank"
+        >
           <img src={telegramIcon} alt="icon" className="menu__list-item-icon" />
           <div className="menu__list-item-text">{t("quickMenu.telegram")}</div>
         </a>
 
-        <a href="#" className="menu__list-item">
+        <a
+          href="https://x.com/akronix_p2e"
+          className="menu__list-item"
+          target="_blank"
+        >
           <img src={xIcon} alt="icon" className="menu__list-item-icon" />
           <div className="menu__list-item-text">{t("quickMenu.xTwitter")}</div>
         </a>
 
-        <a href="#" className="menu__list-item">
+        <a
+          href="https://youtube.com/@akronix_legacy"
+          className="menu__list-item"
+          target="_blank"
+        >
           <img src={youtubeIcon} alt="icon" className="menu__list-item-icon" />
           <div className="menu__list-item-text">{t("quickMenu.youtube")}</div>
         </a>
@@ -174,7 +191,7 @@ function Menu() {
           <div className="menu__list-item menu__list-item--Transparent">
             <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
             <div className="menu__list-item-text">
-              {formatWalletString(wallet.account.address)}
+              {formatWalletString(userFriendlyAddress.toString())}
             </div>
           </div>
         ) : (

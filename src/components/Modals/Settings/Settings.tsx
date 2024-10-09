@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { CharactersData, useUserData } from "../../../UserDataService.tsx";
+import { useBackgroundVideo } from "../../../context/BackgroundVideoContext.tsx";
+import { useModal } from "../../../context/ModalContext.tsx";
+import { SERVER_URL } from "../../../main.tsx";
+import { CuttedButton } from "../../../ui/CuttedButton/CuttedButton.tsx";
 import { Select } from "../../../ui/Select/Select";
 import { SlidingPills } from "../../../ui/SlidingPills/SlidingPills";
 import { PillType } from "../../../ui/SlidingPills/types";
-import "./styles/settings.css";
-import { SelectOptionType } from "./types";
-import { CharactersData, useUserData } from "../../../UserDataService.tsx";
-import { SERVER_URL } from "../../../main.tsx";
-import { useTranslation } from "react-i18next";
 import engFlag from "./img/eng.svg";
 import rusFlag from "./img/rus.svg";
+import "./styles/settings.css";
+import { SelectOptionType } from "./types";
 
 export function Settings() {
   const {
@@ -16,10 +19,14 @@ export function Settings() {
     activeCharacter,
     jwt,
     soundSetting,
+    sessionsCount,
     setSoundSetting,
     updateUserInfo,
   } = useUserData();
   const { t, i18n } = useTranslation();
+
+  const { restartTutorial } = useBackgroundVideo();
+  const { closeModal } = useModal();
 
   const pills: PillType[] = [
     {
@@ -77,7 +84,11 @@ export function Settings() {
 
   useEffect(() => {
     if (characters) {
-      const options: SelectOptionType[] = characters.map((character) => ({
+      const options: SelectOptionType[] = characters.sort((a, b) => {
+        if (a.type < b.type) return -1;
+        if (a.type > b.type) return 1;
+        return 0;
+      }).map((character) => ({
         label: `${CharactersData[character.type - 1].name}`,
         value: character.id.toString(),
       }));
@@ -191,6 +202,23 @@ export function Settings() {
           />
         </div>
       </div>
+
+      {!characters.length && sessionsCount! <= 5 ? null : (
+        <div className="settings__row">
+          <div className="settings__row-name">
+            {t("settingsModal.tutorial")}:
+          </div>
+          <div className="settings__row-action settings__row-selectContainer">
+            <CuttedButton
+              text={t("settingsModal.runTutorial")}
+              callback={() => {
+                restartTutorial!();
+                closeModal!();
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

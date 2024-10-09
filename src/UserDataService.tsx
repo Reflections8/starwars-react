@@ -20,9 +20,10 @@ import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
 import { useTonConnectUI } from "@tonconnect/ui-react";
-import { useLocation } from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 interface UserDataContextType {
+  userDataDefined: boolean;
   credits: number;
   tokens: number;
   tons: number;
@@ -39,30 +40,42 @@ interface UserDataContextType {
   soundSetting: boolean;
   prices: Prices;
   refInfo: RefInfo | null;
+  sessionsCount: number | null;
   selectGun: (value: number) => void;
   selectHealingCharacter: (value: number) => void;
   updateCredits: (value: number) => void;
   updateTokens: (value: number) => void;
   updateJwt: (value: string | null) => void;
+  auth: (value: string) => void;
   startCheckBalance: () => void;
   setCheckGun: (value: boolean) => void;
   sendSocketMessage: (value: string) => void;
   setSoundSetting: (value: boolean) => void;
   updateUserInfo: (value: string) => void;
+  resetUserData: () => void;
+  game1State: boolean | null;
+  setGame1State: (value: boolean) => void;
+  homeState: boolean | null;
+  setHomeState: (value: boolean) => void;
 }
 
 const defaultValue: UserDataContextType = {
+  userDataDefined: false,
   credits: 0,
   tokens: 0,
   tons: 0,
+  sessionsCount: null,
   exchangeRate: 0,
   jwt: "",
   checkGun: false,
   userMetrics: {
     total_deposited: 0,
     total_earned_tokens: 0,
-    blaster_earn_required: 0,
-    blaster_earned: 0,
+    earn_required: 0,
+    earned: 0,
+    akronix_won: 0,
+    credits_won: 0,
+    ton_won: 0,
   },
   blasters: [],
   characters: [],
@@ -91,10 +104,16 @@ const defaultValue: UserDataContextType = {
   updateJwt: () => {},
   setCheckGun: () => {},
   selectHealingCharacter: () => {},
+  auth: () => {},
   startCheckBalance: () => {},
   sendSocketMessage: () => {},
   setSoundSetting: () => {},
   updateUserInfo: () => {},
+  resetUserData: () => {},
+  game1State: null,
+  setGame1State: () => {},
+  homeState: null,
+  setHomeState: () => {},
 };
 
 const UserDataContext = createContext<UserDataContextType>(defaultValue);
@@ -107,24 +126,36 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const { openDrawer, isOpen, drawerText } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
 
-  const [jwt, setJwt] = useState<string | null>("");
+  const [jwt, setJwt] = useState<string | null>(
+    localStorage.getItem("auth_jwt")
+  );
 
   const [credits, setCredits] = useState(0);
   const [tokens, setTokens] = useState(0);
   const [tons, setTons] = useState(0);
-  const [soundSetting, setSoundSetting] = useState(true);
+  const [soundSetting, setSoundSetting] = useState(
+    localStorage.getItem("sound_setting") === "on"
+      ? true
+      : localStorage.getItem("sound_setting") === "off"
+      ? false
+      : true
+  );
   const [userMetrics, setUserMetrics] = useState<UserMetrics>({
     total_deposited: 0,
     total_earned_tokens: 0,
-    blaster_earn_required: 0,
-    blaster_earned: 0,
+    earn_required: 0,
+    earned: 0,
+    akronix_won: 0,
+    ton_won: 0,
+    credits_won: 0
   });
+  const { t } = useTranslation();
   const [exchangeRate, setExchangeRate] = useState(0);
+  const [sessionsCount, setSessionsCount] = useState(null);
 
   const [healingCharacter, setHealingCharacter] = useState<Character | null>(
     null
   );
-  const location = useLocation();
 
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
   const [higherBlaster, setHigherBlaster] = useState<Blaster | null>(null);
@@ -154,16 +185,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   //const [shouldReconnectFlag, setShouldReconnectFlag] = useState(true);
 
   const tonsRef = useRef<number>(tons);
-
-  /*const { sendMessage, lastMessage, readyState } = useWebSocket(SERVER_URL, {
-    share: false,
-    shouldReconnect: () => shouldReconnectFlag,
-    onClose: (event) => {
-      if (event.code == 249) {
-        setShouldReconnectFlag(false);
-      }
-    },
-  });*/
+  const blastersRef = useRef<Blaster[]>(blasters);
+  const charactersRef = useRef<Character[]>(characters);
 
   const updateCredits = (newCredits: number) => {
     setCredits(newCredits);
@@ -202,9 +225,9 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const auth = async (jwt: string) => {
     try {
-      const searchParams = new URLSearchParams(location.search);
+      const searchParams = new URLSearchParams(window.location.search); // Извлекаем строку параметров до хэша
       const idParam = searchParams.get("id");
-      const id = idParam !== null ? parseInt(idParam, 10) : -1;
+      const id = idParam !== null ? Number(idParam) : -1;
 
       const response = await fetch(SERVER_URL + "/main/auth", {
         method: "POST", // или 'POST', в зависимости от требований к API
@@ -220,6 +243,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data);
       return data.code === 1;
     } catch (error) {
       console.error("Failed to authenticate:", error);
@@ -243,6 +267,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setTons(data.tons);
       setTokens(data.tokens);
       setExchangeRate(data.exchange_rate);
+      setSessionsCount(data.sessions);
       const userMetricsData: UserMetrics = data.metrics_response;
       setUserMetrics(userMetricsData);
       const activeCharacter: Character | null = data.active_character;
@@ -256,7 +281,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setPrices(pricesResponse);
       setRefInfo(refInfo);
       setBlasters(blasters);
-      setHigherBlaster(calculateHighestLevelBlaster(blasters));
+      if (blasters.length > 0)
+        setHigherBlaster(calculateHighestLevelBlaster(blasters));
     } catch (error) {
       console.error("Failed to fetch user info:", error);
     }
@@ -264,180 +290,81 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   useEffect(() => {
     if (tonsRef.current < tons && checkBalance) {
-      openDrawer!("resolved", "bottom", "Успешное пополнение баланса");
+      openDrawer!("resolved", "bottom", t("shopModal.accountFilled"));
+      setCheckBalance(false);
     }
     tonsRef.current = tons;
   }, [tons, checkBalance]);
 
   useEffect(() => {
+    if (blastersRef.current.length < blasters.length && checkBalance) {
+      try {
+        const newBlaster = blasters.filter(item2 => !blastersRef.current.some(item1 => item1.level === item2.level))[0];
+        if(newBlaster.level != 1) {
+          openDrawer!("resolved", "bottom", t("shopModal.blasterFilled"));
+          setCheckBalance(false);
+        }
+      }
+      catch (e)
+      {
+        //
+      }
+    }
+    blastersRef.current = blasters;
+  }, [blasters, checkBalance]);
+
+  useEffect(() => {
+    if (charactersRef.current.length < characters.length && checkBalance) {
+      openDrawer!("resolved", "bottom", t("shopModal.characterFilled"));
+      setCheckBalance(false);
+    }
+    charactersRef.current = characters;
+  }, [characters, checkBalance]);
+
+  const [userDataDefined, setUserDataDefined] = useState(false);
+
+  useEffect(() => {
+    let interval: any; // вынеси переменную выше
+    if (!jwt) {
+      setUserDataDefined(true);
+    }
     if (jwt != null && jwt !== "") {
       const authenticateUser = async () => {
         const isLogged = await auth(jwt);
         if (!isLogged) {
           ProofApiService.reset();
-          if (tonConnectUI.connected) await tonConnectUI.disconnect();
+          if (tonConnectUI.connected) {
+            await tonConnectUI.disconnect();
+          }
+          setUserDataDefined(true);
           return;
-        } else await updateUserInfo(jwt);
+        } else {
+          await updateUserInfo(jwt);
+          setUserDataDefined(true);
+        }
 
-        const interval = setInterval(() => {
-          if (jwt != null && jwt !== "") {
+        interval = setInterval(() => {
+          if (jwt && jwt !== "") {
             const refreshUserInfo = async () => {
               await updateUserInfo(jwt);
+              setUserDataDefined(true);
             };
-
             refreshUserInfo();
           }
         }, 20000);
-
-        return () => {
-          clearInterval(interval);
-        };
       };
 
       authenticateUser();
-    } else if (tonConnectUI.connected) tonConnectUI.disconnect();
+    } else if (tonConnectUI.connected) {
+      tonConnectUI.disconnect();
+      setUserDataDefined(true);
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [jwt]);
-
-  /*useEffect(() => {
-    if (lastMessage == null) return;
-
-    const response: string = lastMessage.data.toString();
-
-    if (response.startsWith("financeData:")) {
-      const data = JSON.parse(response.slice("financeData:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      const userMetricsData: UserMetrics = data.metrics_response;
-      setUserMetrics(userMetricsData);
-      const activeCharacter: Character | null = data.active_character;
-      setActiveCharacter(activeCharacter);
-    }
-    if (response.startsWith("refreshData:")) {
-      const data = JSON.parse(response.slice("refreshData:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      const userMetricsData: UserMetrics = data.metrics_response;
-      setUserMetrics(userMetricsData);
-      const activeCharacter: Character | null = data.active_character;
-      setActiveCharacter(activeCharacter);
-      setCheckGun(true);
-    } else if (response.startsWith("exchangeResponse:")) {
-      const data = JSON.parse(response.slice("exchangeResponse:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      openDrawer!("resolved", "bottom", "Обмен успешно произведён");
-    } else if (response.startsWith("blastersResponse:")) {
-      const blastersResult = JSON.parse(
-        response.slice("blastersResponse:".length)
-      );
-
-      const blasters: Blaster[] = blastersResult.blasters;
-      const pricesResponse: Prices = blastersResult.prices;
-
-      setPrices(pricesResponse);
-      setBlasters(blasters);
-    } else if (response.startsWith("charactersResponse:")) {
-      const characters: Character[] = JSON.parse(
-        response.slice("charactersResponse:".length)
-      );
-
-      setCharacters(characters);
-    } else if (response.startsWith("blasterBuyResponse:")) {
-      openDrawer!(
-        "resolved",
-        "bottom",
-        "Покупка бластера выполнена.\nNFT отправлена на подключенный кошелек. Скорость подтверждения зависит от загруженности сети TON."
-      );
-      const blasters: Blaster[] = JSON.parse(
-        response.slice("blasterBuyResponse:".length)
-      );
-      setBlasters(blasters);
-      setCheckGun(true);
-    } else if (response.startsWith("blasterUpgradeResponse:")) {
-      openDrawer!(
-        "resolved",
-        "bottom",
-        "Улучшение бластера выполнено успешно."
-      );
-      const blasters: Blaster[] = JSON.parse(
-        response.slice("blasterUpgradeResponse:".length)
-      );
-      setBlasters(blasters);
-    } else if (response.startsWith("withdrawResponse:")) {
-      const data = JSON.parse(response.slice("withdrawResponse:".length));
-      setCredits(data.credits);
-      setTons(data.tons);
-      setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
-      openDrawer!(
-        "resolved",
-        "bottom",
-        "Вывод добавлен в обработку. Скорость подтверждения зависит от загруженности сети TON."
-      );
-    } else if (response.startsWith("blasterRepairResponse:")) {
-      const num = parseInt(response.slice("blasterRepairResponse:".length));
-
-      if (num == 2) prices.second_blaster_repair = 0;
-      else if (num == 3) prices.third_blaster_repair = 0;
-
-      const blasterTemp = blasters;
-      for (let i = 0; i < blasterTemp.length; i++) {
-        if (blasterTemp[i].level == num) {
-          blasterTemp[i].usage = blasterTemp[i].max_usage;
-        }
-      }
-
-      setBlasters(blasterTemp);
-
-      openDrawer!("resolved", "bottom", "Починка бластера успешна выполнена.");
-    } else if (response.startsWith("CODE:")) {
-      const exitCode = parseInt(response.slice("CODE:".length));
-      switch (exitCode) {
-        case 901: {
-          openDrawer!("rejected", "bottom", "Ошибка при выполнении обмена");
-          break;
-        }
-        case 1001: {
-          openDrawer!("rejected", "bottom", "Недостаточно TON для вывода");
-          break;
-        }
-        case 1002: {
-          openDrawer!("rejected", "bottom", "Недостаточно AKRON для вывода");
-          break;
-        }
-        case 1003: {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для оплаты комиссии для вывода AKRON\nНеобходимо минимум: 0.05 TON"
-          );
-          break;
-        }
-        case 10001: {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для покупки бластера 2 уровня\nНеобходимо 1 TON + 0.05 TON (gas fee)"
-          );
-          break;
-        }
-        case 10002: {
-          openDrawer!(
-            "rejected",
-            "bottom",
-            "Недостаточно TON для покупки бластера 3 уровня\nНеобходимо 2 TON + 0.05 TON (gas fee)"
-          );
-          break;
-        }
-      }
-    }
-  }, [lastMessage]);*/
 
   useEffect(() => {
     setJwt(localStorage.getItem(ProofApiService.localStorageKey));
@@ -455,6 +382,46 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       return highest;
     });
   };
+
+  const resetUserData = () => {
+    setCredits(0);
+    setTokens(0);
+    setTons(0);
+    setJwt(null);
+    setSoundSetting(true);
+    // @ts-ignore
+    setUserMetrics({
+      total_deposited: 0,
+      total_earned_tokens: 0,
+      earn_required: 0,
+      earned: 0,
+    });
+    setExchangeRate(0);
+    setSessionsCount(null);
+    setActiveBlaster(null);
+    setHigherBlaster(null);
+    setActiveCharacter(null);
+    setHealingCharacter(null);
+    setBlasters([]);
+    setCharacters([]);
+    setPrices({
+      second_blaster_repair: 0,
+      third_blaster_repair: 0,
+      blaster_1_1: 0,
+      blaster_1_2: 0,
+      blaster_1_3: 0,
+      blaster_2_1: 0,
+      blaster_2_2: 0,
+      blaster_2_3: 0,
+      blaster_3_1: 0,
+      blaster_3_2: 0,
+      blaster_3_3: 0,
+    });
+    setRefInfo(null);
+  };
+
+  const [game1State, setGame1State] = useState<boolean | null>(null);
+  const [homeState, setHomeState] = useState<boolean | null>(null);
 
   return (
     <UserDataContext.Provider
@@ -475,6 +442,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         userMetrics,
         checkGun,
         soundSetting,
+        sessionsCount,
         setSoundSetting,
         selectGun,
         selectHealingCharacter,
@@ -485,6 +453,13 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         startCheckBalance,
         sendSocketMessage,
         updateUserInfo,
+        resetUserData,
+        userDataDefined,
+        game1State,
+        setGame1State,
+        homeState,
+        setHomeState,
+        auth,
       }}
     >
       {children}
@@ -523,8 +498,11 @@ export interface Character {
 export interface UserMetrics {
   total_deposited: number;
   total_earned_tokens: number;
-  blaster_earned: number;
-  blaster_earn_required: number;
+  earned: number;
+  earn_required: number;
+  akronix_won: number;
+  ton_won: number;
+  credits_won: number;
 }
 
 export interface Prices {
@@ -551,8 +529,9 @@ export interface RefInfo {
 }
 
 export interface InvitedUser {
-  username: string;
-  reward: 0;
+  type: number;
+  value: string;
+  reward: number;
 }
 
 export const BlastersData = [

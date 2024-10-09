@@ -36,11 +36,11 @@ export function Shop() {
       value: "WEAPON",
       component: <Weapon />,
     },
-    {
-      label: t("shopModal.storeTab.title"),
-      value: "STORE",
-      component: <Store />,
-    },
+    //  {
+    //    label: t("shopModal.storeTab.title"),
+    //    value: "STORE",
+    //    component: <Store />,
+    //  },
   ];
 
   const { activePillProp } = useModal();
@@ -68,9 +68,10 @@ export function Shop() {
 }
 
 export function Player() {
-  const { characters, jwt } = useUserData();
+  const { characters, jwt, blasters, startCheckBalance } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
+  const { t } = useTranslation();
 
   /*const initialCharacters: ModelType[] = [
     {
@@ -106,12 +107,13 @@ export function Player() {
   ];*/
 
   /* TODO: NEW MOCK DATA FOR MODEL (base on new figma) */
+  // @ts-ignore
   const mockPlayerCards: ModelTypeNew[] = [
     {
       title: CharactersData[1].name,
       strength: CharactersData[1].damage,
       reloadSpeed: CharactersData[1].charge_step,
-      health: CharactersData[1].price * 2000,
+      health: CharactersData[1].price * 2,
       price: CharactersData[1].price,
       imgSrc: CharactersData[1].image,
       callback: () => handleCharacterBuyClick(2),
@@ -120,7 +122,7 @@ export function Player() {
       title: CharactersData[2].name,
       strength: CharactersData[2].damage,
       reloadSpeed: CharactersData[2].charge_step,
-      health: CharactersData[2].price * 2000,
+      health: CharactersData[2].price * 2,
       price: CharactersData[2].price,
       imgSrc: CharactersData[2].image,
       callback: () => handleCharacterBuyClick(3),
@@ -129,7 +131,7 @@ export function Player() {
       title: CharactersData[3].name,
       strength: CharactersData[3].damage,
       reloadSpeed: CharactersData[3].charge_step,
-      health: CharactersData[3].price * 2000,
+      health: CharactersData[3].price * 2,
       price: CharactersData[3].price,
       imgSrc: CharactersData[3].image,
       callback: () => handleCharacterBuyClick(4),
@@ -138,7 +140,7 @@ export function Player() {
       title: CharactersData[4].name,
       strength: CharactersData[4].damage,
       reloadSpeed: CharactersData[4].charge_step,
-      health: CharactersData[4].price * 2000,
+      health: CharactersData[4].price * 2,
       price: CharactersData[4].price,
       imgSrc: CharactersData[4].image,
       callback: () => handleCharacterBuyClick(5),
@@ -184,7 +186,8 @@ export function Player() {
             address: PROJECT_CONTRACT_ADDRESS,
             amount: (
               CharactersData[i - 1].price * 1000000000 +
-              50000000
+              60000000 +
+              (blasters.length == 0 ? 60000000 : 0)
             ).toString(),
             payload: CharactersData[i - 1].payload,
           },
@@ -192,13 +195,10 @@ export function Player() {
       };
       try {
         await tonConnectUI.sendTransaction(fillTx);
-        openDrawer!(
-          "resolved",
-          "bottom",
-          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-        );
+        startCheckBalance();
+        openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
       } catch (e) {
-        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+        openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
       }
     }
   };
@@ -222,10 +222,12 @@ export function Player() {
   );
 }
 export function Weapon() {
-  const { blasters, jwt } = useUserData();
+  const { blasters, jwt, startCheckBalance, characters } = useUserData();
   const { openDrawer } = useDrawer();
   const [tonConnectUI] = useTonConnectUI();
+  const { t } = useTranslation();
 
+  // @ts-ignore
   const initialWeapons: WeaponType[] = [
     {
       title: BlastersData[1].name,
@@ -265,6 +267,11 @@ export function Weapon() {
     if (jwt == null || jwt === "" || !tonConnectUI.connected) {
       openDrawer!("connectWallet");
     } else {
+      if(characters.length == 0)
+      {
+        openDrawer!("rejected", "bottom", t("shopModal.blasterBuyDeclined"));
+        return;
+      }
       const fillTx: SendTransactionRequest = {
         validUntil: Math.floor(Date.now() / 1000) + 600,
         messages: [
@@ -272,7 +279,8 @@ export function Weapon() {
             address: PROJECT_CONTRACT_ADDRESS,
             amount: (
               BlastersData[i - 1].price * 1000000000 +
-              50000000
+              60000000 +
+              (blasters.length == 0 ? 60000000 : 0)
             ).toString(),
             payload: BlastersData[i - 1].payload,
           },
@@ -280,13 +288,10 @@ export function Weapon() {
       };
       try {
         await tonConnectUI.sendTransaction(fillTx);
-        openDrawer!(
-          "resolved",
-          "bottom",
-          "Транзакция успешно отправлена.\n Ожидайте подтвержения"
-        );
+        startCheckBalance();
+        openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
       } catch (e) {
-        openDrawer!("rejected", "bottom", "Отправка транзакции была отклонена");
+        openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
       }
     }
   };
@@ -381,8 +386,8 @@ export function Store() {
         blaster.damage_level +
         blaster.max_charge_level;
 
-      const earningsPercentage =
-        (userMetrics.blaster_earned / userMetrics.blaster_earn_required) * 100;
+      const earningsPercentage = userMetrics.earned / userMetrics.earn_required;
+
       return {
         title: BlastersData[blaster.level - 1].name,
         rarity: BlastersData[blaster.level - 1].rarity,
@@ -391,14 +396,12 @@ export function Store() {
         additionalIncomeCurrent:
           blaster.level == 1
             ? 0
-            : (BlastersData[blaster.level - 1].price *
-                1.5 *
-                earningsPercentage) /
-              100,
+            : BlastersData[blaster.level - 1].price * 1.5 * earningsPercentage,
         additionalIncomeMax:
           blaster.level == 1 ? 0 : BlastersData[blaster.level - 1].price * 1.5,
         damage: blaster.damage,
         charge: blaster.charge,
+        max_charge: blaster.max_charge,
         reload: blaster.charge_step,
         rateOfFire: weaponRates[blaster.level - 1],
         durabilityCurrent: blaster.usage,
@@ -424,6 +427,7 @@ export function Store() {
             additionalIncomeMax={weapon.additionalIncomeMax}
             damage={weapon.damage}
             charge={weapon.charge}
+            max_charge={weapon.max_charge}
             reload={weapon.reload}
             rateOfFire={weapon.rateOfFire}
             durabilityCurrent={weapon.durabilityCurrent}

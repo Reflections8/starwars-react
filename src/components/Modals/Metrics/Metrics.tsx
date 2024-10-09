@@ -81,7 +81,7 @@ export function Finances() {
           <div className="finances__item-info-key">
             {t("metricsModal.financesTab.earn")}:
           </div>
-          <div className="finances__item-info-value">{totalEarned} akron</div>
+          <div className="finances__item-info-value">{totalEarned.toFixed(4).toString()} akron</div>
         </div>
         <img src={financesIcon2} alt="icon" className="finances__item-icon" />
       </div>
@@ -101,16 +101,22 @@ export function Finances() {
             <div className="finances__item-bottom-row-key">
               {t("metricsModal.financesTab.credits")}
             </div>
-            <div className="finances__item-bottom-row-value">0</div>
+            <div className="finances__item-bottom-row-value">
+              {userMetrics.credits_won}
+            </div>
           </div>
           <div className="finances__item-bottom-row">
             <div className="finances__item-bottom-row-key">akron</div>
-            <div className="finances__item-bottom-row-value">0</div>
+            <div className="finances__item-bottom-row-value">
+              {userMetrics.akronix_won}
+            </div>
           </div>
 
           <div className="finances__item-bottom-row">
             <div className="finances__item-bottom-row-key">ton</div>
-            <div className="finances__item-bottom-row-value">0</div>
+            <div className="finances__item-bottom-row-value">
+              {userMetrics.ton_won}
+            </div>
           </div>
         </div>
       </div>
@@ -135,17 +141,16 @@ export function Models() {
   const { characters } = useUserData();
   useEffect(() => {
     const createModel = (character: Character): MockModelsType => {
-      const health = Math.round(
-        2000 - (character.earned / character.earn_required) * 2000
-      );
+      const health = character.earn_required - character.earned;
       return {
         title: "-" + CharactersData[character.type - 1].name + "-",
         imgSrc: CharactersData[character.type - 1].image,
-        healthCurrent: health <= 0 ? 0 : health,
-        healthMax: 2000,
+        healthCurrent: (health <= 0 ? 0 : health),
+        healthMax: character.earn_required,
         deposits: character.total_deposited,
-        earned: character.total_earned_tokens.toString(),
+        earned: character.total_earned_tokens.toFixed(3).toString()
       };
+
     };
 
     const newModels = characters
@@ -203,8 +208,8 @@ export function Models() {
                       {t("metricsModal.modelsTab.health")}:
                     </div>
                     <div className="models__item-body-list-item-info-value">
-                      <span className="red">{item.healthCurrent}</span>
-                      <span className="white">/{item.healthMax}</span>
+                      <span className="red">{item.healthCurrent == 0 ? "0" : item.healthCurrent.toFixed(3)}</span>
+                      <span className="white">/{item.healthMax.toFixed(3)}</span>
                     </div>
                   </div>
                   <img

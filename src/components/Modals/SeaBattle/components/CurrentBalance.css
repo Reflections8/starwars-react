@@ -1,0 +1,25 @@
+.currentBalanceWrapper {
+  border: 1px solid #19c1ef4d;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.currentBalanceWrapper__start {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: #19c2ef;
+}
+
+.currentBalanceWrapper__end {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #c9e9fb;
+}
