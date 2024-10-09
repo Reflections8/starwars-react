@@ -205,7 +205,7 @@ export function Settings() {
         </div>
       </div>
 
-      {!characters.length && sessionsCount! <= 5 ? null : (
+      {!characters.length && sessionsCount! <= 2 ? null : (
         <div className="settings__row">
           <div className="settings__row-name">
             {t("settingsModal.tutorial")}:

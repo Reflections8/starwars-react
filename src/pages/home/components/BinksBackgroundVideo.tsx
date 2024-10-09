@@ -203,24 +203,21 @@ export function BinksBackgroundVideo({
 
   function handleTutorialDone() {
     // Нет НФТ, 1-5
-    if (!characters.length && sessionsCount <= 5) {
-      console.log("!characters.length && sessionsCount <= 5");
+    if (!characters.length && sessionsCount <= 2) {
       stopVideo("2");
       openModal!("binksDone");
       return;
     }
 
     // Нет НФТ, 6+ (убрал модалку binksDone если это уже 6+ сессии)
-    if (!characters.length && sessionsCount > 5) {
-      console.log("!characters.length && sessionsCount > 5");
+    if (!characters.length && sessionsCount > 2) {
       stopVideo("2");
       setActiveVideo("3");
       return;
     }
 
     // Если есть НФТ, 1-5
-    if (characters.length && sessionsCount <= 5) {
-      console.log("characters.length && sessionsCount <= 5");
+    if (characters.length && sessionsCount <= 2) {
       stopAllVideos();
       setReadyState(false);
       setActiveVideo(null);
@@ -228,8 +225,7 @@ export function BinksBackgroundVideo({
     }
 
     // Если есть НФТ, 6+
-    if (characters.length && sessionsCount > 5) {
-      console.log("characters.length && sessionsCount > 5");
+    if (characters.length && sessionsCount > 2) {
       stopAllVideos();
       setReadyState(false);
       setActiveVideo(null);

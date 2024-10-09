@@ -176,7 +176,7 @@ export function Home() {
 
       if (jwt) {
         if (sessionsCount === null) return;
-        if (characters.length && sessionsCount !== null && sessionsCount! > 5) {
+        if (characters.length && sessionsCount !== null && sessionsCount! > 2) {
           if (!sessionInteracted) {
             openModal!("welcome");
           }
@@ -188,7 +188,7 @@ export function Home() {
         if (
           !characters.length &&
           sessionsCount !== null &&
-          sessionsCount! > 5
+          sessionsCount! > 2
         ) {
           if (!tutorialClicked) {
             openModal!("binksBack");
@@ -199,7 +199,7 @@ export function Home() {
         if (
           characters.length &&
           sessionsCount !== null &&
-          sessionsCount! <= 5
+          sessionsCount! <= 2
         ) {
           if (!tutorialClicked) {
             openModal!("binks");
@@ -211,7 +211,7 @@ export function Home() {
         if (
           !characters.length &&
           sessionsCount !== null &&
-          sessionsCount! <= 5
+          sessionsCount! <= 2
         ) {
           if (!tutorialClicked) {
             openModal!("binks");
