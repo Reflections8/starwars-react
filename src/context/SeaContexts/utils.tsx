@@ -11,15 +11,14 @@ export const playBeamAnimation = (
   return new Promise<void>((resolve) => {
     const beam = document.createElement("div");
     beam.className = "beam-animation-" + (me ? "green" : "red");
-
+    document.body.appendChild(beam);
     document.body.style.overflow = "hidden";
     // Calculate the position of the target cell
     const targetRect = targetCell.getBoundingClientRect();
-    const startX = window.scrollX;
-    const startY = window.scrollY;
-    beam.style.left = `${startX}px`;
-    beam.style.top = `${startY}px`;
-    document.body.appendChild(beam);
+    const beamRect = beam.getBoundingClientRect();
+    const startX = beamRect.left;
+    const startY = beamRect.top;
+
     let targetX = targetRect.left + targetRect.width / 2;
     let targetY = targetRect.top + targetRect.height / 2;
     if (me) {
