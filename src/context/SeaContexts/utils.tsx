@@ -4,8 +4,6 @@ export const playBeamAnimation = (
   isHit: string,
   blastIt: (isHit: string) => void
 ) => {
-  console.log("TEST");
-  return;
   blastIt(isHit);
   const targetCell = document.getElementById(
     `${me ? "enemy" : "user"}Cell${row}-${column}`
@@ -13,14 +11,15 @@ export const playBeamAnimation = (
   return new Promise<void>((resolve) => {
     const beam = document.createElement("div");
     beam.className = "beam-animation-" + (me ? "green" : "red");
-    document.body.appendChild(beam);
+
     document.body.style.overflow = "hidden";
     // Calculate the position of the target cell
     const targetRect = targetCell.getBoundingClientRect();
-    const beamRect = beam.getBoundingClientRect();
-    const startX = beamRect.left;
-    const startY = beamRect.top;
-
+    const startX = window.scrollX;
+    const startY = window.scrollY;
+    beam.style.left = `${startX}px`;
+    beam.style.top = `${startY}px`;
+    document.body.appendChild(beam);
     let targetX = targetRect.left + targetRect.width / 2;
     let targetY = targetRect.top + targetRect.height / 2;
     if (me) {
