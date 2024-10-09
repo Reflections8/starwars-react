@@ -6,7 +6,7 @@ import "./index.css";
 import { router } from "./routes/index.tsx";
 
 export const PROJECT_CONTRACT_ADDRESS =
-  "EQBR93a1DooUJ8yZLAd739SltEaJ6c0VxsPzEEEJj4T1MZFW";
+  "EQD_jqvc8l6syFx5O0PN21StuZMaIl4A-Lx-XwsukIhZcWk7";
 
 export const SERVER_URL = "https://socket.akronix.io";
 export const VADER_SOCKET = "wss://socket.akronix.io/vader";
