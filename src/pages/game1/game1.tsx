@@ -48,7 +48,7 @@ export function Game1() {
         bgRef.current.loop = true;
         bgRef.current.play();
       }
-      console.log("sss")
+      console.log("sss");
       sendMessageToUnity("LangInit", t("audio.vader"));
 
       setGame1State(false);
@@ -56,6 +56,10 @@ export function Game1() {
   }, [game1State]);
 
   useEffect(() => {
+    const pageLoader = document.querySelector(".pageLoader");
+    if (!pageLoader?.classList.contains("loadingModalBg--Hidden")) {
+      pageLoader?.classList.add("loadingModalBg--Hidden");
+    }
     setIsLoading!(true);
   }, []);
 
