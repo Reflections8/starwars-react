@@ -84,6 +84,8 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .gameFields__top-board {
@@ -113,6 +115,8 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .gameFields__bottom-board {

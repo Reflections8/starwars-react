@@ -39,11 +39,26 @@ export const GameFields: FC<{
 
   return (
     <div className="gameFields">
-      <img src={leftBg} alt="left-bg" className="gameFields__leftBg" />
-      <img src={rightBg} alt="right-bg" className="gameFields__rightBg" />
+      <img
+        src={leftBg}
+        alt="left-bg"
+        className="gameFields__leftBg"
+        draggable="false"
+      />
+      <img
+        src={rightBg}
+        alt="right-bg"
+        className="gameFields__rightBg"
+        draggable="false"
+      />
       <div className="gameFieldsMainContent">
         <div className="gameFields__top">
-          <img src={boardBgTop} alt="" className="gameFields__top-bg" />
+          <img
+            src={boardBgTop}
+            alt=""
+            className="gameFields__top-bg"
+            draggable="false"
+          />
           <div style={{ zIndex: 200 }} className="">
             <EnemyBoard
               gameboard={enemyBoard}
@@ -56,7 +71,12 @@ export const GameFields: FC<{
           <ClearedTimer remainTime={timerValue} callback={() => {}} />
         </div>
         <div className="gameFields__bottom">
-          <img src={boardBgBottom} alt="" className="gameFields__bottom-bg" />
+          <img
+            src={boardBgBottom}
+            alt=""
+            className="gameFields__bottom-bg"
+            draggable="false"
+          />
           <div className="">
             <UserBoard gameboard={userBoard} />
           </div>

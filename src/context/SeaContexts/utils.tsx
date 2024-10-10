@@ -23,8 +23,8 @@ export const playBeamAnimation = (
     let targetX = targetRect.left + targetRect.width / 2;
     let targetY = targetRect.top + targetRect.height / 2;
     if (me) {
-      targetX += 1;
-      targetY += 7;
+      targetX -= 1;
+      targetY -= 7;
     } else {
       targetX -= 1;
       targetY -= 7;
