@@ -88,7 +88,7 @@ export function Home() {
       sendMessageToUnity("OnUserModelInitReceive", json);
     }
     return () => {};
-  }, [isUnityLoaded, activeCharacter, higherBlaster]);
+  }, [isUnityLoaded, activeCharacter, higherBlaster, characters.length]);
 
   useEffect(() => {
     if (!isUnityLoaded) return;
