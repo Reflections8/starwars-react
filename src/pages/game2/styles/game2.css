@@ -39,9 +39,10 @@
 
 .beam-animation-green {
   position: absolute;
-  top: 100%;
-  left: 100%;
-  width: 100px;
+  display: none;
+  top: 50%;
+  left: 50%;
+  width: 0px;
   border-radius: 50%;
   height: 5px; /* Adjust height as needed */
   background-color: greenyellow;
@@ -52,10 +53,11 @@
   background-color: greenyellow;
 }
 .beam-animation-red {
+  display: none;
   position: absolute;
-  top: 0;
-  left: 0%;
-  width: 100px;
+  top: 50%;
+  left: 50%;
+  width: 0px;
   border-radius: 50%;
   height: 5px; /* Adjust height as needed */
   background-color: crimson;

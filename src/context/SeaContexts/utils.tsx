@@ -22,7 +22,7 @@ export const playBeamAnimation = (
     beam.style.left = `${startX}px`;
     beam.style.top = `${startY}px`;
     beam.style.display = "block";
-
+    beam.style.width = "100px";
     let targetX = targetRect.left + targetRect.width / 2;
     let targetY = targetRect.top + targetRect.height / 2;
 
@@ -43,7 +43,7 @@ export const playBeamAnimation = (
     setTimeout(() => {
       beam.style.left = `${targetX}px`;
       beam.style.top = `${targetY}px`;
-      beam.style.width = "10px";
+      beam.style.width = "5px";
     }, 10);
 
     // Remove the beam after the animation completes
