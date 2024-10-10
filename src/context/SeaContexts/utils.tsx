@@ -9,19 +9,23 @@ export const playBeamAnimation = (
     `${me ? "enemy" : "user"}Cell${row}-${column}`
   ) as HTMLElement;
   return new Promise<void>((resolve) => {
-    const beam = document.createElement("div");
-    beam.className = "beam-animation-" + (me ? "green" : "red");
+    const beamName = "beam-animation-" + (me ? "green" : "red");
+    const beam = document.getElementById(beamName) as HTMLElement;
 
-    document.body.style.overflow = "hidden";
-    // Calculate the position of the target cell
+    if (!beam) return;
+
     const targetRect = targetCell.getBoundingClientRect();
+
     const startX = window.scrollX;
     const startY = window.scrollY;
+
     beam.style.left = `${startX}px`;
     beam.style.top = `${startY}px`;
-    document.body.appendChild(beam);
+    beam.style.display = "block";
+
     let targetX = targetRect.left + targetRect.width / 2;
     let targetY = targetRect.top + targetRect.height / 2;
+
     if (me) {
       targetX -= 1;
       targetY -= 7;
@@ -32,6 +36,7 @@ export const playBeamAnimation = (
 
     const deltaX = targetX - startX;
     const deltaY = targetY - startY;
+
     const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
     beam.style.transform = `rotate(${angle}deg)`;
 
@@ -43,8 +48,7 @@ export const playBeamAnimation = (
 
     // Remove the beam after the animation completes
     beam.addEventListener("transitionend", () => {
-      document.body.removeChild(beam);
-      document.body.style.overflow = "auto";
+      beam.style.display = "none";
       resolve();
     });
   });

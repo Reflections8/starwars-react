@@ -157,6 +157,8 @@ export function Game2() {
           />
           <div className="game2__gradientTop"></div>
           <div className="game2__gradientBottom"></div>
+          <div id={"beam-animation-green"} className="beam-animation-green" />
+          <div id={"beam-animation-red"} className="beam-animation-red" />
           <GameHeader myTurn={myTurn} />
           <EnemyShips ships={enemyBoard.getShipsRemain()} />
           <GameFields
