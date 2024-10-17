@@ -22,11 +22,20 @@ export function Settings() {
     sessionsCount,
     setSoundSetting,
     updateUserInfo,
+    iframeRefHome,
   } = useUserData();
   const { t, i18n } = useTranslation();
 
   const { restartTutorial } = useBackgroundVideo();
   const { closeModal } = useModal();
+
+  const sendMessageToUnity = (method: string, param: any) => {
+    console.log({ iframeRefHome });
+    const message = JSON.stringify({ method, param });
+    if (iframeRefHome?.current) {
+      iframeRefHome?.current.contentWindow?.postMessage(message, "*");
+    }
+  };
 
   const pills: PillType[] = [
     {
@@ -43,6 +52,26 @@ export function Settings() {
     {
       label: t("settingsModal.optionAuto"),
       value: "AUTO",
+    },
+    {
+      label: "10%",
+      value: "10",
+    },
+    {
+      label: "25%",
+      value: "25",
+    },
+    {
+      label: "50%",
+      value: "50",
+    },
+    {
+      label: "75%",
+      value: "75",
+    },
+    {
+      label: "100%",
+      value: "100",
     },
   ];
 
@@ -153,6 +182,10 @@ export function Settings() {
       localStorage.setItem("sound_setting", "on");
     }
   };
+
+  useEffect(() => {
+    sendMessageToUnity("scale", Number(activeGraphics.value));
+  }, [activeGraphics]);
 
   return (
     <div className="settings">

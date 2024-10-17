@@ -7,6 +7,7 @@ import { ProofApiService } from "../../ProofApiService.ts";
 import { useUserData } from "../../UserDataService.tsx";
 import { Header } from "../../components/Header/Header";
 import { HeaderCenterShop } from "../../components/Header/components/HeaderCenter/HeaderCenterShop";
+import { getMe } from "../../components/Modals/SeaBattle/service/sea-battle.service.ts";
 import { ProofManager } from "../../components/ProofManager/ProofManager.tsx";
 import { useBackgroundVideo } from "../../context/BackgroundVideoContext.tsx";
 import { useDrawer } from "../../context/DrawerContext";
@@ -16,6 +17,7 @@ import { ExitIcon } from "../../icons/Exit";
 import { GamesIcon } from "../../icons/Games";
 import { MenuIcon } from "../../icons/Menu";
 import { OptionsIcon } from "../../icons/Options";
+import bgSound from "../home/audio/main_bg.mp3";
 import highlightBook from "../home/video/currency.svg";
 import { BackgroundLayers } from "./components/BackgroundLayers";
 import { BinksBackgroundVideo } from "./components/BinksBackgroundVideo.tsx";
@@ -23,12 +25,10 @@ import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
-import bgSound from "../home/audio/main_bg.mp3";
-import { getMe } from "../../components/Modals/SeaBattle/service/sea-battle.service.ts";
 
 export function Home() {
   const { t, i18n } = useTranslation();
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  // const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const {
     credits,
@@ -46,6 +46,7 @@ export function Home() {
     userDataDefined,
     homeState,
     setHomeState,
+    iframeRefHome,
   } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
   const [isExpanded, expand] = useExpand();
@@ -68,8 +69,8 @@ export function Home() {
 
   const sendMessageToUnity = (method: string, param: any) => {
     const message = JSON.stringify({ method, param });
-    if (iframeRef.current) {
-      iframeRef.current.contentWindow?.postMessage(message, "*");
+    if (iframeRefHome.current) {
+      iframeRefHome.current.contentWindow?.postMessage(message, "*");
     }
   };
 
@@ -107,7 +108,7 @@ export function Home() {
   const handleLoadingFinish = useCallback(() => {
     setIsUnityLoaded(true);
     if (jwt !== null && jwt !== "") updateUserInfo(jwt);
-    iframeRef.current?.focus();
+    iframeRefHome.current?.focus();
   }, []);
 
   // Обработчик сообщений, полученных из iFrame
@@ -334,7 +335,7 @@ export function Home() {
       {jwt && tonConnectUI.connected && characters.length ? (
         <>
           <iframe
-            ref={iframeRef}
+            ref={iframeRefHome}
             src="https://game.akronix.io/new/unity_main_2/"
             style={{
               position: "absolute",

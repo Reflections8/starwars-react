@@ -24,11 +24,15 @@
 }
 
 .binks__text {
-  color: #e1f0ff;
-  font-size: 14px;
+  color: #19c2ef;
+  font-size: 12px;
   position: relative;
   z-index: 1;
   text-align: center;
+  max-width: 300px;
+  text-align: center;
+  margin: 0 auto;
+  line-height: 170%;
 }
 
 .binks__video2 {

@@ -23,7 +23,8 @@
     "react-unity-webgl": "^9.5.2",
     "react-use-precision-timer": "^3.5.5",
     "react-use-websocket": "^4.8.1",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
