@@ -57,11 +57,9 @@ interface UserDataContextType {
   setGame1State: (value: boolean) => void;
   homeState: boolean | null;
   setHomeState: (value: boolean) => void;
-  iframeRefHome: any;
 }
 
 const defaultValue: UserDataContextType = {
-  iframeRefHome: null,
   userDataDefined: false,
   credits: 0,
   tokens: 0,
@@ -426,8 +424,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
   const [game1State, setGame1State] = useState<boolean | null>(null);
   const [homeState, setHomeState] = useState<boolean | null>(null);
 
-  const iframeRefHome = useRef<HTMLIFrameElement>(null);
-
   return (
     <UserDataContext.Provider
       value={{
@@ -465,7 +461,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         homeState,
         setHomeState,
         auth,
-        iframeRefHome,
       }}
     >
       {children}

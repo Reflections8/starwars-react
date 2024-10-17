@@ -22,20 +22,11 @@ export function Settings() {
     sessionsCount,
     setSoundSetting,
     updateUserInfo,
-    iframeRefHome,
   } = useUserData();
   const { t, i18n } = useTranslation();
 
   const { restartTutorial } = useBackgroundVideo();
   const { closeModal } = useModal();
-
-  const sendMessageToUnity = (method: string, param: any) => {
-    console.log({ iframeRefHome });
-    const message = JSON.stringify({ method, param });
-    if (iframeRefHome?.current) {
-      iframeRefHome?.current.contentWindow?.postMessage(message, "*");
-    }
-  };
 
   const pills: PillType[] = [
     {
@@ -58,16 +49,36 @@ export function Settings() {
       value: "10",
     },
     {
-      label: "25%",
-      value: "25",
+      label: "20%",
+      value: "20",
+    },
+    {
+      label: "30%",
+      value: "30",
+    },
+    {
+      label: "40%",
+      value: "40",
     },
     {
       label: "50%",
       value: "50",
     },
     {
-      label: "75%",
-      value: "75",
+      label: "60%",
+      value: "60",
+    },
+    {
+      label: "70%",
+      value: "70",
+    },
+    {
+      label: "80%",
+      value: "80",
+    },
+    {
+      label: "90%",
+      value: "90",
     },
     {
       label: "100%",
@@ -89,7 +100,17 @@ export function Settings() {
   ];
 
   const [activePill, setActivePill] = useState(pills[0]);
-  const [activeGraphics, setActiveGraphics] = useState(graphics[0]);
+  const [activeGraphics, setActiveGraphics] = useState(
+    localStorage.getItem("graphic_setting")
+      ? graphics.find(
+          (item) =>
+            item.value === String(localStorage.getItem("graphic_setting"))
+        )
+      : {
+          label: "80%",
+          value: "80",
+        }
+  );
 
   const [characterOptions, setCharacterOptions] = useState<SelectOptionType[]>(
     []
@@ -103,13 +124,17 @@ export function Settings() {
   );
 
   useEffect(() => {
-    setActiveGraphics(graphics[0]);
+    // setActiveGraphics(graphics[0]);
   }, [i18n.language]);
 
   useEffect(() => {
     const currentLanguageCode = activeLanguage.value === "ENG" ? "en" : "ru";
     i18n.changeLanguage(currentLanguageCode);
   }, [activeLanguage]);
+
+  useEffect(() => {
+    localStorage.setItem("graphic_setting", String(activeGraphics?.value));
+  }, [activeGraphics]);
 
   useEffect(() => {
     if (characters) {
@@ -182,10 +207,6 @@ export function Settings() {
       localStorage.setItem("sound_setting", "on");
     }
   };
-
-  useEffect(() => {
-    sendMessageToUnity("scale", Number(activeGraphics.value));
-  }, [activeGraphics]);
 
   return (
     <div className="settings">

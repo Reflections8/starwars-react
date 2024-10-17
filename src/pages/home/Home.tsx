@@ -28,7 +28,7 @@ import "./styles/home.css";
 
 export function Home() {
   const { t, i18n } = useTranslation();
-  // const iframeRef = useRef<HTMLIFrameElement>(null);
+  const iframeRefHome = useRef<HTMLIFrameElement>(null);
 
   const {
     credits,
@@ -46,7 +46,6 @@ export function Home() {
     userDataDefined,
     homeState,
     setHomeState,
-    iframeRefHome,
   } = useUserData();
   const [tonConnectUI] = useTonConnectUI();
   const [isExpanded, expand] = useExpand();
@@ -255,6 +254,11 @@ export function Home() {
     if (!localStorage.getItem("sound_setting")) {
       localStorage.setItem("sound_setting", "on");
     }
+
+    if (!localStorage.getItem("graphic_setting")) {
+      localStorage.setItem("graphic_setting", "80");
+    }
+
     if (isExpanded != undefined && !isExpanded) expand();
   }, []);
 

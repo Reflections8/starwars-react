@@ -51,7 +51,7 @@ export function Page({ dataPage, children }: PageProps) {
                 <ModalProvider>
                   <SomethingProvider>
                     <div className="page" data-page={dataPage}>
-                      <PageLoader isOpen={true} className="pageLoader" />
+                      {/* <PageLoader isOpen={true} className="pageLoader" /> */}
                       <div className="page__container">
                         <div className="page__container-gradient page__container-gradient--Left"></div>
                         <div className="page__container-gradient page__container-gradient--Right"></div>
