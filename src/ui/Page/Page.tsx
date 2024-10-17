@@ -7,7 +7,6 @@ import { ModalProvider } from "../../context/ModalContext";
 import { SomethingProvider } from "../../context/SeaContexts/SomethingContext.tsx";
 import { SoundProvider } from "../../context/SeaContexts/SoundContext.tsx";
 import { UserDataProvider } from "../../UserDataService.tsx";
-import { PageLoader } from "../Modal/PageLoader.tsx";
 import "./styles/Page.css";
 
 type PageProps = {
