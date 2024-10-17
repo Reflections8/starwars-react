@@ -241,7 +241,7 @@ export function Settings() {
         <div className="settings__row-action settings__row-selectContainer">
           <Select
             options={graphics}
-            activeOption={activeGraphics}
+            activeOption={activeGraphics!}
             setActiveOption={setActiveGraphics}
           />
         </div>
