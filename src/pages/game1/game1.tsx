@@ -50,7 +50,10 @@ export function Game1() {
       }
       console.log("sss");
       sendMessageToUnity("LangInit", t("audio.vader"));
-      sendMessageToUnity("SetQuality", localStorage.getItem("graphic_setting"));
+      sendMessageToUnity(
+        "SetQuality",
+        JSON.stringify({ scale: localStorage.getItem("graphic_setting") })
+      );
 
       setGame1State(false);
     }
