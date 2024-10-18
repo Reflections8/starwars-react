@@ -356,16 +356,18 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       };
 
       authenticateUser();
-    } else if (tonConnectUI.connected) {
-      tonConnectUI.disconnect();
-      setUserDataDefined(true);
+    } else {
+      ProofApiService.reset();
+      if (tonConnectUI.connected) {
+        tonConnectUI.disconnect();
+      }
     }
     return () => {
       if (interval) {
         clearInterval(interval);
       }
     };
-  }, [jwt]);
+  }, [jwt, tonConnectUI]);
 
   useEffect(() => {
     setJwt(localStorage.getItem(ProofApiService.localStorageKey));

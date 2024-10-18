@@ -56,6 +56,7 @@ export const ProofManager: React.FC<ProofManagerComponentProps> = () => {
             console.log("authorized");
           } else {
             updateJwt(null);
+            ProofApiService.reset();
             tonConnectUI.disconnect();
             console.log("not authorized no access token");
             return;

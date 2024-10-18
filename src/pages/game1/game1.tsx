@@ -48,7 +48,6 @@ export function Game1() {
         bgRef.current.loop = true;
         bgRef.current.play();
       }
-      console.log("sss");
       sendMessageToUnity("LangInit", t("audio.vader"));
       sendMessageToUnity(
         "SetQuality",
@@ -280,7 +279,7 @@ export function Game1() {
       <div className="bottomLinearGradient" />
       <iframe
         ref={iframeRef}
-        src="https://game.akronix.io/new/unity_vader_5/"
+        src="https://game.akronix.io/new/unity_vader_9/"
         style={{
           position: "absolute",
           left: 0,
