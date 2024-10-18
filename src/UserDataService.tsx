@@ -356,9 +356,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       };
 
       authenticateUser();
-    } else if (tonConnectUI.connected) {
-      tonConnectUI.disconnect();
-      setUserDataDefined(true);
     }
     return () => {
       if (interval) {
