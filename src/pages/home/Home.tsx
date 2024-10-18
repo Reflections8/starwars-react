@@ -75,6 +75,7 @@ export function Home() {
 
   // отслеживание статуса токена и загрузки приложения
   useEffect(() => {
+    console.log({ isUnityLoaded, activeCharacter });
     setIsLoading!(true);
     if (isUnityLoaded) {
       setIsLoading!(false);
@@ -89,6 +90,12 @@ export function Home() {
     }
     return () => {};
   }, [isUnityLoaded, activeCharacter, higherBlaster, characters.length]);
+
+  useEffect(() => {
+    if (activeCharacter && isUnityLoaded) {
+      setIsLoading!(false);
+    }
+  }, [activeCharacter]);
 
   useEffect(() => {
     if (!isUnityLoaded) return;
