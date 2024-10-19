@@ -33,7 +33,7 @@ export function SocialTasks() {
       key: "youtube-subscribe",
       completed: false,
       header: {
-        title: t("questsModal.socialTab.youtubeSubcribe"),
+        title: t("questsModal.socialTab.youtubeSubscribe"),
         icon: youtubeSubscribeIcon,
       },
       content: {
