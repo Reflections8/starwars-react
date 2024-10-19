@@ -167,7 +167,42 @@
   },
   "questsModal": {
     "title": "Quests",
-    "comingSoonText": "Tasks will be available soon, follow the news in our TG channel"
+    "reward": "Reward",
+    "get": "Get",
+    "cred": "cred.",
+    
+    "gameTab": {
+      "title": "Game",
+      "earnCredits": "Earn Credits",
+      "earn1000Credits": "Earn 1000 Credits",
+      "buyCharacter": "Buy Character",
+      "buyNFTDroid": "Buy NFT - DROID",
+      "buyGun": "Buy Weapon",
+      "buyNFTBlaster": "Buy NFT - Blaster",
+      "destroyVaiderDrones": "Destroy Vader's Drones",
+      "destroy100Drones": "Destroy 100 Drones",
+      "winCreditsInBattleships": "Win Credits in Space Battle",
+      "win1000Credits": "Win 1000 Credits",
+      "destroyEnemyShips": "Destroy Enemy Ships",
+      "singleShips": "Single-deck Ships",
+      "upgradeGunOnce": "Upgrade Weapon Once",
+      "upgradeAnyGun": "Upgrade Any Weapon",
+      "repairOrHeal": "Repair Weapon or Heal Character",
+      "restoreTo100": "Restore to 100%"
+    },
+    "socialTab": {
+      "title": "Social",
+      "twitterSubscribe": "Subscribe on Twitter",
+      "youtubeSubscribe": "Subscribe on YouTube",
+      "watchVideo": "Watch Video",
+      "inviteFriend": "Invite 1 Friend",
+      "friendBecameWarrior": "Friend Became a Warrior",
+      "becameWarrior": "Became a Warrior",
+      "makePost": "Make a Post on Social Media",
+      "makePostWithHashtag": "Make a Post about Acronyx on Social Media with Hashtag",
+      "sendToModeration": "Send for Moderation",
+      "alreadySent": "You have already sent the link"
+    }
   },
   "partnersModal": {
     "title": "Partners",

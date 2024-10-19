@@ -176,7 +176,11 @@ export function Fill() {
               startCheckBalance();
               openDrawer!("resolved", "bottom", t("shopModal.transactionSent"));
             } catch (e) {
-              openDrawer!("rejected", "bottom", t("shopModal.transactionDenied"));
+              openDrawer!(
+                "rejected",
+                "bottom",
+                t("shopModal.transactionDenied")
+              );
             }
           }}
         />
@@ -187,7 +191,7 @@ export function Fill() {
 
 export function Exchange() {
   const { t } = useTranslation();
-  const { credits, exchangeRate, /*jwt, updateUserInfo*/ } = useUserData();
+  const { credits, exchangeRate /*jwt, updateUserInfo*/ } = useUserData();
   const { openDrawer } = useDrawer();
 
   const [creditsText, setCredits] = useState("");
