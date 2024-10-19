@@ -21,6 +21,7 @@ import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useTranslation } from "react-i18next";
+import {useInitData} from "@vkruglikov/react-telegram-web-app";
 
 interface UserDataContextType {
   userDataDefined: boolean;
@@ -157,6 +158,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     null
   );
 
+  const [initDataUnsafe] = useInitData();
+
   const [activeBlaster, setActiveBlaster] = useState<Blaster | null>(null);
   const [higherBlaster, setHigherBlaster] = useState<Blaster | null>(null);
   const [activeCharacter, setActiveCharacter] = useState<Character | null>(
@@ -225,10 +228,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
 
   const auth = async (jwt: string) => {
     try {
-      const searchParams = new URLSearchParams(window.location.search); // Извлекаем строку параметров до хэша
-      const idParam = searchParams.get("id");
-      const id = idParam !== null ? Number(idParam) : -1;
-
       const response = await fetch(SERVER_URL + "/main/auth", {
         method: "POST", // или 'POST', в зависимости от требований к API
         headers: {
@@ -236,7 +235,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
           Authorization: `Bearer ${jwt}`, // Добавление токена в заголовок
         },
         body: JSON.stringify({
-          chat_id: id,
+          chat_id: initDataUnsafe?.user?.id,
+          ref_id: initDataUnsafe?.start_param != undefined ? parseInt(initDataUnsafe.start_param) : -1
         }),
       });
       if (!response.ok) {

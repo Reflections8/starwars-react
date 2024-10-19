@@ -187,7 +187,7 @@ export function Fill() {
 
 export function Exchange() {
   const { t } = useTranslation();
-  const { credits, exchangeRate, jwt, updateUserInfo } = useUserData();
+  const { credits, exchangeRate, /*jwt, updateUserInfo*/ } = useUserData();
   const { openDrawer } = useDrawer();
 
   const [creditsText, setCredits] = useState("");
@@ -237,6 +237,9 @@ export function Exchange() {
   };
 
   const handleExchangeClick = async () => {
+    openDrawer!("rejected", "bottom", t("walletModal.exchangeDisabled"));
+    return;
+    /*
     if (jwt == null) return;
 
     const numericCredits = parseInt(creditsText, 10);
@@ -271,7 +274,7 @@ export function Exchange() {
         "bottom",
         t("walletModal.invalidAmountOfCredits")
       );
-    }
+    }*/
   };
 
   return (
