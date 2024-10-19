@@ -25,23 +25,42 @@
 .topLinearGradient {
   position: absolute;
   width: 100%;
-  height: 92px;
+  height: 230px;
   left: 0;
   z-index: 2;
   pointer-events: none;
-  background: linear-gradient(to bottom, #120d1fe0, #0f172f00);
+  background: linear-gradient(to bottom, #00032b17, #00032b00);
   top: 0;
+}
+
+.topTexture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .bottomLinearGradient {
   position: absolute;
   width: 100%;
-  height: 92px;
+  height: 150px;
   left: 0;
   z-index: 2;
   pointer-events: none;
-  background: linear-gradient(to top, #120d1fe0, #0f172f00);
-  bottom: 0;
+  background: linear-gradient(to top, #00032b3b, #00032b00);
+  bottom: -1px;
+}
+
+.bottomTexture {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  transform: rotate(180deg);
+  pointer-events: none;
 }
 
 .backgroundVideo {

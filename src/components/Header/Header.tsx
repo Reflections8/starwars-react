@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import bgImgBlur from "./img/left-bg-blur.png";
 import bgImgBlurHome from "./img/left-bg-blur-home.png";
 import bgImg from "./img/left-bg.png";
+import bgImgPurple from "./img/left-bg-purple.png";
 import highlightHeader from "../../pages/home/video/header.svg";
 import "./styles/Header.css";
 import "./styles/HeaderAnimation.css";
@@ -61,9 +62,9 @@ export function Header({
               } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
             >
               <img
-                src={bgImg}
+                src={leftClassName === "games" ? bgImgPurple : bgImg}
                 alt="bg"
-                className="header__top-bg header__top-left-bg"
+                className={`header__top-bg header__top-left-bg ${leftClassName}`}
               />
               <img src={bgImgBlur} alt="" className="header__top-left-bgBlur" />
 
@@ -91,9 +92,9 @@ export function Header({
               } ${isMounted ? "header__top-link--slideInLeft" : ""}`}
             >
               <img
-                src={bgImg}
+                src={leftClassName === "games" ? bgImgPurple : bgImg}
                 alt="bg"
-                className="header__top-bg header__top-left-bg"
+                className={`header__top-bg header__top-left-bg ${leftClassName}`}
               />
               <img
                 src={leftClassName === "games" ? bgImgBlurHome : bgImgBlur}
@@ -113,7 +114,9 @@ export function Header({
                       {leftIcon}
                     </div>
                   </div>
-                  <span className={`header__top-left-content-text`}>
+                  <span
+                    className={`header__top-left-content-text ${leftClassName}`}
+                  >
                     {leftText}
                   </span>
                 </div>
@@ -128,9 +131,9 @@ export function Header({
             onClick={rightAction}
           >
             <img
-              src={bgImg}
+              src={rightClassName === "options" ? bgImgPurple : bgImg}
               alt="bg"
-              className="header__top-bg header__top-right-bg"
+              className={`header__top-bg header__top-right-bg ${rightClassName}`}
             />
             <img
               src={rightClassName === "options" ? bgImgBlurHome : bgImgBlur}
@@ -140,7 +143,9 @@ export function Header({
 
             {!onlyLeft && (
               <div className={`header__top-right-content ${rightClassName}`}>
-                <span className="header__top-right-content-text">
+                <span
+                  className={`header__top-right-content-text ${rightClassName}`}
+                >
                   {rightText}
                 </span>
                 <div className="header__top-right-content-iconWrapper">
