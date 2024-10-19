@@ -133,7 +133,7 @@ export function GameTasks() {
         icon: repairOrHealIcon,
       },
       content: {
-        title: t("questsModal.gameTab.resotreTo100"),
+        title: t("questsModal.gameTab.restoreTo100"),
         hasProgressBar: false,
         taskCurrentProgress: null,
         taskMaxProgress: null,
