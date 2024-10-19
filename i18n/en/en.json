@@ -284,7 +284,9 @@
       "createDuelWithFriend": "Create duel with a friend",
       "friendsLogin": "Friends login",
       "yourBet": "Your bet",
-      "createDuel": "Create duel"
+      "createDuel": "Create duel",
+      "createdDate": "Date",
+      "sum": "Sum"
     },
     "betTab": {
       "title": "Bet",

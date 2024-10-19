@@ -210,6 +210,16 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     }
   }
 
+  type SortRoomsType = {
+    field: "createdDate" | "betAmount" | null;
+    order: "ASC" | "DESC" | null;
+  };
+
+  const [sortRooms, setSortRooms] = useState<SortRoomsType>({
+    field: null,
+    order: null,
+  });
+
   const resetArrangementGameboard = () => {
     const newGameboard = new ArrangementBoard();
     setGameboard(newGameboard);
@@ -584,6 +594,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         approveDuel,
         handleApproveDuel,
         handleDeclineDuel,
+        sortRooms,
+        setSortRooms,
       }}
     >
       {children}

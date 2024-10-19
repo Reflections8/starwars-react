@@ -95,7 +95,7 @@ export function Home() {
     if (activeCharacter && isUnityLoaded) {
       setIsLoading!(false);
     }
-  }, [activeCharacter]);
+  }, [activeCharacter, characters.length]);
 
   useEffect(() => {
     if (!isUnityLoaded) return;

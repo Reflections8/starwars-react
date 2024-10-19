@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CryptoButtons } from "../../../../../ui/CryptoButtons/CryptoButtons";
 import arrowIcon from "./img/arrow.svg";
 import fightIcon from "./img/fight.svg";
@@ -12,6 +12,8 @@ import { useUserData } from "../../../../../UserDataService";
 import { fetchUserPhoto } from "../../service/sea-battle.service";
 import { BetTypeEnum, BetTypeIconEnum } from "../../types/enum";
 import { CurrentBalace } from "../CurrentBalance";
+import arrowEmpty from "./img/sort-arrow-empty.svg";
+import arrowFilled from "./img/sort-arrow-filled.svg";
 import "./styles/Rivals.css";
 
 export function Rivals() {
@@ -36,6 +38,8 @@ export function Rivals() {
     setCreatedRoom,
     sendMessage,
     setRoomName,
+    sortRooms,
+    setSortRooms,
   } = useBattleships();
 
   async function createRoom() {
@@ -139,6 +143,43 @@ export function Rivals() {
     }
   }, [rooms]);
 
+  function handleSort(field: "createdDate" | "betAmount") {
+    if (!sortRooms.field || sortRooms.field === field) {
+      if (!sortRooms.order) {
+        setSortRooms({ field, order: "ASC" });
+      }
+      if (sortRooms.order === "ASC") {
+        setSortRooms({ field, order: "DESC" });
+      }
+      if (sortRooms.order === "DESC") {
+        setSortRooms({ field: null, order: null });
+      }
+    }
+
+    if (sortRooms.field && sortRooms.field !== field) {
+      setSortRooms({ field, order: "ASC" });
+    }
+  }
+
+  const memoizedSortedRooms = useMemo(() => {
+    if (rooms.length === 0) return [];
+
+    const sorted = [...rooms];
+
+    if (sortRooms.field) {
+      sorted.sort((a, b) => {
+        const aValue =
+          sortRooms.field === "createdDate" ? a.createdDate : a.bet_amount;
+        const bValue =
+          sortRooms.field === "createdDate" ? b.createdDate : b.bet_amount;
+
+        return sortRooms.order === "ASC" ? aValue - bValue : bValue - aValue;
+      });
+    }
+
+    return sorted;
+  }, [rooms, sortRooms]);
+
   return (
     <div className="rivals">
       <CryptoButtons
@@ -149,102 +190,167 @@ export function Rivals() {
       />
 
       {!isCreatingDuel ? (
-        <div className="rivals__list">
-          {/* ITEM NEW DUEL */}
-          <div className="rivals__list-item rivals__list-item--New">
-            <div className="rivals__list-item-start">
-              <img
-                src={fightIcon}
-                alt="icon"
-                className="rivals__list-item-start-icon"
-              />
-              <div className="rivals__list-item-start-info">
-                <div className="rivals__list-item-start-info-key">
-                  {t("battleshipsModal.rivalsTab.gameWithFriend")}
-                </div>
-                <div className="rivals__list-item-start-info-value">
-                  {t("battleshipsModal.rivalsTab.createGeneralDuel")}
-                </div>
+        <>
+          <div className="rivals__sortRow">
+            <div
+              className="rivals__sortRow-item"
+              onClick={() => handleSort("createdDate")}
+            >
+              <div className="rivals__sortRow-item-text">
+                {t("battleshipsModal.rivalsTab.createdDate")}
+              </div>
+              <div className="rivals__sortRow-item-icons">
+                <img
+                  src={
+                    sortRooms.field === "createdDate" &&
+                    sortRooms.order === "ASC"
+                      ? arrowFilled
+                      : arrowEmpty
+                  }
+                  alt="arrow"
+                  className="rivals__sortRow-item-icons-top"
+                />
+                <img
+                  src={
+                    sortRooms.field === "createdDate" &&
+                    sortRooms.order === "DESC"
+                      ? arrowFilled
+                      : arrowEmpty
+                  }
+                  alt="arrow"
+                  className="rivals__sortRow-item-icons-bottom"
+                />
               </div>
             </div>
-            <div className="rivals__list-item-end">
-              <CuttedButton
-                className="rivals__list-item-end-btn"
-                iconSrc={arrowIcon}
-                callback={handleDuelCreating}
-              />
+
+            <div
+              className="rivals__sortRow-item"
+              onClick={() => handleSort("betAmount")}
+            >
+              <div className="rivals__sortRow-item-text">
+                {t("battleshipsModal.rivalsTab.sum")}
+              </div>
+              <div className="rivals__sortRow-item-icons">
+                <img
+                  src={
+                    sortRooms.field === "betAmount" && sortRooms.order === "ASC"
+                      ? arrowFilled
+                      : arrowEmpty
+                  }
+                  alt="arrow"
+                  className="rivals__sortRow-item-icons-top"
+                />
+                <img
+                  src={
+                    sortRooms.field === "betAmount" &&
+                    sortRooms.order === "DESC"
+                      ? arrowFilled
+                      : arrowEmpty
+                  }
+                  alt="arrow"
+                  className="rivals__sortRow-item-icons-bottom"
+                />
+              </div>
             </div>
           </div>
-          {rooms?.map((item: any) => {
-            return (
-              <div className="rivals__list-item" key={item?.room_name}>
-                <div className="rivals__list-item-start">
-                  {userPhotos[
-                    item.creator.username as keyof typeof userPhotos
-                  ] ? (
-                    <img
-                      src={
-                        userPhotos[
-                          item.creator.username as keyof typeof userPhotos
-                        ]
-                      }
-                      alt=""
-                      width="36px"
-                      className="rivals__list-item-start-ava check-image"
-                    />
-                  ) : (
-                    <img
-                      src={defaultAva}
-                      alt=""
-                      width="36px"
-                      className="rivals__list-item-start-avaDefault"
-                    />
-                  )}
 
-                  <div className="rivals__list-item-start-login">
-                    <div className="rivals__list-item-start-login-key">
-                      {t("battleshipsModal.rivalsTab.login")}:
-                    </div>
-                    <a
-                      href={item.player}
-                      className="rivals__list-item-start-login-value"
-                    >
-                      {item?.creator?.username}
-                    </a>
+          <div className="rivals__list">
+            {/* ITEM NEW DUEL */}
+            <div className="rivals__list-item rivals__list-item--New">
+              <div className="rivals__list-item-start">
+                <img
+                  src={fightIcon}
+                  alt="icon"
+                  className="rivals__list-item-start-icon"
+                />
+                <div className="rivals__list-item-start-info">
+                  <div className="rivals__list-item-start-info-key">
+                    {t("battleshipsModal.rivalsTab.gameWithFriend")}
                   </div>
-                  <div className="rivals__list-item-start-bet">
-                    <div className="rivals__list-item-start-bet-key">
-                      {t("battleshipsModal.rivalsTab.bet")}:
-                    </div>
-                    <div className="rivals__list-item-start-bet-value">
+                  <div className="rivals__list-item-start-info-value">
+                    {t("battleshipsModal.rivalsTab.createGeneralDuel")}
+                  </div>
+                </div>
+              </div>
+              <div className="rivals__list-item-end">
+                <CuttedButton
+                  className="rivals__list-item-end-btn"
+                  iconSrc={arrowIcon}
+                  callback={handleDuelCreating}
+                />
+              </div>
+            </div>
+            {memoizedSortedRooms?.map((item: any) => {
+              return (
+                <div className="rivals__list-item" key={item?.room_name}>
+                  <div className="rivals__list-item-start">
+                    {userPhotos[
+                      item.creator.username as keyof typeof userPhotos
+                    ] ? (
                       <img
-                        src={BetTypeIconEnum[item.bet_type]}
-                        alt="ton"
-                        className="rivals__list-item-start-bet-value-icon"
+                        src={
+                          userPhotos[
+                            item.creator.username as keyof typeof userPhotos
+                          ]
+                        }
+                        alt=""
+                        width="36px"
+                        className="rivals__list-item-start-ava check-image"
                       />
-                      <div className="rivals__list-item-start-bet-value-amount">
-                        {item.bet_amount}
+                    ) : (
+                      <img
+                        src={defaultAva}
+                        alt=""
+                        width="36px"
+                        className="rivals__list-item-start-avaDefault"
+                      />
+                    )}
+
+                    <div className="rivals__list-item-start-login">
+                      <div className="rivals__list-item-start-login-key">
+                        {t("battleshipsModal.rivalsTab.login")}:
+                      </div>
+                      <a
+                        href={item.player}
+                        className="rivals__list-item-start-login-value"
+                      >
+                        {item?.creator?.username}
+                      </a>
+                    </div>
+                    <div className="rivals__list-item-start-bet">
+                      <div className="rivals__list-item-start-bet-key">
+                        {t("battleshipsModal.rivalsTab.bet")}:
+                      </div>
+                      <div className="rivals__list-item-start-bet-value">
+                        <img
+                          src={BetTypeIconEnum[item.bet_type]}
+                          alt="ton"
+                          className="rivals__list-item-start-bet-value-icon"
+                        />
+                        <div className="rivals__list-item-start-bet-value-amount">
+                          {item.bet_amount}
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <div className="rivals__list-item-end">
+                    <CuttedButton
+                      callback={(e) => {
+                        e.stopPropagation();
+                        joinRoom(item.room_name);
+                        //  setRoomName(item.room_name);
+                        setRoomName(item?.creator?.username);
+                      }}
+                      size="small"
+                      className={`rivals__list-item-end-btn `}
+                      text={t("battleshipsModal.rivalsTab.duel")}
+                    />
+                  </div>
                 </div>
-                <div className="rivals__list-item-end">
-                  <CuttedButton
-                    callback={(e) => {
-                      e.stopPropagation();
-                      joinRoom(item.room_name);
-                      //  setRoomName(item.room_name);
-                      setRoomName(item?.creator?.username);
-                    }}
-                    size="small"
-                    className={`rivals__list-item-end-btn `}
-                    text={t("battleshipsModal.rivalsTab.duel")}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </>
       ) : null}
 
       {isCreatingDuel ? (

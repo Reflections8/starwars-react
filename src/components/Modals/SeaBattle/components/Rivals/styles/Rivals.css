@@ -224,3 +224,34 @@
   margin: 0 auto;
   margin-bottom: 24px;
 }
+
+.rivals__sortRow {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #19c2ef40;
+  font-size: 10px;
+  color: #19c2ef;
+  gap: 70px;
+}
+
+.rivals__sortRow-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.rivals__sortRow-item-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5px;
+}
+
+.rivals__sortRow-item-icons-top {
+  transform: rotate(0deg);
+}
+
+.rivals__sortRow-item-icons-bottom {
+  transform: rotate(180deg);
+}

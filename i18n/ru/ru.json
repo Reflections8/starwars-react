@@ -284,7 +284,9 @@
       "createDuelWithFriend": "создайте свою дуэль с другом",
       "friendsLogin": "Логин друга",
       "yourBet": "Ваша ставка",
-      "createDuel": "создать дуэль"
+      "createDuel": "создать дуэль",
+      "createdDate": "Дата",
+      "sum": "Сумма"
     },
     "betTab": {
       "title": "Ставка",
