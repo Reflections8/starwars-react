@@ -166,7 +166,43 @@
   },
   "questsModal": {
     "title": "Задания",
-    "comingSoonText": "Задания скоро будут доступны, следите за новостями в нашем ТГ канале"
+    "reward": "Награда",
+    "get": "Получить",
+    "cred": "кред.",
+    
+    "gameTab": {
+      "title": "Игровые",
+      "earnCredits": "Заработать кредиты",
+      "earn1000Credits": "Заработать 1000 кредитов",
+      "buyCharacter": "Приобрести персонажа",
+      "buyNFTDroid": "купить NFT - DROID",
+      "buyGun": "приобрести оружие",
+      "buyNFTBlaster": "купить NFT - blaster",
+      "destroyVaiderDrones": "Уничтожь дронов Вейдера",
+      "destroy100Drones": "Уничтожить 100 дронов",
+      "winCreditsInBattleships": "Выиграй кредиты в космическом бое",
+      "win1000Credits": "выграть 1000 кредитов",
+      "destroyEnemyShips": "уничтожить корабли противника",
+      "singleShips": "однопалубных кораблей",
+      "upgradeGunOnce": "Улучши оружие 1 раз",
+      "upgradeAnyGun": "улучшить любое оружие",
+      "repairOrHeal": "Почини оружие или вылечи персонажа",
+      "resotreTo100": "восстановить на 100%"
+
+    },
+    "socialTab": {
+      "title": "Социальные",
+      "twitterSubscribe": "Подписка на Twitter",
+      "youtubeSubcribe": "Подписка на YouTube",
+      "watchVideo": "Посмотри видео",
+      "inviteFriend": "Пригласи 1 друга",
+      "friendBecameWarrior": "Друг стал войном",
+      "becameWarrior": "стал войном",
+      "makePost": "Сделай пост в соц. сети",
+      "makePostWithHashtag": "Сделай пост в соц сети об акроникс с хэштегом",
+      "sendToModeration": "Отправить на модерацию",
+      "alreadySent": "Вы уже отправляли ссылку"
+    }
   },
   "partnersModal": {
     "title": "Партнеры",
