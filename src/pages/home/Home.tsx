@@ -25,6 +25,7 @@ import { MainLinks } from "./components/MainLinks";
 import { Resources } from "./components/Resources";
 import bookImg from "./img/book.svg";
 import "./styles/home.css";
+import { useBattleships } from "../../context/BattleshipsContext.tsx";
 
 export function Home() {
   const { t, i18n } = useTranslation();
@@ -62,6 +63,8 @@ export function Home() {
     readyState,
     repeatCount,
   } = useBackgroundVideo();
+
+  const { createWebSocket, closeSocket } = useBattleships();
 
   // unity vars
   const [isUnityLoaded, setIsUnityLoaded] = useState(false);
@@ -243,6 +246,7 @@ export function Home() {
       getMe().then((res) => {
         localStorage.setItem("username", res.username);
       });
+      createWebSocket();
       setCanQuit(true);
     } else {
       // ProofApiService.reset();
@@ -293,6 +297,7 @@ export function Home() {
           resetUserData();
           updateJwt(null);
           setCanQuit(false);
+          closeSocket();
         }}
         rightIcon={<MenuIcon />}
         rightText={t("homePage.menu")}

@@ -451,6 +451,38 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
     setSocket(ws);
   };
 
+  const closeSocket = () => {
+    // Если сокет есть и он открыт, тогда закрываем
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.close();
+    }
+
+    // очистить все сотсояния (ВОЗМОЖНО УБРАТЬ)
+    setGameState(gameStates.NOT_STARTED);
+    setApproveGame(null);
+    setApproveDuel(null);
+    setMyTurn(true);
+    setMyBoardState({
+      hits: [],
+      misses: [],
+      ships: [],
+    });
+    setEnemyBoardState({
+      hits: [],
+      misses: [],
+      ships: [],
+      preHit: null,
+    });
+    setUserBoard(new Gameboard());
+    setEnemyBoard(new Gameboard());
+    setMessages([]);
+    setRoomName("");
+    setOpponentName("");
+    setSearchingDuel(false);
+    setRooms([]);
+    setCreatedRoom({ name: "" });
+  };
+
   const [intervalJwt, setIntervalJwt] = useState(
     localStorage.getItem("auth_jwt")
   );
@@ -596,6 +628,8 @@ export function BattleshipsProvider({ children }: BattleshipsProviderProps) {
         handleDeclineDuel,
         sortRooms,
         setSortRooms,
+        createWebSocket,
+        closeSocket,
       }}
     >
       {children}
