@@ -7,7 +7,7 @@
 }
 
 .tournament .modal__scrollContainer {
-  max-height: 283px !important;
+  max-height: 273px !important;
 }
 
 .tournament__header {
@@ -125,12 +125,9 @@
 }
 
 .tournament__list-item-reward {
-  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 3px;
   font-size: 10px;
   color: #19c2ef;
-  max-width: 84px;
-  width: 100%;
 }

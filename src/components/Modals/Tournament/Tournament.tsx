@@ -106,13 +106,15 @@ export function Tournament() {
 
     if (reward >= 1_000_000_000) {
       return (
-        (reward / 1_000_000_000).toFixed(3).replace(/\.?0+$/, "") +
-        (i18n.language === "en" ? " B" : " МЛРД")
+        (Math.floor((reward / 1_000_000_000) * 1000) / 1000)
+          .toFixed(3)
+          .replace(/\.?0+$/, "") + (i18n.language === "en" ? " B" : " МЛРД")
       );
     } else if (reward >= 1_000_000) {
       return (
-        (reward / 1_000_000).toFixed(3).replace(/\.?0+$/, "") +
-        (i18n.language === "en" ? " M" : " МЛН")
+        (Math.floor((reward / 1_000_000) * 1000) / 1000)
+          .toFixed(3)
+          .replace(/\.?0+$/, "") + (i18n.language === "en" ? " M" : " МЛН")
       );
     } else {
       return reward.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
