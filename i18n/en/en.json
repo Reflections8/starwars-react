@@ -301,7 +301,8 @@
   },
   "tournamentsModal": {
     "title": "Tournaments",
-    "comingSoonText": "follow news about the opening of tournaments in our TG channel"
+    "text": "fight against Vader or win in space battles. Earn the most credits and become the strongest warrior!",
+    "tournamentFor": "prize pool"
   },
   "battleshipsModal": {
     "title": "Space battle",
