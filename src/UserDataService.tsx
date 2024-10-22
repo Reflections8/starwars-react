@@ -15,13 +15,14 @@ import ch1Img from "../src/assets/img/ch/1.png";
 import ch2Img from "../src/assets/img/ch/2.png";
 import ch3Img from "../src/assets/img/ch/3.png";
 import ch4Img from "../src/assets/img/ch/4.png";
+import ch5Img from "../src/assets/img/ch/5.png";
 import ch0Img from "../src/assets/img/ch/0.png";
 import bl1Img from "../src/assets/img/bl/1.png";
 import bl2Img from "../src/assets/img/bl/2.png";
 import bl3Img from "../src/assets/img/bl/3.png";
 import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useTranslation } from "react-i18next";
-import {useInitData} from "@vkruglikov/react-telegram-web-app";
+import { useInitData } from "@vkruglikov/react-telegram-web-app";
 
 interface UserDataContextType {
   userDataDefined: boolean;
@@ -236,7 +237,10 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
         },
         body: JSON.stringify({
           chat_id: initDataUnsafe?.user?.id,
-          ref_id: initDataUnsafe?.start_param != undefined ? parseInt(initDataUnsafe.start_param) : -1
+          ref_id:
+            initDataUnsafe?.start_param != undefined
+              ? parseInt(initDataUnsafe.start_param)
+              : -1,
         }),
       });
       if (!response.ok) {
@@ -568,7 +572,7 @@ export const CharactersData = [
   {
     type: 1,
     name: "DEALER WATTO",
-    damage: 1,
+    damage: 2,
     charge_step: 0,
     price: 0.5,
     payload: "",
@@ -578,7 +582,7 @@ export const CharactersData = [
   {
     type: 2,
     name: "B1 BATTLE DROID",
-    damage: 2,
+    damage: 4,
     charge_step: 0,
     price: 2,
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAFtxj29k=",
@@ -588,8 +592,8 @@ export const CharactersData = [
   {
     type: 3,
     name: "REBEL PILOT",
-    damage: 10,
-    charge_step: 1,
+    damage: 20,
+    charge_step: 0.2,
     price: 10,
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAF9/gsCs=",
     payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAIYZO8j0=",
@@ -598,8 +602,8 @@ export const CharactersData = [
   {
     type: 4,
     name: "TATOOINE JAWA",
-    damage: 30,
-    charge_step: 2,
+    damage: 60,
+    charge_step: 0.5,
     price: 30,
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAGPvco3U=",
     payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAInK9oi4=",
@@ -608,11 +612,21 @@ export const CharactersData = [
   {
     type: 5,
     name: "STORMTROOPER",
-    damage: 70,
-    charge_step: 4,
+    damage: 140,
+    charge_step: 1,
     price: 70,
     payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAGfhfyIc=",
     payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAI3E+ydw=",
     image: ch4Img,
+  },
+  {
+    type: 6,
+    name: "C-3PO",
+    damage: 1,
+    charge_step: 0,
+    price: 0,
+    payload: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAGfhfyIc=",
+    payload_heal: "te6cckEBAQEADgAAGPbRsjsAAAABAAAAI3E+ydw=",
+    image: ch5Img,
   },
 ];

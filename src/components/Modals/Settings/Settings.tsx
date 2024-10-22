@@ -109,26 +109,39 @@ export function Settings() {
   }, [activeGraphics]);
 
   useEffect(() => {
-    if (characters) {
-      const options: SelectOptionType[] = characters
-        .sort((a, b) => {
-          if (a.type < b.type) return -1;
-          if (a.type > b.type) return 1;
-          return 0;
-        })
-        .map((character) => ({
-          label: `${CharactersData[character.type - 1].name}`,
-          value: character.id.toString(),
-        }));
-      setCharacterOptions(options);
-    }
+    try {
+      if (characters) {
+        const options: SelectOptionType[] = characters
+            .sort((a, b) => {
+              if (
+                  CharactersData[a.type - 1].damage <
+                  CharactersData[b.type - 1].damage
+              )
+                return -1;
+              if (
+                  CharactersData[a.type - 1].damage >
+                  CharactersData[b.type - 1].damage
+              )
+                return 1;
+              return 0;
+            })
+            .map((character) => ({
+              label: `${CharactersData[character.type - 1].name}`,
+              value: character.id.toString(),
+            }));
+        setCharacterOptions(options);
+      }
 
-    if (activeCharacter) {
-      const active: SelectOptionType = {
-        value: activeCharacter.id.toString(),
-        label: `${CharactersData[activeCharacter.type - 1].name}`,
-      };
-      setActiveOption(active);
+      if (activeCharacter) {
+        const active: SelectOptionType = {
+          value: activeCharacter.id.toString(),
+          label: `${CharactersData[activeCharacter.type - 1].name}`,
+        };
+        setActiveOption(active);
+      }
+    }
+    catch (e) {
+      console.log(e)
     }
   }, [characters, activeCharacter]);
 

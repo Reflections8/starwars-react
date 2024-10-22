@@ -158,66 +158,73 @@ export function StoreCardCharacterWrapper() {
   const [storeModels, setStoreModels] = useState<StoreModelType[]>([]);
 
   useEffect(() => {
-    const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
-      return blasters.reduce((highest: Blaster, blaster: Blaster) => {
-        if (blaster.usage > 0 && blaster.level > (highest.level || 0)) {
-          return blaster;
-        }
-        return highest;
-      });
-    };
-
-    const createModel = (
-      character: Character,
-      blaster: Blaster
-    ): StoreModelType => {
-      const needRestoration = character.earned >= character.earn_required;
-      const combatPerformanceReduction = needRestoration ? -90 : null;
-      const strength = Math.round(
-        (CharactersData[character.type - 1].damage + blaster.damage) *
-          (needRestoration ? 0.1 : 1)
-      );
-      const charge = Math.round(
-        blaster.max_charge * (needRestoration ? 0.1 : 1)
-      );
-      const reload =
-        (CharactersData[character.type - 1].charge_step + blaster.charge_step) *
-        (needRestoration ? 0.1 : 1);
-
-      const reloadUpgrade = !needRestoration ? blaster.charge_step : -1;
-      const strengthUpgrade = !needRestoration ? blaster.damage : -1;
-      const chargeUpgrade = !needRestoration ? blaster.max_charge : -1;
-
-      return {
-        title: "-" + CharactersData[character.type - 1].name + "-",
-        needRestoration: needRestoration,
-        combatPerfomanceReduction: combatPerformanceReduction,
-        strength: strength,
-        strengthUpgrade: strengthUpgrade,
-        reload: reload,
-        reloadUpgrade: reloadUpgrade,
-        charge: charge,
-        chargeUpgrade: chargeUpgrade,
-        healthCurrent: character.earn_required - character.earned,
-        healthMax: character.earn_required,
-        imgSrc: CharactersData[character.type - 1].image,
-        type: character.type,
+    try {
+      const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
+        return blasters.reduce((highest: Blaster, blaster: Blaster) => {
+          if (blaster.usage > 0 && blaster.level > (highest.level || 0)) {
+            return blaster;
+          }
+          return highest;
+        });
       };
-    };
 
-    const newModels = characters
-      .sort((a, b) => {
-        if (a.type < b.type) return -1;
-        if (a.type > b.type) return 1;
-        return 0;
-      })
-      .map((character) => {
-        const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
-        return createModel(character, highestLevelBlaster);
-      })
-      .filter((model) => model !== null);
+      const createModel = (
+          character: Character,
+          blaster: Blaster
+      ): StoreModelType => {
+        const needRestoration = character.earned >= character.earn_required;
+        const combatPerformanceReduction = needRestoration ? -90 : null;
+        const strength = Math.round(
+            (CharactersData[character.type - 1].damage + blaster.damage) *
+            (needRestoration ? 0.1 : 1)
+        );
+        const charge = Math.round(
+            blaster.max_charge * (needRestoration ? 0.1 : 1)
+        );
+        const reload =
+            (CharactersData[character.type - 1].charge_step + blaster.charge_step) *
+            (needRestoration ? 0.1 : 1);
 
-    setStoreModels(newModels);
+        const reloadUpgrade = !needRestoration ? blaster.charge_step : -1;
+        const strengthUpgrade = !needRestoration ? blaster.damage : -1;
+        const chargeUpgrade = !needRestoration ? blaster.max_charge : -1;
+
+        return {
+          title: "-" + CharactersData[character.type - 1].name + "-",
+          needRestoration: needRestoration,
+          combatPerfomanceReduction: combatPerformanceReduction,
+          strength: strength,
+          strengthUpgrade: strengthUpgrade,
+          reload: reload,
+          reloadUpgrade: reloadUpgrade,
+          charge: charge,
+          chargeUpgrade: chargeUpgrade,
+          healthCurrent: character.earn_required - character.earned,
+          healthMax: character.earn_required,
+          imgSrc: CharactersData[character.type - 1].image,
+          type: character.type,
+        };
+      };
+
+      const newModels = characters
+          .sort((a, b) => {
+            if (CharactersData[a.type - 1].damage < CharactersData[b.type - 1].damage) return -1;
+            if (CharactersData[a.type - 1].damage > CharactersData[b.type - 1].damage) return 1;
+            return 0;
+          })
+          .map((character) => {
+            const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
+            return createModel(character, highestLevelBlaster);
+          })
+          .filter((model) => model !== null);
+
+      setStoreModels(newModels);
+    }
+    catch (e)
+    {
+      console.log(e)
+    }
+
   }, [characters, blasters]);
 
   return (

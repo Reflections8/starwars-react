@@ -352,7 +352,7 @@ export function Home() {
         <>
           <iframe
             ref={iframeRefHome}
-            src="https://game.akronix.io/new/unity_main_3/"
+            src="https://game.akronix.io/new/unity_main_6/"
             style={{
               position: "absolute",
               left: 0,
