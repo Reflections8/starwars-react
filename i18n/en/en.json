@@ -170,6 +170,8 @@
     "reward": "Reward",
     "get": "Get",
     "cred": "cred.",
+    "rejectedClaim": "Error during claim reward request. Try again later",
+    "claimRewared": "Claim rewarded succesfully!",
     
     "gameTab": {
       "title": "Game",
@@ -201,7 +203,10 @@
       "makePost": "Make a Post on Social Media",
       "makePostWithHashtag": "Make a Post about Acronyx on Social Media with Hashtag",
       "sendToModeration": "Send for Moderation",
-      "alreadySent": "You have already sent the link"
+      "alreadySent": "You have already sent the link",
+      "linkIncorrect": "Link must start with https://",
+      "sendToModerationFailed": "Failed to send the link for moderation. Please try again later.",
+      "sendToModerationSuccess": "The link has been successfully sent for moderation."
     }
   },
   "partnersModal": {

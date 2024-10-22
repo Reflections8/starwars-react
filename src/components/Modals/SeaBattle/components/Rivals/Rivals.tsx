@@ -169,10 +169,10 @@ export function Rivals() {
     if (sortRooms.field) {
       sorted.sort((a, b) => {
         const aValue =
-          sortRooms.field === "createdDate" ? a.createdDate : a.bet_amount;
+          sortRooms.field === "createdDate" ? a.created_at : a.bet_amount;
         const bValue =
-          sortRooms.field === "createdDate" ? b.createdDate : b.bet_amount;
-
+          sortRooms.field === "createdDate" ? b.created_at : b.bet_amount;
+        console.log({ aValue, bValue });
         return sortRooms.order === "ASC" ? aValue - bValue : bValue - aValue;
       });
     }
