@@ -12,7 +12,8 @@ type TaskContentProps = {
     id: number;
     title_ru: string;
     title_en: string;
-    link: string;
+    link_ru: string;
+    link_en: string;
     has_progress_bar: boolean;
     current_progress: number;
     max_progress: number;
@@ -114,9 +115,9 @@ export function TaskContent({ subtask, taskKey, loadTasks }: TaskContentProps) {
             />
           </a>
         ) : null}
-        {!isInviteFriendTask && subtask?.link ? (
+        {!isInviteFriendTask && subtask?.link_en && subtask?.link_ru ? (
           <a
-            href={subtask.link}
+            href={language === "ru" ? subtask.link_ru : subtask.link_en}
             target="_blank"
             className="accordion__task-content-link"
             onClick={() => {
@@ -124,7 +125,7 @@ export function TaskContent({ subtask, taskKey, loadTasks }: TaskContentProps) {
             }}
           >
             <span className="accordion__task-content-link-text">
-              {subtask.link}
+              {language === "ru" ? subtask.link_ru : subtask.link_en}
             </span>
             <img
               src={linkOpenIcon}

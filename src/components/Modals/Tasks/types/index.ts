@@ -10,7 +10,8 @@ export type TaskType = {
       id: number;
       title_ru: string;
       title_en: string;
-      link: string;
+      link_en: string;
+      link_ru: string;
       has_progress_bar: boolean;
       current_progress: number;
       max_progress: number;
