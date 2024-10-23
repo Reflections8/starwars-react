@@ -171,6 +171,7 @@
     "get": "Get",
     "cred": "cred.",
     "rejectedClaim": "Error during claim reward request. Try again later",
+    "cantClaimReward": "Unable to claim the reward, please check the conditions",
     "claimRewared": "Claim rewarded succesfully!",
     
     "gameTab": {
@@ -206,7 +207,9 @@
       "alreadySent": "You have already sent the link",
       "linkIncorrect": "Link must start with https://",
       "sendToModerationFailed": "Failed to send the link for moderation. Please try again later.",
-      "sendToModerationSuccess": "The link has been successfully sent for moderation."
+      "sendToModerationSuccess": "The link has been successfully sent for moderation.",
+      "linkCheckRequestFailed": "Error requesting link. Please try again.",
+      "linkCheckRequestIncorrect":"Error when following the link."
     }
   },
   "partnersModal": {

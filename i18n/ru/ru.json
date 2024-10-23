@@ -171,6 +171,7 @@
     "get": "Получить",
     "cred": "кред.",
     "rejectedClaim": "Ошибка запроса на получение награды. Попробуйте позже",
+    "cantClaimReward": "Не удалось получить награду, проверьте условия",
     "claimRewared": "Награда успешно получена!",
     
     "gameTab": {
@@ -207,7 +208,9 @@
       "alreadySent": "Вы уже отправляли ссылку",
       "linkIncorrect": "Ссылка должна начинаться с https://",
       "sendToModerationFailed": "Не удалось отправить ссылку на модерацию. Попробуйте еще раз позже",
-      "sendToModerationSuccess": "Ссылка успешно отправлена на модерацию"
+      "sendToModerationSuccess": "Ссылка успешно отправлена на модерацию",
+      "linkCheckRequestFailed": "Ошибка запроса при переходе по ссылке. Попробуйте еще раз",
+      "linkCheckRequestIncorrect": "Ошибка при переходе по ссылке"
     }
   },
   "partnersModal": {

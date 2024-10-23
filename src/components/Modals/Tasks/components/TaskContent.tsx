@@ -52,8 +52,11 @@ export function TaskContent({ subtask, taskKey, loadTasks }: TaskContentProps) {
       openDrawer!("rejected", "bottom", t("questsModal.rejectedClaim"));
       return;
     }
-    // TODO: проверь что награда получена
-    if (result && status === 200) {
+    if (status === 200 && result && result.code !== 1) {
+      openDrawer!("rejected", "bottom", t("questsModal.cantClaimReward"));
+      return;
+    }
+    if (status === 200 && result && result.code === 1) {
       openDrawer!("resolved", "bottom", t("questsModal.claimRewared"));
       loadTasks();
       return;
@@ -66,12 +69,24 @@ export function TaskContent({ subtask, taskKey, loadTasks }: TaskContentProps) {
       const result = resComplete?.result;
       const status = resComplete.status;
 
-      if (!result || status !== 200) {
-        openDrawer!("rejected", "bottom", t("questsModal.rejectedClaim"));
+      if (status !== 200 || !result) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          t("questsModal.linkCheckRequestFailed")
+        );
         return;
       }
-      // Это клик по ссылке, если запрос успешнй, то просто грузим задания заново, не показываем дравер.
-      if (result && status === 200) {
+      if (status === 200 && result && result.code !== 1) {
+        openDrawer!(
+          "rejected",
+          "bottom",
+          t("questsModal.linkCheckRequestIncorrect")
+        );
+        return;
+      }
+      // Это клик по ссылке, если запрос успешный, то просто грузим задания заново, не показываем дравер.
+      if (status === 200 && result && result.code === 1) {
         loadTasks();
         return;
       }
