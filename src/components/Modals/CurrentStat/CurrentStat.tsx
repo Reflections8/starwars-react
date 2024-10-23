@@ -14,13 +14,14 @@ import {
   useUserData,
 } from "../../../UserDataService.tsx";
 import "./styles/CurrentStat.css";
+import { useNavigate } from "react-router-dom";
 
 export function CurrentStat() {
   const { t } = useTranslation();
   const { activeCharacter, blasters, jwt, game1State } = useUserData();
   const [damage, setDamage] = useState(0);
   const [damageUpgrade, setDamageUpgrade] = useState(0);
-
+  const navigate = useNavigate();
   const [charge, setCharge] = useState(0);
   const [chargeUpgrade, setChargeUpgrade] = useState(0);
 
@@ -30,6 +31,10 @@ export function CurrentStat() {
   const { closeModal } = useModal();
 
   const calculateHighestLevelBlaster = (blasters: Blaster[]) => {
+    if (blasters == undefined || blasters.length == 0) {
+      navigate("/");
+      return undefined;
+    }
     return blasters.reduce((highest: Blaster, blaster: Blaster) => {
       return blaster.level > (highest.level || 0) ? blaster : highest;
     });
@@ -40,36 +45,41 @@ export function CurrentStat() {
   }, [game1State]);
 
   useEffect(() => {
-    if (!activeCharacter || !blasters || blasters.length == 0) return;
+    try {
+      if (!activeCharacter || !blasters || blasters.length == 0) return;
 
-    const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
-    if (!highestLevelBlaster) return;
+      const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
+      if (!highestLevelBlaster) return;
 
-    const characterData = CharactersData[activeCharacter.type - 1];
-    if (!characterData) return;
+      const characterData = CharactersData[activeCharacter.type - 1];
+      if (!characterData) return;
 
-    const needHealing = activeCharacter.earned >= activeCharacter.earn_required;
+      const needHealing =
+        activeCharacter.earned >= activeCharacter.earn_required;
 
-    const totalDamage = Math.round(
-      ((highestLevelBlaster.damage || 0) + (characterData.damage || 0)) *
-        (needHealing ? 0.1 : 1)
-    );
+      const totalDamage = Math.round(
+        ((highestLevelBlaster.damage || 0) + (characterData.damage || 0)) *
+          (needHealing ? 0.1 : 1)
+      );
 
-    const totalChargeStep =
-      ((highestLevelBlaster.charge_step || 0) +
-        (characterData.charge_step || 0)) *
-      (needHealing ? 0.1 : 1);
+      const totalChargeStep =
+        ((highestLevelBlaster.charge_step || 0) +
+          (characterData.charge_step || 0)) *
+        (needHealing ? 0.1 : 1);
 
-    const charge = Math.round(
-      (highestLevelBlaster.max_charge || 0) * (needHealing ? 0.1 : 1)
-    );
+      const charge = Math.round(
+        (highestLevelBlaster.max_charge || 0) * (needHealing ? 0.1 : 1)
+      );
 
-    setDamage(totalDamage);
-    setReload(totalChargeStep);
-    setCharge(charge);
-    setDamageUpgrade(needHealing ? 0 : highestLevelBlaster.damage);
-    setReloadUpgrade(needHealing ? 0 : highestLevelBlaster.charge_step);
-    setChargeUpgrade(needHealing ? 0 : highestLevelBlaster.max_charge);
+      setDamage(totalDamage);
+      setReload(totalChargeStep);
+      setCharge(charge);
+      setDamageUpgrade(needHealing ? 0 : highestLevelBlaster.damage);
+      setReloadUpgrade(needHealing ? 0 : highestLevelBlaster.charge_step);
+      setChargeUpgrade(needHealing ? 0 : highestLevelBlaster.max_charge);
+    } catch (e) {
+      console.log(e);
+    }
   }, [activeCharacter, blasters]);
 
   return (
@@ -92,7 +102,7 @@ export function CurrentStat() {
             src={
               blasters && jwt && jwt !== ""
                 ? BlastersData?.[
-                    calculateHighestLevelBlaster(blasters).level - 1
+                    calculateHighestLevelBlaster(blasters)!.level - 1
                   ].image
                 : undefined
             }

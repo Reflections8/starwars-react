@@ -48,19 +48,18 @@ export function Metrics() {
 export function Finances() {
   const { t } = useTranslation();
 
-  const { userMetrics, characters } = useUserData();
-  const [totalEarned, setTotalEarned] = useState(0);
+  const { userMetrics } = useUserData();
 
-  useEffect(() => {
-    if (!characters || characters.length == 0) return;
+  //useEffect(() => {
+  //if (!characters || characters.length == 0) return;
 
-    let earned = userMetrics.total_earned_tokens;
-    characters.forEach((c) => {
-      earned += c.total_earned_tokens;
-    });
-
-    setTotalEarned(earned);
-  }, [characters, userMetrics]);
+  //   let earned = userMetrics.total_earned_tokens;
+  //   characters.forEach((c) => {
+  //     earned += c.earned_credits;
+  //   });
+  //
+  //   setTotalEarned(earned);
+  // }, [characters, userMetrics]);
 
   return (
     <div className="finances">
@@ -81,7 +80,9 @@ export function Finances() {
           <div className="finances__item-info-key">
             {t("metricsModal.financesTab.earn")}:
           </div>
-          <div className="finances__item-info-value">{totalEarned.toFixed(4).toString()} akron</div>
+          <div className="finances__item-info-value">
+            {userMetrics.total_earned_credits.toString()} credits
+          </div>
         </div>
         <img src={financesIcon2} alt="icon" className="finances__item-icon" />
       </div>
@@ -145,12 +146,11 @@ export function Models() {
       return {
         title: "-" + CharactersData[character.type - 1].name + "-",
         imgSrc: CharactersData[character.type - 1].image,
-        healthCurrent: (health <= 0 ? 0 : health),
+        healthCurrent: health <= 0 ? 0 : health,
         healthMax: character.earn_required,
         deposits: character.total_deposited,
-        earned: character.total_earned_tokens.toFixed(3).toString()
+        earned: character.credits_earned.toString(),
       };
-
     };
 
     const newModels = characters
@@ -192,7 +192,7 @@ export function Models() {
                       {t("metricsModal.modelsTab.earn")}:
                     </div>
                     <div className="models__item-body-list-item-info-value">
-                      {item.earned} AKRON
+                      {item.earned} CREDITS
                     </div>
                   </div>
                   <img
@@ -208,8 +208,14 @@ export function Models() {
                       {t("metricsModal.modelsTab.health")}:
                     </div>
                     <div className="models__item-body-list-item-info-value">
-                      <span className="red">{item.healthCurrent == 0 ? "0" : item.healthCurrent.toFixed(3)}</span>
-                      <span className="white">/{item.healthMax.toFixed(3)}</span>
+                      <span className="red">
+                        {item.healthCurrent == 0
+                          ? "0"
+                          : item.healthCurrent.toFixed(3)}
+                      </span>
+                      <span className="white">
+                        /{item.healthMax.toFixed(3)}
+                      </span>
                     </div>
                   </div>
                   <img

@@ -12,6 +12,7 @@
     "exit": "Exit",
     "menu": "Menu",
     "shop": "Shop",
+    "shopDisabled": "Shop temporary unavailable",
     "wallet": "Wallet",
     "player": "Player",
     "metrics": "Metrics",
@@ -107,7 +108,7 @@
 
     "successExhange": "Exchange completed successfully",
     "failedExchange": "An error occurred during the exchange",
-    "exchangeDisabled": "Exchange operations disabled at the moment",
+    "exchangeDisabled": "Wallet operations disabled at the moment",
     "invalidAmountOfCredits": "Incorrect amount of credits for exchange",
     "withDrawalInProgress": "The output has been added to processing. The confirmation speed depends on the load on the TON network.",
     "onePerHour": "You can withdraw 1 time per hour",

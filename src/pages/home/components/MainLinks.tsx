@@ -12,16 +12,16 @@ import helmetIcon from "../img/mainLinkIcons/helmet.svg";
 import tasksIcon from "../img/mainLinkIcons/tasks.svg";
 import teamIcon from "../img/mainLinkIcons/team.svg";
 import walletIcon from "../img/mainLinkIcons/wallet.svg";
-import { useTonConnectUI } from "@tonconnect/ui-react";
 import { useDrawer } from "../../../context/DrawerContext.tsx";
 import { useTranslation } from "react-i18next";
 import mainLinkHighlighter from "../video/mainLink.svg";
+import { useUserData } from "../../../UserDataService.tsx";
 
 export function MainLinks() {
   const { t } = useTranslation();
   const { openModal } = useModal();
   const { closeDrawer, openDrawer } = useDrawer();
-  const [tonConnectUI] = useTonConnectUI();
+  const { jwt } = useUserData();
 
   async function openWalletDrawer() {
     // Синхронно закрываем текущий drawer
@@ -37,7 +37,7 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInLeft"
           onClick={() => {
-            if (!tonConnectUI.connected) {
+            if (!jwt || jwt === "") {
               openWalletDrawer();
               return;
             }
@@ -72,7 +72,7 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInLeft2"
           onClick={() => {
-            if (!tonConnectUI.connected) {
+            if (!jwt || jwt === "") {
               openWalletDrawer();
               return;
             }
@@ -107,7 +107,7 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInLeft3"
           onClick={() => {
-            if (!tonConnectUI.connected) {
+            if (!jwt || jwt === "") {
               openWalletDrawer();
               return;
             }
@@ -145,7 +145,7 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInRight"
           onClick={() => {
-            if (!tonConnectUI.connected) {
+            if (!jwt || jwt === "") {
               openWalletDrawer();
               return;
             }
@@ -172,7 +172,7 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInRight2"
           onClick={() => {
-            if (!tonConnectUI.connected) {
+            if (!jwt || jwt === "") {
               openWalletDrawer();
               return;
             }
@@ -207,7 +207,7 @@ export function MainLinks() {
         <div
           className="mainLinks__col-item mainLinks__col-item--slideInRight3 "
           onClick={() => {
-            if (!tonConnectUI.connected) {
+            if (!jwt || jwt === "") {
               openWalletDrawer();
               return;
             }

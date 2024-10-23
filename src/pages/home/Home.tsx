@@ -178,18 +178,21 @@ export function Home() {
     //  console.log({ userDataDefined });
 
     if (userDataDefined) {
-      if (!localStorage.getItem("auth_jwt") || !tonConnectUI.connected) {
+      if (!localStorage.getItem("auth_jwt")) {
         if (!tutorialClicked) {
           openModal!("binks");
+          setIsLoading!(false);
         }
-        setIsLoading!(false);
       }
 
       if (jwt) {
-        if (sessionsCount === null) return;
+        if (sessionsCount === null) {
+          return;
+        }
         if (characters.length && sessionsCount !== null && sessionsCount! > 2) {
           if (!sessionInteracted) {
             openModal!("welcome");
+            setIsLoading!(false);
           }
           setReadyState!(false);
           setActiveVideo!(null);
@@ -204,6 +207,7 @@ export function Home() {
           if (!tutorialClicked) {
             openModal!("binksBack");
           }
+          setIsLoading!(false);
           return;
         }
 
@@ -215,7 +219,6 @@ export function Home() {
           if (!tutorialClicked) {
             openModal!("binks");
           }
-          setIsLoading!(false);
           return;
         }
 
@@ -227,7 +230,6 @@ export function Home() {
           if (!tutorialClicked) {
             openModal!("binks");
           }
-          setIsLoading!(false);
           return;
         }
       } else setIsLoading!(false);
@@ -242,7 +244,7 @@ export function Home() {
   const [canQuit, setCanQuit] = useState(false);
 
   useEffect(() => {
-    if (jwt && tonConnectUI.connected) {
+    if (jwt) {
       getMe().then((res) => {
         localStorage.setItem("username", res.username);
       });
@@ -255,7 +257,7 @@ export function Home() {
       // updateJwt(null);
       // setCanQuit(false);
     }
-  }, [jwt, tonConnectUI.connected, userDataDefined]);
+  }, [jwt, userDataDefined]);
 
   useEffect(() => {
     if (!localStorage.getItem("language")) {
@@ -293,7 +295,7 @@ export function Home() {
         leftText={t("homePage.exit")}
         leftAction={() => {
           ProofApiService.reset();
-          tonConnectUI.disconnect();
+          if (tonConnectUI.connected) tonConnectUI.disconnect();
           resetUserData();
           updateJwt(null);
           setCanQuit(false);
@@ -307,7 +309,8 @@ export function Home() {
         centerComponent={
           <HeaderCenterShop
             onClick={() => {
-              openModal!("shop");
+              openDrawer!("rejected", "bottom", t("homePage.shopDisabled"));
+              //openModal!("shop");
             }}
           />
         }
@@ -348,7 +351,7 @@ export function Home() {
       <Resources credits={credits} akron={tokens} ton={tons} />
       <MainLinks />
 
-      {jwt && tonConnectUI.connected && characters.length ? (
+      {jwt && characters.length ? (
         <>
           <iframe
             ref={iframeRefHome}
@@ -374,7 +377,7 @@ export function Home() {
         leftText={t("homePage.games")}
         leftClassName={"games"}
         leftAction={() => {
-          if (!tonConnectUI.connected) {
+          if (!jwt) {
             openWalletDrawer();
             return;
           }

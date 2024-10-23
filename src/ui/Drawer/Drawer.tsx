@@ -5,12 +5,8 @@ import closeIcon from "./img/closeIcon.svg";
 import rejectedIcon from "./img/rejected.svg";
 import resolvedIcon from "./img/resolved.svg";
 
-import {
-  SendTransactionRequest,
-  useTonAddress,
-  useTonConnectUI,
-  useTonWallet,
-} from "@tonconnect/ui-react";
+import { SendTransactionRequest, useTonConnectUI } from "@tonconnect/ui-react";
+import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ClearedTimer } from "../../components/Modals/SeaBattle/components/ClearedTimer/ClearedTimer.tsx";
@@ -143,8 +139,7 @@ function Rejected({ drawerText }: { drawerText?: string }) {
 
 function Menu() {
   const { t } = useTranslation();
-  const wallet = useTonWallet();
-  const userFriendlyAddress = useTonAddress();
+  const { jwt } = useUserData();
   const { closeDrawer, openDrawer } = useDrawer();
 
   async function openWalletDrawer() {
@@ -155,6 +150,8 @@ function Menu() {
     openDrawer!("connectWallet");
   }
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <div className="menu">
       <div className="menu__text">{t("quickMenu.title")}</div>
@@ -187,11 +184,13 @@ function Menu() {
           <div className="menu__list-item-text">{t("quickMenu.youtube")}</div>
         </a>
 
-        {wallet ? (
+        {jwt != null && jwt !== "" ? (
           <div className="menu__list-item menu__list-item--Transparent">
             <img src={walletIcon} alt="icon" className="menu__list-item-icon" />
             <div className="menu__list-item-text">
-              {formatWalletString(userFriendlyAddress.toString())}
+              {
+                // @ts-ignore
+                formatWalletString(jwtDecode(jwt).address)}
             </div>
           </div>
         ) : (
@@ -214,7 +213,7 @@ function Upgrade() {
   const { openDrawer } = useDrawer();
 
   const damages = [
-    [1, 2, 3, 4], // Blaster 1
+    [1, 2, 3], // Blaster 1
     [3, 4, 5, 6], // Blaster 2
     [8, 10, 12, 15], // Blaster 3
   ];
@@ -261,6 +260,7 @@ function Upgrade() {
     else if (value == 1) nextOptionLevel = activeBlaster.max_charge_level + 1;
     else nextOptionLevel = activeBlaster.charge_level + 1;
 
+    if (activeBlaster.level == 1 && value == 0 && nextOptionLevel >= 4) return;
     if (nextOptionLevel >= 4) return;
 
     if (credits < getPriceByLevel(nextOptionLevel)) {
@@ -311,7 +311,9 @@ function Upgrade() {
                   ? getDamageByLevel(activeBlaster.damage_level)
                   : 0}
               </div>
-              {activeBlaster && activeBlaster.damage_level < 3 ? (
+              {activeBlaster &&
+              ((activeBlaster.level == 1 && activeBlaster.damage_level < 2) ||
+                (activeBlaster.level > 1 && activeBlaster.damage_level < 3)) ? (
                 <>
                   <img
                     src={upgradeArrowsSvg}
@@ -330,12 +332,16 @@ function Upgrade() {
               iconSrc={creditIcon}
               callback={() => handleUpgradeClick(0)}
               className={
-                activeBlaster && activeBlaster.damage_level < 3
+                activeBlaster &&
+                ((activeBlaster.level == 1 && activeBlaster.damage_level < 2) ||
+                  (activeBlaster.level > 1 && activeBlaster.damage_level < 3))
                   ? ""
                   : "halfTransparent"
               }
               text={
-                activeBlaster && activeBlaster.damage_level < 3
+                activeBlaster &&
+                ((activeBlaster.level == 1 && activeBlaster.damage_level < 2) ||
+                  (activeBlaster.level > 1 && activeBlaster.damage_level < 3))
                   ? (
                       getPriceByLevel(activeBlaster.damage_level + 1) / 1000
                     ).toString() + "K"

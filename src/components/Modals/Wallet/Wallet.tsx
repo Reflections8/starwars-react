@@ -19,11 +19,11 @@ import { Select } from "../../../ui/Select/Select";
 import { SelectOptionType } from "../Settings/types";
 import { useUserData } from "../../../UserDataService.tsx";
 import {
-  SendTransactionRequest,
-  useTonConnectUI,
+  /*SendTransactionRequest,
+  useTonConnectUI,*/
   useTonWallet,
 } from "@tonconnect/ui-react";
-import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../../main.tsx";
+/*import { PROJECT_CONTRACT_ADDRESS, SERVER_URL } from "../../../main.tsx";*/
 import { formatWalletString } from "../../../utils/index.ts";
 import walletIcon from "../../../ui/Drawer/img/menu/wallet.svg";
 import { Balance } from "../../../ui/Balance/Balance.tsx";
@@ -100,8 +100,8 @@ export function Wallet() {
 export function Fill() {
   const { t } = useTranslation();
   const { openDrawer } = useDrawer();
-  const { startCheckBalance } = useUserData();
-  const [tonConnectUI] = useTonConnectUI();
+  const { /*startCheckBalance,*/ jwt } = useUserData();
+  /*const [tonConnectUI] = useTonConnectUI();*/
   const [value, setValue] = useState("0.05");
 
   const handleChange = (e: any) => {
@@ -155,11 +155,18 @@ export function Fill() {
         <CuttedButton
           text={t("walletModal.depositTab.title")}
           callback={async () => {
-            if (!tonConnectUI.connected) {
+            if (jwt == null || jwt === "") {
               openDrawer!("connectWallet");
               return;
             }
 
+            openDrawer!(
+              "rejected",
+              "bottom",
+              t("walletModal.exchangeDisabled")
+            );
+            return;
+            /*
             const fillTx: SendTransactionRequest = {
               validUntil: Math.floor(Date.now() / 1000) + 600,
               messages: [
@@ -181,7 +188,7 @@ export function Fill() {
                 "bottom",
                 t("shopModal.transactionDenied")
               );
-            }
+            }*/
           }}
         />
       </div>
@@ -403,7 +410,7 @@ export function Withdraw() {
 
   const [activeCurrency, setActiveCurrency] = useState(currencyOptions[0]);
   const { openDrawer } = useDrawer();
-  const { tokens, tons, jwt, updateUserInfo } = useUserData();
+  const { tokens, tons, jwt /*updateUserInfo*/ } = useUserData();
   const [value, setValue] = useState("0.05");
 
   const handleChange = (e: any) => {
@@ -433,7 +440,9 @@ export function Withdraw() {
 
   const handleWithdrawClick = async () => {
     if (jwt == null) return;
-
+    openDrawer!("rejected", "bottom", t("walletModal.exchangeDisabled"));
+    return;
+    /*
     const numericCredits = parseFloat(value);
 
     const balance = activeCurrency.label == "akron" ? tokens : tons;
@@ -493,7 +502,7 @@ export function Withdraw() {
           " " +
           t("walletModal.forExchange")
       );
-    }
+    }*/
   };
 
   return (

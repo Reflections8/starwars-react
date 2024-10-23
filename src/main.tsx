@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <TonConnectUIProvider
     manifestUrl="https://wallet.akronix.io/tonconnect.json"
     uiPreferences={{ theme: THEME.DARK }}
-    restoreConnection={true}
+    restoreConnection={false}
     walletsListConfiguration={{
       includeWallets: [
         {

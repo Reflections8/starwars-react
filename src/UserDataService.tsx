@@ -73,6 +73,7 @@ const defaultValue: UserDataContextType = {
   userMetrics: {
     total_deposited: 0,
     total_earned_tokens: 0,
+    total_earned_credits:0,
     earn_required: 0,
     earned: 0,
     akronix_won: 0,
@@ -146,6 +147,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
     total_deposited: 0,
     total_earned_tokens: 0,
     earn_required: 0,
+    total_earned_credits: 0,
     earned: 0,
     akronix_won: 0,
     ton_won: 0,
@@ -270,7 +272,8 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       setCredits(data.credits);
       setTons(data.tons);
       setTokens(data.tokens);
-      setExchangeRate(data.exchange_rate);
+      //setExchangeRate(data.exchange_rate);
+      setExchangeRate(0);
       setSessionsCount(data.sessions);
       const userMetricsData: UserMetrics = data.metrics_response;
       setUserMetrics(userMetricsData);
@@ -362,9 +365,6 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       authenticateUser();
     } else {
       ProofApiService.reset();
-      if (tonConnectUI.connected) {
-        tonConnectUI.disconnect();
-      }
     }
     return () => {
       if (interval) {
@@ -401,6 +401,7 @@ export function UserDataProvider({ children }: UserDataProviderProps) {
       total_deposited: 0,
       total_earned_tokens: 0,
       earn_required: 0,
+      total_earned_credits: 0,
       earned: 0,
     });
     setExchangeRate(0);
@@ -498,6 +499,7 @@ export interface Character {
   type: number; // int
   earn_required: number; // int
   earned: number;
+  credits_earned: number;
   total_earned_tokens: number;
   total_deposited: number;
 }
@@ -505,8 +507,10 @@ export interface Character {
 export interface UserMetrics {
   total_deposited: number;
   total_earned_tokens: number;
+  total_earned_credits: number;
   earned: number;
   earn_required: number;
+
   akronix_won: number;
   ton_won: number;
   credits_won: number;
