@@ -48,14 +48,14 @@ export function Select({
       >
         <div className="select__value">
           {withIcon ? <img src={activeOption.icon} alt="icon" /> : null}
-          {activeOption.label}
+          {activeOption?.label}
         </div>
         <img src={arrowSvg} alt="" className="select__arrow" />
       </div>
 
       <div className={`dropdown ${!isOpened ? "dropdown--Hidden" : ""}`}>
         {options.map((option) => {
-          const selected = option.value === activeOption.value;
+          const selected = option?.value === activeOption?.value;
           return (
             <div
               className={`dropdown__option ${

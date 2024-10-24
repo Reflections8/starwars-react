@@ -49,8 +49,8 @@ export function Settings() {
       value: "40",
     },
     {
-      label: "70%",
-      value: "70",
+      label: "80%",
+      value: "80",
     },
     {
       label: "100%",
@@ -79,8 +79,8 @@ export function Settings() {
             item.value === String(localStorage.getItem("graphic_setting"))
         )
       : {
-          label: "70%",
-          value: "70",
+          label: "80%",
+          value: "80",
         }
   );
 
@@ -248,7 +248,10 @@ export function Settings() {
           <div className="settings__row-name">
             {t("settingsModal.tutorial")}:
           </div>
-          <div className="settings__row-action settings__row-selectContainer">
+          <div
+            className="settings__row-action settings__row-selectContainer"
+            style={{ maxWidth: "190px" }}
+          >
             <CuttedButton
               text={t("settingsModal.runTutorial")}
               callback={() => {

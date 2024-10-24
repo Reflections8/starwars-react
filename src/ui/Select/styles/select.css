@@ -4,6 +4,7 @@
 }
 
 .select {
+  gap: 3px;
   padding: 11px 15px;
   border-radius: 8px;
   border: 1px solid #18589f;
@@ -29,13 +30,13 @@
   background-color: #133d95;
   position: absolute;
   transition: all 0.2s ease-in-out;
-  left: 0;
+  right: 0;
   top: calc(100% + 4px);
   z-index: 100;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 100%;
+  width: fit-content;
 }
 
 .dropdown--Hidden {
