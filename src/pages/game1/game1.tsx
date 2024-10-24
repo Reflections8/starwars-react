@@ -213,14 +213,15 @@ export function Game1() {
     value: ReactUnityEventParameter,
     token: string | null
   ) => {
-    const data = JSON.parse(value as string);
+    const data = value as string;
+    const items = data.split(":");
 
     if (token != null && token !== "") {
       const request = {
         type: "shoot",
         message: JSON.stringify({
-          type: parseInt(data.type),
-          seqno: data.seqno,
+          type: items[0],
+          seqno: items[1],
         }),
         jwt: token,
       };
@@ -278,7 +279,7 @@ export function Game1() {
       <div className="bottomLinearGradient" />
       <iframe
         ref={iframeRef}
-        src="https://game.akronix.io/new/unity_vader_28/"
+        src="https://game.akronix.io/new/unity_vader_34/"
         style={{
           userSelect: "none",
           position: "absolute",
