@@ -51,9 +51,8 @@ export function Game1() {
       sendMessageToUnity("LangInit", t("audio.vader"));
       sendMessageToUnity(
         "SetQuality",
-        JSON.stringify({ scale: localStorage.getItem("graphic_setting") })
+        localStorage.getItem("graphic_setting") ?? "80".toString()
       );
-
       setGame1State(false);
     }
   }, [game1State]);
@@ -164,13 +163,13 @@ export function Game1() {
     setBlasterChargeExt(blaster.charge);
     setBlasterCharge(chargeFillField);
     setBlasterLevel(blaster.level);
-    const info = {
-      character: character.type,
-      blaster: blaster.level,
-      charge: blaster.charge,
-    };
-
-    sendMessageToUnity("SetCustomization", JSON.stringify(info));
+    const info =
+      character.type.toString() +
+      ":" +
+      blaster.level.toString() +
+      ":" +
+      blaster.charge.toString();
+    sendMessageToUnity("SetCustomization", info);
   };
 
   const calculateFilled = (currentAmmo: number, maxAmmo: number): number => {
@@ -279,8 +278,9 @@ export function Game1() {
       <div className="bottomLinearGradient" />
       <iframe
         ref={iframeRef}
-        src="https://game.akronix.io/new/unity_vader_11/"
+        src="https://game.akronix.io/new/unity_vader_28/"
         style={{
+          userSelect: "none",
           position: "absolute",
           left: 0,
           top: 0,
