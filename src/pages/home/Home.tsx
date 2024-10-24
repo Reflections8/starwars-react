@@ -180,7 +180,7 @@ export function Home() {
     if (userDataDefined) {
       if (!localStorage.getItem("auth_jwt")) {
         if (!tutorialClicked) {
-          openModal!("binks");
+          // openModal!("binks");
           setIsLoading!(false);
         }
       }
@@ -205,7 +205,7 @@ export function Home() {
           sessionsCount! > 2
         ) {
           if (!tutorialClicked) {
-            openModal!("binksBack");
+            // openModal!("binksBack");
           }
           setIsLoading!(false);
           return;
@@ -217,7 +217,7 @@ export function Home() {
           sessionsCount! <= 2
         ) {
           if (!tutorialClicked) {
-            openModal!("binks");
+            // openModal!("binks");
           }
           return;
         }
@@ -228,7 +228,7 @@ export function Home() {
           sessionsCount! <= 2
         ) {
           if (!tutorialClicked) {
-            openModal!("binks");
+            // openModal!("binks");
           }
           return;
         }

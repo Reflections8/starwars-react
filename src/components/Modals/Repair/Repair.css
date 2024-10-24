@@ -15,3 +15,10 @@
   width: fit-content;
   margin: 0 auto;
 }
+
+.repairDrawer.repair {
+  margin: 0 auto;
+  max-width: 300px;
+  width: 100%;
+  text-align: center;
+}

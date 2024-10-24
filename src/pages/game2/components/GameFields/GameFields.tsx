@@ -1,6 +1,6 @@
 import "./styles/GameFields.css";
-import boardBgTop from "./img/board-bg-top.svg";
-import boardBgBottom from "./img/board-bg-bottom.svg";
+import boardBgTop from "./img/board-bg-top.png";
+import boardBgBottom from "./img/board-bg-bottom.png";
 import leftBg from "./img/left-bg.png";
 import rightBg from "./img/right-bg.png";
 

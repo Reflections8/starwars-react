@@ -169,21 +169,22 @@ export function StoreCardCharacterWrapper() {
       };
 
       const createModel = (
-          character: Character,
-          blaster: Blaster
+        character: Character,
+        blaster: Blaster
       ): StoreModelType => {
         const needRestoration = character.earned >= character.earn_required;
         const combatPerformanceReduction = needRestoration ? -90 : null;
         const strength = Math.round(
-            (CharactersData[character.type - 1].damage + blaster.damage) *
+          (CharactersData[character.type - 1].damage + blaster.damage) *
             (needRestoration ? 0.1 : 1)
         );
         const charge = Math.round(
-            blaster.max_charge * (needRestoration ? 0.1 : 1)
+          blaster.max_charge * (needRestoration ? 0.1 : 1)
         );
         const reload =
-            (CharactersData[character.type - 1].charge_step + blaster.charge_step) *
-            (needRestoration ? 0.1 : 1);
+          (CharactersData[character.type - 1].charge_step +
+            blaster.charge_step) *
+          (needRestoration ? 0.1 : 1);
 
         const reloadUpgrade = !needRestoration ? blaster.charge_step : -1;
         const strengthUpgrade = !needRestoration ? blaster.damage : -1;
@@ -207,24 +208,29 @@ export function StoreCardCharacterWrapper() {
       };
 
       const newModels = characters
-          .sort((a, b) => {
-            if (CharactersData[a.type - 1].damage < CharactersData[b.type - 1].damage) return -1;
-            if (CharactersData[a.type - 1].damage > CharactersData[b.type - 1].damage) return 1;
-            return 0;
-          })
-          .map((character) => {
-            const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
-            return createModel(character, highestLevelBlaster);
-          })
-          .filter((model) => model !== null);
+        .sort((a, b) => {
+          if (
+            CharactersData[a.type - 1].damage <
+            CharactersData[b.type - 1].damage
+          )
+            return -1;
+          if (
+            CharactersData[a.type - 1].damage >
+            CharactersData[b.type - 1].damage
+          )
+            return 1;
+          return 0;
+        })
+        .map((character) => {
+          const highestLevelBlaster = calculateHighestLevelBlaster(blasters);
+          return createModel(character, highestLevelBlaster);
+        })
+        .filter((model) => model !== null);
 
       setStoreModels(newModels);
+    } catch (e) {
+      console.log(e);
     }
-    catch (e)
-    {
-      console.log(e)
-    }
-
   }, [characters, blasters]);
 
   return (

@@ -49,7 +49,7 @@ export function Settings() {
       value: "60",
     },
     {
-      label: "80%",
+      label: "STORMTROOPER 12",
       value: "80",
     },
     {
@@ -112,23 +112,23 @@ export function Settings() {
     try {
       if (characters) {
         const options: SelectOptionType[] = characters
-            .sort((a, b) => {
-              if (
-                  CharactersData[a.type - 1].damage <
-                  CharactersData[b.type - 1].damage
-              )
-                return -1;
-              if (
-                  CharactersData[a.type - 1].damage >
-                  CharactersData[b.type - 1].damage
-              )
-                return 1;
-              return 0;
-            })
-            .map((character) => ({
-              label: `${CharactersData[character.type - 1].name}`,
-              value: character.id.toString(),
-            }));
+          .sort((a, b) => {
+            if (
+              CharactersData[a.type - 1].damage <
+              CharactersData[b.type - 1].damage
+            )
+              return -1;
+            if (
+              CharactersData[a.type - 1].damage >
+              CharactersData[b.type - 1].damage
+            )
+              return 1;
+            return 0;
+          })
+          .map((character) => ({
+            label: `${CharactersData[character.type - 1].name}`,
+            value: character.id.toString(),
+          }));
         setCharacterOptions(options);
       }
 
@@ -139,9 +139,8 @@ export function Settings() {
         };
         setActiveOption(active);
       }
-    }
-    catch (e) {
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
   }, [characters, activeCharacter]);
 

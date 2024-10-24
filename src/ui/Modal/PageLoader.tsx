@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import textureBg from "./img/bg-texture.svg";
-import bgImg from "./img/loader/loader-bg.png";
+import bgImg from "./img/loader/loader-bg.jpg";
 import greenBorder from "./img/loader/green-circle.svg";
 import outerBorder from "./img/loader/outer-border.svg";
 import innerBorder from "./img/loader/inner-border.svg";

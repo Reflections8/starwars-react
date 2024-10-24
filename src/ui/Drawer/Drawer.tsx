@@ -190,7 +190,8 @@ function Menu() {
             <div className="menu__list-item-text">
               {
                 // @ts-ignore
-                formatWalletString(jwtDecode(jwt).address)}
+                formatWalletString(jwtDecode(jwt).address)
+              }
             </div>
           </div>
         ) : (
@@ -503,7 +504,7 @@ function Repair() {
   };
 
   return (
-    <div className="repair">
+    <div className="repair repairDrawer">
       <div className="repair__text">{t("repairDrawer.repair100")}</div>
 
       <div className="repair__block">

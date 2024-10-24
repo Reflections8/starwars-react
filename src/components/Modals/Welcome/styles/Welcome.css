@@ -49,6 +49,7 @@
 .welcome .exchange__badge {
   max-width: 300px;
   margin: 0 auto;
+  display: none;
 }
 
 .welcome .exchange__badge-item--Right {
