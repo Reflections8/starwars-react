@@ -34,7 +34,7 @@ export function LoaderProvider({ children }: LoaderProviderProps) {
       }}
     >
       {children}
-      <LoadingModal isOpen={isLoading} />
+        <LoadingModal isOpen={false} />
     </LoaderContext.Provider>
   );
 }

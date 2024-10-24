@@ -41,16 +41,16 @@ export function Settings() {
 
   const graphics: SelectOptionType[] = [
     {
+      label: "20%",
+      value: "20",
+    },
+    {
       label: "40%",
       value: "40",
     },
     {
-      label: "60%",
-      value: "60",
-    },
-    {
-      label: "STORMTROOPER 12",
-      value: "80",
+      label: "70%",
+      value: "70",
     },
     {
       label: "100%",
@@ -79,8 +79,8 @@ export function Settings() {
             item.value === String(localStorage.getItem("graphic_setting"))
         )
       : {
-          label: "80%",
-          value: "80",
+          label: "70%",
+          value: "70",
         }
   );
 
